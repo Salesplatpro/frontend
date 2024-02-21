@@ -295,3 +295,62 @@ $gray-dark: #667085;
   }
 }
 
+.featured-brands {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  align-items: center;
+  padding-bottom: 96px;
+  > div {
+    padding: 0 32px;
+  }
+  .inner {
+    max-width: 768px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    .headings {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      p {
+        font-family: $poppins;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: $primary-blue;
+      }
+      h4 {
+        font-family: $primary-font-family;
+        font-weight: 600;
+        font-size: 36px;
+        letter-spacing: -2%;
+        color: $primary-dark-bg;
+      }
+    }
+    p {
+      font-family: $poppins;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 30px;
+      color: $gray-dark;
+    }
+  }
+  .images {
+    .overall {
+      max-width: 1230px;
+      display: flex;
+      gap: 25px;
+      justify-content: center;
+      flex-wrap: wrap;
+      img {
+        max-height: 100px;
+        max-width: 167px;
+        height: 100px;
+        object-fit: scale-down;
+      }
+    }
+  }
+}
+
