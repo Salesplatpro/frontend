@@ -7,7 +7,7 @@ const MetricSection = () => {
         <div className="inners">
           <div className="texts">
             <h5>Your one-stop-shop for talent acquisition</h5>
-            Efficiently list job openings, assess candidates' qualifications, and streamline the entire hiring process with smart automation features.
+            Efficiently list job openings, assess candidates&#39; qualifications, and streamline the entire hiring process with smart automation features.
           </div>
 
           <div className="infographics">

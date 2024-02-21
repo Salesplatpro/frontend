@@ -5,6 +5,7 @@ import MetricSection from './components/MetricSection'
 import ServiceSection from './components/ServiceSection'
 import FeaturedBrand from './components/FeaturedBrand'
 import QuoteSection from './components/QuoteSection'
+import Footer from './components/Footer'
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
         <ServiceSection/>
         <FeaturedBrand/>
         <QuoteSection/>
+        <Footer/>
         {/* Home */}
       </div>
     </React.Fragment>

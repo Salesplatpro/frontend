@@ -12,7 +12,7 @@ const FeaturedBrand = () => {
             </div>
 
             <p>
-              Connect your tools, connect your teams. With over 200 apps already available in our directory, your team’s favorite tools are just a click away.
+              Connect your tools, connect your teams. With over 200 apps already available in our directory, your team&#39;s favorite tools are just a click away.
             </p>
           </div>
         </div>

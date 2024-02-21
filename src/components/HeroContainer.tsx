@@ -12,7 +12,7 @@ const HeroContainer = () => {
               </h2>
 
               <p className='inner'>
-                Streamline Your Hiring Process and Make Confident Decisions with SupportPro's Comprehensive Platform.
+                Streamline Your Hiring Process and Make Confident Decisions with SupportPro&#39;s Comprehensive Platform.
               </p>
 
               <button>
