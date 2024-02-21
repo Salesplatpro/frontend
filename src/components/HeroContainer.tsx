@@ -27,7 +27,7 @@ const HeroContainer = () => {
             
           </div>
           <div className='image'>
-            <img src='../../assets/homepage.png' alt='brain-storm'/>
+            <img src='src/assets/homepage.png' alt='brain-storm'/>
           </div>
         </div>
       </section>

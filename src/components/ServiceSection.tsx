@@ -20,13 +20,13 @@ const ServiceSection = () => {
           </div>
 
           <div className="images">
-            <img src='../../assets/bing1.png' alt="talents" />
+            <img src='src/assets/bing1.png' alt="talents" />
           </div>
         </div>
 
         <div className="lefty">
           <div className="images">
-            <img src='../../assets/bing2.png' alt="talents" />
+            <img src='src/assets/bing2.png' alt="talents" />
           </div>
           
           <div className="text">
@@ -60,7 +60,7 @@ const ServiceSection = () => {
           </div>
 
           <div className="images">
-            <img src='../../assets/bing3.png' alt="talents" />
+            <img src='src/assets/bing3.png' alt="talents" />
           </div>
         </div>
       </div>

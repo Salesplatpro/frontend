@@ -7,7 +7,7 @@ const Navbar = () => {
         <div className="container wrapper nav-navigate">
           <nav className="navbar">
             <ul>
-              <a href="" className='logo-li'><img src="../../assets/logo.png" alt="" /></a>
+              <a href="" className='logo-li'><img src="src/assets/logo.png" alt="" /></a>
               <li><a href="">solutions</a></li>
               <li><a href="">resources</a></li>
               <li><a href="">explore jobs</a></li>

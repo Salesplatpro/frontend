@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="main-contain">
           <div className="quick-link">
             <div className="logo">
-              <img src="../../assets/logo.png" alt="logo" />
+              <img src="src/assets/logo.png" alt="logo" />
 
               <p>Design amazing digital experiences that create more happy in the world.</p>
             </div>
@@ -61,23 +61,23 @@ const Footer = () => {
 
               <div className="socials">
                 <a href="">
-                  <img src="../../assets/Vectortwitter.svg" alt="" />
+                  <img src="src/assets/Vectortwitter.svg" alt="" />
                 </a>
 
                 <a href="">
-                  <img src="../../assets/Vectorlinkedin.svg" alt="" />
+                  <img src="src/assets/Vectorlinkedin.svg" alt="" />
                 </a>
 
                 <a href="">
-                  <img src="../../assets/Vectorfacebook.svg" alt="" />
+                  <img src="src/assets/Vectorfacebook.svg" alt="" />
                 </a>
 
                 <a href="">
-                  <img src="../../assets/Subtracttelegram.svg" alt="" />
+                  <img src="src/assets/Subtracttelegram.svg" alt="" />
                 </a>
 
                 <a href="">
-                  <img src="../../assets/Lozengeyoutube.svg" alt="" />
+                  <img src="src/assets/Lozengeyoutube.svg" alt="" />
                 </a>
               </div>
             </div>

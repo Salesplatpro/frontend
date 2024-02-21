@@ -19,20 +19,20 @@ const FeaturedBrand = () => {
 
         <div className="images">
           <div className="overall">
-            <img src="'../../assets/brand1.png" alt="" />
-            <img src="'../../assets/brand2.png" alt="" />
-            <img src="'../../assets/brand3.png" alt="" />
-            <img src="'../../assets/brand4.png" alt="" />
-            <img src="'../../assets/brand5.png" alt="" />
-            <img src="'../../assets/brand6.png" alt="" />
-            <img src="'../../assets/brand7.png" alt="" />
-            <img src="'../../assets/brand14.png" alt="" />
-            <img src="'../../assets/brand13.png" alt="" />
-            <img src="'../../assets/brand12.png" alt="" />
-            <img src="'../../assets/brand11.png" alt="" />
-            <img src="'../../assets/brand10.png" alt="" />
-            <img src="'../../assets/brand9.png" alt="" />
-            <img src="'../../assets/brand8.png" alt="" />
+            <img src="src/assets/brand1.png" alt="" />
+            <img src="src/assets/brand2.png" alt="" />
+            <img src="src/assets/brand3.png" alt="" />
+            <img src="src/assets/brand4.png" alt="" />
+            <img src="src/assets/brand5.png" alt="" />
+            <img src="src/assets/brand6.png" alt="" />
+            <img src="src/assets/brand7.png" alt="" />
+            <img src="src/assets/brand14.png" alt="" />
+            <img src="src/assets/brand13.png" alt="" />
+            <img src="src/assets/brand12.png" alt="" />
+            <img src="src/assets/brand11.png" alt="" />
+            <img src="src/assets/brand10.png" alt="" />
+            <img src="src/assets/brand9.png" alt="" />
+            <img src="src/assets/brand8.png" alt="" />
           </div>
         </div>
       </div>
