@@ -1,0 +1,297 @@
+$font-color: #4B4B4B;
+$nav-f-size: 1rem;
+$nav-f-weight: 600;
+$nav-line-height: 18.78px;
+$primary-blue: #4985DF;
+$primary-f-white: #F1F6FD;
+$primary-f-blue: #C6DDF7; 
+$primary-f-offblue: #CAD8ED;
+$primary-font-family: "Raleway", sans-serif;
+$poppins: "Poppins", sans-serif;
+$secondary-lm-blue: #DFEBFA;
+$primary-dark-bg: #101828;
+$gray-light: #E4E7EC;
+$inter-f: "Inter", sans-serif;
+$gray-dark: #667085;
+
+.navi {
+  background-color: $primary-dark-bg;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  ul {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: auto;
+    li {
+      font-size: 1rem;
+      line-height: 18.78px;
+      font-weight: 600;
+      height: fit-content;
+      a {
+        color: $primary-f-white;
+        width: auto;
+        padding: 10px;
+        text-transform: capitalize;
+        text-decoration: none;
+      }
+    }
+      a.logo-li {
+        padding: 0;
+        margin-right: 40px;
+      }
+
+      img {
+        width: 171px;
+        max-height: 49px;
+      }
+  }
+}
+
+
+.nav-font {
+  font-size: $nav-f-size;
+  font-weight: $nav-f-weight;
+}
+
+.action-btn {
+  display: flex;
+  gap: 1rem;
+  .login {
+    background: transparent;
+    color: $primary-blue;
+    border: none;
+  }
+  .apply {
+    background: transparent;
+    border:2px solid $primary-blue;
+    color: $primary-blue;
+  }
+  .hire {
+    background: $primary-blue;
+    border:2px solid $primary-blue;
+    color: #FFFFFF;
+    ;
+  }
+}
+
+.action-btn > button {
+  cursor: pointer;
+  font-family: "Raleway", sans-serif;
+  font-size: $nav-f-size;
+  font-weight: $nav-f-weight;
+  border-radius: 0.5rem;
+  padding: 12px 24px;
+  text-transform: capitalize;
+  letter-spacing: -1.9%;
+  line-height: $nav-line-height;
+}
+
+.home-pg > div {
+  max-width: 50%;
+  width: 50%;
+  max-height: 640px;
+}
+
+.main-container {
+  background-color: $primary-dark-bg;
+}
+
+.home-pg {
+  .text {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 36px;
+    .inner-text {
+      display: flex;
+      flex-direction: column;
+      max-width: 552px;
+      margin: auto 2rem;
+      color: $primary-f-white;
+      gap: 24px;
+      h2 {
+        font-size: 72px;
+        font-weight: 600;
+        line-height: 86px;
+        letter-spacing: -2%;
+      }
+      p.inner {
+        color: $primary-f-blue;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 30px;
+      }
+
+      button {
+        padding: 12px 24px 12px 24px;
+        background-color: #FFFFFF;
+        border-radius: 8px;
+        width: fit-content;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 28px;
+        letter-spacing: -1.9%;
+        text-transform: capitalize;
+        cursor: pointer;
+        color: #344054;
+        border: .8px solid $primary-f-offblue;
+        font-family: $primary-font-family;
+      }
+    }
+    .outer-text {
+      margin-top: 42px;
+      width: 100%;
+      max-width: 552px;
+      text-align: left;
+      flex-wrap: 500;
+      font-size: 20px;
+      line-height: 30px;
+      color: $secondary-lm-blue;
+      a {
+        text-decoration: none;
+        color: $primary-blue;
+      }
+    }
+  }
+  .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.metrics {
+  .inners {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 96px;
+    gap: 64px;
+    .texts {
+      text-align: center;
+      max-width: 768px;
+      font-weight: 400;
+      font-family: $poppins;
+      font-size: 20px;
+      line-height: 30px;
+      color: #667085;
+      h5 {
+        font-weight: 600;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: -2%;
+        font-family: $primary-font-family;
+        color: #101828;
+      }
+    }
+    .infographics {
+      padding: 64px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: row;
+      gap: 64px;
+      justify-content: space-between;
+      background-color: $primary-dark-bg;
+      div {
+        text-align: center;
+      }
+      h3 {
+        font-weight: 600;
+        font-family: $poppins;
+        line-height: 72px;
+        font-size: 60px;
+        letter-spacing: -2%;
+        color: #FFFFFF;
+      }
+      p {
+        color: $gray-light;
+        padding: 10px;
+      }
+    }
+  }
+}
+
+.service-section {
+  padding: 96px 0px;
+  display: flex;
+  flex-direction: column;
+  > div {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    max-height: 640px;
+    height: 640px;
+    justify-content: space-between;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    justify-content: center;
+    padding: 96px;
+    max-width: calc(50% -  192px);
+    width: calc(50% -  128px);
+    .inner-texts {
+      max-width: 512px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      p.top {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: $primary-blue;
+      }
+      div {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        h3 {
+          font-weight: 600;
+          font-size: 36px;
+          line-height: 42.26px;
+          color: $primary-dark-bg;
+        }
+        p {
+          font-family: $inter-f;
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 28px;
+          color: $gray-dark;
+        }
+      }
+    }
+    button {
+      padding: 12px 24px;
+      width: fit-content;
+      border-radius: 8px;
+      background-color: $primary-dark-bg;
+      border: none;
+      color: #FFFFFF;
+      font-size: 18px;
+      line-height: 28px;
+      letter-spacing: -1.9%;
+      font-weight: 600;
+      font-family: $primary-font-family;
+      cursor: pointer;
+    }
+  }
+  .images {
+    width: 50%;
+    max-width: 50%;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
