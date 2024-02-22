@@ -1,4 +1,6 @@
 import React from 'react'
+// @ts-ignore
+import homepages from '../assets/homepage.png'
 
 const HeroContainer = () => {
   return (
@@ -27,7 +29,7 @@ const HeroContainer = () => {
             
           </div>
           <div className='image'>
-            <img src='src/assets/homepage.png' alt='brain-storm'/>
+            <img src={homepages} alt='brain-storm'/>
           </div>
         </div>
       </section>

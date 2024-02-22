@@ -1,4 +1,6 @@
 import React from 'react'
+// @ts-ignore
+import quotes from '../assets/quote1.jpeg'
 
 const QuoteSection = () => {
   return (
@@ -18,7 +20,7 @@ const QuoteSection = () => {
 
         <div className="testimonial">
           <div className="cover">
-            <img src="src/assets/quote1.jpeg" alt="" />
+            <img src={quotes} alt="" />
             <div className="text">
               <h5>
                 Love the simplicity of the service and the prompt customer support. We can&#39;t imagine working without it.

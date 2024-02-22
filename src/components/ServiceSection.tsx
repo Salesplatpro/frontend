@@ -1,4 +1,10 @@
 import React from 'react'
+// @ts-ignore
+import bing1 from '../assets/bing1.png';
+// @ts-ignore
+import bing2 from '../assets/bing2.png'
+// @ts-ignore
+import bing3 from '../assets/bing3.png'
 
 const ServiceSection = () => {
   return (
@@ -20,13 +26,13 @@ const ServiceSection = () => {
           </div>
 
           <div className="images">
-            <img src='src/assets/bing1.png' alt="talents" />
+            <img src={bing1} alt="talents" />
           </div>
         </div>
 
         <div className="lefty">
           <div className="images">
-            <img src='src/assets/bing2.png' alt="talents" />
+            <img src={bing2} alt="talents" />
           </div>
           
           <div className="text">
@@ -60,7 +66,7 @@ const ServiceSection = () => {
           </div>
 
           <div className="images">
-            <img src='src/assets/bing3.png' alt="talents" />
+            <img src={bing3} alt="talents" />
           </div>
         </div>
       </div>

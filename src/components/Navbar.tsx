@@ -1,4 +1,6 @@
 import React from 'react'
+// @ts-ignore
+import logo from '../assets/logo.png'
 
 const Navbar = () => {
   return (
@@ -7,7 +9,7 @@ const Navbar = () => {
         <div className="container wrapper nav-navigate">
           <nav className="navbar">
             <ul>
-              <a href="" className='logo-li'><img src="src/assets/logo.png" alt="" /></a>
+              <a href="" className='logo-li'><img src={logo} alt="" /></a>
               <li><a href="">solutions</a></li>
               <li><a href="">resources</a></li>
               <li><a href="">explore jobs</a></li>

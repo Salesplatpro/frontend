@@ -213,7 +213,11 @@ $gray-f-light: #98A2B3;
       }
       p {
         color: $gray-light;
-        padding: 10px;
+        font-weight: 500;
+        // padding: 10px;
+        font-family: $inter-f;
+        font-weight: 18px;
+        line-height: 28px;
       }
     }
   }
@@ -577,7 +581,8 @@ $gray-f-light: #98A2B3;
     display: none;
   }
   .main-container {
-    padding: 38px 16px 64px 16px;
+    padding: 38px 0px  0px 0px;
+    height: fit-content;
     .home-pg {
       flex-direction: column;
       > div {
@@ -586,7 +591,180 @@ $gray-f-light: #98A2B3;
       }
       .text {
         .inner-text {
+          padding: 0 16px 64px 16px;
           margin: 0;
+          h2 {
+            font-size: 36px;
+            line-height: 43.34px;
+          }
+          p.inner {
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+            font-family: $poppins;
+          }
+          button {
+            width: 100%;
+          }
+        }
+
+        .outer-text {
+          margin: 0;
+          font-size: 16px;
+          line-height: 18.78px;
+        }
+      }
+      .image {
+        height: 308px;
+        max-height: 308px;
+      }
+    }
+  }
+  .metrics {
+    max-height: fit-content;
+    height: fit-content;
+    .inners {
+      gap: 48px;
+      padding: 64px 32px 0px 32px;
+      .texts {
+        max-width: 350px;
+        font-size: 18px;
+        h5 {
+          font-size: 30px;
+          line-height: 35.22px;
+        }
+      }
+      .infographics {
+        flex-direction: column;
+        h3 {
+          font-size: 48px;
+        }
+      }
+    }
+    
+  }
+  .service-section {
+    padding: 72px 32px;
+    gap: 64px;
+    > div {
+      flex-direction: column;
+      gap: 40px;
+      max-width: fit-content;
+      width: fit-content;
+      height: fit-content;
+      max-height: fit-content;
+    }
+    .text {
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      .inner-texts {
+        gap: 20px;
+        div {
+          h3 {
+            font-size: 24px;
+            line-height: 30.72px;
+          }
+          p {
+            font-size: 16px;
+            line-height: 28px;
+          }
+        }
+      }
+      button {
+        width: 100%;
+      }
+    }
+    .images {
+      width: 100%;
+      max-width: 100%;
+    }
+    .lefty {
+      flex-direction: column-reverse;
+    }
+  }
+  .featured-brands {
+    gap: 48px;
+    .inner {
+      gap: 16px;
+      .headings {
+        p {
+          font-size: 14px;
+        }
+        h4 {
+          font-size: 30px;
+          line-height: 38px;
+        }
+      }
+    }
+    p {
+      font-size: 18px;
+      line-height: 28px;
+      font-family: $inter-f;
+    }
+    .images {
+      .overall {
+        img {
+          max-height: 51.02px;
+          max-width: 85.21px;
+        }
+      }
+    }
+  }
+
+  .quote-section {
+    flex-direction: column-reverse;
+    height: fit-content;
+    max-height: fit-content;
+    > div {
+      width: 100%;
+      max-width: 100%;
+    }
+    .testimonial {
+      .cover {
+        padding: 48px 32px;
+        img {
+          width: 100px;
+          max-width: 100px;
+        }
+        .text {
+          h5 {
+            font-size: 24px;
+            line-height: 32.4px;
+          }
+        }
+      }
+    }
+    .text {
+      .cover {
+        padding: 64px 32px;
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+  .footer {
+    max-height: fit-content;
+    height: fit-content;
+    .main-contain {
+      padding: 48px 32px;
+      .quick-link {
+        flex-direction: column;
+        .links {
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+      }
+    }
+    .main-contain {
+      .cob {
+        flex-direction: column-reverse;
+        padding: 0px;
+        gap: 15px;
+        .socials {
+          padding-top: 10px;
+          justify-content: flex-start;
         }
       }
     }

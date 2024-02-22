@@ -1,4 +1,16 @@
 import React from 'react'
+// @ts-ignore
+import logo from '../assets/logo.png'
+// @ts-ignore
+import twitter from '../assets/Vectortwitter.svg'
+// @ts-ignore
+import linkedin from '../assets/Vectorlinkedin.svg'
+// @ts-ignore
+import youtube from '../assets/Lozengeyoutube.svg'
+// @ts-ignore
+import telegram from '../assets/Subtracttelegram.svg'
+// @ts-ignore
+import facebook from '../assets/Vectorfacebook.svg'
 
 const Footer = () => {
   return (
@@ -7,7 +19,7 @@ const Footer = () => {
         <div className="main-contain">
           <div className="quick-link">
             <div className="logo">
-              <img src="src/assets/logo.png" alt="logo" />
+              <img src={logo} alt="logo" />
 
               <p>Design amazing digital experiences that create more happy in the world.</p>
             </div>
@@ -52,6 +64,16 @@ const Footer = () => {
                   <a href="">Help Center</a>
                 </div>
               </div>
+
+              <div>
+                <h6>Legal</h6>
+                <div>
+                  <a href="">Terms</a>
+                  <a href="">Privacy</a>
+                  <a href="">Cookies</a>
+                  <a href="">Licenses</a>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -61,23 +83,23 @@ const Footer = () => {
 
               <div className="socials">
                 <a href="">
-                  <img src="src/assets/Vectortwitter.svg" alt="" />
+                  <img src={twitter} alt="" />
                 </a>
 
                 <a href="">
-                  <img src="src/assets/Vectorlinkedin.svg" alt="" />
+                  <img src={linkedin} alt="" />
                 </a>
 
                 <a href="">
-                  <img src="src/assets/Vectorfacebook.svg" alt="" />
+                  <img src={facebook} alt="" />
                 </a>
 
                 <a href="">
-                  <img src="src/assets/Subtracttelegram.svg" alt="" />
+                  <img src={telegram} alt="" />
                 </a>
 
                 <a href="">
-                  <img src="src/assets/Lozengeyoutube.svg" alt="" />
+                  <img src={youtube} alt="" />
                 </a>
               </div>
             </div>
