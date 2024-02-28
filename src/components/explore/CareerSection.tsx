@@ -6,6 +6,9 @@ import jonImg from '../../assets/jobpost2.png'
 import jop2 from '../../assets/jobpost.png'
 // @ts-ignore
 import searchIcon from '../../assets/searchsearcn.svg'
+// @ts-ignore
+import arrowIcon from '../../assets/Iconarrow.svg'
+
 
 const jobs = [
   {title: "Product Designer", description: "We’re looking for a mid-level product designer to join our team.", color: "#175CD3", image: jonImg, badge: "Design", bdbg: "#EFF8FF"},
@@ -55,6 +58,18 @@ const CareerSection = () => {
               <div className='divider'/>
 
               <label>Specialties</label>
+
+      
+              <div className="custom-select-container">
+                <select className="custom-select">
+                  <option value="" disabled selected hidden>Choose an option</option>
+                  <option value="option1">Option 1</option>
+                  <option value="option2">Option 2</option>
+                  <option value="option3">Option 3</option>
+                </select>
+                <img src={arrowIcon} alt="" />
+              </div>
+
 
               <div className="radio-group">
                 <div>

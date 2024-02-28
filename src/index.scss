@@ -1044,6 +1044,99 @@ $new-dark: #0D0C22;
       }
     }
   }
+
+  .explore-head {
+    padding-top: 64px;
+    .content {
+      padding: 0px 20px;
+      gap: 16px;
+      p {
+        font-size: 20px;
+        line-height: 30px;
+        text-align: left;
+      }
+      .top {
+        gap: 6px;
+        h6 {
+          font-size: 14px;
+        }
+        h4 {
+          font-size: 36px;
+          line-height: 43.57px;
+        }
+      }
+    }
+  }
+
+  .career-section {
+    padding: 64px 20px;
+    .content {
+      flex-direction: column-reverse;
+      gap: 48px;
+      .jobs {
+        width: inherit;
+        .content {
+          gap: 64px;
+          > div {
+            flex-direction: column;
+          }
+          .job-post {
+            padding: 0;
+            padding-top: 24px;
+            .description {
+              .top {
+                .badge {
+                  flex-direction: column;
+                  .color-bdg {
+                    width: fit-content;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .job-search {
+        padding: 24px 20px;
+        .search-tool {
+          label {
+            line-height: 24px;
+          }
+          .radio-group {
+            display: none;
+          }
+        }
+      }
+    }
+    .closeing {
+      margin-top: 48px;
+      width: 100%;
+    }
+
+    .custom-select-container {
+      position: relative;
+      padding: 12px 16px;
+      background-color: #FFFFFF;
+      gap: 8px;
+      border-radius: 8px;
+      border: 1px solid #D0D5DD;
+      display: flex;
+      img {
+        right: 0;
+      }
+      select {
+        flex-grow: 1;
+        border: none;
+        outline: none;
+        font-family: $inter-f;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        color: $gray-dark;
+      }
+    }
+  }
 }
 
 
@@ -1055,4 +1148,15 @@ $new-dark: #0D0C22;
   height: 1px;
   border-top: 1px solid #E7E7E9;
 }
+
+
+.custom-select-container {
+  display: none;
+}
+
+select.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
 
