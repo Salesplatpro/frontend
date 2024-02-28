@@ -16,7 +16,7 @@ function App() {
           {/* @ts-ignore */}
           <Route exact path='/' element={<Home/>} />
           {/* @ts-ignore */}
-          <Route exact path='/explore' element={<Explore/>} />
+          <Route exact path='explore' element={<Explore/>} />
         </Routes>
       </Router>
     </div>
