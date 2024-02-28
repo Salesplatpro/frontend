@@ -13,8 +13,10 @@ function App() {
     <div className="App" data-testid="app-page">
       <Router>
         <Routes>
-          <Route path='/' element={<Home/>} />
-          <Route path='/explore' element={<Explore/>} />
+          {/* @ts-ignore */}
+          <Route exact path='/' element={<Home/>} />
+          {/* @ts-ignore */}
+          <Route exact path='/explore' element={<Explore/>} />
         </Routes>
       </Router>
     </div>
