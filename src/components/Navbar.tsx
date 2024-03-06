@@ -10,11 +10,10 @@ const Navbar = () => {
         <div className="container wrapper nav-navigate">
           <nav className="navbar">
             <ul>
-              <a href="" className='logo-li'><img src={logo} alt="" /></a>
-              <li><a href="">solutions</a></li>
+              <a href="/" className='logo-li'><img src={logo} alt="" /></a>
+              <li><a href="solution">solutions</a></li>
               <li><a href="">resources</a></li>
               <li><a href="explore">explore jobs</a></li>
-              <li><Link to='/explore'>explore jobs</Link></li>
               <li><a href="">customers stories</a></li>
             </ul>
           </nav>
