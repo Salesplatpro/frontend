@@ -1303,6 +1303,99 @@ $new-dark: #0D0C22;
       }
     }
   }
+  .solution-header {
+    padding: 64px 20px;
+    .content {
+      .main-texts {
+        p {
+          font-size: 14px;
+        }
+        h3 {
+          font-size: 32px;
+          line-height: 38.73px;
+        }
+      }
+      p {
+        font-size: 16px;
+        line-height: 26px;
+        text-align: center;
+      }
+    }
+  }
+
+  .solution-content {
+    padding: 64px 20px;
+    .content {
+      flex-direction: column;
+      .solutions {
+        width: 100%;
+        max-width: 100%;
+        .solute {
+          button {
+            display: none;
+          }
+          .custom-select-container {
+            position: relative;
+            padding: 12px 16px;
+            background-color: #FFFFFF;
+            gap: 8px;
+            border-radius: 8px;
+            border: 1px solid #D0D5DD;
+            display: flex;
+            img {
+              right: 0;
+            }
+            select {
+              flex-grow: 1;
+              border: none;
+              outline: none;
+              font-family: $inter-f;
+              font-weight: 400;
+              font-size: 14px;
+              line-height: 20px;
+              color: $gray-dark;
+            }
+          }
+        }
+      }
+      .sourcing {
+        .texts {
+          h5 {
+            font-size: 24px;
+            line-height: 28.18px;
+          }
+          p {
+            font-size: 16px;
+            line-height: 24px;
+          }
+        }
+        .resources {
+          > div {
+            width: inherit;
+            flex-basis: 100%;
+            max-width: 100%;
+          }
+          .dievs {
+            .top {
+              padding: 72px 0;
+              img {
+                width: 56px;
+                max-width: 56px;
+                height: 56px;
+                max-height: 56px;
+              }
+            }
+          }
+          .text {
+            h5 {
+              font-size: 20px;
+              line-height: 24.2px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 
