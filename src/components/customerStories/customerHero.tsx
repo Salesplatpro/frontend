@@ -29,7 +29,6 @@ const CustomerHero = () => {
                 <div className='dp'>
                 <img src={customerDp} alt='customerDp'/>
                 </div>
-                
                 <div className='customer-name'>
                   <p>Olivia Ryne</p>
                   <p className='role'>Published in Adventure</p>
@@ -37,10 +36,7 @@ const CustomerHero = () => {
               </div>
 
             </div>
-
-
           </div>
-
         </div>
       </section>
     </React.Fragment>
