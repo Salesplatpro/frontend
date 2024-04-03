@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './Home'
 import Explore from './components/Explore'
 import Solutions from './components/Solutions'
+import SingleJob from './components/SingleJob'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "solution",
     element: <Solutions/>,
+  },
+  {
+    path: "job",
+    element: <SingleJob/>,
   }
 ]);
 
