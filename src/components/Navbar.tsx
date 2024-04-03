@@ -14,7 +14,7 @@ const Navbar = () => {
               <li><a href="solution">solutions</a></li>
               <li><a href="">resources</a></li>
               <li><a href="explore">explore jobs</a></li>
-              <li><a href="">customers stories</a></li>
+              <li><a href="customerstories">customers stories</a></li>
             </ul>
           </nav>
 
