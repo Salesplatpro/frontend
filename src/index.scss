@@ -967,7 +967,6 @@ $new-dark: #0d0c22;
 .customerstory-container {
   background-color: $primary-dark-bg;
   height: 100%;
-
   .home-pg {
     .text {
       display: flex;
@@ -1022,26 +1021,22 @@ $new-dark: #0d0c22;
     }
   }
 }
-
 .customer-intro{
   background-color: #ffffff;
   max-width: 720px;
   margin: 64px auto;
-
   p{
     color: $gray-dark;
     font-weight: 500;
     font-size: 20px;
     line-height: 30px;
   }
-
   h5 {
     color: $primary-dark-bg;
     font-weight: 600;
     font-size: 30px;
     line-height: 30px;
   }
-  
   .subheader{
     margin-top: 64px;
     margin-bottom: 20px;
@@ -1054,7 +1049,6 @@ $new-dark: #0d0c22;
     margin-bottom: 30px;
     display: flex;
     gap: 14px;
-
     .quote-line{
       width: 5px;
       height: 248px;
@@ -1082,7 +1076,6 @@ $new-dark: #0d0c22;
       display: flex;
       justify-content: space-between;
       align-items: center;
-
     }
     .social-icons{
       display: flex;
@@ -1106,13 +1099,11 @@ $new-dark: #0d0c22;
       p{
         font-size: 14px;
       }
-
       .social{
         width: 20px;
         height: 20px;
         color: #D0D5DD;
-      }
-      
+      } 
     }
     .link{
       width: 122px;
@@ -1120,7 +1111,6 @@ $new-dark: #0d0c22;
     .sub-sm{
       width: 40px;
     }
-
   }
 }
 

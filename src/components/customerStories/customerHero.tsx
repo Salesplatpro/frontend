@@ -1,6 +1,5 @@
 import React from 'react'
 // @ts-ignore
-import homepages from '../../assets/homepage.png'
 import customerHero from '../../assets/customerHero.webp'
 import customerDp from '../../assets/Avatar.png'
 import { CiLocationOn } from "react-icons/ci";
