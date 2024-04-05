@@ -8,6 +8,7 @@ import Home from './Home'
 import Explore from './components/Explore'
 import Solutions from './components/Solutions'
 import CustomerStories from './components/customerStories'
+import SingleJob from './components/SingleJob'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "customerstories",
     element: <CustomerStories/>,
+  },
+  {
+    path: "job",
+    element: <SingleJob/>,
   }
 ]);
 
@@ -34,14 +39,6 @@ function App() {
   return (
     <div className="App" data-testid="app-page">
       <RouterProvider router={router} />
-      {/* <Router>
-        <Routes>
-          @ts-ignore
-          <Route exact path='/' element={<Home/>} />
-          @ts-ignore
-          <Route exact path='explore' element={<Explore/>} />
-        </Routes>
-      </Router> */}
     </div>
   )
 }
