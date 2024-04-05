@@ -968,6 +968,159 @@ $deep-gray: #525C68;
   }
 }
 
+
+// Customer Stories
+.customerstory-container {
+  background-color: $primary-dark-bg;
+  height: 100%;
+  .home-pg {
+    .text {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      gap: 36px;
+      .location-icon{
+        font-size: 24px;
+      }
+      .inner-text {
+        display: flex;
+        flex-direction: column;
+        max-width: 552px;
+        margin: auto 2rem;
+        color: $primary-f-white;
+        gap: 24px;
+        h2 {
+          font-size: 48px;
+          font-weight: 600;
+          line-height: 60px;
+          letter-spacing: -2%;
+        }
+        h2 .h2-sub{
+          color: #C6DDF7;
+        }
+        p.inner {
+          color: $primary-f-blue;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 30px;
+        }
+      }
+      .customer-info {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 170px;
+        .dp {
+        }
+        .customer-name {
+          font-size: 12;
+          .role {
+            color: #3d3d4e;
+          }
+        }
+      }
+    }
+    .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+.customer-intro{
+  background-color: #ffffff;
+  max-width: 720px;
+  margin: 64px auto;
+  p{
+    color: $gray-dark;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+  }
+  h5 {
+    color: $primary-dark-bg;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 30px;
+  }
+  .subheader{
+    margin-top: 64px;
+    margin-bottom: 20px;
+  }
+  .subheader h5{
+    margin-bottom: 20px;
+  }
+  .quote{
+    margin-top: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 14px;
+    .quote-line{
+      width: 5px;
+      height: 248px;
+      background: #6941C6;
+    }
+    h5{
+      font-style: italic;
+    }
+    p{
+      margin-top: 98px;
+      font-size: 16px;
+    }
+  }
+  .socialLink{
+    margin-top: 40px;
+    margin-bottom: 100px;
+
+    .line{
+      width: 100%;
+      height: 2px;
+      background: #E4E7EC;
+      margin-bottom: 20px;
+    }
+    .sub-socialLink{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .social-icons{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      a{
+        text-decoration: none;
+      }
+    }
+    .sm{
+      border: 1px solid #D0D5DD;
+      height: 40px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: center;
+      border-radius: 8px;
+
+      p{
+        font-size: 14px;
+      }
+      .social{
+        width: 20px;
+        height: 20px;
+        color: #D0D5DD;
+      } 
+    }
+    .link{
+      width: 122px;
+    }
+    .sub-sm{
+      width: 40px;
+    }
+  }
+}
+
+
 // Job Details
 .job-details {
   padding-top: 48px;
@@ -1742,6 +1895,173 @@ $deep-gray: #525C68;
           }
         }
       }
+    }
+  }
+
+  // customer Story
+  .customerstory-container {
+    padding: 38px 12px 0px 12px;
+    background-color: #ffffff;
+    height: fit-content;
+    .home-pg {
+      flex-direction: column-reverse;
+      > div {
+        width: 100%;
+        max-width: 100%;
+      }
+      .text {
+        .inner-text {
+          padding: 0 0px 64px 0px;
+          margin: 0;
+          .location-icon{
+            font-size: 24px;
+          }
+          h2 {
+            font-size: 36px;
+            line-height: 43.34px;
+            color:#101828;
+          }
+          h2 .h2-sub{
+            color: #667085;
+          }
+          p.inner {
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 24px;
+            color: #667085;
+            font-family: $poppins;
+          }
+          .customer-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+            .dp {
+            }
+            .customer-name {
+              font-size: 16px;
+              color: #101828;
+              .role {
+                color: #667085;
+              }
+            }
+          }
+        }
+      }
+      .image {
+        // padding: 10px;
+        height: 308px;
+        max-height: 308px;
+      }
+    }
+  }
+  .customer-intro{
+    background-color: #ffffff;
+    max-width: 100%;
+    padding: 0 12px;
+    // margin: 64px auto;
+  
+    p{
+      color: $gray-dark;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 30px;
+    }
+  
+    h5 {
+      color: $primary-dark-bg;
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 30px;
+    }
+    
+    .subheader{
+      margin-top: 64px;
+      margin-bottom: 20px;
+    }
+    .subheader h5{
+      margin-bottom: 20px;
+    }
+    .quote{
+      margin-top: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 14px;
+  
+      .quote-line{
+        width: 5px;
+        height: 248px;
+        background: #6941C6;
+      }
+      h5{
+        font-style: italic;
+      }
+      p{
+        margin-top: 98px;
+        font-size: 16px;
+      }
+    }
+    .image {
+      // padding: 10px;
+      width: 100%;
+      height: 308px;
+      max-height: 308px;
+    }
+
+    .socialLink{
+      margin-top: 40px;
+      margin-bottom: 100px;
+  
+      .line{
+        width: 100%;
+        height: 2px;
+        background: #E4E7EC;
+        margin-bottom: 25px;
+      }
+      .sub-socialLink{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+  
+      }
+      .social-icons{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        a{
+          text-decoration: none;
+        }
+      }
+      .sm{
+        border: 1px solid #D0D5DD;
+        height: 40px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        justify-self: center;
+        border-radius: 8px;
+  
+        p{
+          font-size: 14px;
+        }
+  
+        .social{
+          width: 20px;
+          height: 20px;
+          color: #D0D5DD;
+        }
+        
+      }
+      .link{
+        width: 122px;
+      }
+      .sub-sm{
+        width: 40px;
+      }
+  
     }
   }
 }
