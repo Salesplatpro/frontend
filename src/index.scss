@@ -68,16 +68,30 @@ $deep-gray: #525C68;
   gap: 1rem;
   .login {
     background: transparent;
-    color: $primary-blue;
     border: none;
+    a{
+      text-decoration: none;
+      color: $primary-blue;
+    }
+    
   }
   .apply {
     background: transparent;
+    border: 2px solid $primary-blue;
+    a{
+      text-decoration: none;
+      color: $primary-blue;
+    }
     border:2px solid $primary-blue;
     color: $primary-blue;
   }
   .hire {
     background: $primary-blue;
+    border: 2px solid $primary-blue;
+    a{
+      color: #ffffff;
+    text-decoration: none;
+    }
     border:2px solid $primary-blue;
     color: #FFFFFF;
     ;
