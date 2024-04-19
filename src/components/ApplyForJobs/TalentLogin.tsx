@@ -44,7 +44,7 @@ const TalentLogin: React.FC = () => {
     let errors = {} as FormErrors
 
     if (!data.email) {
-      errors.email = 'Role is Required'
+      errors.email = 'Email is Required'
     }
     if (!data.password) {
       errors.password = 'password is Required'
