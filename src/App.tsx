@@ -8,25 +8,46 @@ import Home from './Home'
 import Explore from './components/Explore'
 import Solutions from './components/Solutions'
 import CustomerStories from './components/customerStories'
+import ApplyForJob from './components/ApplyForJobs/TalentProfile'
+import HireTalents from './components/HireTalents/HireTalents'
+import TalentRegister from './components/ApplyForJobs/TalentRegister'
+import TalentLogin from './components/ApplyForJobs/TalentLogin'
+import TalentProfile from './components/ApplyForJobs/TalentProfile'
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home/>,
+    path: '/',
+    element: <Home />,
   },
   {
     path: 'explore',
-    element: <Explore/>,
+    element: <Explore />,
   },
   {
-    path: "solution",
-    element: <Solutions/>,
+    path: 'solution',
+    element: <Solutions />,
   },
   {
-    path: "customerstories",
-    element: <CustomerStories/>,
-  }
-]);
+    path: 'customerstories',
+    element: <CustomerStories />,
+  },
+  {
+    path: 'apply',
+    element: <TalentProfile />,
+  },
+  {
+    path: 'hire',
+    element: <HireTalents />,
+  },
+  {
+    path: 'talentRegister',
+    element: <TalentRegister />,
+  },
+  {
+    path: 'talentLogin',
+    element: <TalentLogin />,
+  },
+])
 
 function App() {
   const [count, setCount] = useState(0)

@@ -66,18 +66,28 @@ $new-dark: #0d0c22;
   gap: 1rem;
   .login {
     background: transparent;
-    color: $primary-blue;
     border: none;
+    a{
+      text-decoration: none;
+      color: $primary-blue;
+    }
+    
   }
   .apply {
     background: transparent;
     border: 2px solid $primary-blue;
-    color: $primary-blue;
+    a{
+      text-decoration: none;
+      color: $primary-blue;
+    }
   }
   .hire {
     background: $primary-blue;
     border: 2px solid $primary-blue;
-    color: #ffffff;
+    a{
+      color: #ffffff;
+    text-decoration: none;
+    }
   }
 }
 
