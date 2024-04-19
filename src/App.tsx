@@ -13,6 +13,7 @@ import HireTalents from './components/HireTalents/HireTalents'
 import TalentRegister from './components/ApplyForJobs/TalentRegister'
 import TalentLogin from './components/ApplyForJobs/TalentLogin'
 import TalentProfile from './components/ApplyForJobs/TalentProfile'
+import SingleJob from './components/SingleJob'
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
     element: <TalentLogin />,
   },
 ])
+    path: "customerstories",
+    element: <CustomerStories/>,
+  },
+  {
+    path: "job",
+    element: <SingleJob/>,
+  }
+]);
 
 function App() {
   const [count, setCount] = useState(0)
@@ -55,14 +64,6 @@ function App() {
   return (
     <div className="App" data-testid="app-page">
       <RouterProvider router={router} />
-      {/* <Router>
-        <Routes>
-          @ts-ignore
-          <Route exact path='/' element={<Home/>} />
-          @ts-ignore
-          <Route exact path='explore' element={<Explore/>} />
-        </Routes>
-      </Router> */}
     </div>
   )
 }
