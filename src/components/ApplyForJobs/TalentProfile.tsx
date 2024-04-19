@@ -38,7 +38,7 @@ const TalentProfile: React.FC = () => {
     const validationErrors = validateForm(formValues)
     if (Object.keys(validationErrors).length === 0) {
       // const data = await TalentProfile(formValues)
-      const data = await TalentProfile({
+      const data = await TalentCreation({
         ...formValues,
         role: [formValues.role],
       })
