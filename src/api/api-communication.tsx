@@ -1,25 +1,10 @@
-interface FormTalentReg {
-  email?: any
-  firstName?: string
-  lastName?: string
-  middleName?: string
-  password?: any
-  phone?: any
-}
+import {
+  FormTalentLogin,
+  FormTalentReg,
+  FormTalentProfile,
+  FormPostJob,
+} from '../utils/types';
 
-interface FormTalentProfile {
-  bio?: string
-  role?: string | string[]
-  maxSalary?: string
-  minSalary?: string
-  experience?: string
-  cv?: string
-}
-
-interface FormTalentLogin {
-  email?: any
-  password?: any
-}
 
 export const SendTalentReg = async (formValues: FormTalentReg) => {
   const requestOptions = {
@@ -114,5 +99,34 @@ export const TalentCreation = async (formValues: FormTalentProfile) => {
   } catch (error) {
     console.log('Error posting profile', error)
     throw error
+  }
+}
+
+export const PostJob = async (formValue: FormPostJob) => {
+  const authToken = sessionStorage.getItem('authToken')
+
+  if (!authToken) {
+    throw new Error('Authentication required')
+  }
+
+  const requestOption = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify(formValue),
+  }
+
+  try {
+    const response = await fetch(
+      'https://supportpro-backend.onrender.com/v1/jobs',
+      requestOption,
+    )
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    console.log(error)
   }
 }
