@@ -3,6 +3,7 @@ import './Apply.scss'
 import { SendTalentLogin } from '../../api/api-communication'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../Navbar'
+import toast from 'react-hot-toast'
 
 interface FormErrors {
   email?: any
@@ -32,9 +33,14 @@ const TalentLogin: React.FC = () => {
 
     const validationErrors = validateForm(formValues)
     if (Object.keys(validationErrors).length === 0) {
-      const data = await SendTalentLogin(formValues)
-      console.log('Successfully Logged in user', data)
-      navigate('/apply')
+      try {
+        const data = await SendTalentLogin(formValues)
+        toast.success('Successfully Logged in')
+        console.log('Successfully Logged in user', data)
+        navigate('/apply')
+      } catch (error) {
+        toast.error('Log in Unsuccessfull')
+      }
     } else {
       setErrors(validationErrors)
     }
@@ -44,7 +50,7 @@ const TalentLogin: React.FC = () => {
     let errors = {} as FormErrors
 
     if (!data.email) {
-      errors.email = 'Role is Required'
+      errors.email = 'Email is Required'
     }
     if (!data.password) {
       errors.password = 'password is Required'

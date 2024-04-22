@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './Apply.scss'
 import { TalentCreation } from '../../api/api-communication'
+import toast from 'react-hot-toast'
 
 interface FormErrors {
   bio?: string
@@ -37,8 +38,7 @@ const TalentProfile: React.FC = () => {
 
     const validationErrors = validateForm(formValues)
     if (Object.keys(validationErrors).length === 0) {
-      // const data = await TalentProfile(formValues)
-      const data = await TalentProfile({
+      const data = await TalentCreation({
         ...formValues,
         role: [formValues.role],
       })
