@@ -48,6 +48,10 @@ const router = createBrowserRouter([
     path: 'talentLogin',
     element: <TalentLogin />,
   },
+  ])
+    path: "customerstories",
+    element: <CustomerStories/>,
+  },
   {
     path: 'customerstories',
     element: <CustomerStories />,
