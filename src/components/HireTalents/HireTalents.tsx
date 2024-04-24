@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './HireTalents.scss'
 import { PostJob } from '../../api/api-communication'
+import toast from 'react-hot-toast'
 
 interface locationType {
   city?: string
@@ -72,16 +73,20 @@ const HireTalents: React.FC = () => {
 
     const validationErrors = validateForm(formValues)
     if (Object.keys(validationErrors).length === 0) {
-      const data = await PostJob({
-        ...formValues,
-        responsibilities: [formValues.responsibilities],
-        goals: [formValues.goals],
-        skills: [formValues.skills],
-      })
-
-      return data
+      try {
+        const data = await PostJob({
+          ...formValues,
+          responsibilities: [formValues.responsibilities],
+          goals: [formValues.goals],
+          skills: [formValues.skills],
+        })
+        toast.success('Job Post Created successfully')
+      } catch (err) {
+        toast.error('An error occurred while creating job post')
+      }
     } else {
       setErrors(validationErrors)
+      toast.error('Error creating job, check details ')
     }
   }
 

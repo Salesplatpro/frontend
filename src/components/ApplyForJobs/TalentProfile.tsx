@@ -35,17 +35,18 @@ const TalentProfile: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     const validationErrors = validateForm(formValues)
+
     if (Object.keys(validationErrors).length === 0) {
-      const data = await TalentCreation({
-        ...formValues,
-        role: [formValues.role],
-      })
-      console.log(data)
-      return data
+      try {
+        const data = await TalentCreation(formValues)
+        toast.success('Profile created successfully')
+      } catch (err) {
+        toast.error('An error occurred while creating Profile')
+      }
     } else {
       setErrors(validationErrors)
+      toast.error('Error creating profile')
     }
   }
 

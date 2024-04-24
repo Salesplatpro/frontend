@@ -14,6 +14,7 @@ import TalentRegister from './components/ApplyForJobs/TalentRegister'
 import TalentLogin from './components/ApplyForJobs/TalentLogin'
 import TalentProfile from './components/ApplyForJobs/TalentProfile'
 import SingleJob from './components/SingleJob'
+import RecruiterRegister from './components/HireTalents/RecruiterRegister'
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: 'talentLogin',
     element: <TalentLogin />,
+  },
+  {
+    path: 'recruiterRegister',
+    element: <RecruiterRegister />
   },
   {
     path: 'customerstories',
