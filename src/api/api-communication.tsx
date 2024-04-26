@@ -3,8 +3,7 @@ import {
   FormTalentReg,
   FormTalentProfile,
   FormPostJob,
-} from '../utils/types';
-
+} from '../utils/types'
 
 export const SendTalentReg = async (formValues: FormTalentReg) => {
   const requestOptions = {
@@ -22,7 +21,51 @@ export const SendTalentReg = async (formValues: FormTalentReg) => {
       requestOptions,
     )
     const data = await response.json()
-    console.log(data)
+
+    // Check if the response contains the token
+    if (!data.data.token) {
+      throw new Error('Token not found in response')
+    }
+
+    // Extract the token from the response data
+    const authToken = data.data.token
+
+    // Store the token in sessionStorage
+    sessionStorage.setItem('authToken', authToken)
+    return data
+  } catch (error) {
+    console.error('Error registering User', error)
+    throw error
+  }
+}
+
+export const SendRecruiterReg = async (formValues: FormTalentReg) => {
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formValues),
+  }
+
+  console.log(requestOptions)
+  try {
+    const response = await fetch(
+      'https://supportpro-backend.onrender.com/v1/auth/register/recruiter',
+      requestOptions,
+    )
+    const data = await response.json()
+
+    // Check if the response contains the token
+    if (!data.data.token) {
+      throw new Error('Token not found in response')
+    }
+
+    // Extract the token from the response data
+    const authToken = data.data.token
+
+    // Store the token in sessionStorage
+    sessionStorage.setItem('authToken', authToken)
     return data
   } catch (error) {
     console.error('Error registering User', error)
@@ -46,7 +89,7 @@ export const SendTalentLogin = async (formValues: FormTalentLogin) => {
     )
 
     if (!response.ok) {
-      throw new Error('Login failed')
+      throw new Error('Invalid login details')
     }
 
     const data = await response.json()
@@ -128,5 +171,21 @@ export const PostJob = async (formValue: FormPostJob) => {
     return data
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const getRole = async () => {
+  try {
+    const response = await fetch(
+      'https://supportpro-backend.onrender.com/v1/roles/',
+    )
+    if (!response.ok) {
+      throw new Error('Failed to fetch users')
+    }
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+    throw error
   }
 }

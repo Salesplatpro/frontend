@@ -37,3 +37,8 @@ export interface FormPostJob {
   skills?: string[]
   goals?: string[]
 }
+
+export interface Role {
+  _id?: number
+  name?: string
+}

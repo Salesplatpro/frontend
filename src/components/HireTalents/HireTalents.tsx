@@ -1,23 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './HireTalents.scss'
 import { PostJob } from '../../api/api-communication'
-
-interface locationType {
-  city?: string
-  state?: string
-  country?: string
-}
+import toast from 'react-hot-toast'
+import { Role } from '../../utils/types'
+import { getRole } from '../../api/api-communication'
 
 interface FormErrors {
   role?: string
   description?: string
   maxSalary?: string
   minSalary?: string
-  experience?: string
+  experienceLevel?: string
   city?: string
   state?: string
   country?: string
-  // location?: locationType
   address?: string
   remote?: boolean
   responsibilities?: string[]
@@ -26,15 +22,13 @@ interface FormErrors {
 }
 
 const HireTalents: React.FC = () => {
+  const [roles, setRoles] = useState<Role[]>([])
   const [formValues, setFormValues] = useState({
     role: '',
     description: '',
     maxSalary: '',
     minSalary: '',
     experienceLevel: '',
-    // city: '',
-    // state: '',
-    // country: '',
     location: { city: '', state: '', country: '' },
     address: '',
     remote: false,
@@ -45,12 +39,25 @@ const HireTalents: React.FC = () => {
 
   const [errors, setErrors] = useState<FormErrors>({})
 
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const data = await getRole()
+        setRoles(data.data)
+      } catch (error) {
+        console.log('error fetching role', error)
+      }
+    }
+    fetchRoles()
+  }, [])
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
     const { name, value } = e.target
+    // const newValue = name === 'role' ? [value] : value
     if (name.startsWith('location')) {
       const [locationKey, nestedKey] = name.split('.')
       setFormValues({
@@ -72,25 +79,35 @@ const HireTalents: React.FC = () => {
 
     const validationErrors = validateForm(formValues)
     if (Object.keys(validationErrors).length === 0) {
-      const data = await PostJob({
-        ...formValues,
-        responsibilities: [formValues.responsibilities],
-        goals: [formValues.goals],
-        skills: [formValues.skills],
-      })
-
-      return data
+      try {
+        const data = await PostJob({
+          ...formValues,
+          responsibilities: [formValues.responsibilities],
+          goals: [formValues.goals],
+          skills: [formValues.skills],
+        })
+        console.log(data)
+        console.log(formValues)
+        if (data.status) {
+          toast.success('Job Post Created successfully')
+        } else {
+          toast.error(data.message)
+        }
+      } catch (err) {
+        toast.error('An error occurred while creating job post')
+      }
     } else {
       setErrors(validationErrors)
+      toast.error('Error creating job, check details ')
     }
   }
 
   const validateForm = (data: typeof formValues): FormErrors => {
     let errors = {} as FormErrors
 
-    if (!data.role) {
-      errors.role = 'Role is Required'
-    }
+    // if (!data.role) {
+    //   errors.role = 'Role is Required'
+    // }
     if (!data.description) {
       errors.description = 'Description is Required'
     }
@@ -112,16 +129,18 @@ const HireTalents: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <div className="input">
             <label htmlFor="role">Role</label>
-            <input
-              type="text"
-              name="role"
+            <select
               id="role"
+              name="role"
               value={formValues.role}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.role && <span className="error">{errors.role}</span>}
+              onChange={handleChange}>
+              <option value="">Select a role...</option>
+              {roles.map((role) => (
+                <option key={role._id} value={role._id}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="input">

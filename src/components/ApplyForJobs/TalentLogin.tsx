@@ -28,21 +28,38 @@ const TalentLogin: React.FC = () => {
     setErrors({ ...errors, [name]: '' })
   }
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault()
+  //   const validationErrors = validateForm(formValues)
+  //   if (Object.keys(validationErrors).length === 0) {
+  //     try {
+  //       const data = await SendTalentLogin(formValues)
+  //       toast.success('Registered successfully')
+  //       navigate('/')
+  //     } catch (err) {
+  //       toast.error(err.message)
+  //     }
+  //   } else {
+  //     setErrors(validationErrors)
+  //     toast.error('Error Logging userdetails ')
+  //   }
+  // }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     const validationErrors = validateForm(formValues)
+
     if (Object.keys(validationErrors).length === 0) {
       try {
         const data = await SendTalentLogin(formValues)
-        toast.success('Successfully Logged in')
-        console.log('Successfully Logged in user', data)
-        navigate('/apply')
-      } catch (error) {
-        toast.error('Log in Unsuccessfull')
+        toast.success('Logged in successfully')
+        navigate('/')
+      } catch (err) {
+        toast.error('An error occurred while logging in')
       }
     } else {
       setErrors(validationErrors)
+      toast.error('Error Logging user details')
     }
   }
 
@@ -100,7 +117,11 @@ const TalentLogin: React.FC = () => {
         </form>
 
         <h6 className="">
-          Dont have an account <a href="talentRegister">Register</a>
+          Dont have an account <a href="talentRegister">Register as a Talent</a>
+        </h6>
+        <h6 className="">
+          Dont have an account{' '}
+          <a href="recruiterRegister">Register as a Recruiter</a>
         </h6>
       </div>
     </div>

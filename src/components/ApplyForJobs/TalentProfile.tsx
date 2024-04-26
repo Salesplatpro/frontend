@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Apply.scss'
-import { TalentCreation } from '../../api/api-communication'
+import { TalentCreation, getRole } from '../../api/api-communication'
 import toast from 'react-hot-toast'
+import { Role } from '../../utils/types'
 
 interface FormErrors {
   bio?: string
-  role?: string[]
+  role?: []
   maxSalary?: string
   minSalary?: string
   experience?: string
@@ -13,39 +14,61 @@ interface FormErrors {
 }
 
 const TalentProfile: React.FC = () => {
+  const [roles, setRoles] = useState<Role[]>([])
   const [formValues, setFormValues] = useState({
     bio: '',
-    role: '',
+    role: [],
     maxSalary: '',
     minSalary: '',
     experience: '',
     cv: '',
   })
 
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const data = await getRole()
+        setRoles(data.data)
+      } catch (error) {
+        console.log('error fetching role', error)
+      }
+    }
+    fetchRoles()
+  }, [])
+
   const [errors, setErrors] = useState<FormErrors>({})
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target
-    setFormValues({ ...formValues, [name]: value })
+    const newValue = name === 'role' ? [value] : value
+    setFormValues({ ...formValues, [name]: newValue })
 
     setErrors({ ...errors, [name]: '' })
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     const validationErrors = validateForm(formValues)
+    const data = await TalentCreation(formValues)
+    console.log(data)
     if (Object.keys(validationErrors).length === 0) {
-      const data = await TalentCreation({
-        ...formValues,
-        role: [formValues.role],
-      })
-      console.log(data)
-      return data
+      try {
+        const data = await TalentCreation(formValues)
+        if (data.status) {
+          toast.success('Profile Created successfully')
+        } else {
+          toast.error(data.message)
+        }
+      } catch (err) {
+        toast.error('An error occurred while creating Profile')
+      }
     } else {
       setErrors(validationErrors)
+      toast.error('Error creating profile')
     }
   }
 
@@ -93,20 +116,22 @@ const TalentProfile: React.FC = () => {
             />
             {errors.bio && <span className="error">{errors.bio}</span>}
           </div>
-
           <div className="input">
-            <label htmlFor="role">role</label>
-            <input
-              type="text"
-              name="role"
+            <label htmlFor="role">Role</label>
+            <select
               id="role"
+              name="role"
               value={formValues.role}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.role && <span className="error">{errors.role}</span>}
+              onChange={handleChange}>
+              <option value="">Select a role...</option>
+              {roles.map((role) => (
+                <option key={role._id} value={role._id}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
           </div>
+
           <div className="input">
             <label htmlFor="maxSalary">Max Salary</label>
             <input
@@ -138,19 +163,16 @@ const TalentProfile: React.FC = () => {
             )}
           </div>
           <div className="input">
-            <label htmlFor="experience">Experience</label>
-            <input
-              type="text"
-              name="experience"
+            <label htmlFor="experience">experience Level</label>
+            <select
               id="experience"
+              name="experience"
               value={formValues.experience}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.experience && (
-              <span className="error">{errors.experience}</span>
-            )}
+              onChange={handleChange}>
+              <option value="senior">Senior</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="junior">Junior</option>
+            </select>
           </div>
           <div className="input">
             <label htmlFor="bio">CV</label>
