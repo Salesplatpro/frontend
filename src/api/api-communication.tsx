@@ -173,3 +173,19 @@ export const PostJob = async (formValue: FormPostJob) => {
     console.log(error)
   }
 }
+
+export const getRole = async () => {
+  try {
+    const response = await fetch(
+      'https://supportpro-backend.onrender.com/v1/roles/',
+    )
+    if (!response.ok) {
+      throw new Error('Failed to fetch users')
+    }
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
