@@ -44,7 +44,7 @@ const TalentRegister: React.FC = () => {
       try {
         const data = await SendTalentReg(formValues)
         toast.success('Registered successfully')
-        navigate('/apply')
+        navigate('/talentDashboard/talentProfile')
       } catch (err) {
         toast.error('An error occurred while Registering')
       }

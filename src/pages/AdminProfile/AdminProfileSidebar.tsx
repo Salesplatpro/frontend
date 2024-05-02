@@ -14,6 +14,7 @@ const AdminProfileSidebar = () => {
           {/* <img src={logo} alt="" /> */}
           <h4>Support Pro</h4>
         </a>
+        <h2>Admin Dashboard</h2>
         <nav>
           <ul>
             <li>
