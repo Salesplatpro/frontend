@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import './Apply.scss'
-import { TalentCreation, getRole } from '../../api/api-communication'
+import '../form.scss'
+import { TalentCreation, getRole, uploadCV } from '../../api/api-communication'
 import toast from 'react-hot-toast'
 import { Role } from '../../utils/types'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/contextHook'
 
 interface FormErrors {
   bio?: string
@@ -10,11 +12,13 @@ interface FormErrors {
   maxSalary?: string
   minSalary?: string
   experience?: string
-  cv?: string
+  // cv?: string
 }
 
 const TalentProfile: React.FC = () => {
+  const auth = useAuth()
   const [roles, setRoles] = useState<Role[]>([])
+  const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     bio: '',
     role: [],
@@ -23,6 +27,7 @@ const TalentProfile: React.FC = () => {
     experience: '',
     cv: '',
   })
+  console.log(auth?.isLoggedIn)
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -53,23 +58,53 @@ const TalentProfile: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const validationErrors = validateForm(formValues)
-    const data = await TalentCreation(formValues)
-    console.log(data)
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const data = await TalentCreation(formValues)
-        if (data.status) {
-          toast.success('Profile Created successfully')
-        } else {
-          toast.error(data.message)
+
+    const formData = new FormData(e.currentTarget)
+    const cvFile = formData.get('cv') as File
+
+    try {
+      if (cvFile) {
+        const submitCv = await uploadCV(cvFile)
+        const updatedFormValue = {
+          ...formValues,
+          cv: submitCv.data.fileUrl,
         }
-      } catch (err) {
-        toast.error('An error occurred while creating Profile')
+        const data = await TalentCreation(updatedFormValue)
+        // console.log(submitCv.data.fileUrl)
+        if (data.status) {
+          toast.success('Profile created successfully')
+        } else {
+          toast.error(
+            data.message || 'An error occurred while creating profile',
+          )
+        }
+        console.log(data)
+      } else {
+        toast.error('Error uploading cv')
+        throw new Error('Error uploading cv')
       }
-    } else {
-      setErrors(validationErrors)
-      toast.error('Error creating profile')
+    } catch (error: any) {
+      console.error('error submiting', error)
+      toast.error(error.message || 'An error occurred while creating profile')
     }
+
+    // const data = await TalentCreation(formValues)
+    // console.log(data)
+    // if (Object.keys(validationErrors).length === 0) {
+    //   try {
+    //     const data = await TalentCreation(formValues)
+    //     if (data.status) {
+    //       toast.success('Profile Created successfully')
+    //     } else {
+    //       toast.error(data.message)
+    //     }
+    //   } catch (err) {
+    //     toast.error('An error occurred while creating Profile')
+    //   }
+    // } else {
+    //   setErrors(validationErrors)
+    //   toast.error('Error creating profile')
+    // }
   }
 
   const validateForm = (data: typeof formValues): FormErrors => {
@@ -90,9 +125,9 @@ const TalentProfile: React.FC = () => {
     if (!data.experience) {
       errors.experience = 'Salary Range is Required'
     }
-    if (!data.cv) {
-      errors.cv = 'Job Description is Required'
-    }
+    // if (!data.cv) {
+    //   errors.cv = 'Job Description is Required'
+    // }
     return errors
   }
 
@@ -175,18 +210,18 @@ const TalentProfile: React.FC = () => {
             </select>
           </div>
           <div className="input">
-            <label htmlFor="bio">CV</label>
+            <label htmlFor="bio">cv</label>
             <input
               type="file"
               name="cv"
               id="cv"
-              value={formValues.cv}
+              // value={cv}
+              required
               onChange={handleChange}
               placeholder=""
               accept=".pdf,.doc,.docx"
-              // required
             />
-            {errors.cv && <span className="error">{errors.cv}</span>}
+            {/* {errors.cv && <span className="error">{errors.cv}</span>} */}
           </div>
 
           <button type="submit">Submit</button>

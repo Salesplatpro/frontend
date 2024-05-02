@@ -7,7 +7,7 @@ export interface FormTalentReg {
   phone?: any
 }
 
-export interface FormTalentProfile {
+export interface FormCreateTalentProfile {
   bio?: string
   role?: string | string[]
   maxSalary?: string

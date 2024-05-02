@@ -1,9 +1,16 @@
 import React from 'react'
 // @ts-ignore
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { useAuth } from '../context/contextHook'
 
 const Navbar = () => {
+  const auth = useAuth()
+
+  const handleLogout = () => {
+    auth.logout()
+  }
+  console.log(auth?.isLoggedIn)
+
   return (
     <React.Fragment>
       <div className="navi">
@@ -29,15 +36,21 @@ const Navbar = () => {
           </nav>
 
           <div className="action-btn nav-font">
-            {/* <button className='login' type="button">login</button> */}
-            <button className="login" type="button">
-              <a href="talentLogin">login</a>
-            </button>
+            {auth?.isLoggedIn ? (
+              <button className="login" type="button" onClick={handleLogout}>
+                <a href="/">Logout</a>
+              </button>
+            ) : (
+              <button className="login" type="button">
+                <a href="login">Login</a>
+              </button>
+            )}
+
             <button className="apply">
-              <a href="apply">Apply for jobs</a>
+              <a href="talentDashboard/talentProfile">Apply for jobs</a>
             </button>
             <button className="hire">
-              <a href="hire">Hire Talents</a>
+              <a href="recruiterDashboard/postjob">Hire Talents</a>
             </button>
           </div>
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import './HireTalents.scss'
-import { PostJob } from '../../api/api-communication'
+import './PostJobs.scss'
+import { PostJob } from '../../../api/api-communication'
 import toast from 'react-hot-toast'
-import { Role } from '../../utils/types'
-import { getRole } from '../../api/api-communication'
+import { Role } from '../../../utils/types'
+import { getRole } from '../../../api/api-communication'
+import Roles from '../../../components/Roles'
 
 interface FormErrors {
   role?: string
@@ -21,7 +22,7 @@ interface FormErrors {
   goals?: string[]
 }
 
-const HireTalents: React.FC = () => {
+const PostJobs: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([])
   const [formValues, setFormValues] = useState({
     role: '',
@@ -127,7 +128,8 @@ const HireTalents: React.FC = () => {
       </div>
       <div className="talent-form">
         <form onSubmit={handleSubmit}>
-          <div className="input">
+          <Roles value={formValues.role} onChange={handleChange} />
+          {/* <div className="input">
             <label htmlFor="role">Role</label>
             <select
               id="role"
@@ -141,7 +143,7 @@ const HireTalents: React.FC = () => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           <div className="input">
             <label htmlFor="description">Description</label>
@@ -316,4 +318,4 @@ const HireTalents: React.FC = () => {
   )
 }
 
-export default HireTalents
+export default PostJobs

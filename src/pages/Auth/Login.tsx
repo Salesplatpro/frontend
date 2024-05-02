@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import './Apply.scss'
+import '../form.scss'
 import { SendTalentLogin } from '../../api/api-communication'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '../Navbar'
+import Navbar from '../../components/Navbar'
 import toast from 'react-hot-toast'
+import { useAuth } from '../../context/contextHook'
 
 interface FormErrors {
   email?: any
   password?: any
 }
 
-const TalentLogin: React.FC = () => {
+const Login: React.FC = () => {
+  const auth = useAuth()
   const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     email: '',
@@ -18,6 +20,7 @@ const TalentLogin: React.FC = () => {
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
+  console.log(auth?.isLoggedIn)
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -28,33 +31,26 @@ const TalentLogin: React.FC = () => {
     setErrors({ ...errors, [name]: '' })
   }
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-  //   const validationErrors = validateForm(formValues)
-  //   if (Object.keys(validationErrors).length === 0) {
-  //     try {
-  //       const data = await SendTalentLogin(formValues)
-  //       toast.success('Registered successfully')
-  //       navigate('/')
-  //     } catch (err) {
-  //       toast.error(err.message)
-  //     }
-  //   } else {
-  //     setErrors(validationErrors)
-  //     toast.error('Error Logging userdetails ')
-  //   }
-  // }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const validationErrors = validateForm(formValues)
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const data = await SendTalentLogin(formValues)
+        const data = await auth?.login(formValues)
+        console.log(data.data)
         toast.success('Logged in successfully')
-        navigate('/')
+        if (data.data.user.userRole === 'recruiter') {
+          navigate('/recruiterDashboard/postjob')
+        } else if (data.data.user.userRole === 'talent') {
+          navigate('/talentDashboard/talentProfile')
+        } else if (data.data.user.userRole === 'admin') {
+          navigate('/adminDashboard/viewcandidates')
+        } else {
+          navigate('/')
+        }
       } catch (err) {
+        console.log(err)
         toast.error('An error occurred while logging in')
       }
     } else {
@@ -79,7 +75,7 @@ const TalentLogin: React.FC = () => {
     <div className="apply-job">
       <Navbar />
       <div className="job-hero">
-        <h2>TALENT LOGIN</h2>
+        <h2>LOGIN AS A TALENT OR RECRUITER HERE</h2>
       </div>
       <div className="job-form">
         <form onSubmit={handleSubmit}>
@@ -128,4 +124,4 @@ const TalentLogin: React.FC = () => {
   )
 }
 
-export default TalentLogin
+export default Login
