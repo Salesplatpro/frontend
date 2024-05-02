@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-// import './Apply.scss'
-import './../ApplyForJobs/Apply.scss'
-import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
+import '../form.scss'
+import { SendTalentReg } from '../../api/api-communication'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '../Navbar'
+import Navbar from '../../components/Navbar'
 import toast from 'react-hot-toast'
 
 interface FormErrors {
@@ -15,7 +14,7 @@ interface FormErrors {
   phone?: any
 }
 
-const RecruiterRegister: React.FC = () => {
+const TalentRegister: React.FC = () => {
   const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     email: '',
@@ -43,15 +42,15 @@ const RecruiterRegister: React.FC = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const data = await SendRecruiterReg(formValues)
+        const data = await SendTalentReg(formValues)
         toast.success('Registered successfully')
-        navigate('/hire')
+        navigate('/apply')
       } catch (err) {
-        toast.error('An error occurred while registering')
+        toast.error('An error occurred while Registering')
       }
     } else {
       setErrors(validationErrors)
-      toast.error('Error registering recruiter details , check your ')
+      toast.error('Error registering user details')
     }
   }
 
@@ -83,7 +82,7 @@ const RecruiterRegister: React.FC = () => {
     <div className="apply-job">
       <Navbar />
       <div className="job-hero">
-        <h2>Register as a Recruiter</h2>
+        <h2>Register as a Talent</h2>
       </div>
       <div className="job-form">
         <form onSubmit={handleSubmit}>
@@ -182,4 +181,4 @@ const RecruiterRegister: React.FC = () => {
   )
 }
 
-export default RecruiterRegister
+export default TalentRegister

@@ -1,7 +1,7 @@
 import {
   FormTalentLogin,
   FormTalentReg,
-  FormTalentProfile,
+  FormCreateTalentProfile,
   FormPostJob,
 } from '../utils/types'
 
@@ -112,7 +112,7 @@ export const SendTalentLogin = async (formValues: FormTalentLogin) => {
   }
 }
 
-export const TalentCreation = async (formValues: FormTalentProfile) => {
+export const TalentCreation = async (formValues: FormCreateTalentProfile) => {
   const authToken = sessionStorage.getItem('authToken')
 
   if (!authToken) {
@@ -187,5 +187,101 @@ export const getRole = async () => {
   } catch (error) {
     console.log(error)
     throw error
+  }
+}
+
+export const uploadCV = async (file: any) => {
+  const authToken = sessionStorage.getItem('authToken')
+
+  if (!authToken) {
+    throw new Error('Authentication required')
+  }
+
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const requestOption = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: formData,
+  }
+
+  try {
+    const response = await fetch(
+      'https://supportpro-backend.onrender.com/v1/uploads',
+      requestOption,
+    )
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// fetch questions based on role
+export const roleQuestions = async (id: string) => {
+  try {
+    const response = await fetch(
+      `https://supportpro-backend.onrender.com/v1/roles/${id}/questions`,
+    )
+
+    const data = response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// submit answer
+export const quizAnswer = async (quizAnswer) => {
+  const authToken = sessionStorage.getItem('authToken')
+
+  if (!authToken) {
+    throw new Error('Authentication required')
+  }
+  const responseReq = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify(quizAnswer),
+  }
+  try {
+    const response = await fetch(
+      'https://supportpro-backend.onrender.com/v1/questions/answer',
+      responseReq,
+    )
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const fetchTalentProfies = async (role?: string) => {
+  const token = sessionStorage.getItem('authToken')
+  let talentprofiles: string
+  if (role) {
+    talentprofiles = `https://supportpro-backend.onrender.com/v1/user/profile?roleId=${role}&limit=20&offset=0`
+  } else {
+    talentprofiles = 'https://supportpro-backend.onrender.com/v1/user/profile'
+  }
+  try {
+    const response = await fetch(talentprofiles, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+      },
+    })
+
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    console.log(error)
   }
 }

@@ -8,13 +8,20 @@ import Home from './Home'
 import Explore from './components/Explore'
 import Solutions from './components/Solutions'
 import CustomerStories from './components/customerStories'
-import ApplyForJob from './components/ApplyForJobs/TalentProfile'
-import HireTalents from './components/HireTalents/HireTalents'
-import TalentRegister from './components/ApplyForJobs/TalentRegister'
-import TalentLogin from './components/ApplyForJobs/TalentLogin'
-import TalentProfile from './components/ApplyForJobs/TalentProfile'
+import TalentRegister from './pages/Auth/TalentRegister'
+import TalentLogin from './pages/Auth/Login'
+// import CreateTalentProfile from './pages/TalentProfile/CreateTalentProfile'
 import SingleJob from './components/SingleJob'
-import RecruiterRegister from './components/HireTalents/RecruiterRegister'
+import RecruiterRegister from './pages/Auth/RecruiterRegister'
+import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
+import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
+import TalentProfile from './pages/TalentProfile/TalentProfile'
+import Job from './pages/TalentProfile/Job'
+import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
+import PostJobs from './pages/RecruiterProfile/PostJobs/PostJobs'
+import ViewCandidates from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
+import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
+import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 
 const router = createBrowserRouter([
   {
@@ -33,25 +40,21 @@ const router = createBrowserRouter([
     path: 'customerstories',
     element: <CustomerStories />,
   },
-  {
-    path: 'apply',
-    element: <TalentProfile />,
-  },
-  {
-    path: 'hire',
-    element: <HireTalents />,
-  },
+  // {
+  //   path: 'apply',
+  //   element: <CreateTalentProfile />,
+  // },
   {
     path: 'talentRegister',
     element: <TalentRegister />,
   },
   {
-    path: 'talentLogin',
+    path: 'login',
     element: <TalentLogin />,
   },
   {
     path: 'recruiterRegister',
-    element: <RecruiterRegister />
+    element: <RecruiterRegister />,
   },
   {
     path: 'customerstories',
@@ -61,6 +64,48 @@ const router = createBrowserRouter([
     path: 'job',
     element: <SingleJob />,
   },
+  {
+    path: '/talentDashboard',
+    element: <TalentProfileSidebar />,
+    children: [
+      {
+        path: 'talentProfile',
+        element: <TalentProfile />,
+      },
+      {
+        path: 'talentQuiz',
+        element: <TalentQuiz />,
+      },
+      {
+        path: 'job',
+        element: <Job />,
+      },
+    ],
+  },
+  {
+    path: '/recruiterDashboard',
+    element: <RecruiterProfileSidebar />,
+    children: [
+      {
+        path: 'postjob',
+        element: <PostJobs />,
+      },
+      {
+        path: 'viewcandidates',
+        element: <ViewTalents />,
+      },
+    ],
+  },
+  {
+    path: '/adminDashboard',
+    element: <AdminProfileSidebar />,
+    children: [
+      {
+        path: 'viewcandidates',
+        element: <ViewTalents />,
+      }
+    ]
+  }
 ])
 
 function App() {

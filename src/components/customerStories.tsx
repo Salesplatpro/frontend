@@ -6,16 +6,15 @@ import Footer from './Footer'
 import QuoteSection from './QuoteSection'
 import Introduction from './customerStories/introduction'
 
-
 const CustomerStories = () => {
   return (
-    <div className=''>
-        <Navbar/>
-        <CustomerHero />
-        <Introduction />
-        <QuoteSection/>
-        <Footer/>
-      </div>
+    <div className="">
+      <Navbar />
+      <CustomerHero />
+      <Introduction />
+      <QuoteSection />
+      <Footer />
+    </div>
   )
 }
 
