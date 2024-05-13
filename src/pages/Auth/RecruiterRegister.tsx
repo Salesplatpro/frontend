@@ -44,7 +44,7 @@ const RecruiterRegister: React.FC = () => {
       try {
         const data = await SendRecruiterReg(formValues)
         toast.success('Registered successfully')
-        navigate('/hire')
+        navigate('/recruiterDashboard/postjob')
       } catch (err) {
         toast.error('An error occurred while registering')
       }

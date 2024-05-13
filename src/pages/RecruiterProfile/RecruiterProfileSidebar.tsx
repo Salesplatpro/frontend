@@ -14,6 +14,7 @@ const RecruiterProfileSidebar = () => {
           {/* <img src={logo} alt="" /> */}
           <h4>Support Pro</h4>
         </a>
+        <h2>Recruiter Dashboard</h2>
         <nav>
           <ul>
             <li>
@@ -31,7 +32,7 @@ const RecruiterProfileSidebar = () => {
       <div className="dashboard-body">
         {!auth?.isLoggedIn ? (
           <div>
-            <h6>You need to be a registered recruiter</h6>
+            <h6>You need to login </h6>
             <div className="action-btn nav-font">
               <button className="login" type="button">
                 <a href="/login">login</a>

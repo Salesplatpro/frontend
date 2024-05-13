@@ -13,6 +13,7 @@ const TalentProfileSidebar = () => {
           {/* <img src={logo} alt="" /> */}
           <h4>Salesplat</h4>
         </a>
+        <h2>Talent Dashboard</h2>
         <nav>
           <ul>
             <li>
@@ -31,7 +32,7 @@ const TalentProfileSidebar = () => {
       <div className="dashboard-body">
         {!auth?.isLoggedIn ? (
           <div>
-            <h6>You need to be a registered Talent</h6>
+            <h6>You need to login</h6>
             <div className="action-btn nav-font">
               <button className="login" type="button">
                 <a href="/login">login</a>
