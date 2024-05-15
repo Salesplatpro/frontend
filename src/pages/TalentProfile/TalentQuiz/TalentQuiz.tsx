@@ -3,10 +3,11 @@ import './TalentQuiz.scss'
 import { quizAnswer, roleQuestions } from '../../../api/api-communication'
 import { useAuth } from '../../../context/contextHook'
 import toast from 'react-hot-toast'
+import { QuestionForm } from '../../../utils/types'
 
-interface QuestionForm {
-  answers: { questionId: string; answer: string }[]
-}
+// interface QuestionForm {
+//   answers: { questionId: string; answer: string }[]
+// }
 
 interface Question {
   _id: string
@@ -77,7 +78,8 @@ const TalentQuiz = () => {
                   <h4>{i + 1}.</h4>
                   <h4>{question.question}</h4>
                 </div>
-                <textarea
+                <input
+                  type="text"
                   className="quiz-input"
                   name="answer"
                   onChange={(e) => handleChange(e, question._id)}

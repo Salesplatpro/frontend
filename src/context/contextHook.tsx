@@ -39,7 +39,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       sessionStorage.setItem('userInfo', JSON.stringify(data.data))
     }
     if (data.data.user.userRole === 'talents') {
-      setUserInfo(data.data.user.profile.role[0]._id)
+      // setUserInfo(data.data.user.profile.role[0]._id)
+      setUserInfo(data.data.user)
     }
     return data
   }

@@ -1,0 +1,25 @@
+.view-containers{
+    width: 100%;
+    height: 100%;
+
+    h2{
+        font-size: 32px;
+        color: rgb(59, 59, 244);
+        text-align: center;
+    }
+
+    .view-role{
+        margin-top: 10px;
+        text-align: center;
+    }
+    .view-body {
+        padding: 20px;
+        width: auto;
+        max-width: 700px;
+        margin: 30px auto;
+        box-shadow: 2px 2px 20px #ccc;
+    }
+    .view-talent{
+        padding: 10px;
+    }
+}

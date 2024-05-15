@@ -42,3 +42,7 @@ export interface Role {
   _id?: number
   name?: string
 }
+
+export interface QuestionForm {
+  answers: { questionId: string; answer: string }[]
+}
