@@ -159,9 +159,9 @@ const TalentProfile: React.FC = () => {
     return errors
   }
 
-  if (!userProfile) {
-    return <div> loading</div>
-  }
+  // if (!userProfile) {
+  //   return <div> loading</div>
+  // }
 
   return (
     <div className="apply-job">
