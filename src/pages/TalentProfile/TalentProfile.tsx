@@ -19,7 +19,7 @@ const TalentProfile: React.FC = () => {
   const auth = useAuth()
   const userProfile = auth?.userInfo?.user?.profile
   const [edit, setEdit] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isDisabled, setIsDisabled] = useState(false)
   const [roles, setRoles] = useState<Role[]>([])
   const [formValues, setFormValues] = useState({
@@ -30,10 +30,10 @@ const TalentProfile: React.FC = () => {
     experience: '',
     cv: '',
   })
-  // console.log(auth?.isLoggedIn)
 
   useEffect(() => {
     if (userProfile) {
+      setLoading(false)
       setEdit(true)
       const profile = userProfile
 
@@ -49,7 +49,11 @@ const TalentProfile: React.FC = () => {
     } else {
       setEdit(false)
     }
-  }, [userProfile])
+
+    if (loading) {
+      return <div> loading</div>
+    }
+  }, [])
 
   useEffect(() => {
     const fetchRoles = async () => {
