@@ -3,6 +3,7 @@ import {
   FormTalentReg,
   FormCreateTalentProfile,
   FormPostJob,
+  QuestionForm,
 } from '../utils/types'
 
 export const SendTalentReg = async (formValues: FormTalentReg) => {
@@ -177,7 +178,7 @@ export const PostJob = async (formValue: FormPostJob) => {
 export const getRole = async () => {
   try {
     const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/roles/',
+      'https://supportpro-backend.onrender.com/v1/roles?limit=1000',
     )
     if (!response.ok) {
       throw new Error('Failed to fetch users')
@@ -236,7 +237,7 @@ export const roleQuestions = async (id: string) => {
 }
 
 // submit answer
-export const quizAnswer = async (quizAnswer) => {
+export const quizAnswer = async (quizAnswer: QuestionForm) => {
   const authToken = sessionStorage.getItem('authToken')
 
   if (!authToken) {
@@ -280,6 +281,81 @@ export const fetchTalentProfies = async (role?: string) => {
 
     const data = await response.json()
 
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const filterTalentProfiles = async (filter) => {
+  const token = sessionStorage.getItem('authToken')
+
+  let url =
+    'https://supportpro-backend.onrender.com/v1/user/profile?limit=20&offset=0'
+
+  if (filter.role) {
+    url += `&roleId=${filter.role}`
+  }
+  if (filter.experience) {
+    url += `&experience=${filter.experience}`
+  }
+  if (filter.minScore) {
+    url += `&minScore=${filter.minScore}`
+  }
+  if (filter.maxSalary) {
+    url += `&maxSalary=${filter.maxSalary}`
+  }
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const jobProfiles = async (role?: string) => {
+  const token = sessionStorage.getItem('authToken')
+  let jobProfiles: string
+
+  if (role) {
+    jobProfiles = `https://supportpro-backend.onrender.com/v1/jobs?roleId=${role}&limit=10&offset=0`
+  } else {
+    jobProfiles = `https://supportpro-backend.onrender.com/v1/jobs`
+  }
+
+  try {
+    const response = await fetch(jobProfiles, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+      },
+    })
+
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const getTalentMatch = async (roleId) => {
+  const token = sessionStorage.getItem('authToken')
+  try {
+    const response = await fetch(
+      `https://supportpro-backend.onrender.com/v1/jobs/match/${roleId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    const data = await response.json()
     return data
   } catch (error) {
     console.log(error)

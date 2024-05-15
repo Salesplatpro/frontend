@@ -18,6 +18,7 @@
     height: 100%;
     overflow: hidden;
   }
+
   
   .sidebar-container {
     width: 18%;
@@ -27,6 +28,11 @@
     color: #fff;
     height: 100%;
     position: fixed;
+
+    h3{
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
   }
   a.logo-li {
     padding: 0;
@@ -52,11 +58,19 @@
   
   .sidebar-container nav ul li {
     margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 20px;
+    box-shadow: 2px 2px 20px #4985df;
   }
   
   .sidebar-container nav ul li a {
     color: #fff;
     text-decoration: none;
+
+    &:hover{
+      color: blue;
+    }
   }
   
   .dashboard-body {

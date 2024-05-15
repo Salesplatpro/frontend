@@ -1,7 +1,7 @@
 import './App.css'
 import './index.scss'
 
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './Home'
@@ -22,6 +22,19 @@ import PostJobs from './pages/RecruiterProfile/PostJobs/PostJobs'
 import ViewCandidates from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
+import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
+import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
+import JobProfiles from './pages/RecruiterProfile/JobProfiles/JobProfiles'
+// const TalentProfileSidebar = React.lazy(
+//   () => import('./pages/TalentProfile/TalentProfileSidebar'),
+// )
+// const TalentProfile = React.lazy(
+//   () => import('./pages/TalentProfile/TalentProfile'),
+// )
+// const TalentQuiz = React.lazy(
+//   () => import('./pages/TalentProfile/TalentQuiz/TalentQuiz'),
+// )
+// const Job = React.lazy(() => import('./pages/TalentProfile/Job'))
 
 const router = createBrowserRouter([
   {
@@ -40,10 +53,6 @@ const router = createBrowserRouter([
     path: 'customerstories',
     element: <CustomerStories />,
   },
-  // {
-  //   path: 'apply',
-  //   element: <CreateTalentProfile />,
-  // },
   {
     path: 'talentRegister',
     element: <TalentRegister />,
@@ -94,6 +103,18 @@ const router = createBrowserRouter([
         path: 'viewcandidates',
         element: <ViewTalents />,
       },
+      {
+        path: 'getTalents',
+        element: <GetTalents />,
+      },
+      {
+        path: 'jobProfiles',
+        element: <JobProfiles />,
+      },
+      {
+        path: 'getMatch/:jobId',
+        element: <GetMatch />,
+      },
     ],
   },
   {
@@ -103,13 +124,13 @@ const router = createBrowserRouter([
       {
         path: 'viewcandidates',
         element: <ViewTalents />,
-      }
-    ]
-  }
+      },
+    ],
+  },
 ])
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
 
   return (
     <div className="App" data-testid="app-page">

@@ -25,6 +25,16 @@ const RecruiterProfileSidebar = () => {
                 View Candidates
               </Link>
             </li>
+            <li>
+              <Link to={`/recruiterDashboard/getTalents`}>
+                Search For Talents
+              </Link>
+            </li>
+            <li>
+              <Link to={`/recruiterDashboard/jobProfiles`}>
+                View Job Profiles
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>

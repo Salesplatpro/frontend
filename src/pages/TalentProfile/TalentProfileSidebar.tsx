@@ -13,7 +13,7 @@ const TalentProfileSidebar = () => {
           {/* <img src={logo} alt="" /> */}
           <h4>Salesplat</h4>
         </a>
-        <h2>Talent Dashboard</h2>
+        <h3>Talent Dashboard</h3>
         <nav>
           <ul>
             <li>

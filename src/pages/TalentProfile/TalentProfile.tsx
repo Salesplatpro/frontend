@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
 import '../form.scss'
 import { TalentCreation, getRole, uploadCV } from '../../api/api-communication'
 import toast from 'react-hot-toast'
@@ -17,8 +17,11 @@ interface FormErrors {
 
 const TalentProfile: React.FC = () => {
   const auth = useAuth()
+  const userProfile = auth?.userInfo?.user?.profile
+  const [edit, setEdit] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
   const [roles, setRoles] = useState<Role[]>([])
-  const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     bio: '',
     role: [],
@@ -27,7 +30,26 @@ const TalentProfile: React.FC = () => {
     experience: '',
     cv: '',
   })
-  console.log(auth?.isLoggedIn)
+  // console.log(auth?.isLoggedIn)
+
+  useEffect(() => {
+    if (userProfile) {
+      setEdit(true)
+      const profile = userProfile
+
+      setFormValues({
+        bio: profile.bio,
+        role: profile.role,
+        maxSalary: profile.maxSalary,
+        minSalary: profile.minSalary,
+        experience: profile.experience,
+        cv: profile.cv,
+      })
+      setIsDisabled(true)
+    } else {
+      setEdit(false)
+    }
+  }, [userProfile])
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -42,6 +64,12 @@ const TalentProfile: React.FC = () => {
   }, [])
 
   const [errors, setErrors] = useState<FormErrors>({})
+
+  // no endpoint for this yet
+  const handleEdit = () => {
+    setIsDisabled(false)
+    setEdit(false)
+  }
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -131,6 +159,10 @@ const TalentProfile: React.FC = () => {
     return errors
   }
 
+  if (!userProfile) {
+    return <div> loading</div>
+  }
+
   return (
     <div className="apply-job">
       <div className="job-hero">
@@ -147,6 +179,7 @@ const TalentProfile: React.FC = () => {
               value={formValues.bio}
               onChange={handleChange}
               placeholder=""
+              disabled={isDisabled}
               // required
             />
             {errors.bio && <span className="error">{errors.bio}</span>}
@@ -156,6 +189,7 @@ const TalentProfile: React.FC = () => {
             <select
               id="role"
               name="role"
+              disabled={isDisabled}
               value={formValues.role}
               onChange={handleChange}>
               <option value="">Select a role...</option>
@@ -176,6 +210,7 @@ const TalentProfile: React.FC = () => {
               value={formValues.maxSalary}
               onChange={handleChange}
               placeholder=""
+              disabled={isDisabled}
               // required
             />
             {errors.maxSalary && (
@@ -191,6 +226,7 @@ const TalentProfile: React.FC = () => {
               value={formValues.minSalary}
               onChange={handleChange}
               placeholder=""
+              disabled={isDisabled}
               // required
             />
             {errors.minSalary && (
@@ -203,6 +239,7 @@ const TalentProfile: React.FC = () => {
               id="experience"
               name="experience"
               value={formValues.experience}
+              disabled={isDisabled}
               onChange={handleChange}>
               <option value="senior">Senior</option>
               <option value="intermediate">Intermediate</option>
@@ -215,6 +252,7 @@ const TalentProfile: React.FC = () => {
               type="file"
               name="cv"
               id="cv"
+              disabled={isDisabled}
               // value={cv}
               required
               onChange={handleChange}
@@ -224,7 +262,11 @@ const TalentProfile: React.FC = () => {
             {/* {errors.cv && <span className="error">{errors.cv}</span>} */}
           </div>
 
-          <button type="submit">Submit</button>
+          {!edit ? (
+            <button type="submit">Submit</button>
+          ) : (
+            <button onClick={handleEdit}>Edit</button>
+          )}
         </form>
       </div>
     </div>
