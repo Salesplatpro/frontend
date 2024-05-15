@@ -44,6 +44,7 @@ const Login: React.FC = () => {
           navigate('/recruiterDashboard/postjob')
         } else if (data.data.user.userRole === 'talent') {
           navigate('/talentDashboard/talentProfile')
+          window.location.reload()
         } else if (data.data.user.userRole === 'admin') {
           navigate('/adminDashboard/viewcandidates')
         } else {
