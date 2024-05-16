@@ -14,6 +14,7 @@ interface FormErrors {
 const Login: React.FC = () => {
   const auth = useAuth()
   const navigate = useNavigate()
+  const [submitLoading, setSubmitLoading] = useState(false)
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
@@ -33,6 +34,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitLoading(true)
     const validationErrors = validateForm(formValues)
 
     if (Object.keys(validationErrors).length === 0) {
@@ -52,10 +54,12 @@ const Login: React.FC = () => {
         }
       } catch (err) {
         console.log(err)
+        setSubmitLoading(false)
         toast.error('An error occurred while logging in')
       }
     } else {
       setErrors(validationErrors)
+      setSubmitLoading(false)
       toast.error('Error Logging user details')
     }
   }
@@ -110,7 +114,9 @@ const Login: React.FC = () => {
             )}
           </div>
 
-          <button type="submit">Submit</button>
+          <button type="submit">
+            {!submitLoading ? 'Submit' : 'Submitting..'}
+          </button>
         </form>
 
         <h6 className="">

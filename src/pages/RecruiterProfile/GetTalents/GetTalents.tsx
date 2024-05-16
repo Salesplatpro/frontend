@@ -4,8 +4,9 @@ import {
   filterTalentProfiles,
 } from '../../../api/api-communication'
 import './GetTalents.scss'
-import Roles from '../../../components/Roles'
+import Roles from '../../../components/Roles/Roles'
 import Loading from '../../../components/Loading/Loading'
+import { Link } from 'react-router-dom'
 
 interface GetTalent {
   firstName: string
@@ -38,12 +39,14 @@ const GetTalents = () => {
     fetch()
   }, [])
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target
     setFilter({ ...filter, [name]: value })
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(filter)
 
@@ -62,45 +65,46 @@ const GetTalents = () => {
 
   return (
     <div className="view-container">
-      <h2>Search for your preferred talents</h2>
+      <h2>Get your preferred talents</h2>
       <form onSubmit={handleSubmit}>
         <div className="form">
           <div className="view-role">
-            <label htmlFor="rolesearch">Roles</label>
+            {/* <label htmlFor="rolesearch">Roles</label> */}
             <Roles value={roleValue} onChange={handleChange} />
           </div>
           <div>
-            <label htmlFor="experience">Experience</label>
+            {/* <label htmlFor="experience">Experience</label> */}
             <select
               id="experience"
               name="experience"
               value={filter.experience}
               onChange={handleChange}>
+              <option value="">Select experience...</option>
               <option value="senior">Senior</option>
               <option value="intermediate">Intermediate</option>
               <option value="junior">Junior</option>
             </select>
           </div>
           <div>
-            <label htmlFor="maxSalary">Max Salary</label>
+            {/* <label htmlFor="maxSalary">Max Salary</label> */}
             <input
               type="text"
               name="maxSalary"
               id="maxSalary"
               value={filter.maxSalary}
               onChange={handleChange}
-              placeholder=""
+              placeholder="Max Salary"
             />
           </div>
           <div>
-            <label htmlFor="minScore">Min Score</label>
+            {/* <label htmlFor="minScore">Min Score</label> */}
             <input
               type="text"
               name="minScore"
               id="minScore"
               value={filter.minScore}
               onChange={handleChange}
-              placeholder=""
+              placeholder="Min Score"
             />
           </div>
         </div>
@@ -118,6 +122,9 @@ const GetTalents = () => {
               {talent.profile?.experience || 'Experience not specified'}
             </p>
             <p>Bio: {talent.profile?.bio || 'Bio not specified'}</p>
+            <Link to={`/recruiterDashboard/individualTalents/${talent._id}`}>
+              View More
+            </Link>
             <hr />
           </div>
         ))}

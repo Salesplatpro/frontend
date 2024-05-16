@@ -361,3 +361,22 @@ export const getTalentMatch = async (roleId) => {
     console.log(error)
   }
 }
+// Get Talent Individual Profile
+export const individualTalent = async (talentId: string) => {
+  const token = sessionStorage.getItem('authToken')
+  try {
+    const response = await fetch(
+      `https://supportpro-backend.onrender.com/v1/user/profile/${talentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}

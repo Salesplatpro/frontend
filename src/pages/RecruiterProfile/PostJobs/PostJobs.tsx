@@ -4,7 +4,7 @@ import { PostJob } from '../../../api/api-communication'
 import toast from 'react-hot-toast'
 import { Role } from '../../../utils/types'
 import { getRole } from '../../../api/api-communication'
-import Roles from '../../../components/Roles'
+import Roles from '../../../components/Roles/Roles'
 
 interface FormErrors {
   role?: string

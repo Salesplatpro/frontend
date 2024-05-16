@@ -1,11 +1,11 @@
 import React from 'react'
 import './TalentProfileSidebar.scss'
-import { Link, Outlet } from 'react-router-dom'
-import logo from '../../assets/logo.png'
+import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../../context/contextHook'
 
 const TalentProfileSidebar = () => {
   const auth = useAuth()
+
   return (
     <div className="dashboard">
       <div className="sidebar-container">
@@ -17,13 +17,25 @@ const TalentProfileSidebar = () => {
         <nav>
           <ul>
             <li>
-              <Link to={`/talentDashboard/talentProfile`}>Profile Details</Link>
+              <NavLink
+                to="/talentDashboard/talentProfile"
+                className={({ isActive }) => (isActive ? 'active' : '')}>
+                Profile Details
+              </NavLink>
             </li>
             <li>
-              <Link to={`/talentDashboard/talentQuiz`}>Quiz</Link>
+              <NavLink
+                to="/talentDashboard/talentQuiz"
+                className={({ isActive }) => (isActive ? 'active' : '')}>
+                Quiz
+              </NavLink>
             </li>
             <li>
-              <Link to={`/talentDashboard/job`}>Job</Link>
+              <NavLink
+                to="/talentDashboard/job"
+                className={({ isActive }) => (isActive ? 'active' : '')}>
+                Job
+              </NavLink>
             </li>
           </ul>
         </nav>

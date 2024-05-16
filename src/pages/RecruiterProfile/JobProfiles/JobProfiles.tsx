@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { fetchTalentProfies, jobProfiles } from '../../../api/api-communication'
 import './JobProfiles.scss'
-import Roles from '../../../components/Roles'
+import Roles from '../../../components/Roles/Roles'
 import { Link } from 'react-router-dom'
 import Loading from '../../../components/Loading/Loading'
 
@@ -58,10 +58,12 @@ const JobProfiles = () => {
 
   return (
     <div className="view-container">
-      <h2>All Jobs</h2>
-      <div className="view-role">
-        <p>Search by job profiles by roles</p>
-        <Roles value={roleValue} onChange={handleChange} />
+      <h2>All Jobs Posted</h2>
+      <div className="search-role">
+        <p>Search for jobs by roles</p>
+        <div className="view-role">
+          <Roles value={roleValue} onChange={handleChange} />
+        </div>
       </div>
       <div className="view-body">
         {jobProfile.map((job, index) => (
@@ -75,7 +77,7 @@ const JobProfiles = () => {
               Experience: {job?.experienceLevel || 'Experience not specified'}
             </p>
             <Link to={`/recruiterDashboard/getMatch/${job._id}`}>
-              View best Talents
+              View best Talents for this role
             </Link>
             <hr />
           </div>

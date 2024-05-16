@@ -1,7 +1,12 @@
 import React from 'react'
+import './Loading.scss'
 
 const Loading = () => {
-  return <div>Loading</div>
+  return (
+    <div className="loading-spinner-container">
+      <div className="loading-spinner"></div>
+    </div>
+  )
 }
 
 export default Loading
