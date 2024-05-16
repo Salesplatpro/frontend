@@ -25,6 +25,7 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
 import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
 import JobProfiles from './pages/RecruiterProfile/JobProfiles/JobProfiles'
+import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -114,6 +115,10 @@ const router = createBrowserRouter([
       {
         path: 'getMatch/:jobId',
         element: <GetMatch />,
+      },
+      {
+        path: 'individualTalents/:talentId',
+        element: <IndividualTalents />,
       },
     ],
   },

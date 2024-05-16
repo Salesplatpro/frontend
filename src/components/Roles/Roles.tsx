@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { getRole } from '../api/api-communication'
+import { getRole } from '../../api/api-communication'
 import { Role } from '../../utils/types'
+import './Roles.scss'
 
 const Roles = ({ value, onChange }) => {
   const [roles, setRoles] = useState<Role[]>([])
@@ -17,9 +18,8 @@ const Roles = ({ value, onChange }) => {
     fetchRoles()
   }, [])
 
-
   return (
-    <div>
+    <div className="roles-container">
       <div className="input">
         <select id="role" name="role" value={value} onChange={onChange}>
           <option value="">Select a role...</option>

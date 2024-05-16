@@ -1,6 +1,6 @@
 import React from 'react'
 import '../TalentProfile/TalentProfileSidebar.scss'
-import { Link, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import { useAuth } from '../../context/contextHook'
 
@@ -11,29 +11,39 @@ const RecruiterProfileSidebar = () => {
     <div className="dashboard">
       <div className="sidebar-container">
         <a href="/" className="logo-li">
-          {/* <img src={logo} alt="" /> */}
+          {/* <img src={logo} alt="Logo" /> */}
           <h4>Support Pro</h4>
         </a>
         <h2>Recruiter Dashboard</h2>
         <nav>
           <ul>
             <li>
-              <Link to={`/recruiterDashboard/postjob`}>Post a Job</Link>
+              <NavLink
+                to="/recruiterDashboard/postjob"
+                activeClassName="active">
+                Post a Job
+              </NavLink>
             </li>
             <li>
-              <Link to={`/recruiterDashboard/viewcandidates`}>
+              <NavLink
+                to="/recruiterDashboard/viewcandidates"
+                activeClassName="active">
                 View Candidates
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to={`/recruiterDashboard/getTalents`}>
+              <NavLink
+                to="/recruiterDashboard/getTalents"
+                activeClassName="active">
                 Search For Talents
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to={`/recruiterDashboard/jobProfiles`}>
+              <NavLink
+                to="/recruiterDashboard/jobProfiles"
+                activeClassName="active">
                 View Job Profiles
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </nav>
@@ -42,7 +52,7 @@ const RecruiterProfileSidebar = () => {
       <div className="dashboard-body">
         {!auth?.isLoggedIn ? (
           <div>
-            <h6>You need to login </h6>
+            <h6>You need to login</h6>
             <div className="action-btn nav-font">
               <button className="login" type="button">
                 <a href="/login">login</a>

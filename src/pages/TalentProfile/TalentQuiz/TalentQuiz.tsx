@@ -1,37 +1,36 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import './TalentQuiz.scss'
 import { quizAnswer, roleQuestions } from '../../../api/api-communication'
 import { useAuth } from '../../../context/contextHook'
 import toast from 'react-hot-toast'
-import { QuestionForm } from '../../../utils/types'
-
-// interface QuestionForm {
-//   answers: { questionId: string; answer: string }[]
-// }
-
-interface Question {
-  _id: string
-  question: string
-}
+import { Question } from '../../../utils/types'
+import Loading from '../../../components/Loading/Loading'
 
 const TalentQuiz = () => {
   const auth = useAuth()
   const [questions, setQuestions] = useState<Question[]>([])
-  const [formData, setFormData] = useState<QuestionForm>({ answers: [] })
-  console.log(auth?.isLoggedIn)
+  const [loading, setLoading] = useState(true)
+  const [formData, setFormData] = useState<{
+    answers: { questionId: string; answer: string }[]
+  }>({ answers: [] })
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const id = auth?.userInfo.user.profile.role[0]._id
       try {
+        const id = auth?.userInfo?.user?.profile?.role[0]?._id
+        if (!id) throw new Error('Role ID not found')
+
         const response = await roleQuestions(id)
         if (response.status && response.data) {
+          setLoading(false)
           setQuestions(response.data)
         } else {
-          throw new Error('Invalid')
+          throw new Error('Invalid response')
         }
       } catch (error) {
         console.log(error)
+        // Handle error (e.g., show a toast message)
+        toast.error('Error fetching questions')
       }
     }
 
@@ -39,44 +38,45 @@ const TalentQuiz = () => {
   }, [auth])
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement>,
     questionId: string,
   ) => {
     const { value } = e.target
     setFormData((prevData) => ({
       ...prevData,
-      answers: [...(prevData.answers || []), { questionId, answer: value }],
+      answers: [...prevData.answers, { questionId, answer: value }],
     }))
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      console.log(formData)
       const data = await quizAnswer(formData)
       if (data.status) {
         toast.success('Submitted successfully')
       } else {
         toast.error(data.message || 'Error submitting question')
       }
-      return data
     } catch (error) {
       console.log(error)
+      // Handle error (e.g., show a toast message)
+      toast.error('Error submitting quiz')
     }
   }
 
   return (
     <div className="talentQuiz">
       <div className="quiz-container">
-        <h2>Quiz</h2>
-
-        <form className="quiz" onSubmit={handleSubmit}>
-          {useMemo(() => {
-            return questions.map((question, i) => (
+        <h2>Assessment</h2>
+        {loading ? (
+          <Loading />
+        ) : (
+          <form className="quiz" onSubmit={handleSubmit}>
+            {questions.map((question, i) => (
               <div key={i}>
                 <div className="quiz-question">
-                  <h4>{i + 1}.</h4>
-                  <h4>{question.question}</h4>
+                  <h3>{i + 1}.</h3>
+                  <h3>{question.question}</h3>
                 </div>
                 <input
                   type="text"
@@ -86,11 +86,10 @@ const TalentQuiz = () => {
                   required
                 />
               </div>
-            ))
-          }, [questions])}
-
-          <button type="submit">Submit</button>
-        </form>
+            ))}
+            <button type="submit">Submit</button>
+          </form>
+        )}
       </div>
     </div>
   )

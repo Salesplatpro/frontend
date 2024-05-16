@@ -4,9 +4,10 @@ import {
   getTalentMatch,
 } from '../../../api/api-communication'
 import './GetMatch.scss'
-import Roles from '../../../components/Roles'
+import Roles from '../../../components/Roles/Roles'
 import { useParams } from 'react-router-dom'
 import Loading from '../../../components/Loading/Loading'
+import { Link } from 'react-router-dom'
 
 interface TalentProfile {
   firstName: string
@@ -72,6 +73,7 @@ const GetMatch: React.FC = () => {
               {talent.profile?.experience || 'Experience not specified'}
             </p>
             <p>Bio: {talent.profile?.bio || 'Bio not specified'}</p>
+            <Link to={`/recruiterDashboard/individualTalents/${talent._id}`}>View More About this Talent</Link>
             <hr />
           </div>
         ))}
