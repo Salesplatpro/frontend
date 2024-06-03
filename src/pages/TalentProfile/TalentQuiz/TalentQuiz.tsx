@@ -8,16 +8,17 @@ import Loading from '../../../components/Loading/Loading'
 
 const TalentQuiz = () => {
   const auth = useAuth()
+  const id = auth?.userInfo?.user?.profile?.role[0]?._id
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState<{
+    roleId: string
     answers: { questionId: string; answer: string }[]
-  }>({ answers: [] })
+  }>({ roleId: id || '', answers: [] })
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const id = auth?.userInfo?.user?.profile?.role[0]?._id
         if (!id) throw new Error('Role ID not found')
 
         const response = await roleQuestions(id)
@@ -29,37 +30,52 @@ const TalentQuiz = () => {
         }
       } catch (error) {
         console.log(error)
-        // Handle error (e.g., show a toast message)
         toast.error('Error fetching questions')
       }
     }
 
     fetchQuestions()
-  }, [auth])
+  }, [id])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     questionId: string,
   ) => {
     const { value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      answers: [...prevData.answers, { questionId, answer: value }],
-    }))
+    setFormData((prevData) => {
+      const existingAnswerIndex = prevData.answers.findIndex(
+        (answer) => answer.questionId === questionId,
+      )
+
+      let newAnswers = [...prevData.answers]
+
+      if (existingAnswerIndex !== -1) {
+        // Update existing answer
+        newAnswers[existingAnswerIndex].answer = value
+      } else {
+        // Add new answer
+        newAnswers.push({ questionId, answer: value })
+      }
+
+      return {
+        ...prevData,
+        answers: newAnswers,
+      }
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
       const data = await quizAnswer(formData)
+      console.log(formData)
       if (data.status) {
-        toast.success('Submitted successfully')
+        toast.success(`${data.message} ${data.data.scorePercent}`)
       } else {
         toast.error(data.message || 'Error submitting question')
       }
     } catch (error) {
       console.log(error)
-      // Handle error (e.g., show a toast message)
       toast.error('Error submitting quiz')
     }
   }
@@ -81,7 +97,7 @@ const TalentQuiz = () => {
                 <input
                   type="text"
                   className="quiz-input"
-                  name="answer"
+                  name={`answer-${question._id}`}
                   onChange={(e) => handleChange(e, question._id)}
                   required
                 />

@@ -237,7 +237,7 @@ export const roleQuestions = async (id: string) => {
 }
 
 // submit answer
-export const quizAnswer = async (quizAnswer: QuestionForm) => {
+export const quizAnswer = async (quizAnswer) => {
   const authToken = sessionStorage.getItem('authToken')
 
   if (!authToken) {
@@ -349,6 +349,25 @@ export const getTalentMatch = async (roleId) => {
   try {
     const response = await fetch(
       `https://supportpro-backend.onrender.com/v1/jobs/match/${roleId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// Get Top Talents
+export const getTopTalents = async (jobId) => {
+  const token = sessionStorage.getItem('authToken')
+  try {
+    const response = await fetch(
+      `https://supportpro-backend.onrender.com/v1/jobs/talents/${jobId}?percentage=40&limit=20`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

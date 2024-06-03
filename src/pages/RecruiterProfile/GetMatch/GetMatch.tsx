@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import {
   fetchTalentProfies,
   getTalentMatch,
+  getTopTalents,
 } from '../../../api/api-communication'
 import './GetMatch.scss'
 import Roles from '../../../components/Roles/Roles'
 import { useParams } from 'react-router-dom'
 import Loading from '../../../components/Loading/Loading'
 import { Link } from 'react-router-dom'
+import TopTalents from '../TopTalents/TopTalents'
 
 interface TalentProfile {
   firstName: string
@@ -30,7 +32,8 @@ const GetMatch: React.FC = () => {
   useEffect(() => {
     const fetchTalents = async () => {
       try {
-        const data = await getTalentMatch(jobId)
+        // const data = await getTalentMatch(jobId)
+        const data = await getTopTalents(jobId)
         if (data.data.talents.length === 0) {
           setError(true)
         } else {
