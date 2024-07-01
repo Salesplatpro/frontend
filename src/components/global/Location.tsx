@@ -9,7 +9,12 @@ const geonames = new Geonames({
   encoding: 'JSON',
 })
 
-const Location: React.FC<LocationProps> = ({ locationTitle, geoId, isCountry, onChange }) => {
+const Location: React.FC<LocationProps> = ({
+  locationTitle,
+  geoId,
+  isCountry,
+  onChange,
+}) => {
   const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
 
@@ -18,22 +23,29 @@ const Location: React.FC<LocationProps> = ({ locationTitle, geoId, isCountry, on
       try {
         if (isCountry) {
           const res = await geonames.countryInfo({})
-          setOptions(res.geonames.map((country: any) => ({
-            name: country.countryName,
-            geoId: country.geonameId,
-            countryName: country.countryName,
-          })))
+          setOptions(
+            res.geonames.map((country: any) => ({
+              name: country.countryName,
+              geoId: country.geonameId,
+              countryName: country.countryName,
+            })),
+          )
         } else if (geoId) {
           const res = await geonames.children({ geonameId: geoId })
-          setOptions(res.geonames.map((place: any) => ({
-            name: place.name,
-            geoId: place.geonameId,
-          })))
+          setOptions(
+            res.geonames.map((place: any) => ({
+              name: place.name,
+              geoId: place.geonameId,
+            })),
+          )
         } else {
           setOptions([])
         }
       } catch (err) {
-        console.error(`Error fetching ${isCountry ? 'countries' : 'states/cities'}:`, err)
+        console.error(
+          `Error fetching ${isCountry ? 'countries' : 'states/cities'}:`,
+          err,
+        )
       }
     }
 
@@ -41,10 +53,12 @@ const Location: React.FC<LocationProps> = ({ locationTitle, geoId, isCountry, on
   }, [geoId, isCountry])
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = options.find(option => option.geoId === parseInt(e.target.value, 10))
+    const selectedOption = options.find(
+      (option) => option.geoId === parseInt(e.target.value, 10),
+    )
     const value = {
       name: isCountry ? selectedOption!.countryName : selectedOption!.name,
-      geoId: selectedOption!.geoId
+      geoId: selectedOption!.geoId,
     }
     setFieldValue(`location.${locationTitle.toLowerCase()}`, value)
     onChange(value.geoId)
