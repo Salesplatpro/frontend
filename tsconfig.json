@@ -16,7 +16,7 @@
     "target": "ESNext",
     "types": ["vite"]
   },
-  "include": ["./src"],
+  "include": ["./src", "../postcss.config.js"],
   // "exclude": ["node_modules"]
   "exclude": ["node_modules/vite"]
 }

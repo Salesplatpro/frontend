@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
 import '../form.scss'
-import { SendTalentReg } from '../../api/api-communication'
-import { useNavigate } from 'react-router-dom'
-import Navbar from '../../components/Navbar'
+
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+
+import { SendTalentReg } from '../../api/api-communication'
+import Navbar from '../../components/Navbar'
 
 interface FormErrors {
   email?: any

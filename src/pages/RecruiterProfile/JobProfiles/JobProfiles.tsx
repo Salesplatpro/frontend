@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { fetchTalentProfies, jobProfiles } from '../../../api/api-communication'
 import './JobProfiles.scss'
-import Roles from '../../../components/Roles/Roles'
+
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+
+import { fetchTalentProfies, jobProfiles } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
+import Roles from '../../../components/Roles/Roles'
 
 interface JobProfile {
   role?: {

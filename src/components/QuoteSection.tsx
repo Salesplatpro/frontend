@@ -1,4 +1,5 @@
 import React from 'react'
+
 // @ts-ignore
 import quotes from '../assets/quote1.jpeg'
 
@@ -12,9 +13,7 @@ const QuoteSection = () => {
               <h5>Hire the best talents</h5>
               <p>Join over 100+ brands already growing with Supportpro</p>
             </div>
-            <button>
-              Start Hiring
-            </button>
+            <button>Start Hiring</button>
           </div>
         </div>
 
@@ -23,11 +22,12 @@ const QuoteSection = () => {
             <img src={quotes} alt="" />
             <div className="text">
               <h5>
-                Love the simplicity of the service and the prompt customer support. We can&#39;t imagine working without it.
+                Love the simplicity of the service and the prompt customer
+                support. We can&#39;t imagine working without it.
               </h5>
 
               <div className="inner">
-                <p className='tip'>— Olivia Rhye</p>
+                <p className="tip">— Olivia Rhye</p>
                 <p>Head of Design, Layers</p>
               </div>
             </div>

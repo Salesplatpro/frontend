@@ -1,16 +1,17 @@
 import React from 'react'
+
 // @ts-ignore
 import logo from '../assets/logo.png'
-// @ts-ignore
-import twitter from '../assets/Vectortwitter.svg'
-// @ts-ignore
-import linkedin from '../assets/Vectorlinkedin.svg'
 // @ts-ignore
 import youtube from '../assets/Lozengeyoutube.svg'
 // @ts-ignore
 import telegram from '../assets/Subtracttelegram.svg'
 // @ts-ignore
 import facebook from '../assets/Vectorfacebook.svg'
+// @ts-ignore
+import linkedin from '../assets/Vectorlinkedin.svg'
+// @ts-ignore
+import twitter from '../assets/Vectortwitter.svg'
 
 const Footer = () => {
   return (
@@ -21,7 +22,10 @@ const Footer = () => {
             <div className="logo">
               <img src={logo} alt="logo" />
 
-              <p>Design amazing digital experiences that create more happy in the world.</p>
+              <p>
+                Design amazing digital experiences that create more happy in the
+                world.
+              </p>
             </div>
             <div className="links">
               <div>

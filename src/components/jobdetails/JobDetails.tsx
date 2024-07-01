@@ -1,6 +1,7 @@
 import React from 'react'
-import Navbar from '../Navbar'
+
 import Footer from '../Footer'
+import Navbar from '../Navbar'
 import BreadCrumb from './BreadCrumb'
 import JobDetailsHeader from './JobDetailsHeader'
 import MajorDetails from './MajorDetails'
@@ -10,10 +11,10 @@ const JobDetails = () => {
     <React.Fragment>
       <div className="job-details">
         <div className="content">
-          <BreadCrumb/>
-          <JobDetailsHeader/>
+          <BreadCrumb />
+          <JobDetailsHeader />
           <div className="divider"></div>
-          <MajorDetails/>
+          <MajorDetails />
         </div>
       </div>
     </React.Fragment>

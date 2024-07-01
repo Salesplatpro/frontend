@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react'
 import '../form.scss'
-import { TalentCreation, getRole, uploadCV } from '../../api/api-communication'
+
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Role } from '../../utils/types'
 import { useNavigate } from 'react-router-dom'
+
+import { getRole, TalentCreation, uploadCV } from '../../api/api-communication'
 import { useAuth } from '../../context/contextHook'
+import { Role } from '../../utils/types'
 
 interface FormErrors {
   bio?: string
@@ -36,6 +38,7 @@ const TalentProfile: React.FC = () => {
       setLoading(false)
       setEdit(true)
       const profile = userProfile
+      console.log(profile)
 
       setFormValues({
         bio: profile.bio,
@@ -265,6 +268,9 @@ const TalentProfile: React.FC = () => {
             />
             {/* {errors.cv && <span className="error">{errors.cv}</span>} */}
           </div>
+          <p style={{ marginBottom: '10px' }}>
+            Score: {userProfile?.score ?? 'Score is unavailable'}
+          </p>
 
           {!edit ? (
             <button type="submit">Submit</button>

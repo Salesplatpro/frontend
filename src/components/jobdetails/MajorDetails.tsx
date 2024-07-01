@@ -1,15 +1,16 @@
 import React from 'react'
-import VerticalTabs from './VerticalTabs'
+
 import AllDetails from './AllDetails'
 import JobPoster from './JobPoster'
+import VerticalTabs from './VerticalTabs'
 
 const MajorDetails = () => {
   return (
     <React.Fragment>
       <div className="job-mjr-details">
-        <VerticalTabs/>
-        <AllDetails/>
-        <JobPoster/>
+        <VerticalTabs />
+        <AllDetails />
+        <JobPoster />
       </div>
     </React.Fragment>
   )

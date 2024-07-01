@@ -1,31 +1,32 @@
 import './App.css'
 import './index.scss'
-
+import './index.css'
 import React, { Suspense, useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Home from './Home'
-import Explore from './components/Explore'
-import Solutions from './components/Solutions'
 import CustomerStories from './components/customerStories'
-import TalentRegister from './pages/Auth/TalentRegister'
-import TalentLogin from './pages/Auth/Login'
+import Explore from './components/Explore'
 // import CreateTalentProfile from './pages/TalentProfile/CreateTalentProfile'
 import SingleJob from './components/SingleJob'
+import Solutions from './components/Solutions'
+import Home from './Home'
+import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
+import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
-import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
-import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
-import TalentProfile from './pages/TalentProfile/TalentProfile'
-import Job from './pages/TalentProfile/Job'
-import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
+import TalentRegister from './pages/Auth/TalentRegister'
+import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
+import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
+import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
+import JobProfiles from './pages/RecruiterProfile/JobProfiles/JobProfiles'
 import PostJobs from './pages/RecruiterProfile/PostJobs/PostJobs'
+import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import ViewCandidates from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
-import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
-import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
-import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
-import JobProfiles from './pages/RecruiterProfile/JobProfiles/JobProfiles'
-import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
+import Job from './pages/TalentProfile/Job'
+import TalentProfile from './pages/TalentProfile/TalentProfile'
+import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
+import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
+import PostJob from './pages/RecruiterProfile/PostJobs/PostJob'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -98,7 +99,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'postjob',
-        element: <PostJobs />,
+        // element: <PostJobs />,
+        element: <PostJob />,
       },
       {
         path: 'viewcandidates',
@@ -138,7 +140,7 @@ function App() {
   // const [count, setCount] = useState(0)
 
   return (
-    <div className="App" data-testid="app-page">
+    <div className="app" data-testid="app-page">
       <RouterProvider router={router} />
     </div>
   )

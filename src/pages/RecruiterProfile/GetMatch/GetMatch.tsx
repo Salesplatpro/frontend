@@ -1,13 +1,18 @@
+import './GetMatch.scss'
+
 import React, { useEffect, useState } from 'react'
+import { FaArrowLeft } from 'react-icons/fa'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
 import {
   fetchTalentProfies,
   getTalentMatch,
+  getTopTalents,
 } from '../../../api/api-communication'
-import './GetMatch.scss'
-import Roles from '../../../components/Roles/Roles'
-import { useParams } from 'react-router-dom'
 import Loading from '../../../components/Loading/Loading'
-import { Link } from 'react-router-dom'
+import Roles from '../../../components/Roles/Roles'
+import TopTalents from '../TopTalents/TopTalents'
 
 interface TalentProfile {
   firstName: string
@@ -16,10 +21,12 @@ interface TalentProfile {
     role?: [{ name: string }]
     experience?: string
     bio?: string
+    _id?: string
   }
 }
 
 const GetMatch: React.FC = () => {
+  const navigate = useNavigate()
   const { jobId } = useParams()
   const [talentsProfile, setTalentsProfile] = useState<TalentProfile[]>([])
   const [loading, setLoading] = useState(true)
@@ -30,7 +37,8 @@ const GetMatch: React.FC = () => {
   useEffect(() => {
     const fetchTalents = async () => {
       try {
-        const data = await getTalentMatch(jobId)
+        // const data = await getTalentMatch(jobId)
+        const data = await getTopTalents(jobId)
         if (data.data.talents.length === 0) {
           setError(true)
         } else {
@@ -56,6 +64,9 @@ const GetMatch: React.FC = () => {
 
   return (
     <div className="view-containers">
+      <button onClick={() => navigate(-1)}>
+        <FaArrowLeft />
+      </button>
       <h2>Talents that fits the Job description</h2>
       <div className="view-role">
         <p>These Talents are the best fit for your job</p>
@@ -73,7 +84,9 @@ const GetMatch: React.FC = () => {
               {talent.profile?.experience || 'Experience not specified'}
             </p>
             <p>Bio: {talent.profile?.bio || 'Bio not specified'}</p>
-            <Link to={`/recruiterDashboard/individualTalents/${talent._id}`}>View More About this Talent</Link>
+            <Link to={`/recruiterDashboard/individualTalents/${talent?._id}`}>
+              View More About this Talent
+            </Link>
             <hr />
           </div>
         ))}

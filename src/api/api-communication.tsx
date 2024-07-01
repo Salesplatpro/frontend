@@ -1,8 +1,11 @@
+const BASE_URL = 'https://supportpro-backend.onrender.com/v1'
+const authToken = sessionStorage.getItem('authToken') || ''
+
 import {
-  FormTalentLogin,
-  FormTalentReg,
   FormCreateTalentProfile,
   FormPostJob,
+  FormTalentLogin,
+  FormTalentReg,
   QuestionForm,
 } from '../utils/types'
 
@@ -17,10 +20,7 @@ export const SendTalentReg = async (formValues: FormTalentReg) => {
 
   console.log(requestOptions)
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/auth/register',
-      requestOptions,
-    )
+    const response = await fetch(`${BASE_URL}/auth/register`, requestOptions)
     const data = await response.json()
 
     // Check if the response contains the token
@@ -52,7 +52,7 @@ export const SendRecruiterReg = async (formValues: FormTalentReg) => {
   console.log(requestOptions)
   try {
     const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/auth/register/recruiter',
+      `${BASE_URL}/auth/register/reuruiter`,
       requestOptions,
     )
     const data = await response.json()
@@ -84,10 +84,7 @@ export const SendTalentLogin = async (formValues: FormTalentLogin) => {
   }
 
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/auth/login',
-      loginOptions,
-    )
+    const response = await fetch(`${BASE_URL}/auth/login`, loginOptions)
 
     if (!response.ok) {
       throw new Error('Invalid login details')
@@ -114,7 +111,7 @@ export const SendTalentLogin = async (formValues: FormTalentLogin) => {
 }
 
 export const TalentCreation = async (formValues: FormCreateTalentProfile) => {
-  const authToken = sessionStorage.getItem('authToken')
+  // const authToken = sessionStorage.getItem('authToken')
 
   if (!authToken) {
     throw new Error('Authentication token not found')
@@ -132,10 +129,7 @@ export const TalentCreation = async (formValues: FormCreateTalentProfile) => {
   console.log(requestOptions)
 
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/user/profile',
-      requestOptions,
-    )
+    const response = await fetch(`${BASE_URL}/user/profile`, requestOptions)
 
     const data = await response.json()
 
@@ -163,10 +157,7 @@ export const PostJob = async (formValue: FormPostJob) => {
   }
 
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/jobs',
-      requestOption,
-    )
+    const response = await fetch(`${BASE_URL}/jobs`, requestOption)
     const data = await response.json()
 
     return data
@@ -177,9 +168,7 @@ export const PostJob = async (formValue: FormPostJob) => {
 
 export const getRole = async () => {
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/roles?limit=1000',
-    )
+    const response = await fetch(`${BASE_URL}/roles?limit=1000`)
     if (!response.ok) {
       throw new Error('Failed to fetch users')
     }
@@ -192,8 +181,6 @@ export const getRole = async () => {
 }
 
 export const uploadCV = async (file: any) => {
-  const authToken = sessionStorage.getItem('authToken')
-
   if (!authToken) {
     throw new Error('Authentication required')
   }
@@ -210,10 +197,7 @@ export const uploadCV = async (file: any) => {
   }
 
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/uploads',
-      requestOption,
-    )
+    const response = await fetch(`${BASE_URL}/uploads`, requestOption)
     const data = await response.json()
 
     return data
@@ -225,9 +209,7 @@ export const uploadCV = async (file: any) => {
 // fetch questions based on role
 export const roleQuestions = async (id: string) => {
   try {
-    const response = await fetch(
-      `https://supportpro-backend.onrender.com/v1/roles/${id}/questions`,
-    )
+    const response = await fetch(`${BASE_URL}/roles/${id}/questions`)
 
     const data = response.json()
     return data
@@ -237,9 +219,7 @@ export const roleQuestions = async (id: string) => {
 }
 
 // submit answer
-export const quizAnswer = async (quizAnswer: QuestionForm) => {
-  const authToken = sessionStorage.getItem('authToken')
-
+export const quizAnswer = async (quizAnswer) => {
   if (!authToken) {
     throw new Error('Authentication required')
   }
@@ -252,10 +232,7 @@ export const quizAnswer = async (quizAnswer: QuestionForm) => {
     body: JSON.stringify(quizAnswer),
   }
   try {
-    const response = await fetch(
-      'https://supportpro-backend.onrender.com/v1/questions/answer',
-      responseReq,
-    )
+    const response = await fetch(`${BASE_URL}/questions/answer`, responseReq)
 
     const data = await response.json()
     return data
@@ -265,17 +242,16 @@ export const quizAnswer = async (quizAnswer: QuestionForm) => {
 }
 
 export const fetchTalentProfies = async (role?: string) => {
-  const token = sessionStorage.getItem('authToken')
   let talentprofiles: string
   if (role) {
-    talentprofiles = `https://supportpro-backend.onrender.com/v1/user/profile?roleId=${role}&limit=20&offset=0`
+    talentprofiles = `${BASE_URL}/user/profile?roleId=${role}&limit=20&offset=0`
   } else {
-    talentprofiles = 'https://supportpro-backend.onrender.com/v1/user/profile'
+    talentprofiles = `${BASE_URL}/user/profile`
   }
   try {
     const response = await fetch(talentprofiles, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        Authorization: `Bearer ${authToken}`, // Include the token in the Authorization header
       },
     })
 
@@ -288,10 +264,7 @@ export const fetchTalentProfies = async (role?: string) => {
 }
 
 export const filterTalentProfiles = async (filter) => {
-  const token = sessionStorage.getItem('authToken')
-
-  let url =
-    'https://supportpro-backend.onrender.com/v1/user/profile?limit=20&offset=0'
+  let url = `${BASE_URL}/user/profile?limit=20&offset=0`
 
   if (filter.role) {
     url += `&roleId=${filter.role}`
@@ -309,7 +282,7 @@ export const filterTalentProfiles = async (filter) => {
   try {
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     })
     const data = await response.json()
@@ -320,19 +293,18 @@ export const filterTalentProfiles = async (filter) => {
 }
 
 export const jobProfiles = async (role?: string) => {
-  const token = sessionStorage.getItem('authToken')
   let jobProfiles: string
 
   if (role) {
-    jobProfiles = `https://supportpro-backend.onrender.com/v1/jobs?roleId=${role}&limit=10&offset=0`
+    jobProfiles = `${BASE_URL}/jobs?roleId=${role}&limit=10&offset=0`
   } else {
-    jobProfiles = `https://supportpro-backend.onrender.com/v1/jobs`
+    jobProfiles = `${BASE_URL}/jobs`
   }
 
   try {
     const response = await fetch(jobProfiles, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        Authorization: `Bearer ${authToken}`, // Include the token in the Authorization header
       },
     })
 
@@ -345,13 +317,27 @@ export const jobProfiles = async (role?: string) => {
 }
 
 export const getTalentMatch = async (roleId) => {
-  const token = sessionStorage.getItem('authToken')
+  try {
+    const response = await fetch(`${BASE_URL}/jobs/match/${roleId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+// Get Top Talents
+export const getTopTalents = async (jobId) => {
   try {
     const response = await fetch(
-      `https://supportpro-backend.onrender.com/v1/jobs/match/${roleId}`,
+      `${BASE_URL}/jobs/talents/${jobId}?percentage=40&limit=20`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       },
     )
@@ -363,16 +349,12 @@ export const getTalentMatch = async (roleId) => {
 }
 // Get Talent Individual Profile
 export const individualTalent = async (talentId: string) => {
-  const token = sessionStorage.getItem('authToken')
   try {
-    const response = await fetch(
-      `https://supportpro-backend.onrender.com/v1/user/profile/${talentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await fetch(`${BASE_URL}/user/profile/${talentId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
       },
-    )
+    })
     const data = await response.json()
     return data
   } catch (error) {

@@ -52,14 +52,28 @@
 
 // export default ViewTalents
 
-import React, { useEffect, useState } from 'react'
-import { fetchTalentProfies } from '../../../api/api-communication'
 import './ViewTalents.scss'
-import Roles from '../../../components/Roles/Roles'
+
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
+import { fetchTalentProfies } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
+import Roles from '../../../components/Roles/Roles'
+
+interface TalentProfile {
+  firstName: string
+  lastName: string
+  _id: string
+  profile?: {
+    role?: { name: string | null }[]
+    experience?: string
+    bio?: string
+  }
+}
 
 const ViewTalents = () => {
-  const [talentsProfile, setTalentsProfile] = useState([])
+  const [talentsProfile, setTalentsProfile] = useState<TalentProfile[]>([])
   const [roleValue, setRoleValue] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -72,6 +86,7 @@ const ViewTalents = () => {
       try {
         const data = await fetchTalentProfies(roleValue)
         setTalentsProfile(data.data.talents)
+        console.log(data)
       } catch (error) {
         setError('Failed to fetch talent profiles')
       } finally {
@@ -82,7 +97,7 @@ const ViewTalents = () => {
     fetchData()
   }, [roleValue])
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const val = e.target.value
     setRoleValue(val)
   }
@@ -110,13 +125,20 @@ const ViewTalents = () => {
               <div key={index} className="view-talent">
                 <h3>{`${talent.firstName} ${talent.lastName}`}</h3>
                 <p>
-                  Role: {talent.profile?.role[0]?.name || 'Role not specified'}
+                  Role:{' '}
+                  {talent?.profile?.role && talent.profile.role.length > 0
+                    ? talent.profile?.role[0]?.name ?? 'Role not specified'
+                    : 'Role not specified'}
                 </p>
                 <p>
                   Experience:{' '}
                   {talent.profile?.experience || 'Experience not specified'}
                 </p>
                 <p>Bio: {talent.profile?.bio || 'Bio not specified'}</p>
+                <Link
+                  to={`/recruiterDashboard/individualTalents/${talent?._id}`}>
+                  View More
+                </Link>
                 <hr />
               </div>
             ))

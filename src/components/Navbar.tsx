@@ -1,4 +1,5 @@
 import React from 'react'
+
 // @ts-ignore
 import logo from '../assets/logo.png'
 import { useAuth } from '../context/contextHook'
@@ -9,7 +10,6 @@ const Navbar = () => {
   const handleLogout = () => {
     auth.logout()
   }
-  console.log(auth?.isLoggedIn)
 
   return (
     <React.Fragment>
@@ -24,7 +24,7 @@ const Navbar = () => {
                 <a href="solution">solutions</a>
               </li>
               <li>
-                <a href="">resources</a>
+                <a href=" ">resources</a>
               </li>
               <li>
                 <a href="explore">explore jobs</a>

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
 import '../form.scss'
-import { SendTalentLogin } from '../../api/api-communication'
-import { useNavigate } from 'react-router-dom'
-import Navbar from '../../components/Navbar'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+import { SendTalentLogin } from '../../api/api-communication'
+import Navbar from '../../components/Navbar'
 import { useAuth } from '../../context/contextHook'
 
 interface FormErrors {
@@ -21,14 +21,12 @@ const Login: React.FC = () => {
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
-  console.log(auth?.isLoggedIn)
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target
     setFormValues({ ...formValues, [name]: value })
-
     setErrors({ ...errors, [name]: '' })
   }
 
@@ -40,17 +38,20 @@ const Login: React.FC = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const data = await auth?.login(formValues)
-        console.log(data.data)
+        // console.log(data.data)
         toast.success('Logged in successfully')
-        if (data.data.user.userRole === 'recruiter') {
-          navigate('/recruiterDashboard/postjob')
-        } else if (data.data.user.userRole === 'talent') {
-          navigate('/talentDashboard/talentProfile')
-          window.location.reload()
-        } else if (data.data.user.userRole === 'admin') {
-          navigate('/adminDashboard/viewcandidates')
-        } else {
-          navigate('/')
+        if (data && data.data) {
+          const userRole = data.data.user?.userRole
+          if (userRole === 'recruiter') {
+            navigate('/recruiterDashboard/postjob')
+          } else if (userRole === 'talent') {
+            navigate('/talentDashboard/talentProfile')
+            window.location.reload()
+          } else if (userRole === 'admin') {
+            navigate('/adminDashboard/viewcandidates')
+          } else {
+            navigate('/')
+          }
         }
       } catch (err) {
         console.log(err)
@@ -80,7 +81,7 @@ const Login: React.FC = () => {
     <div className="apply-job">
       <Navbar />
       <div className="job-hero">
-        <h2>LOGIN AS A TALENT OR RECRUITER HERE</h2>
+        <h5 className='text-blue-900 font-extrabold text-center'>LOGIN AS A TALENT OR RECRUITER HERE</h5>
       </div>
       <div className="job-form">
         <form onSubmit={handleSubmit}>
@@ -119,12 +120,17 @@ const Login: React.FC = () => {
           </button>
         </form>
 
-        <h6 className="">
-          Dont have an account <a href="talentRegister">Register as a Talent</a>
-        </h6>
-        <h6 className="">
+        <h6 style={{ marginTop: '10px' }}>
           Dont have an account{' '}
-          <a href="recruiterRegister">Register as a Recruiter</a>
+          <a href="talentRegister" style={{ textDecoration: 'none' }}>
+            Register as a Talent
+          </a>
+        </h6>
+        <h6 style={{ marginTop: '10px' }}>
+          Dont have an account{' '}
+          <a href="recruiterRegister" style={{ textDecoration: 'none' }}>
+            Register as a Recruiter
+          </a>
         </h6>
       </div>
     </div>
