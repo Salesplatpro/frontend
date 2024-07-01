@@ -6,18 +6,23 @@
     "build": "vite build",
     "serve": "vite preview",
     "type-check": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@types/node": "^20.11.19",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.8",
+    "formik": "^2.4.6",
+    "geonames.js": "^3.0.6",
     "postcss-import": "^16.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.0.1",
-    "react-router-dom": "^6.22.1"
+    "react-redux": "^7.2.9",
+    "react-router-dom": "^6.22.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@testing-library/react": "^12.1.4",
@@ -25,6 +30,7 @@
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "@vitejs/plugin-react": "^1.2.0",
+    "autoprefixer": "^10.4.19",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
@@ -33,9 +39,10 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jsdom": "^19.0.0",
+    "postcss": "^8.4.38",
     "prettier": "^2.6.1",
     "sass": "^1.71.0",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.4",
     "typescript": "^4.6.3",
     "vite": "^2.8.6",
     "vitest": "^0.7.11"

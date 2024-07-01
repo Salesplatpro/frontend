@@ -1,4 +1,5 @@
 import React from 'react'
+
 // @ts-ignore
 import brand1 from '../assets/brand1.png'
 // @ts-ignore
@@ -40,7 +41,9 @@ const FeaturedBrand = () => {
             </div>
 
             <p>
-              Connect your tools, connect your teams. With over 200 apps already available in our directory, your team&#39;s favorite tools are just a click away.
+              Connect your tools, connect your teams. With over 200 apps already
+              available in our directory, your team&#39;s favorite tools are
+              just a click away.
             </p>
           </div>
         </div>

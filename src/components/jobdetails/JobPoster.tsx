@@ -1,17 +1,30 @@
 import React from 'react'
+
 // @ts-ignore
 import cypress from '../../assets/jobpost.png'
-import JobPost from '../explore/JobPost'
 // @ts-ignore
 import jop2 from '../../assets/jobpost.png'
-
+import JobPost from '../explore/JobPost'
 
 const jobs = [
+  {
+    title: 'Account Executive',
+    description: 'We’re looking for an account executive to join our team.',
+    color: '#3538CD',
+    image: jop2,
+    badge: 'Sales',
+    bdbg: '#EEF4FF',
+  },
 
-  {title: "Account Executive", description: "We’re looking for an account executive to join our team.", color: "#3538CD", image: jop2, badge: "Sales", bdbg: "#EEF4FF"},
-
-  {title: "SEO Marketing Manager", description: "We’re looking for an experienced SEO marketing manager to join our team.", color: "#C4320A", image: jop2, badge: "Marketing", bdbg: "#FFF6ED"},
-
+  {
+    title: 'SEO Marketing Manager',
+    description:
+      'We’re looking for an experienced SEO marketing manager to join our team.',
+    color: '#C4320A',
+    image: jop2,
+    badge: 'Marketing',
+    bdbg: '#FFF6ED',
+  },
 ]
 
 const JobPoster = () => {
@@ -27,7 +40,7 @@ const JobPoster = () => {
 
             <div className="atn-btn">
               <button>View profile</button>
-              <button className='apply'>Apply</button>
+              <button className="apply">Apply</button>
             </div>
 
             <div className="divider"></div>
@@ -54,7 +67,14 @@ const JobPoster = () => {
             <h4>You may also like</h4>
             <div className="jobs">
               {jobs.map((job, index) => (
-                <JobPost title={job.title} description={job.description} badge={job.badge} color={job.color} bdbg={job.bdbg} image={job.image}/>
+                <JobPost
+                  title={job.title}
+                  description={job.description}
+                  badge={job.badge}
+                  color={job.color}
+                  bdbg={job.bdbg}
+                  image={job.image}
+                />
               ))}
             </div>
           </div>

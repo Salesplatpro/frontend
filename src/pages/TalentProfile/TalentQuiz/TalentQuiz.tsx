@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
 import './TalentQuiz.scss'
-import { quizAnswer, roleQuestions } from '../../../api/api-communication'
-import { useAuth } from '../../../context/contextHook'
+
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Question } from '../../../utils/types'
+
+import { quizAnswer, roleQuestions } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
+import { useAuth } from '../../../context/contextHook'
+import { Question } from '../../../utils/types'
 
 const TalentQuiz = () => {
   const auth = useAuth()

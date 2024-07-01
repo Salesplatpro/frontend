@@ -11,7 +11,10 @@ const Header = () => {
               <h4>Find the best jobs...</h4>
             </div>
             <p>
-            Untitled is a technology company that builds infrastructure for your startup, so you don&#39;t have to. Businesses of every size—from new startups to public companies—use our software to manage their businesses.
+              Untitled is a technology company that builds infrastructure for
+              your startup, so you don&#39;t have to. Businesses of every
+              size—from new startups to public companies—use our software to
+              manage their businesses.
             </p>
           </div>
         </div>

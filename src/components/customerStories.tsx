@@ -1,10 +1,11 @@
 import React from 'react'
-import Navbar from './Navbar'
-import HeroContainer from './HeroContainer'
+
 import CustomerHero from './customerStories/customerHero'
-import Footer from './Footer'
-import QuoteSection from './QuoteSection'
 import Introduction from './customerStories/introduction'
+import Footer from './Footer'
+import HeroContainer from './HeroContainer'
+import Navbar from './Navbar'
+import QuoteSection from './QuoteSection'
 
 const CustomerStories = () => {
   return (

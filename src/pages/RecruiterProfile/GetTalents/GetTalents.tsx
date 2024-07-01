@@ -1,18 +1,21 @@
+import './GetTalents.scss'
+
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import {
   fetchTalentProfies,
   filterTalentProfiles,
 } from '../../../api/api-communication'
-import './GetTalents.scss'
-import Roles from '../../../components/Roles/Roles'
 import Loading from '../../../components/Loading/Loading'
-import { Link } from 'react-router-dom'
+import Roles from '../../../components/Roles/Roles'
 
 interface GetTalent {
   firstName: string
   lastName: string
+  _id: string
   profile?: {
-    role?: [{ name: string }]
+    role?: { name: string | null }[]
     experience?: string
     bio?: string
   }
@@ -116,7 +119,12 @@ const GetTalents = () => {
         {talentsProfile.map((talent, index) => (
           <div key={index} className="view-talent">
             <h3>{`${talent.firstName} ${talent.lastName}`}</h3>
-            <p>Role: {talent.profile?.role[0]?.name || 'Role not specified'}</p>
+            <p>
+              Role:{' '}
+              {talent?.profile?.role && talent.profile.role.length > 0
+                ? talent.profile?.role[0]?.name ?? 'Role not specified'
+                : 'Role not specified'}
+            </p>
             <p>
               Experience:{' '}
               {talent.profile?.experience || 'Experience not specified'}

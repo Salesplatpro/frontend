@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
 import './PostJobs.scss'
-import { PostJob } from '../../../api/api-communication'
+
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Role } from '../../../utils/types'
+
+import { PostJob } from '../../../api/api-communication'
 import { getRole } from '../../../api/api-communication'
 import Roles from '../../../components/Roles/Roles'
+import { Role } from '../../../utils/types'
 
 interface FormErrors {
   role?: string
