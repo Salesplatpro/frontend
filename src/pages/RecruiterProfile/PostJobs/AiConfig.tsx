@@ -2,9 +2,11 @@ import React from 'react'
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { aiConfigs } from '../../../api/api-communication'
+import toast from 'react-hot-toast'
+import { configProps } from '../../../utils/jobPostTypes'
 
 const AiConfig = () => {
-  const initialValue = {
+  const initialValue: configProps = {
     name: '',
     prescreeningAssessment: '',
     minPrescreeningScore: '',
@@ -40,10 +42,15 @@ const AiConfig = () => {
     // ),
   })
 
-  const onSubmit = async (values, { setSubmitting }) => {
+  const onSubmit = async (values: configProps, { setSubmitting }) => {
     try {
       const data = await aiConfigs(values)
       console.log('Form Values:', data)
+      if (data.status) {
+        toast.success('Job Post Created successfully')
+      } else {
+        toast.error(data.message)
+      }
     } catch (error) {
       console.log(error)
     }
