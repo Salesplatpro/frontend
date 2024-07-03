@@ -27,6 +27,7 @@ import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
 import PostJob from './pages/RecruiterProfile/PostJobs/PostJob'
+import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -99,8 +100,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'postjob',
-        // element: <PostJobs />,
-        element: <PostJob />,
+        // element: <PostJob />,
+        element: <PostJobTab />,
       },
       {
         path: 'viewcandidates',

@@ -140,7 +140,7 @@ export const TalentCreation = async (formValues: FormCreateTalentProfile) => {
   }
 }
 
-export const PostJob = async (formValue: FormPostJob) => {
+export const PostJobs = async (formValue) => {
   const authToken = sessionStorage.getItem('authToken')
 
   if (!authToken) {
@@ -360,5 +360,27 @@ export const individualTalent = async (talentId: string) => {
   } catch (error) {
     console.log(error)
     throw error
+  }
+}
+
+// Send ai config
+export const aiConfigs = async (aiconfig) => {
+  if (!authToken) {
+    throw new Error('Authentication required')
+  }
+  const responseReq = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify(aiconfig),
+  }
+  try {
+    const response = await fetch(`${BASE_URL}/ai-config`, responseReq)
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
   }
 }

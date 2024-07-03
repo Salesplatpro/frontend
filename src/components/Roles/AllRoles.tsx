@@ -3,7 +3,13 @@ import React, { useState, useEffect } from 'react'
 import { Role } from '../../utils/types'
 import { getRole } from '../../api/api-communication'
 
-const AllRoles = ({ value, onChange, name }) => {
+interface roleTypes {
+  value: string
+  name: string
+  onChange: () => {}
+}
+
+const AllRoles = ({ value, onChange, name }: roleTypes) => {
   const [roles, setRoles] = useState<Role[]>([])
 
   useEffect(() => {
@@ -20,10 +26,11 @@ const AllRoles = ({ value, onChange, name }) => {
 
   return (
     <div className="roles-container">
-      <div className="input">
+      <div className="input bg-transparent">
         <Field
           as="select"
           id="role"
+          className="bg-transparent"
           name={name}
           value={value}
           onChange={onChange}>
