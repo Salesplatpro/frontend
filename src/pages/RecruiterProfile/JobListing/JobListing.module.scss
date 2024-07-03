@@ -1,0 +1,63 @@
+
+.sharedDisplay {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 18px;
+  cursor: pointer;
+}
+
+.displayFlex {
+  @extend .sharedDisplay;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.createNew {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 38px;
+}
+
+.list {
+  padding: 16px 0;
+  cursor: pointer;
+  width: calc(25% - 16px);
+  flex-shrink: 0;
+}
+
+.listContainer {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid #e4e7ec;
+}
+
+.name {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #344054;
+}
+
+.description {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #667085;
+}
+
+.active {
+  border-top: 3px solid #006bff;
+}
+
+.notActive {
+  border-top: 3px solid #e4e7ec;
+}

@@ -1,0 +1,40 @@
+.sideBarContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+.imageContainer {
+  padding: 20px 38px;
+}
+.logo {
+  width: 163px;
+}
+
+.sidebarList {
+  margin-top: 40px;
+}
+
+.employer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.employerDetails {
+  display: flex;
+  gap: 16px;
+}
+
+.employerName {
+  font-size: 14px;
+  color: #011948;
+  font-weight: bold;
+}
+
+.employerType {
+  font-size: 12px;
+  color: #667085;
+}
