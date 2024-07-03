@@ -41,14 +41,15 @@ const PostJobTab = () => {
         return <PostJob />
     }
   }
+
   return (
-    <div className="p-8">
+    <div className="p-4">
       <div>
         <p className="text-[#333333] text-[13px]">Back</p>
-        <h2 className="text-[#101828] text-[30px] mt-2 font-bold">
+        <h2 className="text-[#101828] text-[30px] mt-1 font-bold">
           Create a new job
         </h2>
-        <div className="mt-4 flex flex-row justify-between border-b-2">
+        <div className="mt-2 flex flex-row justify-between border-b-2">
           {tabs.map((tab, i) => (
             <div
               key={i}
@@ -68,8 +69,6 @@ const PostJobTab = () => {
         </div>
         {renderContent()}
       </div>
-
-      {/* <button>Save Progress and move to the next</button> */}
     </div>
   )
 }
