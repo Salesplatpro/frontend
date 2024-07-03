@@ -34,3 +34,17 @@ export interface FormValues {
   skills: string[]
   goals: string[]
 }
+
+export interface configProps {
+  name: string
+  prescreeningAssessment: string
+  minPrescreeningScore: string
+  cvSimilarity: string
+  minCvSimilarityScore: string
+  noOfCvSimilarCandidates: string
+  personalizedAssessment: string
+  noPersonalizedQuestions: string
+  personalityEvaluation: string
+  uploadedQuestions: string[]
+  recruiterGuide: string
+}
