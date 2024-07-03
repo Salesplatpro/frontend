@@ -17,10 +17,12 @@ export interface LocationValues {
 }
 
 export interface FormValues {
-  description: string
+  description: string,
+  aiConfig: string
+  role: string
   minSalary: string
   maxSalary: string
-  experience: string
+  experienceLevel: string
   location: {
     country: LocationValues
     state: LocationValues
