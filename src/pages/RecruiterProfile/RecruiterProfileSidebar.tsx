@@ -1,10 +1,11 @@
 import '../TalentProfile/TalentProfileSidebar.scss'
 
 import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 import logo from '../../assets/logo.png'
 import { useAuth } from '../../context/contextHook'
+import { SideBar } from "../../components";
 
 const RecruiterProfileSidebar = () => {
   const auth = useAuth()
@@ -12,43 +13,7 @@ const RecruiterProfileSidebar = () => {
   return (
     <div className="dashboard">
       <div className="sidebar-container">
-        <a href="/" className="logo-li">
-          {/* <img src={logo} alt="Logo" /> */}
-          <h4>Support Pro</h4>
-        </a>
-        <h2>Recruiter Dashboard</h2>
-        <nav>
-          <ul>
-            <li>
-              <NavLink
-                to="/recruiterDashboard/postjob"
-                activeClassName="active">
-                Post a Job
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/recruiterDashboard/viewcandidates"
-                activeClassName="active">
-                View Candidates
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/recruiterDashboard/getTalents"
-                activeClassName="active">
-                Search For Talents
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/recruiterDashboard/jobProfiles"
-                activeClassName="active">
-                View Job Profiles
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
+        <SideBar />
       </div>
 
       <div className="dashboard-body">
