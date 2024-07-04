@@ -57,7 +57,7 @@ const PostJobTab = () => {
                 activeTab === tab.tab
                   ? 'border-blue-600 border-t-4 text-blue-600'
                   : 'border-t-4 text-[#344054]'
-              } min-w-[232px]`}>
+              } min-w-[202px] py-2`}>
               <button
                 onClick={() => setActiveTab(tab.tab)}
                 className={` flex flex-col`}>
