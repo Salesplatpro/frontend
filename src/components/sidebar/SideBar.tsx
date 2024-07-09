@@ -22,6 +22,7 @@ export const SideBar = () => {
               icon={data.icon}
               name={data.name}
               count={data.count}
+              link={data.link}
               active={activeIndex === index}
               onClick={() => setActiveIndex(index)}
             />
