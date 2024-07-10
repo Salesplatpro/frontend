@@ -17,8 +17,8 @@ export interface LocationValues {
 }
 
 export interface FormValues {
-  description: string,
-  aiConfig: string
+  description: string
+  // aiConfig: string
   role: string
   minSalary: string
   maxSalary: string

@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 
 const initialValues: FormValues = {
   description: '',
-  aiConfig: '6683d3bcc837fba3d95427b2',
+  // aiConfig: '',
   role: '',
   minSalary: '',
   maxSalary: '',

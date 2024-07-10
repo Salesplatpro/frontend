@@ -47,7 +47,8 @@ const AiConfig = () => {
       const data = await aiConfigs(values)
       console.log('Form Values:', data)
       if (data.status) {
-        toast.success('Job Post Created successfully')
+        toast.success('Ai Config created successfully')
+        // const patchConfig = await patchJobPost(data.data.id)
       } else {
         toast.error(data.message)
       }
