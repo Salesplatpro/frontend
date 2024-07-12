@@ -2,13 +2,15 @@ import React from 'react'
 
 // @ts-ignore
 import logo from '../assets/logo.png'
-import { useAuth } from '../context/contextHook'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../redux/store/store'
+import { logout } from '../redux/features/authSlice/authSlice'
 
 const Navbar = () => {
-  const auth = useAuth()
-
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.auth)
   const handleLogout = () => {
-    auth.logout()
+    dispatch(logout())
   }
 
   return (
@@ -36,7 +38,7 @@ const Navbar = () => {
           </nav>
 
           <div className="action-btn nav-font">
-            {auth?.isLoggedIn ? (
+            {user.isLoggedIn ? (
               <button className="login" type="button" onClick={handleLogout}>
                 <a href="/">Logout</a>
               </button>
