@@ -1,7 +1,7 @@
 import './App.css'
 import './index.scss'
 import './index.css'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import CustomerStories from './components/customerStories'
@@ -28,6 +28,10 @@ import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
 import PostJob from './pages/RecruiterProfile/PostJobs/PostJob'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
+import { useDispatch } from 'react-redux'
+import { getToken } from './utils/authUtils'
+import { setUser } from './redux/features/authSlice/authSlice'
+import ProtectedRoute from './components/ProtectedRoute'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -78,50 +82,61 @@ const router = createBrowserRouter([
   },
   {
     path: '/talentDashboard',
-    element: <TalentProfileSidebar />,
+    element: <ProtectedRoute allowedRoles={['talent']} />,
     children: [
       {
-        path: 'talentProfile',
-        element: <TalentProfile />,
-      },
-      {
-        path: 'talentQuiz',
-        element: <TalentQuiz />,
-      },
-      {
-        path: 'job',
-        element: <Job />,
+        path: '',
+        element: <TalentProfileSidebar />,
+        children: [
+          {
+            path: 'talentProfile',
+            element: <TalentProfile />,
+          },
+          {
+            path: 'talentQuiz',
+            element: <TalentQuiz />,
+          },
+          {
+            path: 'job',
+            element: <Job />,
+          },
+        ],
       },
     ],
   },
   {
     path: '/recruiterDashboard',
-    element: <RecruiterProfileSidebar />,
+    element: <ProtectedRoute allowedRoles={['recruiter']} />,
     children: [
       {
-        path: 'postjob',
-        // element: <PostJob />,
-        element: <PostJobTab />,
-      },
-      {
-        path: 'viewcandidates',
-        element: <ViewTalents />,
-      },
-      {
-        path: 'getTalents',
-        element: <GetTalents />,
-      },
-      {
-        path: 'jobProfiles',
-        element: <JobProfiles />,
-      },
-      {
-        path: 'getMatch/:jobId',
-        element: <GetMatch />,
-      },
-      {
-        path: 'individualTalents/:talentId',
-        element: <IndividualTalents />,
+        path: '',
+        element: <RecruiterProfileSidebar />,
+        children: [
+          {
+            path: 'postjob',
+            element: <PostJobTab />,
+          },
+          {
+            path: 'viewcandidates',
+            element: <ViewTalents />,
+          },
+          {
+            path: 'getTalents',
+            element: <GetTalents />,
+          },
+          {
+            path: 'jobProfiles',
+            element: <JobProfiles />,
+          },
+          {
+            path: 'getMatch/:jobId',
+            element: <GetMatch />,
+          },
+          {
+            path: 'individualTalents/:talentId',
+            element: <IndividualTalents />,
+          },
+        ],
       },
     ],
   },
@@ -139,7 +154,15 @@ const router = createBrowserRouter([
 
 function App() {
   // const [count, setCount] = useState(0)
+  const dispatch = useDispatch()
 
+  useEffect(() => {
+    const token = getToken()
+    const user = JSON.parse(localStorage.getItem('user') || 'null')
+    if (token && user) {
+      dispatch(setUser({ user }))
+    }
+  }, [dispatch])
   return (
     <div className="app" data-testid="app-page">
       <RouterProvider router={router} />
