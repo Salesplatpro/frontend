@@ -384,3 +384,27 @@ export const aiConfigs = async (aiconfig) => {
     console.log(error)
   }
 }
+
+// Patch Ai config to job post
+
+export const patchJobPost = async (configId) => {
+  if (!authToken) {
+    throw new Error('Authentication required')
+  }
+  const responseReq = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify(configId),
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/jobs/{{jobId}}`, responseReq)
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+}
