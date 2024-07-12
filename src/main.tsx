@@ -1,16 +1,14 @@
 import './index.css'
-import './index.scss'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Toaster } from 'react-hot-toast'
-
 import App from './App'
-import { AuthProvider } from './context/contextHook'
+import { Provider } from 'react-redux'
+import { store } from './redux/store/store'
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
+    <Provider store={store}>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -28,7 +26,7 @@ ReactDOM.render(
         }}
       />
       <App />
-    </AuthProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 )
