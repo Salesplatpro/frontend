@@ -1,0 +1,22 @@
+.sharedStyles {
+  display: flex;
+  justify-content: space-between;
+}
+
+.listContainer {
+  @extend .sharedStyles;
+  padding: 16px 20px;
+}
+
+.listContainer:hover {
+  cursor: pointer;
+}
+
+.listItem {
+  @extend .sharedStyles;
+  gap: 16px;
+}
+
+.active {
+  background: #cadffd;
+}

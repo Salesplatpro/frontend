@@ -7,10 +7,12 @@ import { quizAnswer, roleQuestions } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
 import { useAuth } from '../../../context/contextHook'
 import { Question } from '../../../utils/types'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../redux/store/store'
 
 const TalentQuiz = () => {
-  const auth = useAuth()
-  const id = auth?.userInfo?.user?.profile?.role[0]?._id
+  const userId = useSelector((state: RootState) => state.auth)
+  const id = userId.user?.profile?.role[0]?._id
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState<{
@@ -19,6 +21,8 @@ const TalentQuiz = () => {
   }>({ roleId: id || '', answers: [] })
 
   useEffect(() => {
+    // console.log('user', userId)
+    // console.log('user', id)
     const fetchQuestions = async () => {
       try {
         if (!id) throw new Error('Role ID not found')

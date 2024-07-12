@@ -1,29 +1,7 @@
-// {
-//   "_id": "6683d3bcc837fba3d95427b2",
-//   "name": "my config",
-//   "recruiter": "66546e54a83aa1f43bd84824",
-//   "prescreeningAssessment": true,
-//   "minPrescreeningScore": 2,
-//   "cvSimilarity": false,
-//   "minCvSimilarityScore": 33,
-//   "noOfCvSimilarCandidates": 4,
-//   "personalizedAssessment": true,
-//   "noPersonalizedQuestions": 15,
-//   "recruiterGuide": "or generic and insincere responses",
-//   "uploadedQuestions": [
-//       "what is your leadership experience"
-//   ],
-//   "personalityEvaluation": true,
-//   "createdAt": "2024-07-02T10:17:32.638Z",
-//   "updatedAt": "2024-07-02T10:17:32.638Z",
-//   "__v": 0
-
-
 import { ErrorMessage, Field, Form, Formik, FieldArray } from 'formik'
 import React from 'react'
 import * as Yup from 'yup'
 import Location from '../../../components/global/Location'
-// import { FormValues } from './types';
 import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { PostJobs } from '../../../api/api-communication'
@@ -31,7 +9,7 @@ import toast from 'react-hot-toast'
 
 const initialValues: FormValues = {
   description: '',
-  aiConfig: '6683d3bcc837fba3d95427b2',
+  // aiConfig: '',
   role: '',
   minSalary: '',
   maxSalary: '',

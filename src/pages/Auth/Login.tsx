@@ -5,6 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { SendTalentLogin } from '../../api/api-communication'
 import Navbar from '../../components/Navbar'
 import { useAuth } from '../../context/contextHook'
+import { useUserLoginMutation } from '../../redux/api/apiSlice'
+import { useDispatch } from 'react-redux'
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from '../../redux/features/authSlice/authSlice'
 
 interface FormErrors {
   email?: any
@@ -12,7 +19,9 @@ interface FormErrors {
 }
 
 const Login: React.FC = () => {
-  const auth = useAuth()
+  const [login, isLoading] = useUserLoginMutation()
+  const dispatch = useDispatch()
+  // const auth = useAuth()
   const navigate = useNavigate()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [formValues, setFormValues] = useState({
@@ -36,17 +45,23 @@ const Login: React.FC = () => {
     const validationErrors = validateForm(formValues)
 
     if (Object.keys(validationErrors).length === 0) {
+      dispatch(loginStart())
       try {
-        const data = await auth?.login(formValues)
-        // console.log(data.data)
+        // const data = await auth?.login(formValues)
+        const response = await login(formValues).unwrap()
+        dispatch(
+          loginSuccess({
+            user: response.data.user,
+            token: response.data.token,
+          }),
+        )
         toast.success('Logged in successfully')
-        if (data && data.data) {
-          const userRole = data.data.user?.userRole
+        if (response && response.data) {
+          const userRole = response.data.user?.userRole
           if (userRole === 'recruiter') {
             navigate('/recruiterDashboard/postjob')
           } else if (userRole === 'talent') {
-            navigate('/talentDashboard/talentProfile')
-            window.location.reload()
+            navigate('/talentDashboard/')
           } else if (userRole === 'admin') {
             navigate('/adminDashboard/viewcandidates')
           } else {
@@ -55,8 +70,9 @@ const Login: React.FC = () => {
         }
       } catch (err) {
         console.log(err)
+        dispatch(loginFailure(err.data?.message || 'Failed to login'))
         setSubmitLoading(false)
-        toast.error('An error occurred while logging in')
+        toast.error(err.data?.message || 'An error occurred while logging in')
       }
     } else {
       setErrors(validationErrors)
@@ -81,7 +97,9 @@ const Login: React.FC = () => {
     <div className="apply-job">
       <Navbar />
       <div className="job-hero">
-        <h5 className='text-blue-900 font-extrabold text-center'>LOGIN AS A TALENT OR RECRUITER HERE</h5>
+        <h5 className="text-blue-900 font-extrabold text-center">
+          LOGIN AS A TALENT OR RECRUITER HERE
+        </h5>
       </div>
       <div className="job-form">
         <form onSubmit={handleSubmit}>
