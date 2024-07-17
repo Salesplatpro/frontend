@@ -8,7 +8,7 @@ $nav-f-weight: 600;
 $nav-line-height: 18.78px;
 $primary-blue: #4985DF;
 $primary-f-white: #F1F6FD;
-$primary-f-blue: #C6DDF7; 
+$primary-f-blue: #C6DDF7;
 $primary-f-offblue: #CAD8ED;
 $primary-font-family: "Raleway", sans-serif;
 $poppins: "Poppins", sans-serif;
@@ -26,6 +26,9 @@ $deep-gray: #525C68;
   padding: 16px;
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 .navbar {
   display: flex;
@@ -77,7 +80,7 @@ $deep-gray: #525C68;
       text-decoration: none;
       color: $primary-blue;
     }
-    
+
   }
   .apply {
     background: transparent;
@@ -418,7 +421,7 @@ $deep-gray: #525C68;
         flex-direction: column;
         gap: 20px;
         max-width: 496px;
-        
+
       }
       h5 {
         font-weight: 700;
@@ -631,7 +634,7 @@ $deep-gray: #525C68;
         flex-direction: column;
         gap: 0px;
         > div {
-          
+
           display: flex;
           flex-direction: row;
           gap: 24px;
@@ -1105,7 +1108,7 @@ $deep-gray: #525C68;
       display: flex;
       align-items: center;
       gap: 10px;
-      
+
       a{
         text-decoration: none;
       }
@@ -1127,7 +1130,7 @@ $deep-gray: #525C68;
         width: 20px;
         height: 20px;
         color: #D0D5DD;
-      } 
+      }
     }
     .link{
       width: 122px;
@@ -1210,7 +1213,7 @@ $deep-gray: #525C68;
         line-height: 20px;
         text-align: left;
         cursor: pointer;
-      } 
+      }
       button:hover, button.active {
         background-color: $primary-f-white;
         color: $primary-blue;
@@ -1305,7 +1308,7 @@ $deep-gray: #525C68;
       font-size: 18px;
       line-height: 28px;
     }
-    
+
   }
   .atn-btn {
     display: flex;
@@ -1601,7 +1604,7 @@ $deep-gray: #525C68;
         }
       }
     }
-    
+
   }
   .service-section {
     padding: 72px 32px;
@@ -1978,21 +1981,21 @@ $deep-gray: #525C68;
     max-width: 100%;
     padding: 0 12px;
     // margin: 64px auto;
-  
+
     p{
       color: $gray-dark;
       font-weight: 500;
       font-size: 18px;
       line-height: 30px;
     }
-  
+
     h5 {
       color: $primary-dark-bg;
       font-weight: 600;
       font-size: 24px;
       line-height: 30px;
     }
-    
+
     .subheader{
       margin-top: 64px;
       margin-bottom: 20px;
@@ -2005,7 +2008,7 @@ $deep-gray: #525C68;
       margin-bottom: 30px;
       display: flex;
       gap: 14px;
-  
+
       .quote-line{
         width: 5px;
         height: 248px;
@@ -2029,7 +2032,7 @@ $deep-gray: #525C68;
     .socialLink{
       margin-top: 40px;
       margin-bottom: 100px;
-  
+
       .line{
         width: 100%;
         height: 2px;
@@ -2041,13 +2044,13 @@ $deep-gray: #525C68;
         flex-direction: column;
         align-items: flex-start;
         gap: 25px;
-  
+
       }
       .social-icons{
         display: flex;
         align-items: center;
         gap: 10px;
-        
+
         a{
           text-decoration: none;
         }
@@ -2061,17 +2064,17 @@ $deep-gray: #525C68;
         justify-content: center;
         justify-self: center;
         border-radius: 8px;
-  
+
         p{
           font-size: 14px;
         }
-  
+
         .social{
           width: 20px;
           height: 20px;
           color: #D0D5DD;
         }
-        
+
       }
       .link{
         width: 122px;
@@ -2079,7 +2082,7 @@ $deep-gray: #525C68;
       .sub-sm{
         width: 40px;
       }
-  
+
     }
   }
 }

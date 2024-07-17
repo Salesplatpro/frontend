@@ -6,6 +6,12 @@ import { useNavigate } from 'react-router-dom'
 
 import { SendTalentReg } from '../../api/api-communication'
 import Navbar from '../../components/Navbar'
+import { CheckBox, TextInput } from "../../components/InputField";
+import logo from '../../assets/logo.png';
+import google from '../../assets/google.png';
+import salesplate from '../../assets/salesplat.png';
+import { Carousel } from "./Carousel";
+import { Button } from "../../components";
 
 interface FormErrors {
   email?: any
@@ -81,104 +87,105 @@ const TalentRegister: React.FC = () => {
   }
 
   return (
-    <div className="apply-job">
+    <div>
       <Navbar />
-      <div className="job-hero">
-        <h2>Register as a Talent</h2>
+      <div className="talentReg">
+        <div className="apply-job">
+          <div className="job-hero">
+            <img className="logo" src={logo}/>
+           <div>
+             <div className="create-account">Create account</div>
+             <div className="details">Please enter your details</div>
+           </div>
+          </div>
+          <div className="job-form">
+            <form onSubmit={handleSubmit}>
+              <TextInput
+                title="First Name"
+                label="firstName"
+                name="firstName"
+                value={formValues.firstName}
+                onChange={handleChange}
+                required
+                placeholder="Enter your name"
+                error={errors.firstName}
+              />
+              <TextInput
+                title="Last Name"
+                label="lastName"
+                name="lastName"
+                value={formValues.lastName}
+                onChange={handleChange}
+                required
+                placeholder="Enter your name"
+                error={errors.lastName}
+              />
+              <TextInput
+                title="Email"
+                label="email"
+                name="email"
+                value={formValues.email}
+                onChange={handleChange}
+                placeholder="Email"
+                error={errors.email}
+              />
+              <TextInput
+                title="Phone Number"
+                label="phoneNumber"
+                name="phoneNumber"
+                value={formValues.phone}
+                onChange={handleChange}
+                placeholder="Enter your phone number"
+                error={errors.phone}
+              />
+              <TextInput
+                title="Password"
+                label="password"
+                name="password"
+                value={formValues.password}
+                onChange={handleChange}
+                isPassword
+                placeholder="Enter your password"
+                error={errors.password}
+              />
+              <TextInput
+                title="Confirm Password"
+                label="confirmPassword"
+                name="confirmPassword"
+                value={formValues.password}
+                onChange={handleChange}
+                isPassword
+                placeholder="Enter your password"
+                error={errors.password}
+              />
+              <div>
+               <div className="remember-me">
+                 <CheckBox name="remember" label="Remember me" />
+                 <div className="forgot-password">Forgot password?</div>
+               </div>
+                <div className="buttons">
+                  <Button title="Sign Up" />
+                  <div className="already">Already have an account? <a href="/login">Log in</a></div>
+                  <Button
+                    title="Continue with Google"
+                    variant="secondary"
+                    element={<img src={google} />}
+                  />
+                  <Button
+                    title="Continue with Salesplat"
+                    variant="secondary"
+                    element={<img src={salesplate} />}
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="carousel">
+          <Carousel />
+        </div>
       </div>
-      <div className="job-form">
-        <form onSubmit={handleSubmit}>
-          <div className="input">
-            <label htmlFor="email">email</label>
-            <input
-              type="text"
-              name="email"
-              id="email"
-              value={formValues.email}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.email && <span className="error">{errors.email}</span>}
-          </div>
-
-          <div className="input">
-            <label htmlFor="firstName">firstName</label>
-            <input
-              type="text"
-              name="firstName"
-              id="firstName"
-              value={formValues.firstName}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.firstName && (
-              <span className="error">{errors.firstName}</span>
-            )}
-          </div>
-          <div className="input">
-            <label htmlFor="lastName">lastName</label>
-            <input
-              type="text"
-              name="lastName"
-              id="lastName"
-              value={formValues.lastName}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.lastName && (
-              <span className="error">{errors.lastName}</span>
-            )}
-          </div>
-          <div className="input">
-            <label htmlFor="middleName">middleName</label>
-            <input
-              type="text"
-              name="middleName"
-              id="middleName"
-              value={formValues.middleName}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.middleName && (
-              <span className="error">{errors.middleName}</span>
-            )}
-          </div>
-          <div className="input">
-            <label htmlFor="password">password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formValues.password}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.password && (
-              <span className="error">{errors.password}</span>
-            )}
-          </div>
-          <div className="input">
-            <label htmlFor="phone">phone</label>
-            <input
-              type="text"
-              name="phone"
-              id="phone"
-              value={formValues.phone}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.phone && <span className="error">{errors.phone}</span>}
-          </div>
-
-          <button type="submit">Submit</button>
-        </form>
-      </div>
+      {/*<div>© 2024 Salesplat. All rights reserved.</div>*/}
     </div>
   )
 }

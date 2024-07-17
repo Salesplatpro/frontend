@@ -49,7 +49,7 @@ const Navbar = () => {
             )}
 
             <button className="apply">
-              <a href="talentDashboard/talentProfile">Apply for jobs</a>
+              <a href="talentRegister">Apply for jobs</a>
             </button>
             <button className="hire">
               <a href="recruiterDashboard/postjob">Hire Talents</a>

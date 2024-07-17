@@ -1,0 +1,29 @@
+.primary {
+  background-color: #3C6FD4;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.secondary {
+  background-color: white;
+  color: #344054;
+  margin-top: 16px;
+  width: 100%;
+  border: 1px solid #D0D5DD;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.element {
+  width: 24px;
+  height: 24px;
+}
