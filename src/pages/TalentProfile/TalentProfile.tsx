@@ -1,111 +1,83 @@
-import '../form.scss'
-
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React from 'react'
+import profilePics from '../../assets/profilePics.png'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
+import AllRoles from '../../components/Roles/AllRoles'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import {
+  useTalentCreationMutation,
+  useUploadCvMutation,
+} from '../../redux/api/talent'
 
-import { getRole, TalentCreation, uploadCV } from '../../api/api-communication'
-import { useAuth } from '../../context/contextHook'
-import { Role } from '../../utils/types'
-
-interface FormErrors {
+interface TalentProfileProps {
   bio?: string
-  role?: []
+  role?: string[]
   maxSalary?: string
   minSalary?: string
   experience?: string
-  // cv?: string
+  cv?: File | null
 }
 
-const TalentProfile: React.FC = () => {
-  const auth = useAuth()
-  const userProfile = auth?.userInfo?.user?.profile
-  const [edit, setEdit] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [isDisabled, setIsDisabled] = useState(false)
-  const [roles, setRoles] = useState<Role[]>([])
-  const [formValues, setFormValues] = useState({
-    bio: '',
-    role: [],
-    maxSalary: '',
-    minSalary: '',
-    experience: '',
-    cv: '',
-  })
+const initialValues: TalentProfileProps = {
+  bio: '',
+  role: [],
+  maxSalary: '',
+  minSalary: '',
+  experience: '',
+  cv: null,
+}
 
-  useEffect(() => {
-    if (userProfile) {
-      setLoading(false)
-      setEdit(true)
-      const profile = userProfile
-      console.log(profile)
+const validationSchema = Yup.object({
+  bio: Yup.string().required('Bio is required'),
+  minSalary: Yup.number()
+    .required('Minimum Salary is required')
+    .positive('Minimum Salary must be positive'),
+  maxSalary: Yup.number()
+    .required('Maximum Salary is required')
+    .positive('Maximum Salary must be positive'),
+  experience: Yup.string().required('Experience level is required'),
+  cv: Yup.mixed()
+    .required('A file is required')
+    .test(
+      'fileSize',
+      'File size is too large',
+      (value) => value && value.size <= 5 * 1024 * 1024, // 5MB
+    )
+    .test(
+      'fileType',
+      'Unsupported file format',
+      (value) =>
+        value &&
+        [
+          'application/pdf',
+          'application/msword',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ].includes(value.type),
+    ),
+})
 
-      setFormValues({
-        bio: profile.bio,
-        role: profile.role,
-        maxSalary: profile.maxSalary,
-        minSalary: profile.minSalary,
-        experience: profile.experience,
-        cv: profile.cv,
-      })
-      setIsDisabled(true)
-    } else {
-      setEdit(false)
-    }
+const TalentProfile = () => {
+  const [talentCreation] = useTalentCreationMutation()
+  const [uploadCv] = useUploadCvMutation()
 
-    if (loading) {
-      return <div> loading</div>
-    }
-  }, [])
-
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const data = await getRole()
-        setRoles(data.data)
-      } catch (error) {
-        console.log('error fetching role', error)
-      }
-    }
-    fetchRoles()
-  }, [])
-
-  const [errors, setErrors] = useState<FormErrors>({})
-
-  // no endpoint for this yet
-  const handleEdit = () => {
-    setIsDisabled(false)
-    setEdit(false)
-  }
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+  const onSubmit = async (
+    values: TalentProfileProps,
+    { setSubmitting, setFieldValue },
   ) => {
-    const { name, value } = e.target
-    const newValue = name === 'role' ? [value] : value
-    setFormValues({ ...formValues, [name]: newValue })
-
-    setErrors({ ...errors, [name]: '' })
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const validationErrors = validateForm(formValues)
-
-    const formData = new FormData(e.currentTarget)
-    const cvFile = formData.get('cv') as File
-
     try {
-      if (cvFile) {
-        const submitCv = await uploadCV(cvFile)
+      if (values.cv) {
+        const formData = new FormData()
+        formData.append('file', values.cv)
+
+        const submitCv = await uploadCv(formData).unwrap()
+
         const updatedFormValue = {
-          ...formValues,
+          ...values,
           cv: submitCv.data.fileUrl,
         }
-        const data = await TalentCreation(updatedFormValue)
-        // console.log(submitCv.data.fileUrl)
+
+        const data = await talentCreation(updatedFormValue).unwrap()
+
         if (data.status) {
           toast.success('Profile created successfully')
         } else {
@@ -113,171 +85,298 @@ const TalentProfile: React.FC = () => {
             data.message || 'An error occurred while creating profile',
           )
         }
-        console.log(data)
       } else {
         toast.error('Error uploading cv')
         throw new Error('Error uploading cv')
       }
     } catch (error: any) {
-      console.error('error submiting', error)
+      console.error('Error submitting', error)
       toast.error(error.message || 'An error occurred while creating profile')
+    } finally {
+      setSubmitting(false)
     }
-
-    // const data = await TalentCreation(formValues)
-    // console.log(data)
-    // if (Object.keys(validationErrors).length === 0) {
-    //   try {
-    //     const data = await TalentCreation(formValues)
-    //     if (data.status) {
-    //       toast.success('Profile Created successfully')
-    //     } else {
-    //       toast.error(data.message)
-    //     }
-    //   } catch (err) {
-    //     toast.error('An error occurred while creating Profile')
-    //   }
-    // } else {
-    //   setErrors(validationErrors)
-    //   toast.error('Error creating profile')
-    // }
   }
-
-  const validateForm = (data: typeof formValues): FormErrors => {
-    let errors = {} as FormErrors
-
-    if (!data.bio) {
-      errors.bio = 'Bio is Required'
-    }
-    if (!data.role) {
-      // errors.role = 'Role is Required'
-    }
-    if (!data.maxSalary) {
-      errors.maxSalary = 'Role is Required'
-    }
-    if (!data.minSalary) {
-      errors.minSalary = 'Role is Required'
-    }
-    if (!data.experience) {
-      errors.experience = 'Salary Range is Required'
-    }
-    // if (!data.cv) {
-    //   errors.cv = 'Job Description is Required'
-    // }
-    return errors
-  }
-
-  // if (!userProfile) {
-  //   return <div> loading</div>
-  // }
 
   return (
-    <div className="apply-job">
-      <div className="job-hero">
-        <h2>Create Talent Profile</h2>
-      </div>
-      <div className="job-form">
-        <form onSubmit={handleSubmit}>
-          <div className="input">
-            <label htmlFor="bio">bio</label>
-            <input
-              type="text"
-              name="bio"
-              id="bio"
-              value={formValues.bio}
-              onChange={handleChange}
-              placeholder=""
-              disabled={isDisabled}
-              // required
-            />
-            {errors.bio && <span className="error">{errors.bio}</span>}
+    <div className="w-full">
+      <div className="md:w-[80%] w-full m-auto">
+        <div className="md:my-3">
+          <h2 className="font-bold md:text-3xl text-xl">
+            Create Talent Profile
+          </h2>
+          <div> </div>
+        </div>
+        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2 ">
+          <div>
+            <img src={profilePics} alt="" />
+            <p className="text-[10px] text-[#4884DF]">Change Image</p>
           </div>
-          <div className="input">
-            <label htmlFor="role">Role</label>
-            <select
-              id="role"
-              name="role"
-              disabled={isDisabled}
-              value={formValues.role}
-              onChange={handleChange}>
-              <option value="">Select a role...</option>
-              {roles.map((role) => (
-                <option key={role._id} value={role._id}>
-                  {role.name}
-                </option>
-              ))}
-            </select>
+          <div className="w-full">
+            <div className="flex justify-between w-full">
+              <div className="text-[#101828]">
+                <p className="text-[20px] font-semibold">Williamson Paints</p>
+                <p className="text-[16px]">Customer Success</p>
+              </div>
+              <button className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]">
+                Edit Profile
+              </button>
+            </div>
+            <hr className="my-2" />
+            <p className="text-[14px] text-[#667085]">
+              Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus
+              id scelerisque est ultricies ultricies. Duis est sit sed leo nisl,
+              blandit elit{' '}
+            </p>
           </div>
+        </div>
 
-          <div className="input">
-            <label htmlFor="maxSalary">Max Salary</label>
-            <input
-              type="text"
-              name="maxSalary"
-              id="maxSalary"
-              value={formValues.maxSalary}
-              onChange={handleChange}
-              placeholder=""
-              disabled={isDisabled}
-              // required
-            />
-            {errors.maxSalary && (
-              <span className="error">{errors.maxSalary}</span>
-            )}
-          </div>
-          <div className="input">
-            <label htmlFor="minSalary">Min Salary</label>
-            <input
-              type="text"
-              name="minSalary"
-              id="minSalary"
-              value={formValues.minSalary}
-              onChange={handleChange}
-              placeholder=""
-              disabled={isDisabled}
-              // required
-            />
-            {errors.minSalary && (
-              <span className="error">{errors.minSalary}</span>
-            )}
-          </div>
-          <div className="input">
-            <label htmlFor="experience">experience Level</label>
-            <select
-              id="experience"
-              name="experience"
-              value={formValues.experience}
-              disabled={isDisabled}
-              onChange={handleChange}>
-              <option value="senior">Senior</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="junior">Junior</option>
-            </select>
-          </div>
-          <div className="input">
-            <label htmlFor="bio">cv</label>
-            <input
-              type="file"
-              name="cv"
-              id="cv"
-              disabled={isDisabled}
-              // value={cv}
-              required
-              onChange={handleChange}
-              placeholder=""
-              accept=".pdf,.doc,.docx"
-            />
-            {/* {errors.cv && <span className="error">{errors.cv}</span>} */}
-          </div>
-          <p style={{ marginBottom: '10px' }}>
-            Score: {userProfile?.score ?? 'Score is unavailable'}
-          </p>
+        <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-2 w-[100%] ">
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}>
+            {({ values, isSubmitting, setFieldValue }) => (
+              <Form>
+                <div>
+                  <label htmlFor="bio" className="text-[14px] text-[#344054]">
+                    Bio
+                  </label>
+                  <Field
+                    type="text"
+                    id="bio"
+                    name="bio"
+                    placeholder="Tell us about yourself"
+                    className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[128px]"
+                  />
+                  <ErrorMessage
+                    name="bio"
+                    component="div"
+                    className="text-red-500 text-[14px]"
+                  />
+                </div>
 
-          {!edit ? (
-            <button type="submit">Submit</button>
-          ) : (
-            <button onClick={handleEdit}>Edit</button>
-          )}
-        </form>
+                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-16">
+                  <div className="md:w-[48%]">
+                    <label htmlFor="bio" className="text-[14px] text-[#344054]">
+                      Name
+                    </label>
+                    <Field
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="Williamson Paints"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="role"
+                      className="text-[14px] text-[#344054]">
+                      Role
+                    </label>
+                    <div className="border border-gray-300 p-2 rounded-lg h-[44px] ">
+                      <AllRoles
+                        name="role"
+                        value={values.role}
+                        onChange={(e) =>
+                          setFieldValue('role', [e.target.value])
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="inline-block mt-6 w-full">
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="phoneNumber"
+                      className="text-[14px] text-[#344054]">
+                      Phone number
+                    </label>
+                    <Field
+                      type="text"
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      placeholder="08198675757"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="phoneNumber"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="github"
+                      className="text-[14px] text-[#344054]">
+                      Github
+                    </label>
+                    <Field
+                      type="text"
+                      id="github"
+                      name="github"
+                      placeholder="Your Github Link"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="github"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="linkedin"
+                      className="text-[14px] text-[#344054]">
+                      LinkedIn
+                    </label>
+                    <Field
+                      type="text"
+                      id="linkedin"
+                      name="linkedin"
+                      placeholder="Your Linkedin Link"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="linkedin"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="portfolio"
+                      className="text-[14px] text-[#344054]">
+                      Portfolio
+                    </label>
+                    <Field
+                      type="text"
+                      id="portfolio"
+                      name="portfolio"
+                      placeholder="Your portfolio Link"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="portfolio"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                  <div className="md:w-[48%]">
+                    <label
+                      className="text-[14px] text-[#344054]"
+                      htmlFor="experience">
+                      Experience Level
+                    </label>
+                    <Field
+                      as="select"
+                      id="experience"
+                      name="experience"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]">
+                      <option value="">Select experience Level</option>
+                      <option value="senior">Senior</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="junior">Junior</option>
+                    </Field>
+                    <ErrorMessage
+                      name="experience"
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="minSalary"
+                      className="text-[14px] text-[#344054]">
+                      Min Salary
+                    </label>
+                    <Field
+                      type="text"
+                      id="minSalary"
+                      name="minSalary"
+                      placeholder="Your minSalary"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="minSalary"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                  <div className="md:w-[48%]">
+                    <label
+                      htmlFor="maxSalary"
+                      className="text-[14px] text-[#344054]">
+                      Max Salary
+                    </label>
+                    <Field
+                      type="text"
+                      id="maxSalary"
+                      name="maxSalary"
+                      placeholder="Your Max Salary"
+                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                    />
+                    <ErrorMessage
+                      name="maxSalary"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="inline-block mt-6 w-full">
+                  <div className="md:w-[48%]">
+                    <label htmlFor="cv">Upload CV</label>
+                    <input
+                      id="cv"
+                      name="cv"
+                      type="file"
+                      onChange={(event) => {
+                        if (event.currentTarget.files) {
+                          setFieldValue('cv', event.currentTarget.files[0])
+                        }
+                      }}
+                    />
+                    <ErrorMessage
+                      name="cv"
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end ">
+                  <button
+                    disabled={isSubmitting}
+                    className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700">
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
   )
