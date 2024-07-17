@@ -1,44 +1,61 @@
-import React, {useState} from 'react';
-import logo from '../../assets/logo.png';
-import styles from './sidebar.module.scss';
-import { sidebarData } from "./sidebarData";
-import employer from '../../assets/employer.png';
-import { IoIosArrowDown } from "react-icons/io";
-import { SidebarList } from "../lists";
+import React, { ReactNode, useState } from 'react'
+import logo from '../../assets/logo.png'
+import styles from './sidebar.module.scss'
+import { SidebarList } from '../lists'
+import { feedBack } from './sidebarData'
 
-export const SideBar = () => {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+interface sideBarProps {
+  sideBarData: {
+    name: string
+    icon: React.ReactElement
+    count?: number
+    link?: string
+  }[]
+  handleClick: () => void
+}
+
+export const SideBar: React.FC<sideBarProps> = ({ sideBarData, handleClick }) => {
+  const [activeItem, setActiveItem] = useState<string | null>(null)
+
+  const handleItemClick = (type: string, index: number) => {
+    setActiveItem(`${type}-${index}`)
+    handleClick()
+  }
 
   return (
     <div className={styles.sideBarContainer}>
       <div>
         <div className={styles.imageContainer}>
-          <img src={logo} className={styles.logo} />
+          <img src={logo} className={styles.logo} alt="support pro" />
         </div>
         <div className={styles.sidebarList}>
-          {sidebarData.map((data, index) => (
+          {sideBarData.map((data, index) => (
             <SidebarList
               key={index}
               icon={data.icon}
               name={data.name}
               count={data.count}
               link={data.link}
-              active={activeIndex === index}
-              onClick={() => setActiveIndex(index)}
+              active={activeItem === `sideBar-${index}`}
+              onClick={() => handleItemClick('sideBar', index)}
             />
-          )) }
+          ))}
         </div>
       </div>
       <div className={styles.employer}>
-        <div className={styles.employerDetails}>
-          <img src={employer} />
-          <div>
-            <div className={styles.employerName}>Yolex Tech</div>
-            <div className={styles.employerType}>Employer</div>
-          </div>
+        <div>
+          {feedBack.map((data, index) => (
+            <SidebarList
+              key={index}
+              icon={data.icon}
+              name={data.name}
+              link={data.link}
+              active={activeItem === `feedback-${index}`}
+              onClick={() => handleItemClick('feedback', index)}
+            />
+          ))}
         </div>
-        <IoIosArrowDown size={20} />
       </div>
     </div>
-  );
-};
+  )
+}

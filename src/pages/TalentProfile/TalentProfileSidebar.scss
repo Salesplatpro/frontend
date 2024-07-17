@@ -1,104 +1,109 @@
 .dashboard {
   display: flex;
   height: 100%;
-  background-color: #f4f5f7;
   width: 100%;
 }
 
 .sidebar-container {
-  width: 20%;
-  padding: 20px 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: start;
   height: 100vh;
   position: fixed;
   overflow: hidden;
-
-  .logo-li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-
-    h4 {
-      margin: 0;
-      color: #fff;
-    }
-
-    img {
-      width: 40px;
-      margin-right: 10px;
-    }
-  }
-
-  h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-  }
-
-  nav {
-    width: 100%;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-  }
-
-  li {
-    margin: 10px 0;
-
-    a {
-      color: #fff;
-      text-decoration: none;
-      display: block;
-      padding: 10px;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #2171e9;
-      }
-
-      &.active {
-        background-color: #0868f7;
-      }
-    }
-  }
 }
 
 .dashboard-body {
-  flex-grow: 1;
-  width: 80%;
-  margin-left: 20%;
-  background-color: #FCFCFC;
+  // flex-grow: 1;
+  width: 100%;
+  margin-left: 22%;
+}
 
-  h6 {
-    // margin: 20px 0;
-    color: #333;
+.dashboard-nav {
+  // height: 50px;
+  box-shadow: #fcfcfc;
+  background-color: #fcfcfc;
+  width: 100%;
+  padding: 10px;
+  .menu {
+    display: none;
   }
 
-  .action-btn {
-    margin-top: 20px;
+  .employer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 50px;
+    gap: 20px;
+  }
 
-    .login {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+  .employerDetails {
+    display: flex;
+    gap: 8px;
+  }
 
-      &:hover {
-        background-color: #0056b3;
-      }
+  .employerName {
+    font-size: 14px;
+    color: #011948;
+    font-weight: bold;
+  }
 
-      a {
-        color: #fff;
-        text-decoration: none;
-      }
+  .employerType {
+    font-size: 12px;
+    color: #667085;
+  }
+}
+
+@media (max-width: 980px) {
+  .dashboard {
+    .sidebar-container {
+      transition: transform 0.3s ease;
+    }
+    .sidebar-container.closed {
+      transform: translateX(-100%);
+    }
+    .sidebar-container.open {
+      transform: translateX(0);
+    }
+    .close{
+      position: relative;
+      right: 3rem;
+      top: 1rem;
+      color: white;
+    }
+  }
+  .dashboard-body {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 8px;
+  }
+  .outlet{
+    margin-top: 1rem;
+  }
+  .dashboard-nav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    // position: fixed;
+
+    .menu {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #4884DF;
+      border: 0.5px solid #D0D5DD;
+    }
+
+    .employer {
+      padding-right: 0px;
+      gap: 14px;
+    }
+
+    .employerDetails {
+      gap: 2px;
     }
   }
 }
