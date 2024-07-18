@@ -118,3 +118,17 @@
       cursor: pointer;
     }
   }
+
+@media (max-width: 768px) {
+  .carousel {
+    display: none;
+  }
+
+  .apply-job {
+    width: 100%;
+    padding: 20px;
+    .job-form {
+      width: 100%;
+    }
+  }
+}
