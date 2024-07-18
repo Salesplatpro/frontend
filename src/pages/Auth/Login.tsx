@@ -12,6 +12,11 @@ import {
   loginStart,
   loginSuccess,
 } from '../../redux/features/authSlice/authSlice'
+import logo from "../../assets/logo.png";
+import { Button, CheckBox, TextInput } from "../../components";
+import google from "../../assets/google.png";
+import salesplate from "../../assets/salesplat.png";
+import { Carousel } from "./Carousel";
 
 interface FormErrors {
   email?: any
@@ -94,64 +99,65 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="apply-job">
+    <div>
       <Navbar />
-      <div className="job-hero">
-        <h5 className="text-blue-900 font-extrabold text-center">
-          LOGIN AS A TALENT OR RECRUITER HERE
-        </h5>
-      </div>
-      <div className="job-form">
-        <form onSubmit={handleSubmit}>
-          <div className="input">
-            <label htmlFor="email">email</label>
-            <input
-              type="text"
-              name="email"
-              id="email"
-              value={formValues.email}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.email && <span className="error">{errors.email}</span>}
+      <div className="talentReg">
+        <div className="apply-job">
+          <div className="job-hero">
+            <img className="logo" src={logo}/>
+            <div>
+              <div className="create-account">Login your account</div>
+              <div className="details">Please enter your details</div>
+            </div>
           </div>
-
-          <div className="input">
-            <label htmlFor="password">password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formValues.password}
-              onChange={handleChange}
-              placeholder=""
-              // required
-            />
-            {errors.password && (
-              <span className="error">{errors.password}</span>
-            )}
+          <div className="job-form">
+            <form onSubmit={handleSubmit}>
+              <TextInput
+                title="Email"
+                label="email"
+                name="email"
+                value={formValues.email}
+                onChange={handleChange}
+                placeholder="Email"
+                error={errors.email}
+              />
+              <TextInput
+                title="Password"
+                label="password"
+                name="password"
+                value={formValues.password}
+                onChange={handleChange}
+                isPassword
+                placeholder="Enter your password"
+                error={errors.password}
+              />
+              <div className="remember-me">
+                <CheckBox name="remember" label="Remember me" />
+                <div className="forgot-password">Forgot password?</div>
+              </div>
+              <div className="buttons">
+                <Button title="Log In" />
+                <div className="already">Don't have an account? <a href="/login">Sign up</a></div>
+                <Button
+                  title="Continue with Google"
+                  variant="secondary"
+                  element={<img src={google} />}
+                />
+                <Button
+                  title="Continue with Salesplat"
+                  variant="secondary"
+                  element={<img src={salesplate} />}
+                />
+              </div>
+            </form>
           </div>
-
-          <button type="submit">
-            {!submitLoading ? 'Submit' : 'Submitting..'}
-          </button>
-        </form>
-
-        <h6 style={{ marginTop: '10px' }}>
-          Dont have an account{' '}
-          <a href="talentRegister" style={{ textDecoration: 'none' }}>
-            Register as a Talent
-          </a>
-        </h6>
-        <h6 style={{ marginTop: '10px' }}>
-          Dont have an account{' '}
-          <a href="recruiterRegister" style={{ textDecoration: 'none' }}>
-            Register as a Recruiter
-          </a>
-        </h6>
+        </div>
+        <div className="carousel">
+          <Carousel />
+        </div>
       </div>
     </div>
+
   )
 }
 

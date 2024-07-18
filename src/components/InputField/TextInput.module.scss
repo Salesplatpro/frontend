@@ -1,0 +1,17 @@
+.shared-style {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  @extend .shared-style;
+  gap: 6px;
+  padding: 6px 0;
+}
+
+.label {
+  display: flex;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 21.38px;
+}
