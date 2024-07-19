@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { SendTalentLogin } from '../../api/api-communication'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
-import salesplate from '../../assets/salesplat.png'
+import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
 import { useAuth } from '../../context/contextHook'
@@ -75,7 +75,7 @@ const Login: React.FC = () => {
             navigate('/')
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         console.log(err)
         dispatch(loginFailure(err.data?.message || 'Failed to login'))
         setSubmitLoading(false)
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
       errors.email = 'Email is Required'
     }
     if (!data.password) {
-      errors.password = 'password is Required'
+      errors.password = 'Password is Required'
     }
     return errors
   }
@@ -121,8 +121,9 @@ const Login: React.FC = () => {
                 value={formValues.email}
                 onChange={handleChange}
                 placeholder="Email"
-                error={errors.email}
               />
+              {errors.email && <p className="text-red-500">{errors.email}</p>}
+
               <TextInput
                 title="Password"
                 label="password"
@@ -131,8 +132,20 @@ const Login: React.FC = () => {
                 onChange={handleChange}
                 isPassword
                 placeholder="Enter your password"
-                error={errors.password}
               />
+              {errors.password ? (
+                <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
+                  {errors.password}
+                </p>
+              ) : (
+                formValues.password &&
+                formValues.password.length < 8 && (
+                  <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
+                    Password must be at least 8 characters
+                  </p>
+                )
+              )}
+
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />
                 <div className="forgot-password">Forgot password?</div>
@@ -140,7 +153,7 @@ const Login: React.FC = () => {
               <div className="buttons">
                 <Button title="Log In" />
                 <div className="already">
-                  Don't have an account? <a href="/login">Sign up</a>
+                  Don&apos;t have an account ? <a href="/login">Sign up</a>
                 </div>
                 <Button
                   title="Continue with Google"
@@ -150,7 +163,7 @@ const Login: React.FC = () => {
                 <Button
                   title="Continue with Salesplat"
                   variant="secondary"
-                  element={<img src={salesplate} alt="salesplat logo" />}
+                  element={<img src={Salesplat} alt="salesplat logo" />}
                 />
               </div>
             </form>
