@@ -1,5 +1,7 @@
 .primary {
   background-color: #3C6FD4;
+  padding: 8px;
+  border-radius: 10px;
   color: white;
   border: none;
   cursor: pointer;
@@ -12,8 +14,9 @@
 
 .secondary {
   background-color: white;
+  padding: 8px;
+  border-radius: 10px;
   color: #344054;
-  margin-top: 16px;
   width: 100%;
   border: 1px solid #D0D5DD;
   cursor: pointer;

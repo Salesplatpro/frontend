@@ -1,0 +1,35 @@
+.selectItem-container {
+  display: block;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e7e7e9;
+  border-radius: 10px;
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.display {
+  display: block;
+  margin-top: 8px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.hide {
+  display: none;
+}

@@ -138,16 +138,18 @@ const Login: React.FC = () => {
               <div className="buttons">
                 <Button title="Log In" />
                 <div className="already">Don't have an account? <a href="/login">Sign up</a></div>
-                <Button
-                  title="Continue with Google"
-                  variant="secondary"
-                  element={<img src={google} />}
-                />
-                <Button
-                  title="Continue with Salesplat"
-                  variant="secondary"
-                  element={<img src={salesplate} />}
-                />
+               <div className="btns">
+                 <Button
+                   title="Continue with Google"
+                   variant="secondary"
+                   element={<img src={google} />}
+                 />
+                 <Button
+                   title="Continue with Salesplat"
+                   variant="secondary"
+                   element={<img src={salesplate} />}
+                 />
+               </div>
               </div>
             </form>
           </div>

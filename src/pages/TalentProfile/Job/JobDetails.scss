@@ -1,0 +1,13 @@
+.job-details-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.job-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667085;
+  font-weight: 600;
+}

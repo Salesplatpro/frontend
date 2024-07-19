@@ -1,0 +1,23 @@
+.dropdown-container:hover {
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.display {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
