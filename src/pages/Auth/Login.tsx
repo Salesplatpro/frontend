@@ -1,21 +1,23 @@
 import '../form.scss'
+
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+
 import { SendTalentLogin } from '../../api/api-communication'
+import google from '../../assets/google.png'
+import logo from '../../assets/logo.png'
+import salesplate from '../../assets/salesplat.png'
+import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
 import { useAuth } from '../../context/contextHook'
 import { useUserLoginMutation } from '../../redux/api/apiSlice'
-import { useDispatch } from 'react-redux'
 import {
   loginFailure,
   loginStart,
   loginSuccess,
 } from '../../redux/features/authSlice/authSlice'
-import logo from '../../assets/logo.png'
-import { Button, CheckBox, TextInput } from '../../components'
-import google from '../../assets/google.png'
-import salesplate from '../../assets/salesplat.png'
 import { Carousel } from './Carousel'
 
 interface FormErrors {
