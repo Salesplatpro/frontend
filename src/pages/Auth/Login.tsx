@@ -12,11 +12,11 @@ import {
   loginStart,
   loginSuccess,
 } from '../../redux/features/authSlice/authSlice'
-import logo from "../../assets/logo.png";
-import { Button, CheckBox, TextInput } from "../../components";
-import google from "../../assets/google.png";
-import salesplate from "../../assets/salesplat.png";
-import { Carousel } from "./Carousel";
+import logo from '../../assets/logo.png'
+import { Button, CheckBox, TextInput } from '../../components'
+import google from '../../assets/google.png'
+import salesplate from '../../assets/salesplat.png'
+import { Carousel } from './Carousel'
 
 interface FormErrors {
   email?: any
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
       <div className="talentReg">
         <div className="apply-job">
           <div className="job-hero">
-            <img className="logo" src={logo}/>
+            <img className="logo" src={logo} alt="company" />
             <div>
               <div className="create-account">Login your account</div>
               <div className="details">Please enter your details</div>
@@ -137,16 +137,18 @@ const Login: React.FC = () => {
               </div>
               <div className="buttons">
                 <Button title="Log In" />
-                <div className="already">Don't have an account? <a href="/login">Sign up</a></div>
+                <div className="already">
+                  Don't have an account? <a href="/login">Sign up</a>
+                </div>
                 <Button
                   title="Continue with Google"
                   variant="secondary"
-                  element={<img src={google} />}
+                  element={<img src={google} alt="google" />}
                 />
                 <Button
                   title="Continue with Salesplat"
                   variant="secondary"
-                  element={<img src={salesplate} />}
+                  element={<img src={salesplate} alt="salesplat logo" />}
                 />
               </div>
             </form>
@@ -157,7 +159,6 @@ const Login: React.FC = () => {
         </div>
       </div>
     </div>
-
   )
 }
 
