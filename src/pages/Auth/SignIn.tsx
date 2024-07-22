@@ -5,35 +5,37 @@ import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { SendTalentLogin } from '../../api/api-communication'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
-import { useAuth } from '../../context/contextHook'
-import { useUserLoginMutation } from '../../redux/api/apiSlice'
-import {
-  loginFailure,
-  loginStart,
-  loginSuccess,
-} from '../../redux/features/authSlice/authSlice'
+import { useUserSignupMutation } from '../../redux/api/apiSlice'
+// import {
+//   signupFailure,
+//   signupStart,
+//   signupSuccess,
+// } from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
 
 interface FormErrors {
-  email?: any
-  password?: any
+  email?: string
+  password?: string
+  confirmPassword?: string
 }
 
-const Login: React.FC = () => {
-  const [login, isLoading] = useUserLoginMutation()
+const SignIn = () => {
+  // const [signup] = useUserSignupMutation() // Adjust this if the mutation name is different
   const dispatch = useDispatch()
-  // const auth = useAuth()
   const navigate = useNavigate()
   const [submitLoading, setSubmitLoading] = useState(false)
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    number: '',
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
@@ -52,17 +54,16 @@ const Login: React.FC = () => {
     const validationErrors = validateForm(formValues)
 
     if (Object.keys(validationErrors).length === 0) {
-      dispatch(loginStart())
+      dispatch(signupStart())
       try {
-        // const data = await auth?.login(formValues)
-        const response = await login(formValues).unwrap()
+        const response = await signup(formValues).unwrap()
         dispatch(
-          loginSuccess({
+          signupSuccess({
             user: response.data.user,
             token: response.data.token,
           }),
         )
-        toast.success('Logged in successfully')
+        toast.success('Signed up successfully')
         if (response && response.data) {
           const userRole = response.data.user?.userRole
           if (userRole === 'recruiter') {
@@ -77,14 +78,14 @@ const Login: React.FC = () => {
         }
       } catch (err: any) {
         console.log(err)
-        dispatch(loginFailure(err.data?.message || 'Failed to login'))
+        dispatch(signupFailure(err.data?.message || 'Failed to sign up'))
         setSubmitLoading(false)
-        toast.error(err.data?.message || 'An error occurred while logging in')
+        toast.error(err.data?.message || 'An error occurred while signing up')
       }
     } else {
       setErrors(validationErrors)
       setSubmitLoading(false)
-      toast.error('Error Logging user details')
+      toast.error('Error signing up user details')
     }
   }
 
@@ -92,10 +93,15 @@ const Login: React.FC = () => {
     let errors = {} as FormErrors
 
     if (!data.email) {
-      errors.email = 'Email is Required'
+      errors.email = 'Email is required'
     }
     if (!data.password) {
-      errors.password = 'Password is Required'
+      errors.password = 'Password is required'
+    } else if (data.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters'
+    }
+    if (data.password !== data.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match'
     }
     return errors
   }
@@ -108,12 +114,30 @@ const Login: React.FC = () => {
           <div className="job-hero">
             <img className="logo" src={logo} alt="company" />
             <div>
-              <div className="create-account">Login your account</div>
-              <div className="details">Please enter your details</div>
+              <div className="create-account">Create account</div>
+              <div className="details">Please enter your details.</div>
             </div>
           </div>
           <div className="job-form">
             <form onSubmit={handleSubmit}>
+              <TextInput
+                title="First Name"
+                label="firstName"
+                name="firstName"
+                value={formValues.firstName}
+                onChange={handleChange}
+                placeholder="Enter your Name"
+              />
+
+              <TextInput
+                title="Last Name"
+                label="lastName"
+                name="lastName"
+                value={formValues.lastName}
+                onChange={handleChange}
+                placeholder="Enter your Name"
+              />
+
               <TextInput
                 title="Email"
                 label="email"
@@ -125,6 +149,15 @@ const Login: React.FC = () => {
               {errors.email && <p className="text-red-500">{errors.email}</p>}
 
               <TextInput
+                title="Phone Number"
+                label="Phone Number"
+                name="number"
+                value={formValues.number}
+                onChange={handleChange}
+                placeholder="Enter Phone Number"
+              />
+
+              <TextInput
                 title="Password"
                 label="password"
                 name="password"
@@ -133,6 +166,7 @@ const Login: React.FC = () => {
                 isPassword
                 placeholder="Enter your password"
               />
+
               {errors.password ? (
                 <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
                   {errors.password}
@@ -146,14 +180,33 @@ const Login: React.FC = () => {
                 )
               )}
 
+              <TextInput
+                title="Confirm Password"
+                label="confirmPassword"
+                name="confirmPassword"
+                value={formValues.confirmPassword}
+                onChange={handleChange}
+                isPassword
+                placeholder="Confirm your password"
+              />
+
+              {formValues.confirmPassword &&
+                formValues.confirmPassword !== formValues.password && (
+                  <p className="text-red-500">Passwords do not match</p>
+                )}
+              {formValues.confirmPassword &&
+                formValues.confirmPassword === formValues.password && (
+                  <p className="text-green-500">Passwords match</p>
+                )}
+
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />
                 <div className="forgot-password">Forgot password?</div>
               </div>
               <div className="buttons">
-                <Button title="Log In" />
+                <Button title="Sign Up" />
                 <div className="already">
-                  Don&apos;t have an account ? <a href="/SignIn">Sign up</a>
+                  Already have an account ? <a href="/login">Log In</a>
                 </div>
                 <Button
                   title="Continue with Google"
@@ -177,4 +230,4 @@ const Login: React.FC = () => {
   )
 }
 
-export default Login
+export default SignIn
