@@ -1,16 +1,19 @@
 import '../form.scss'
 
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import * as Yup from 'yup'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
-import { useUserSignupMutation } from '../../redux/api/apiSlice'
+// import { useUserSignupMutation } from '../../redux/api/apiSlice'
 // import {
 //   signupFailure,
 //   signupStart,
@@ -18,93 +21,59 @@ import { useUserSignupMutation } from '../../redux/api/apiSlice'
 // } from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
 
-interface FormErrors {
-  email?: string
-  password?: string
-  confirmPassword?: string
-}
+const SignUpSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Email is required'),
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
+  firstName: Yup.string().required('First Name is required'),
+  lastName: Yup.string().required('Last Name is required'),
+  number: Yup.string().required('Phone Number is required'),
+})
 
 const SignIn = () => {
-  // const [signup] = useUserSignupMutation() // Adjust this if the mutation name is different
+  // const [signin] = useUserSignupMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [formValues, setFormValues] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: '',
-    number: '',
-  })
 
-  const [errors, setErrors] = useState<FormErrors>({})
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target
-    setFormValues({ ...formValues, [name]: value })
-    setErrors({ ...errors, [name]: '' })
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setSubmitLoading(true)
-    const validationErrors = validateForm(formValues)
-
-    if (Object.keys(validationErrors).length === 0) {
-      dispatch(signupStart())
-      try {
-        const response = await signup(formValues).unwrap()
-        dispatch(
-          signupSuccess({
-            user: response.data.user,
-            token: response.data.token,
-          }),
-        )
-        toast.success('Signed up successfully')
-        if (response && response.data) {
-          const userRole = response.data.user?.userRole
-          if (userRole === 'recruiter') {
-            navigate('/recruiterDashboard/postjob')
-          } else if (userRole === 'talent') {
-            navigate('/talentDashboard/')
-          } else if (userRole === 'admin') {
-            navigate('/adminDashboard/viewcandidates')
-          } else {
-            navigate('/')
-          }
+  const handleSubmit = async (values: any, { setSubmitting }: any) => {
+    setSubmitting(true)
+    dispatch(signinStart())
+    try {
+      const response = await SignIn(values).unwrap()
+      dispatch(
+        signinSuccess({
+          user: response.data.user,
+          token: response.data.token,
+        }),
+      )
+      toast.success('Signed up successfully')
+      if (response && response.data) {
+        const userRole = response.data.user?.userRole
+        if (userRole === 'recruiter') {
+          navigate('/recruiterDashboard/postjob')
+        } else if (userRole === 'talent') {
+          navigate('/talentDashboard/')
+        } else if (userRole === 'admin') {
+          navigate('/adminDashboard/viewcandidates')
+        } else {
+          navigate('/')
         }
-      } catch (err: any) {
-        console.log(err)
-        dispatch(signupFailure(err.data?.message || 'Failed to sign up'))
-        setSubmitLoading(false)
-        toast.error(err.data?.message || 'An error occurred while signing up')
       }
-    } else {
-      setErrors(validationErrors)
-      setSubmitLoading(false)
-      toast.error('Error signing up user details')
+    } catch (err: any) {
+      console.log(err)
+      dispatch(signinFailure(err.data?.message || 'Failed to sign up'))
+      toast.error(err.data?.message || 'An error occurred while signing up')
+    } finally {
+      setSubmitting(false)
     }
   }
 
-  const validateForm = (data: typeof formValues): FormErrors => {
-    let errors = {} as FormErrors
-
-    if (!data.email) {
-      errors.email = 'Email is required'
-    }
-    if (!data.password) {
-      errors.password = 'Password is required'
-    } else if (data.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters'
-    }
-    if (data.password !== data.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match'
-    }
-    return errors
-  }
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   return (
     <div>
@@ -119,107 +88,151 @@ const SignIn = () => {
             </div>
           </div>
           <div className="job-form">
-            <form onSubmit={handleSubmit}>
-              <TextInput
-                title="First Name"
-                label="firstName"
-                name="firstName"
-                value={formValues.firstName}
-                onChange={handleChange}
-                placeholder="Enter your Name"
-              />
+            <Formik
+              initialValues={{
+                email: '',
+                password: '',
+                confirmPassword: '',
+                firstName: '',
+                lastName: '',
+                number: '',
+              }}
+              validationSchema={SignUpSchema}
+              onSubmit={handleSubmit}>
+              {({ isSubmitting, values }) => (
+                <Form>
+                  <Field
+                    title="First Name"
+                    label="firstName"
+                    name="firstName"
+                    as={TextInput}
+                    placeholder="Enter your First Name"
+                  />
+                  <ErrorMessage
+                    name="firstName"
+                    component="p"
+                    className="text-red-500"
+                  />
 
-              <TextInput
-                title="Last Name"
-                label="lastName"
-                name="lastName"
-                value={formValues.lastName}
-                onChange={handleChange}
-                placeholder="Enter your Name"
-              />
+                  <Field
+                    title="Last Name"
+                    label="lastName"
+                    name="lastName"
+                    as={TextInput}
+                    placeholder="Enter your Last Name"
+                  />
+                  <ErrorMessage
+                    name="lastName"
+                    component="p"
+                    className="text-red-500"
+                  />
 
-              <TextInput
-                title="Email"
-                label="email"
-                name="email"
-                value={formValues.email}
-                onChange={handleChange}
-                placeholder="Email"
-              />
-              {errors.email && <p className="text-red-500">{errors.email}</p>}
+                  <Field
+                    title="Email"
+                    label="email"
+                    name="email"
+                    as={TextInput}
+                    placeholder="Email"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="p"
+                    className="text-red-500"
+                  />
 
-              <TextInput
-                title="Phone Number"
-                label="Phone Number"
-                name="number"
-                value={formValues.number}
-                onChange={handleChange}
-                placeholder="Enter Phone Number"
-              />
+                  <Field
+                    title="Phone Number"
+                    label="Phone Number"
+                    name="number"
+                    as={TextInput}
+                    placeholder="Enter Phone Number"
+                  />
+                  <ErrorMessage
+                    name="number"
+                    component="p"
+                    className="text-red-500"
+                  />
 
-              <TextInput
-                title="Password"
-                label="password"
-                name="password"
-                value={formValues.password}
-                onChange={handleChange}
-                isPassword
-                placeholder="Enter your password"
-              />
+                  <div className="relative">
+                    <Field
+                      title="Password"
+                      label="password"
+                      name="password"
+                      as={TextInput}
+                      placeholder="Enter your password"
+                      type="password"
+                      className="pr-10" // Add padding to the right to make space for the icon
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
+                      onClick={() => {
+                        setShowPassword(!showPassword)
+                      }}>
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
 
-              {errors.password ? (
-                <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
-                  {errors.password}
-                </p>
-              ) : (
-                formValues.password &&
-                formValues.password.length < 8 && (
-                  <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
-                    Password must be at least 8 characters
-                  </p>
-                )
+                    {values.password && values.password.length < 8 && (
+                      <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
+                        Password must be at least 8 characters
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="relative">
+                    <Field
+                      title="Confirm Password"
+                      label="confirmPassword"
+                      name="confirmPassword"
+                      as={TextInput}
+                      placeholder="Confirm your password"
+                      className="pr-10" // Add padding to the right to make space for the icon
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }>
+                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+
+                    {values.confirmPassword &&
+                      values.confirmPassword !== values.password && (
+                        <p className="text-red-500">Passwords do not match</p>
+                      )}
+                    {values.confirmPassword &&
+                      values.confirmPassword === values.password && (
+                        <p className="text-green-500">Passwords match</p>
+                      )}
+                  </div>
+                  <div className="remember-me">
+                    <CheckBox name="remember" label="Remember me" />
+                    <div className="forgot-password">Forgot password?</div>
+                  </div>
+                  <div className="buttons">
+                    <Button
+                      type="submit"
+                      title="Sign Up"
+                      disabled={isSubmitting}
+                    />
+                    <div className="already">
+                      Already have an account? <a href="/login">Log In</a>
+                    </div>
+                    <Button
+                      title="Continue with Google"
+                      variant="secondary"
+                      element={<img src={google} alt="google" />}
+                    />
+                    <Button
+                      title="Continue with Salesplat"
+                      variant="secondary"
+                      element={<img src={Salesplat} alt="salesplat logo" />}
+                    />
+                  </div>
+                </Form>
               )}
-
-              <TextInput
-                title="Confirm Password"
-                label="confirmPassword"
-                name="confirmPassword"
-                value={formValues.confirmPassword}
-                onChange={handleChange}
-                isPassword
-                placeholder="Confirm your password"
-              />
-
-              {formValues.confirmPassword &&
-                formValues.confirmPassword !== formValues.password && (
-                  <p className="text-red-500">Passwords do not match</p>
-                )}
-              {formValues.confirmPassword &&
-                formValues.confirmPassword === formValues.password && (
-                  <p className="text-green-500">Passwords match</p>
-                )}
-
-              <div className="remember-me">
-                <CheckBox name="remember" label="Remember me" />
-                <div className="forgot-password">Forgot password?</div>
-              </div>
-              <div className="buttons">
-                <Button title="Sign Up" />
-                <div className="already">
-                  Already have an account ? <a href="/login">Log In</a>
-                </div>
-                <Button
-                  title="Continue with Google"
-                  variant="secondary"
-                  element={<img src={google} alt="google" />}
-                />
-                <Button
-                  title="Continue with Salesplat"
-                  variant="secondary"
-                  element={<img src={Salesplat} alt="salesplat logo" />}
-                />
-              </div>
-            </form>
+            </Formik>
           </div>
         </div>
         <div className="carousel">
