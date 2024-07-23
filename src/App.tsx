@@ -32,6 +32,7 @@ import { useDispatch } from 'react-redux'
 import { getToken } from './utils/authUtils'
 import { setUser } from './redux/features/authSlice/authSlice'
 import ProtectedRoute from './components/ProtectedRoute'
+import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -94,7 +95,8 @@ const router = createBrowserRouter([
           },
           {
             path: 'talentQuiz',
-            element: <TalentQuiz />,
+            element: <TalentAssessment />,
+            // element: <TalentQuiz />,
           },
           {
             path: 'job',
