@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 .talentReg {
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
 }
@@ -17,6 +21,7 @@
   &:hover {
     cursor: pointer;
   }
+  font-family: 'Raleway', sans-serif;
 }
 
 .logo {
@@ -35,12 +40,25 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: #335BC2;
+  color: #335bc2;
+  font-family: 'Raleway', sans-serif;
 }
 
 .already {
   margin-top: 8px;
   text-align: center;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+  line-height: 20px;
+  font-size: 14px;
+
+  a {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    color: #335bc2;
+    line-height: 20px;
+    font-size: 14px;
+  }
 }
 
 .details {
@@ -49,6 +67,8 @@
   font-size: 18px;
   line-height: 24px;
   color: #667085;
+  padding-top: 15px;
+  font-family: 'Raleway', sans-serif;
 }
 
 .apply-job {
@@ -60,62 +80,50 @@
   align-items: center;
   padding: 20px 0;
 
-    .job-hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 32px;
-      // background-color: #4985df;
-      // border-bottom-left-radius: 30px;
-      // border-bottom-right-radius: 30px;
-      // width: 100%;
-      // height: 20vh;
-    }
-    .job-form {
-      width: 60%;
-      //align-self: center;
-      //margin: 2rem auto 0;
-      //box-shadow: 2px 2px 20px #ccc;
-      //padding: 2rem;
-    }
-    .input{
-      //margin-bottom: 20px;
-    }
-    label {
-      font-weight: 500;
-      font-size: 12px;
-    }
+  .job-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+    // background-color: #4985df;
+    // border-bottom-left-radius: 30px;
+    // border-bottom-right-radius: 30px;
+    // width: 100%;
+    // height: 20vh;
+  }
+  .job-form {
+    width: 60%;
+    //align-self: center;
+    //margin: 2rem auto 0;
+    //box-shadow: 2px 2px 20px #ccc;
+    //padding: 2rem;
+  }
+  // .input {
+  //   //margin-bottom: 20px;
+  // }
+  label {
+    font-weight: 500;
+    font-size: 12px;
+    font-family: 'Raleway', sans-serif;
+  }
 
-    input[type='text'],
-    input[type='email'],
-    input[type='password'],
-    textarea {
-      width: 100%;
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-
-      &:focus {
-        border: 1px solid #D0D5DD;
-        outline: none;
-      }
-    }
-    .error {
-      color: red;
-      font-size: 12px;
-    }
-
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      border-radius: 5px;
-      padding: 0.5rem 1rem;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  textarea {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-weight: 500;
+    color: #667085;
+    font-family: 'Raleway', sans-serif;
+    line-height: 25.65px;
+    font-size: 14px;
+    &:focus {
+      border: 1px solid #d0d5dd;
+      outline: none;
     }
     .btns {
       display: flex;
@@ -124,6 +132,25 @@
       gap: 16px;
     }
   }
+  .error {
+    color: red;
+    font-size: 12px;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    line-height: 24px;
+  }
+}
 
 @media (max-width: 768px) {
   .carousel {

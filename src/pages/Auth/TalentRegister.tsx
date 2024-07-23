@@ -5,13 +5,13 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import { SendTalentReg } from '../../api/api-communication'
+import google from '../../assets/google.png'
+import logo from '../../assets/logo.png'
+import salesplate from '../../assets/salesplat.png'
+import { Button } from '../../components'
+import { CheckBox, TextInput } from '../../components/InputField'
 import Navbar from '../../components/Navbar'
-import { CheckBox, TextInput } from "../../components/InputField";
-import logo from '../../assets/logo.png';
-import google from '../../assets/google.png';
-import salesplate from '../../assets/salesplat.png';
-import { Carousel } from "./Carousel";
-import { Button } from "../../components";
+import { Carousel } from './Carousel'
 
 interface FormErrors {
   email?: any
@@ -92,11 +92,11 @@ const TalentRegister: React.FC = () => {
       <div className="talentReg">
         <div className="apply-job">
           <div className="job-hero">
-            <img className="logo" src={logo}/>
-           <div>
-             <div className="create-account">Create account</div>
-             <div className="details">Please enter your details</div>
-           </div>
+            <img className="logo" src={logo} alt="Logo Img" />
+            <div>
+              <div className="create-account">Create account</div>
+              <div className="details">Please enter your details</div>
+            </div>
           </div>
           <div className="job-form">
             <form onSubmit={handleSubmit}>
@@ -159,22 +159,24 @@ const TalentRegister: React.FC = () => {
                 error={errors.password}
               />
               <div>
-               <div className="remember-me">
-                 <CheckBox name="remember" label="Remember me" />
-                 <div className="forgot-password">Forgot password?</div>
-               </div>
+                <div className="remember-me">
+                  <CheckBox name="remember" label="Remember me" />
+                  <div className="forgot-password">Forgot password?</div>
+                </div>
                 <div className="buttons">
                   <Button title="Sign Up" />
-                  <div className="already">Already have an account? <a href="/login">Log in</a></div>
+                  <div className="already">
+                    Already have an account? <a href="/login">Log in</a>
+                  </div>
                   <Button
                     title="Continue with Google"
                     variant="secondary"
-                    element={<img src={google} />}
+                    element={<img src={google} alt="google Img" />}
                   />
                   <Button
                     title="Continue with Salesplat"
                     variant="secondary"
-                    element={<img src={salesplate} />}
+                    element={<img src={salesplate} alt="salesplat img" />}
                   />
                 </div>
               </div>

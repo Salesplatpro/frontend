@@ -1,12 +1,3 @@
-// /** @type {import('tailwindcss').Config} */
-// module.exports = {
-//   content: ['./index.html', '../src/**/*.{js,ts,jsx,tsx}'],
-//   theme: {
-//     extend: {},
-//   },
-//   plugins: [],
-// }
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -14,7 +5,11 @@ module.exports = {
     './src/**/*.scss', // Include SCSS files
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        raleway: ['Raleway, san-serif'],
+      },
+    },
   },
   plugins: [],
 }
