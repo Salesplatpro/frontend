@@ -155,16 +155,18 @@ const Login: React.FC = () => {
                 <div className="already">
                   Don&apos;t have an account ? <a href="/SignIn">Sign up</a>
                 </div>
-                <Button
-                  title="Continue with Google"
-                  variant="secondary"
-                  element={<img src={google} alt="google" />}
-                />
-                <Button
-                  title="Continue with Salesplat"
-                  variant="secondary"
-                  element={<img src={Salesplat} alt="salesplat logo" />}
-                />
+               <div className="btns">
+                 <Button
+                   title="Continue with Google"
+                   variant="secondary"
+                   element={<img src={google} alt="google" />}
+                 />
+                 <Button
+                   title="Continue with Salesplat"
+                   variant="secondary"
+                   element={<img src={Salesplat} alt="salesplat logo" />}
+                 />
+               </div>
               </div>
             </form>
           </div>

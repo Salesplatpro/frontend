@@ -125,6 +125,12 @@
       border: 1px solid #d0d5dd;
       outline: none;
     }
+    .btns {
+      display: flex;
+      flex-direction: column;
+      margin-top: 16px;
+      gap: 16px;
+    }
   }
   .error {
     color: red;
