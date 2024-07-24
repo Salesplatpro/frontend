@@ -42,6 +42,12 @@ export const talentApi = createApi({
         body: testAnswer,
       }),
     }),
+    fetchJob: builder.query({
+      query: (roleId) => ({
+        url: `/jobs?roleId=${roleId}&limit=10&offset=0`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -50,4 +56,5 @@ export const {
   useUploadCvMutation,
   useFetchPretestQuery,
   usePostPretestMutation,
+  useFetchJobQuery,
 } = talentApi

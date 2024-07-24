@@ -33,7 +33,6 @@ import Job from './pages/TalentProfile/Job/Job'
 import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
-// import ProtectedRoute from './components/ProtectedRoute'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 import { setUser } from './redux/features/authSlice/authSlice'
 
