@@ -29,7 +29,32 @@ export const talentApi = createApi({
         body: formData,
       }),
     }),
+    fetchPretest: builder.query({
+      query: (roleId) => ({
+        url: `/questions?limit=20&offset=0&questionType=prescreening&roleId=${roleId}`,
+        method: 'GET',
+      }),
+    }),
+    postPretest: builder.mutation({
+      query: (testAnswer) => ({
+        url: `/questions/answer/prescreening`,
+        method: 'POST',
+        body: testAnswer,
+      }),
+    }),
+    fetchJob: builder.query({
+      query: (roleId) => ({
+        url: `/jobs?roleId=${roleId}&limit=10&offset=0`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
-export const { useTalentCreationMutation, useUploadCvMutation } = talentApi
+export const {
+  useTalentCreationMutation,
+  useUploadCvMutation,
+  useFetchPretestQuery,
+  usePostPretestMutation,
+  useFetchJobQuery,
+} = talentApi

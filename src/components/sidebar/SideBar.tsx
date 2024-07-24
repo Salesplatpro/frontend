@@ -3,6 +3,7 @@ import logo from '../../assets/logo.png'
 import styles from './sidebar.module.scss'
 import { SidebarList } from '../lists'
 import { feedBack } from './sidebarData'
+import { Link } from 'react-router-dom'
 
 interface sideBarProps {
   sideBarData: {
@@ -14,7 +15,10 @@ interface sideBarProps {
   handleClick: () => void
 }
 
-export const SideBar: React.FC<sideBarProps> = ({ sideBarData, handleClick }) => {
+export const SideBar: React.FC<sideBarProps> = ({
+  sideBarData,
+  handleClick,
+}) => {
   const [activeItem, setActiveItem] = useState<string | null>(null)
 
   const handleItemClick = (type: string, index: number) => {
@@ -26,7 +30,9 @@ export const SideBar: React.FC<sideBarProps> = ({ sideBarData, handleClick }) =>
     <div className={styles.sideBarContainer}>
       <div>
         <div className={styles.imageContainer}>
-          <img src={logo} className={styles.logo} alt="support pro" />
+          <Link to="/">
+            <img src={logo} className={styles.logo} alt="support pro" />
+          </Link>
         </div>
         <div className={styles.sidebarList}>
           {sideBarData.map((data, index) => (
