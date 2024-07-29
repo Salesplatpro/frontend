@@ -18,7 +18,7 @@ export interface LocationValues {
 
 export interface FormValues {
   description: string
-  // aiConfig: string
+  aiConfig: string
   role: string
   minSalary: string
   maxSalary: string
@@ -47,4 +47,15 @@ export interface configProps {
   personalityEvaluation: string
   uploadedQuestions: string[]
   recruiterGuide: string
+}
+
+export interface JobFiltersTypes {
+  role?: string
+  experienceLevel?: string
+  remote?: ''
+  location?: {
+    country: LocationValues
+    state: LocationValues
+    city: LocationValues
+  }
 }

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { getToken } from '../../../utils/authUtils'
+import { url } from 'inspector'
 
 export const talentApi = createApi({
   reducerPath: 'talentApi',
@@ -48,6 +49,29 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
+    filterJob: builder.query({
+      query: ({ roleId, experienceLevel, remote, city, state, country }) => {
+        let url = `/jobs?limit=10&offset=0`
+
+        if (roleId) url += `&roleId=${roleId}`
+        if (experienceLevel) url += `&experienceLevel=${experienceLevel}`
+        if (remote) url += `&remote=${remote}`
+        if (city) url += `&city=${city}`
+        if (state) url += `&state=${state}`
+        if (country) url += `&country=${country}`
+
+        return {
+          url,
+          method: 'GET',
+        }
+      },
+    }),
+    individualJob: builder.query({
+      query: (jobId) => ({
+        url: `/jobs/${jobId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -57,4 +81,6 @@ export const {
   useFetchPretestQuery,
   usePostPretestMutation,
   useFetchJobQuery,
+  useFilterJobQuery,
+  useIndividualJobQuery,
 } = talentApi

@@ -1,11 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { aiConfigs } from '../../../api/api-communication'
 import toast from 'react-hot-toast'
 import { configProps } from '../../../utils/jobPostTypes'
+import {
+  useAiConfigMutation,
+  usePatchAiConfigMutation,
+} from '../../../redux/api/recruiter'
+import { Link, useParams } from 'react-router-dom'
+
+const validationSchema = Yup.object({
+  // prescreeningAssessment: Yup.string().required('Required'),
+  // minPrescreeningScore: Yup.number()
+  //   .required('Required')
+  //   .min(0, 'Min score must be at least 0'),
+  // cvSimilarity: Yup.string().required('Required'),
+  // minCvSimilarityScore: Yup.number()
+  //   .required('Required')
+  //   .min(0, 'Min score must be at least 0'),
+  // noOfCvSimilarCandidates: Yup.number()
+  //   .required('Required')
+  //   .min(0, 'Min number must be at least 0'),
+  // personalizedAssessment: Yup.string().required('Required'),
+  // noPersonalizedQuestions: Yup.number()
+  //   .required('Required')
+  //   .min(0, 'Min number must be at least 0'),
+  // personalityEvaluation: Yup.string().required('Required'),
+  // uploadedQuestions: Yup.array().of(
+  //   Yup.string().required('Question is required'),
+  // ),
+})
 
 const AiConfig = () => {
+  // const { jobId } = useParams()
+  const [aiConfigId, setAiConfigId] = useState(null)
+  const [aiConfig] = useAiConfigMutation()
+  // const [patchAiConfig] = usePatchAiConfigMutation()
   const initialValue: configProps = {
     name: '',
     prescreeningAssessment: '',
@@ -20,45 +51,46 @@ const AiConfig = () => {
     recruiterGuide: '',
   }
 
-  const validationSchema = Yup.object({
-    // prescreeningAssessment: Yup.string().required('Required'),
-    // minPrescreeningScore: Yup.number()
-    //   .required('Required')
-    //   .min(0, 'Min score must be at least 0'),
-    // cvSimilarity: Yup.string().required('Required'),
-    // minCvSimilarityScore: Yup.number()
-    //   .required('Required')
-    //   .min(0, 'Min score must be at least 0'),
-    // noOfCvSimilarCandidates: Yup.number()
-    //   .required('Required')
-    //   .min(0, 'Min number must be at least 0'),
-    // personalizedAssessment: Yup.string().required('Required'),
-    // noPersonalizedQuestions: Yup.number()
-    //   .required('Required')
-    //   .min(0, 'Min number must be at least 0'),
-    // personalityEvaluation: Yup.string().required('Required'),
-    // uploadedQuestions: Yup.array().of(
-    //   Yup.string().required('Question is required'),
-    // ),
-  })
-
   const onSubmit = async (values: configProps, { setSubmitting }) => {
     try {
-      const data = await aiConfigs(values)
+      const data = await aiConfig(values)
       console.log('Form Values:', data)
-      if (data.status) {
-        toast.success('Ai Config created successfully')
-        // const patchConfig = await patchJobPost(data.data.id)
+      console.log(data.data.message)
+      console.log(data.data.data.config._id)
+
+      if (data.data.status) {
+        toast.success(data.data.message)
+        setAiConfigId(data.data.data.config._id)
       } else {
-        toast.error(data.message)
+        toast.error(data.data.message)
       }
     } catch (error) {
-      console.log(error)
+      console.error('Error during form submission:', error)
+      toast.error('An unexpected error occurred. Please try again later.')
+    } finally {
+      setSubmitting(false)
     }
 
     console.log('Form Submission')
-    setSubmitting(false)
   }
+
+  // const onSubmit = async (values: configProps, { setSubmitting }) => {
+  //   try {
+  //     const data = await aiConfig(values)
+  //     console.log('Form Values:', data)
+  //     if (data.status) {
+  //       toast.success(data?.message)
+  //       setAiConfigId(data.data.config._id)
+  //     } else {
+  //       toast.error(data.message)
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+
+  //   console.log('Form Submission')
+  //   setSubmitting(false)
+  // }
 
   return (
     <div className="p-8 bg-[#FCFCFC] shadow-md rounded w-[70%] mx-auto">
@@ -405,6 +437,20 @@ const AiConfig = () => {
                 disabled={isSubmitting}>
                 Submit
               </button>
+            </div>
+            <div>
+              {aiConfigId !== null ? (
+                <Link to={`/recruiterDashboard/postjob/${aiConfigId}`}>
+                  <button
+                    // type="submit"
+                    // disabled={isSubmitting}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                    Next
+                  </button>
+                </Link>
+              ) : (
+                ''
+              )}
             </div>
           </Form>
         )}
