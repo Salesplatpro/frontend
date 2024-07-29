@@ -1,21 +1,33 @@
-import React from 'react';
-import styles from './TextInput.module.scss';
+import React from 'react'
+
+import styles from './TextInput.module.scss'
 
 type TextInputProps = {
-  title: string;
-  name: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  value?: string | number;
-  disabled?: boolean;
-  error?: string;
-  isPassword?: boolean;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
+  title: string
+  name: string
+  label: string
+  placeholder?: string
+  required?: boolean
+  value?: string | number
+  disabled?: boolean
+  error?: string | boolean
+  isPassword?: boolean
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
 
-export const TextInput = ({ label, title, name, value, placeholder, disabled, required, isPassword, error, onChange }: TextInputProps) => {
-  const inputType = isPassword ? 'password' : 'text';
+export const TextInput = ({
+  label,
+  title,
+  name,
+  value,
+  placeholder,
+  disabled,
+  required,
+  isPassword,
+  error,
+  onChange,
+}: TextInputProps) => {
+  const inputType = isPassword ? 'password' : 'text'
 
   return (
     <div className={styles.container}>
@@ -35,7 +47,7 @@ export const TextInput = ({ label, title, name, value, placeholder, disabled, re
           className={styles.input}
         />
       </div>
-      {error && <div>{error}</div>}
+      {error && <div className={styles.inputError}>{error}</div>}
     </div>
-  );
-};
+  )
+}
