@@ -157,20 +157,17 @@ const TalentProfile = () => {
 
                 <div className="flex md:flex-row flex-col w-[100%] justify-between mt-16">
                   <div className="md:w-[48%]">
-                    <label htmlFor="bio" className="text-[14px] text-[#344054]">
+                    <label
+                      htmlFor="names"
+                      className="text-[14px] text-[#344054]">
                       Name
                     </label>
-                    <Field
+                    <input
                       type="text"
-                      id="name"
-                      name="name"
+                      // id="names"
+                      // name="names"
                       placeholder="Williamson Paints"
                       className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="name"
-                      component="div"
-                      className="text-red-500 text-[14px]"
                     />
                   </div>
                   <div className="md:w-[48%]">
