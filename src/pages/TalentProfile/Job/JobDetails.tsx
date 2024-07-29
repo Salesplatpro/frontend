@@ -1,34 +1,39 @@
-import React from 'react';
-import { GoClock, GoLocation } from "react-icons/go";
-import { IoBagRemoveOutline } from "react-icons/io5";
-import { TbMoneybag } from "react-icons/tb";
-import './JobDetails.scss';
+import React from 'react'
+import { GoClock, GoLocation } from 'react-icons/go'
+import { IoBagRemoveOutline } from 'react-icons/io5'
+import { TbMoneybag } from 'react-icons/tb'
+import './JobDetails.scss'
 
 type JobDetailsProps = {
-  location: string;
-  type: string;
-  level: string;
-  salary: string;
+  location: string
+  type: string
+  level: string
+  salary: string
 }
 
-export const JobDetails = ({ location, type, level, salary }: JobDetailsProps) => {
+export const JobDetails = ({
+  location,
+  type,
+  level,
+  salary,
+}: JobDetailsProps) => {
   const details = [
     {
       icon: <GoLocation />,
-      detail: location
+      detail: location,
     },
-    {
-      icon: <GoClock />,
-      detail: type
-    },
+    // {
+    //   icon: <GoClock />,
+    //   detail: type
+    // },
     {
       icon: <IoBagRemoveOutline />,
-      detail: level
+      detail: level,
     },
     {
       icon: <TbMoneybag />,
-      detail: salary
-    }
+      detail: salary,
+    },
   ]
   return (
     <div className="job-details-container">
@@ -39,5 +44,5 @@ export const JobDetails = ({ location, type, level, salary }: JobDetailsProps) =
         </div>
       ))}
     </div>
-  );
+  )
 }

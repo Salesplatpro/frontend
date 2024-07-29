@@ -1,121 +1,155 @@
-import React, { useState } from "react";
-import { Button, CheckBox, DropDownList, SearchBox, SelectItem } from "../../../components";
-import { countries, experienceLevels, jobTypes, roles } from "./JobData";
-import { JobFiltersTypes } from "./Job";
-import { SalaryRange } from "./SalaryRange";
-import './JobFilter.scss';
+import React, { useState } from 'react'
+import './JobFilter.scss'
+import AllRoles from '../../../components/Roles/AllRoles'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
+import Location from '../../../components/global/Location'
+import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
-type JobFiltersProps = {
-  filters: JobFiltersTypes;
-  handleSalaryChange: (event: Event, newValue: number | number[], activeThumb: number) => void;
-  handleCountryChange: (value: string) => void;
-  handleRoleChange: (role: string) => void;
-  handleExperienceChange: (experience: string) => void;
-  handleJobTypeChange: (job: string) => void;
-  onClose: () => void;
+interface JobFiltersProps {
+  onFilterSubmit: (filterValues: JobFiltersTypes) => void
 }
 
-export const JobFilter = ({ filters, handleCountryChange, handleSalaryChange, handleRoleChange, handleExperienceChange, handleJobTypeChange, onClose}: JobFiltersProps) => {
-  const [selectItemToggle, setSelectItemToggle] = useState(false);
+export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
+  const [selectItemToggle, setSelectItemToggle] = useState(false)
+
+  const initialValues: JobFiltersTypes = {
+    role: '',
+    experienceLevel: '',
+    remote: '',
+    location: {
+      country: { name: '', geoId: null },
+      state: { name: '', geoId: null },
+      city: { name: '', geoId: null },
+    },
+  }
+
+  const onSubmit = async (
+    values: JobFiltersTypes,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    onFilterSubmit(values)
+    setSubmitting(false)
+  }
 
   return (
     <div className="filter">
-      <div className="filter-top">
-        <div className="title">Filter</div>
-        <div className="clear" onClick={onClose}>Clear/Close</div>
-      </div>
-      <SearchBox />
-      <div>
-        <div className="line" />
-        <DropDownList
-          title="Roles"
-          children={
-            <div className="each-list-gap">
-              {
-                roles.map((role, index) => (
-                  <CheckBox
-                    key={index}
-                    name={role.name}
-                    label={role.label}
-                    color="#3d3d4e"
-                    checked={filters.roles.includes(role.name)}
-                    onChange={() => handleRoleChange(role.name)}
-                  />
-                ))
-              }
+      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+        {({ values, isSubmitting, setFieldValue }) => (
+          <Form>
+            <div className="filter-top">
+              <div className="title">Filter</div>
+              <button
+                type="button"
+                className="clear"
+                onClick={() => setFieldValue('role', '')}>
+                Clear/Close
+              </button>
             </div>
-          }
-        />
-        <div className="line" />
-        <DropDownList
-          title="Experience Level"
-          children={
-            <div className="each-list-gap">
-              {
-                experienceLevels.map((experience, index) => (
-                  <CheckBox
-                    key={index}
-                    name={experience.name}
-                    label={experience.label}
-                    color="#3d3d4e"
-                    checked={filters.experienceLevel.includes(experience.name)}
-                    onChange={() => handleExperienceChange(experience.name)}
-                  />
-                ))
-              }
-            </div>
-          }
-        />
-        <div className="line" />
-        <DropDownList
-          title="Job Type"
-          children={
-            <div className="each-list-gap">
-              {
-                jobTypes.map((job, index) => (
-                  <CheckBox key={index} name={job.name} label={job.label} color="#3d3d4e" checked={filters.jobType.includes(job.name)} onChange={() => handleJobTypeChange(job.name)} />
-                ))
-              }
-            </div>
-          }
-        />
-        <div className="line" />
-        <DropDownList
-          title="Location"
-          children={
-            <div className="each-list-gap">
-              <SelectItem
-                title="Country"
-                value={filters.location}
-                toggle={selectItemToggle}
-                onClick={() => setSelectItemToggle(!selectItemToggle)}
-                children={
-                  countries.map((country) => (
-                    <ul key={country.code} onClick={() => {
-                      handleCountryChange(country.name);
-                      setSelectItemToggle(!selectItemToggle)
-                    }}>
-                      <li>{country.name}</li>
-                    </ul>
-                  ))}
+            {/* <SearchBox /> */}
+            <div>
+              <div className="line" />
+              <div>
+                <label className="block mb-2 font-bold" htmlFor="role">
+                  Role
+                </label>
+                <AllRoles
+                  className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full"
+                  name="role"
+                  value={values.role}
+                  onChange={(e) => setFieldValue('role', e.target.value)}
+                />
+              </div>
+              <div className="line" />
+
+              <div className="mb-4">
+                <label
+                  className="block mb-2 font-bold"
+                  htmlFor="experienceLevel">
+                  Experience Level
+                </label>
+                <Field
+                  as="select"
+                  id="experienceLevel"
+                  name="experienceLevel"
+                  className="w-full p-2 border border-gray-300 rounded">
+                  <option value="">Select Experience Level</option>
+                  <option value="senior">Senior</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="junior">Junior</option>
+                </Field>
+                {/* <ErrorMessage
+                  name="experienceLevel"
+                  component="div"
+                  className="text-red-500"
+                /> */}
+              </div>
+              <div className="line" />
+
+              <div className="mb-4">
+                <label className="block mb-2 font-bold" htmlFor="remote">
+                  Remote
+                </label>
+                <Field
+                  as="select"
+                  id="remote"
+                  name="remote"
+                  className="w-full p-2 border border-gray-300 rounded">
+                  <option value="">Select Remote Option</option>
+                  <option value="true">True</option>
+                  <option value="false">False</option>
+                </Field>
+                <ErrorMessage
+                  name="remote"
+                  component="div"
+                  className="text-red-500"
+                />
+              </div>
+              <div className="line" />
+
+              <Location
+                locationTitle="Country"
+                geoId={null}
+                isCountry={true}
+                onChange={(geoId) => {
+                  setFieldValue('location.country.geoId', geoId)
+                  setFieldValue('location.state', { name: '', geoId: null })
+                  setFieldValue('location.city', { name: '', geoId: null })
+                }}
               />
-              <SelectItem title="States" disabled />
-              <SelectItem title="City" disabled />
+              <div className="line" />
+
+              <Location
+                locationTitle="State"
+                geoId={values.location.country.geoId}
+                isCountry={false}
+                onChange={(geoId) => {
+                  setFieldValue('location.state.geoId', geoId)
+                  setFieldValue('location.city', { name: '', geoId: null })
+                }}
+              />
+              <div className="line" />
+
+              <Location
+                locationTitle="City"
+                geoId={values.location.state.geoId}
+                isCountry={false}
+                onChange={(geoId) => {
+                  setFieldValue('location.city.geoId', geoId)
+                }}
+              />
+              <div className="line" />
+              <div className="btn">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                  {isSubmitting ? 'applying...' : 'Apply'}
+                </button>
+              </div>
             </div>
-          }
-        />
-        <div className="line" />
-        <DropDownList
-          title="Salary Range"
-          children={
-            <SalaryRange salary={filters.salary} handleSalaryChange={handleSalaryChange} />
-          }
-        />
-        <div className="btn">
-          <Button title="Apply" variant="primary" />
-          <Button title="Clear" variant="secondary" />
-        </div>
-      </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   )
 }
