@@ -1,0 +1,18 @@
+.pipelineContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 37px;
+  margin-right: 40px;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 32px;
+  color: #101828;
+}
+
+.description {
+  font-weight: 500;
+  font-size: 20px;
+  color: #101828;
+}

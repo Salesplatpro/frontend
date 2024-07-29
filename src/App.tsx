@@ -29,15 +29,15 @@ import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import ViewCandidates from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
+import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
+import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
+import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
-import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 import { setUser } from './redux/features/authSlice/authSlice'
-
 import { getToken } from './utils/authUtils'
-import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -116,6 +116,10 @@ const router = createBrowserRouter([
           {
             path: 'job/:jobId',
             element: <IndividualJob />,
+          },
+          {
+            path: 'applicationPipeline',
+            element: <ApplicationPipeline />,
           },
         ],
       },
