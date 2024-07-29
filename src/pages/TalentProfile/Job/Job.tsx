@@ -2,30 +2,25 @@ import React, { useEffect, useState } from 'react'
 import './Job.scss'
 import { JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
-import { jobs } from './JobData'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { getScreenWidth } from '../../../hooks'
 import { Button } from '../../../components'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store/store'
-import { useFetchJobQuery } from '../../../redux/api/talent'
+import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
 import toast from 'react-hot-toast'
 import Loading from '../../../components/Loading/Loading'
+import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
-export type JobFiltersTypes = {
-  roles: string[]
-  experienceLevel: string[]
-  jobType: string[]
-  location: string
-  salary: [number, number]
-}
-
-const defaultFilterValues: JobFiltersTypes = {
-  roles: [],
-  experienceLevel: [],
-  jobType: [],
-  location: '',
-  salary: [1000, 3000],
+const defaultFilterValues = {
+  role: '',
+  experienceLevel: '',
+  remote: '',
+  location: {
+    city: '',
+    state: '',
+    country: '',
+  },
 }
 
 const Job = () => {
@@ -35,76 +30,60 @@ const Job = () => {
 
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
+  const [jobs, setJobs] = useState([])
   const screenWidth = getScreenWidth()
-  const minSalaryDifference = 1900
-  console.log(filters)
-  console.log(showFilter)
+
+  // Fetch filtered jobs
+  const {
+    data: filteredData,
+    error: filteredError,
+    isLoading: isFiltering,
+  } = useFilterJobQuery(
+    {
+      roleId: filters.role,
+      experienceLevel: filters.experienceLevel,
+      remote: filters.remote,
+      city: filters?.location.city?.name,
+      state: filters?.location.state?.name,
+      country: filters?.location.country?.name,
+    },
+    {
+      skip: !filters.role,
+    },
+  )
 
   useEffect(() => {
-    if (data) {
+    if (data && !filters.role) {
+      setJobs(data.data)
       console.log(data.data)
     }
     if (error) {
-      toast.error('Error fetching Job')
+      toast.error('Error fetching jobs')
     }
-  }, [data, error])
+  }, [data, error, filters.role])
 
-  const handleCountryChange = (countryName: string) => {
-    setFilters({ ...filters, location: countryName })
-  }
-
-  const handleSalaryChange = (
-    event: Event,
-    newValue: number | number[],
-    activeThumb: number,
-  ) => {
-    if (!Array.isArray(newValue)) {
-      return
+  useEffect(() => {
+    if (filteredData && filters.role) {
+      setJobs(filteredData.data)
+      console.log(data.data)
     }
-
-    if (activeThumb === 0) {
-      const newMin = Math.min(
-        newValue[0],
-        filters.salary[1] - minSalaryDifference,
-      )
-      setFilters({ ...filters, salary: [newMin, filters.salary[1]] })
-    } else {
-      const newMax = Math.max(
-        newValue[1],
-        filters.salary[0] + minSalaryDifference,
-      )
-      setFilters({ ...filters, salary: [filters.salary[0], newMax] })
+    if (filteredError) {
+      toast.error('Error fetching filtered jobs')
     }
-  }
+  }, [filteredData, filteredError, filters.role])
 
-  const handleRoleChange = (roleName: string) => {
-    const newRole = filters.roles.includes(roleName)
-      ? filters.roles.filter((role) => role !== roleName)
-      : [...filters.roles, roleName]
-    setFilters({ ...filters, roles: newRole })
-  }
+  if (isLoading || isFiltering) return <Loading />
 
-  const handleExperienceChange = (experience: string) => {
-    const newExperience = filters.roles.includes(experience)
-      ? filters.roles.filter((exp) => exp !== experience)
-      : [...filters.experienceLevel, experience]
-    setFilters({ ...filters, experienceLevel: newExperience })
+  const handleFilterSubmit = (filterValues) => {
+    setFilters(filterValues)
+    setShowFilter(false)
   }
-
-  const handleJobTypeChange = (jobType: string) => {
-    const newJobType = filters.jobType.includes(jobType)
-      ? filters.jobType.filter((job) => job !== jobType)
-      : [...filters.jobType, jobType]
-    setFilters({ ...filters, jobType: newJobType })
-  }
-
-  if (isLoading) return <Loading />
 
   return (
     <div className="job-container">
       <div className="jobs-title">
         <div className="jobs">Jobs</div>
-        <div>Find your dream Job by searching and applying directly.</div>
+        <div>Find your dream job by searching and applying directly.</div>
       </div>
       <div className="job-section">
         {screenWidth < 768 && !showFilter ? (
@@ -116,19 +95,11 @@ const Job = () => {
             />
           </div>
         ) : (
-          <JobFilter
-            filters={filters}
-            handleCountryChange={handleCountryChange}
-            handleSalaryChange={handleSalaryChange}
-            handleRoleChange={handleRoleChange}
-            handleExperienceChange={handleExperienceChange}
-            handleJobTypeChange={handleJobTypeChange}
-            onClose={() => setShowFilter(!showFilter)}
-          />
+          <JobFilter onFilterSubmit={handleFilterSubmit} />
         )}
         <div className="job-listing-container">
           <div className="sorting">
-            <div className="showing-result">Showing 400 results</div>
+            <div className="showing-result">Showing {jobs.length} results</div>
             <div className="sortby">
               Sort by: Recent{' '}
               <span>
@@ -140,10 +111,14 @@ const Job = () => {
             {jobs.map((job, index) => (
               <SingleJob
                 key={index}
-                jobTitle={job.jobTitle}
-                jobCategory={job.jobCategory}
-                jobDescription={job.jobDescription}
-                details={job.details}
+                jobId={job?._id}
+                jobTitle={job?.role?.name}
+                jobCategory={job?.experienceLevel}
+                jobDescription={job?.description}
+                jobRemote={job?.remote}
+                jobCountry={job?.location?.country}
+                jobExperience={job?.experienceLevel}
+                jobSalary={job?.maxSalary}
               />
             ))}
           </div>

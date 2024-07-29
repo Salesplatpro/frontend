@@ -1,30 +1,15 @@
 import { ErrorMessage, Field, Form, Formik, FieldArray } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import Location from '../../../components/global/Location'
 import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { PostJobs } from '../../../api/api-communication'
 import toast from 'react-hot-toast'
+import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
+import { Link, useParams } from 'react-router-dom'
 
-const initialValues: FormValues = {
-  description: '',
-  // aiConfig: '',
-  role: '',
-  minSalary: '',
-  maxSalary: '',
-  experienceLevel: '',
-  location: {
-    country: { name: '', geoId: null },
-    state: { name: '', geoId: null },
-    city: { name: '', geoId: null },
-  },
-  address: '',
-  remote: '',
-  responsibilities: [''],
-  skills: [''],
-  goals: [''],
-}
+
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),
@@ -68,35 +53,58 @@ const validationSchema = Yup.object({
   ),
 })
 
-const onSubmit = async (
-  values: FormValues,
-  { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
-) => {
-  const submissionValues = {
-    ...values,
-    location: {
-      country: values.location.country.name,
-      state: values.location.state.name,
-      city: values.location.city.name,
-    },
-  }
-  try {
-    const data = await PostJobs(submissionValues)
-    console.log(data)
-    if (data.status) {
-      toast.success('Job Post Created successfully')
-    } else {
-      toast.error(data.message)
-    }
-  } catch (error) {
-    // toast.error(error)
-  }
-  console.log(submissionValues)
-  console.log('submissionValues')
-  setSubmitting(false)
-}
-
 const PostJob: React.FC = () => {
+  const [jobId, setJobId] = useState(null)
+  const { aiConfigId } = useParams()
+  const [jobPostCreation] = useJobPostCreationMutation()
+
+  const initialValues: FormValues = {
+    description: '',
+    aiConfig: aiConfigId,
+    role: '',
+    minSalary: '',
+    maxSalary: '',
+    experienceLevel: '',
+    location: {
+      country: { name: '', geoId: null },
+      state: { name: '', geoId: null },
+      city: { name: '', geoId: null },
+    },
+    address: '',
+    remote: '',
+    responsibilities: [''],
+    skills: [''],
+    goals: [''],
+  }
+
+  const onSubmit = async (
+    values: FormValues,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    const submissionValues = {
+      ...values,
+      location: {
+        country: values.location.country.name,
+        state: values.location.state.name,
+        city: values.location.city.name,
+      },
+    }
+    try {
+      const data = await jobPostCreation(submissionValues).unwrap()
+      console.log(data)
+      if (data.status) {
+        toast.success('Job Post Created successfully')
+        setJobId(data?.data._id)
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error('Failed to create job post')
+    }
+    console.log(submissionValues)
+    console.log('submissionValues')
+    setSubmitting(false)
+  }
   return (
     <div className="p-4 w-full">
       <div className="w-[50%] m-auto">

@@ -37,6 +37,7 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import { setUser } from './redux/features/authSlice/authSlice'
 
 import { getToken } from './utils/authUtils'
+import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
             path: 'job',
             element: <Job />,
           },
+          {
+            path: 'job/:jobId',
+            element: <IndividualJob />,
+          },
         ],
       },
     ],
@@ -126,6 +131,10 @@ const router = createBrowserRouter([
         children: [
           {
             path: 'postjob',
+            element: <PostJobTab />,
+          },
+          {
+            path: 'postjob/:aiConfigId',
             element: <PostJobTab />,
           },
           {
