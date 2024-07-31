@@ -12,6 +12,7 @@ type TextInputProps = {
   value?: string | number
   disabled?: boolean
   error?: string
+  // eslint-disable-next-line no-unused-vars
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
