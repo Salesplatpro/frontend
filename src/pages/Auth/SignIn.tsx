@@ -8,18 +8,20 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
+import { SendTalentReg } from '../../api/api-communication'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
-// import { useUserSignupMutation } from '../../redux/api/apiSlice'
-// import {
-//   signupFailure,
-//   signupStart,
-//   signupSuccess,
-// } from '../../redux/features/authSlice/authSlice'
+import {
+  signupFailure,
+  signupStart,
+  signupSuccess,
+} from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
+import Modal from './Modal'
+import { useTalentRegMutation } from '../../redux/api/apiSlice'
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -35,45 +37,53 @@ const SignUpSchema = Yup.object().shape({
 })
 
 const SignIn = () => {
-  // const [signin] = useUserSignupMutation()
-  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const handleSubmit = async (values: any, { setSubmitting }: any) => {
-    setSubmitting(true)
-    dispatch(signinStart())
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  // const [modalName, setModalName] = useState('')
+
+  const [talentReg] = useTalentRegMutation()
+
+  const handleSubmit = async (values: any) => {
+    dispatch(signupStart())
     try {
-      const response = await SignIn(values).unwrap()
+      // Exclude confirmPassword from values before sending to API
+      const { confirmPassword, ...formValues } = values
+
+      // const response = await SendTalentReg(formValues)
+      // console.log('API Response:', response)
+
+      const response = await talentReg(formValues).unwrap()
+      console.log('API Response:', response)
+
+      // Handle successful response
       dispatch(
-        signinSuccess({
+        signupSuccess({
           user: response.data.user,
           token: response.data.token,
         }),
       )
       toast.success('Signed up successfully')
-      if (response && response.data) {
-        const userRole = response.data.user?.userRole
-        if (userRole === 'recruiter') {
-          navigate('/recruiterDashboard/postjob')
-        } else if (userRole === 'talent') {
-          navigate('/talentDashboard/')
-        } else if (userRole === 'admin') {
-          navigate('/adminDashboard/viewcandidates')
-        } else {
-          navigate('/')
-        }
-      }
+      // setModalName(`${values.lastName}`)
+      // setIsModalOpen(true)
+      navigate('/login')
     } catch (err: any) {
-      console.log(err)
-      dispatch(signinFailure(err.data?.message || 'Failed to sign up'))
+      console.error('Error signing up:', err)
+      dispatch(
+        signupFailure(
+          err.data?.message || 'An error occurred while signing up',
+        ),
+      )
       toast.error(err.data?.message || 'An error occurred while signing up')
-    } finally {
-      setSubmitting(false)
     }
   }
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
 
   return (
     <div>
@@ -99,12 +109,13 @@ const SignIn = () => {
               }}
               validationSchema={SignUpSchema}
               onSubmit={handleSubmit}>
-              {({ isSubmitting, values }) => (
+              {({ values }) => (
                 <Form>
                   <Field
                     title="First Name"
                     label="firstName"
                     name="firstName"
+                    type="text"
                     as={TextInput}
                     placeholder="Enter your First Name"
                   />
@@ -118,6 +129,7 @@ const SignIn = () => {
                     title="Last Name"
                     label="lastName"
                     name="lastName"
+                    type="text"
                     as={TextInput}
                     placeholder="Enter your Last Name"
                   />
@@ -129,9 +141,10 @@ const SignIn = () => {
 
                   <Field
                     title="Email"
-                    label="email"
+                    label="Email"
                     name="email"
                     as={TextInput}
+                    type="email"
                     placeholder="Email"
                   />
                   <ErrorMessage
@@ -145,6 +158,7 @@ const SignIn = () => {
                     label="Phone Number"
                     name="number"
                     as={TextInput}
+                    type="number"
                     placeholder="Enter Phone Number"
                   />
                   <ErrorMessage
@@ -156,20 +170,19 @@ const SignIn = () => {
                   <div className="relative">
                     <Field
                       title="Password"
-                      label="password"
                       name="password"
-                      as={TextInput}
+                      label="password"
+                      as={TextInput} // Add padding to the right to make space for the i
+                      isPassword={!showPassword}
                       placeholder="Enter your password"
-                      type="password"
-                      className="pr-10" // Add padding to the right to make space for the icon
+                      type={showPassword ? 'text' : 'password'}
                     />
+
                     <button
                       type="button"
-                      className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
-                      onClick={() => {
-                        setShowPassword(!showPassword)
-                      }}>
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
+                      onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
 
                     {values.password && values.password.length < 8 && (
@@ -184,7 +197,8 @@ const SignIn = () => {
                       title="Confirm Password"
                       label="confirmPassword"
                       name="confirmPassword"
-                      as={TextInput}
+                      as={TextInput} // Add padding to the right to make space for the i
+                      isPassword={!showConfirmPassword}
                       placeholder="Confirm your password"
                       className="pr-10" // Add padding to the right to make space for the icon
                     />
@@ -194,7 +208,7 @@ const SignIn = () => {
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }>
-                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                      {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
 
                     {values.confirmPassword &&
@@ -211,11 +225,7 @@ const SignIn = () => {
                     <div className="forgot-password">Forgot password?</div>
                   </div>
                   <div className="buttons">
-                    <Button
-                      type="submit"
-                      title="Sign Up"
-                      disabled={isSubmitting}
-                    />
+                    <Button title="Sign Up" type="submit" />
                     <div className="already">
                       Already have an account? <a href="/login">Log In</a>
                     </div>
@@ -239,6 +249,9 @@ const SignIn = () => {
           <Carousel />
         </div>
       </div>
+
+      {/* Modal Component */}
+      {isModalOpen && <Modal onClose={closeModal} name={modalName} />}
     </div>
   )
 }
