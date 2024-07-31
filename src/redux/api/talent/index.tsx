@@ -72,6 +72,50 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
+    jobPipeline: builder.query({
+      query: (jobId) => ({
+        url: `/jobs/applications/${jobId}`,
+        method: 'PATCH',
+      }),
+    }),
+    cvMatch: builder.query({
+      query: (jobId) => ({
+        url: `/jobs/cv-similarity/${jobId}`,
+        method: 'PATCH',
+      }),
+    }),
+    generatePersonalizedTest: builder.query({
+      query: ({ jobId, talentId }) => ({
+        url: `/questions/personalized`,
+        method: 'POST',
+        body: { jobId, talentId },
+      }),
+    }),
+    postPersonalizedTest: builder.mutation({
+      query: (testAnswer) => ({
+        url: `/questions/answer/personalized`,
+        method: 'POST',
+        body: testAnswer,
+      }),
+    }),
+    personalizedTest: builder.query({
+      query: ({ jobId, talentId }) => ({
+        url: `/questions?limit=20&offset=0&questionType=personalized&jobId=${jobId}&talentId=${talentId}`,
+        method: 'GET',
+      }),
+    }),
+    personalityTest: builder.query({
+      query: (jobId) => ({
+        url: `/questions?limit=20&offset=0&jobId=${jobId}&questionType=personality`,
+        method: 'GET',
+      }),
+    }),
+    allJobApplications: builder.query({
+      query: () => ({
+        url: `/user/applications`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -83,4 +127,11 @@ export const {
   useFetchJobQuery,
   useFilterJobQuery,
   useIndividualJobQuery,
+  useJobPipelineQuery,
+  useCvMatchQuery,
+  useLazyPersonalizedTestQuery,
+  useLazyGeneratePersonalizedTestQuery,
+  usePostPersonalizedTestMutation,
+  useLazyPersonalityTestQuery,
+  useAllJobApplicationsQuery,
 } = talentApi
