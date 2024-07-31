@@ -56,7 +56,7 @@ const Login: React.FC = () => {
             navigate('/recruiterDashboard/postjob')
             break
           case 'talent':
-            navigate('/talentDashboard/')
+            navigate('/talentDashboard/TalentProfile')
             break
           case 'admin':
             navigate('/adminDashboard/viewcandidates')

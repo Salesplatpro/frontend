@@ -1,6 +1,6 @@
 import React from 'react'
 import profilePics from '../../assets/profilePics.png'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import AllRoles from '../../components/Roles/AllRoles'
 import toast from 'react-hot-toast'
@@ -41,7 +41,7 @@ const validationSchema = Yup.object({
     .test(
       'fileSize',
       'File size is too large',
-      (value) => value && value.size <= 5 * 1024 * 1024, // 5MB
+      (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
     )
     .test(
       'fileType',
@@ -52,7 +52,7 @@ const validationSchema = Yup.object({
           'application/pdf',
           'application/msword',
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ].includes(value.type),
+        ].includes((value as File).type),
     ),
 })
 
@@ -62,7 +62,7 @@ const TalentProfile = () => {
 
   const onSubmit = async (
     values: TalentProfileProps,
-    { setSubmitting, setFieldValue },
+    { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
   ) => {
     try {
       if (values.cv) {
