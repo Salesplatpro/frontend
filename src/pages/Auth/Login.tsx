@@ -131,7 +131,8 @@ const Login: React.FC = () => {
               <div className="buttons">
                 <Button title="Log In" disabled={formik.isSubmitting} />
                 <div className="already py-2">
-                  Don&apos;t have an account ? <a href="/SignIn">Sign up</a>
+                  Don&apos;t have an account ?{' '}
+                  <a href="/talentRegister">Sign up</a>
                 </div>
                 <div className="btns space-y-4 py-4">
                   <Button
