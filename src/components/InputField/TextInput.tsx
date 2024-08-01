@@ -6,12 +6,13 @@ type TextInputProps = {
   title: string
   name: string
   label: string
+  isPassword?: boolean
   placeholder?: string
   required?: boolean
   value?: string | number
   disabled?: boolean
-  error?: string | boolean
-  isPassword?: boolean
+  error?: string
+  // eslint-disable-next-line no-unused-vars
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 

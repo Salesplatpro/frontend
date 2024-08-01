@@ -1,10 +1,10 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 // @ts-ignore
 import logo from '../assets/logo.png'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../redux/store/store'
 import { logout } from '../redux/features/authSlice/authSlice'
+import { RootState } from '../redux/store/store'
 
 const Navbar = () => {
   const dispatch = useDispatch()

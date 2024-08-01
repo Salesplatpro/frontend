@@ -1,8 +1,9 @@
-import authSlice from './authSlice/authSlice'
 import { combineReducers } from '@reduxjs/toolkit'
+
 import { api } from '../api/apiSlice'
-import { talentApi } from '../api/talent'
 import { recruiterApi } from '../api/recruiter'
+import { talentApi } from '../api/talent'
+import authSlice from './authSlice/authSlice'
 
 const rootReducer = combineReducers({
   auth: authSlice,
