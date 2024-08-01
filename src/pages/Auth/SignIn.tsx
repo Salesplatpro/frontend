@@ -5,18 +5,14 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-// import { useDispatch } from 'react-redux'
-// import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { SendTalentReg } from '../../api/api-communication'
+import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
-import { useTalentRegMutation } from '../../redux/api/apiSlice'
 import {
   signupFailure,
   signupStart,
@@ -35,51 +31,55 @@ const SignUpSchema = Yup.object().shape({
     .required('Confirm Password is required'),
   firstName: Yup.string().required('First Name is required'),
   lastName: Yup.string().required('Last Name is required'),
-  number: Yup.string().required('Phone Number is required'),
+  phone: Yup.string().required('Phone Number is required'),
+  userType: Yup.string()
+    .oneOf(['talent', 'recruiter'], 'User type is required')
+    .required('User type is required'),
 })
 
 const SignIn = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
 
-  const [talentReg] = useTalentRegMutation()
-
   const handleSubmit = async (values: any) => {
     dispatch(signupStart())
     try {
-      // Exclude confirmPassword from values before sending to API
-      // const { confirmPassword, ...formValues } = values
+      const { confirmPassword, userType, ...formValues } = values
 
-      // const response = await SendTalentReg(formValues)
-      // console.log('API Response:', response)
+      let response
+      if (userType === 'talent') {
+        response = await SendTalentReg(formValues)
+      } else if (userType === 'recruiter') {
+        response = await SendRecruiterReg(formValues)
+      } else {
+        throw new Error('Invalid user type')
+      }
 
-      // const response = await talentReg(formValues).unwrap()
-      // console.log('API Response:', response)
-
-      // Handle successful response
-      // dispatch(
-      //   signupSuccess({
-      //     user: response.data.user,
-      //     token: response.data.token,
-      //   }),
-      // )
+      // Dispatch success action and handle the response
+      dispatch(
+        signupSuccess({
+          user: response.data.user,
+          token: response.data.token,
+        }),
+      )
       toast.success('Signed up successfully')
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
-      // navigate('/login')
     } catch (err: any) {
       console.error('Error signing up:', err)
+
+      // Handle error response
       dispatch(
         signupFailure(
-          err.data?.message || 'An error occurred while signing up',
+          err.response?.data?.message || 'An error occurred while signing up',
         ),
       )
-      toast.error(err.data?.message || 'An error occurred while signing up')
+      toast.error(
+        err.response?.data?.message || 'An error occurred while signing up',
+      )
     }
   }
 
@@ -107,7 +107,8 @@ const SignIn = () => {
                 confirmPassword: '',
                 firstName: '',
                 lastName: '',
-                number: '',
+                phone: '',
+                userType: '',
               }}
               validationSchema={SignUpSchema}
               onSubmit={handleSubmit}>
@@ -154,17 +155,29 @@ const SignIn = () => {
                     component="p"
                     className="text-red-500"
                   />
-
+                  <div className="flex">
+                    <div>Register as:</div>
+                    <Field title="Register as" name="userType" as="select">
+                      <option value="" label="Choose an option" />
+                      <option value="talent" label="Talent" />
+                      <option value="recruiter" label="Recruiter" />
+                    </Field>
+                  </div>
+                  <ErrorMessage
+                    name="userType"
+                    component="p"
+                    className="text-red-500"
+                  />
                   <Field
                     title="Phone Number"
                     label="Phone Number"
-                    name="number"
+                    name="phone"
                     as={TextInput}
                     type="number"
                     placeholder="Enter Phone Number"
                   />
                   <ErrorMessage
-                    name="number"
+                    name="phone"
                     component="p"
                     className="text-red-500"
                   />
@@ -174,7 +187,7 @@ const SignIn = () => {
                       title="Password"
                       name="password"
                       label="password"
-                      as={TextInput} // Add padding to the right to make space for the i
+                      as={TextInput}
                       isPassword={!showPassword}
                       placeholder="Enter your password"
                       type={showPassword ? 'text' : 'password'}
@@ -199,7 +212,7 @@ const SignIn = () => {
                       title="Confirm Password"
                       label="confirmPassword"
                       name="confirmPassword"
-                      as={TextInput} // Add padding to the right to make space for the i
+                      as={TextInput} // Add padding to the right to make space for the icon
                       isPassword={!showConfirmPassword}
                       placeholder="Confirm your password"
                       className="pr-10" // Add padding to the right to make space for the icon
