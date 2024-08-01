@@ -4,6 +4,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 // import { useDispatch } from 'react-redux'
 // import { useNavigate } from 'react-router-dom'
@@ -15,6 +16,7 @@ import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
+import { useTalentRegMutation } from '../../redux/api/apiSlice'
 import {
   signupFailure,
   signupStart,
@@ -22,7 +24,6 @@ import {
 } from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
 import Modal from './Modal'
-import { useTalentRegMutation } from '../../redux/api/apiSlice'
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -44,7 +45,7 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  // const [modalName, setModalName] = useState('')
+  const [modalName, setModalName] = useState('')
 
   const [talentReg] = useTalentRegMutation()
 
@@ -52,25 +53,25 @@ const SignIn = () => {
     dispatch(signupStart())
     try {
       // Exclude confirmPassword from values before sending to API
-      const { confirmPassword, ...formValues } = values
+      // const { confirmPassword, ...formValues } = values
 
       // const response = await SendTalentReg(formValues)
       // console.log('API Response:', response)
 
-      const response = await talentReg(formValues).unwrap()
-      console.log('API Response:', response)
+      // const response = await talentReg(formValues).unwrap()
+      // console.log('API Response:', response)
 
       // Handle successful response
-      dispatch(
-        signupSuccess({
-          user: response.data.user,
-          token: response.data.token,
-        }),
-      )
+      // dispatch(
+      //   signupSuccess({
+      //     user: response.data.user,
+      //     token: response.data.token,
+      //   }),
+      // )
       toast.success('Signed up successfully')
-      // setModalName(`${values.lastName}`)
-      // setIsModalOpen(true)
-      navigate('/login')
+      setModalName(`${values.lastName}`)
+      setIsModalOpen(true)
+      // navigate('/login')
     } catch (err: any) {
       console.error('Error signing up:', err)
       dispatch(
@@ -227,14 +228,18 @@ const SignIn = () => {
                   </div>
                   <div className="buttons">
                     <Button title="Sign Up" type="submit" />
-                    <div className="already">
+
+                    <div className="already py-2">
                       Already have an account? <a href="/login">Log In</a>
                     </div>
-                    <Button
-                      title="Continue with Google"
-                      variant="secondary"
-                      element={<img src={google} alt="google" />}
-                    />
+                    <div className="py-4">
+                      <Button
+                        title="Continue with Google"
+                        variant="secondary"
+                        element={<img src={google} alt="google" />}
+                      />
+                    </div>
+
                     <Button
                       title="Continue with Salesplat"
                       variant="secondary"

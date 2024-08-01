@@ -14,11 +14,8 @@ export const Button = ({
   title,
   element,
   variant = 'primary',
-<<<<<<< HEAD
   textType = 'normal',
   onClick,
-=======
->>>>>>> f93ef00... new updates
 }: ButtonProps) => {
   const isSecondary = variant === 'secondary'
   const textTypeClass = styles[textType] || styles.big
