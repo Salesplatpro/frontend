@@ -128,7 +128,7 @@ export const {
   useFilterJobQuery,
   useIndividualJobQuery,
   useJobPipelineQuery,
-  useCvMatchQuery,
+  useLazyCvMatchQuery,
   useLazyPersonalizedTestQuery,
   useLazyGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
