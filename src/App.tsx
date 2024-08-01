@@ -68,7 +68,7 @@ const router = createBrowserRouter([
   },
   {
     path: 'talentRegister',
-    element: <TalentRegister />,
+    element: <SignIn />,
   },
   {
     path: 'login',
