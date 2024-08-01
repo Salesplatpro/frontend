@@ -67,16 +67,12 @@ const router = createBrowserRouter([
     element: <CustomerStories />,
   },
   {
-    path: 'talentRegister',
-    element: <SignIn />,
-  },
-  {
     path: 'login',
     element: <TalentLogin />,
   },
 
   {
-    path: 'SignIn',
+    path: 'talentRegister',
     element: <SignIn />,
   },
 
