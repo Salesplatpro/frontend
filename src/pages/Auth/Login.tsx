@@ -130,10 +130,10 @@ const Login: React.FC = () => {
               </div>
               <div className="buttons">
                 <Button title="Log In" disabled={formik.isSubmitting} />
-                <div className="already">
+                <div className="already py-2">
                   Don&apos;t have an account ? <a href="/SignIn">Sign up</a>
                 </div>
-                <div className="btns">
+                <div className="btns space-y-4 py-4">
                   <Button
                     title="Continue with Google"
                     variant="secondary"
