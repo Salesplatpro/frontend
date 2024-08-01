@@ -6,9 +6,9 @@ import './Roles.scss'
 
 
 interface roleTypes {
-  value: string
+  value: string[] | undefined
   name: string
-  onChange: () => {}
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 const AllRoles = ({ value, onChange, name }: roleTypes) => {

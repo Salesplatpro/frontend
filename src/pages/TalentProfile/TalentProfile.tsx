@@ -1,6 +1,6 @@
 import React from 'react'
 import profilePics from '../../assets/profilePics.png'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import AllRoles from '../../components/Roles/AllRoles'
 import toast from 'react-hot-toast'
@@ -8,6 +8,9 @@ import {
   useTalentCreationMutation,
   useUploadCvMutation,
 } from '../../redux/api/talent'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser } from '../../redux/features/authSlice/authSlice'
+import { RootState } from '../../redux/store/store'
 
 interface TalentProfileProps {
   bio?: string
@@ -16,15 +19,6 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
-}
-
-const initialValues: TalentProfileProps = {
-  bio: '',
-  role: [],
-  maxSalary: '',
-  minSalary: '',
-  experience: '',
-  cv: null,
 }
 
 const validationSchema = Yup.object({
@@ -41,7 +35,7 @@ const validationSchema = Yup.object({
     .test(
       'fileSize',
       'File size is too large',
-      (value) => value && value.size <= 5 * 1024 * 1024, // 5MB
+      (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
     )
     .test(
       'fileType',
@@ -52,17 +46,31 @@ const validationSchema = Yup.object({
           'application/pdf',
           'application/msword',
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ].includes(value.type),
+        ].includes((value as File).type),
     ),
 })
 
 const TalentProfile = () => {
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.auth)
+  console.log(user.user)
+  const userInfo = user.user
+  console.log(userInfo.profile?.role[0].name)
+
+  const initialValues: TalentProfileProps = {
+    bio: userInfo.profile?.bio || '',
+    role: userInfo.profile?.role[0]._id || [],
+    maxSalary: userInfo.profile?.maxSalary || '',
+    minSalary: userInfo.profile?.minSalary || '',
+    experience: userInfo.profile?.experience || '',
+    cv: null,
+  }
 
   const onSubmit = async (
     values: TalentProfileProps,
-    { setSubmitting, setFieldValue },
+    { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
   ) => {
     try {
       if (values.cv) {
@@ -79,6 +87,12 @@ const TalentProfile = () => {
         const data = await talentCreation(updatedFormValue).unwrap()
 
         if (data.status) {
+          dispatch(
+            setUser({
+              user: data.data.user,
+              isLoggedIn: true,
+            }),
+          )
           toast.success('Profile created successfully')
         } else {
           toast.error(
@@ -102,7 +116,7 @@ const TalentProfile = () => {
       <div className="md:w-[80%] w-full m-auto">
         <div className="md:my-3">
           <h2 className="font-bold md:text-3xl text-xl">
-            Create Talent Profile
+            {userInfo.profile ? 'Edit Talent Profile' : 'Create Talent Profile'}
           </h2>
           <div> </div>
         </div>
@@ -114,8 +128,8 @@ const TalentProfile = () => {
           <div className="w-full">
             <div className="flex justify-between w-full">
               <div className="text-[#101828]">
-                <p className="text-[20px] font-semibold">Williamson Paints</p>
-                <p className="text-[16px]">Customer Success</p>
+                <p className="text-[20px] font-semibold">{`${userInfo.firstName} ${userInfo.lastName}`}</p>
+                <p className="text-[16px]">{userInfo.userRole}</p>
               </div>
               <button className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]">
                 Edit Profile
@@ -133,7 +147,7 @@ const TalentProfile = () => {
         <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-2 w-[100%] ">
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            validationSchema={!userInfo.profile ? validationSchema : null}
             onSubmit={onSubmit}>
             {({ values, isSubmitting, setFieldValue }) => (
               <Form>
@@ -167,6 +181,7 @@ const TalentProfile = () => {
                       // id="names"
                       // name="names"
                       placeholder="Williamson Paints"
+                      value={`${userInfo.firstName} ${userInfo.lastName}` || ''}
                       className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
                     />
                   </div>
@@ -199,6 +214,7 @@ const TalentProfile = () => {
                       type="text"
                       id="phoneNumber"
                       name="phoneNumber"
+                      value={`${userInfo.phone}`}
                       placeholder="08198675757"
                       className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
                     />
@@ -367,7 +383,13 @@ const TalentProfile = () => {
                     type="submit"
                     disabled={isSubmitting}
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                    {userInfo.profile
+                      ? isSubmitting
+                        ? 'Editing...'
+                        : 'Edit'
+                      : isSubmitting
+                      ? 'Submitting...'
+                      : 'Submit'}
                   </button>
                 </div>
               </Form>

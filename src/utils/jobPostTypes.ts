@@ -5,9 +5,9 @@ export interface LocationOption {
 }
 
 export interface LocationProps {
-  locationTitle: string
-  geoId: number | null
-  isCountry: boolean
+  locationTitle?: string
+  geoId?: number | null
+  isCountry?: boolean
   onChange: (geoId: number) => void
 }
 
@@ -50,7 +50,7 @@ export interface configProps {
 }
 
 export interface JobFiltersTypes {
-  role?: string
+  role?: string[]
   experienceLevel?: string
   remote?: ''
   location?: {

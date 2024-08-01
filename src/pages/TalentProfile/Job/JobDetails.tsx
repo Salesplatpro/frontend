@@ -5,10 +5,10 @@ import { TbMoneybag } from 'react-icons/tb'
 import './JobDetails.scss'
 
 type JobDetailsProps = {
-  location: string
-  type: string
-  level: string
-  salary: string
+  location?: string
+  type?: boolean
+  level?: string
+  salary?: string
 }
 
 export const JobDetails = ({
