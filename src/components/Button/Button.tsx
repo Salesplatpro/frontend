@@ -4,10 +4,12 @@ import styles from './Button.module.scss'
 
 type ButtonProps = {
   element?: ReactNode
+  type?: 'submit' | 'reset'
   title: string
   variant?: 'primary' | 'secondary'
   textType?: 'big' | 'small' | 'normal'
   onClick?: () => void
+  disabled?: boolean
 }
 
 export const Button = ({

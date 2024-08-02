@@ -12,10 +12,9 @@ const Modal: React.FC<ModalProps> = ({ onClose, name }) => {
   const [isVisible, setIsVisible] = useState(true)
   const navigate = useNavigate()
 
-  const handleOverlayClick = (e: {
-    target: { classList: { contains: (arg0: string) => any } }
-  }) => {
-    if (e.target.classList.contains('overlay')) {
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement
+    if (target.classList.contains('overlay')) {
       handleClose()
     }
   }
@@ -72,10 +71,10 @@ const Modal: React.FC<ModalProps> = ({ onClose, name }) => {
           with corporate organizations.
         </p>
         <button
-          className="close-modal px-24 border-[1px] py-2 my-10 rounded-lg text-white font-raleway font-medium text-center text-[20px] bg-[#3C6FD4] hover:bg-[#4985df]"
+          className="close-modal px-24 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[20px] bg-[#3C6FD4] hover:bg-[#4985df]"
           onClick={handleClose}
           aria-label="Close modal">
-          Go to Dashboard
+          Go to Login
         </button>
       </div>
     </div>
