@@ -4,7 +4,7 @@ import styles from './Button.module.scss'
 
 type ButtonProps = {
   element?: ReactNode
-  type?: 'button' | 'submit' | 'reset'
+  type?: 'submit' | 'reset'
   title: string
   variant?: 'primary' | 'secondary'
   textType?: 'big' | 'small' | 'normal'

@@ -19,9 +19,9 @@ import {
   signupSuccess,
 } from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
+import DropDown from './DropDown'
 import Loading from './Loading'
 import Modal from './Modal'
-import DropDown from './DropDown'
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
