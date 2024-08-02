@@ -6,12 +6,12 @@ interface Option {
   label: string
 }
 
-interface CustomDropdownProps extends FieldProps {
+interface SelectUserType extends FieldProps {
   label: string
   options: Option[]
 }
 
-const DropDown: React.FC<CustomDropdownProps> = ({ label, options, field }) => {
+const DropDown: React.FC<SelectUserType> = ({ label, options, field }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
