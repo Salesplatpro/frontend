@@ -1,9 +1,10 @@
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
 import React from 'react'
-import profilePics from '../../assets/profilePics.png'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import AllRoles from '../../components/Roles/AllRoles'
 import toast from 'react-hot-toast'
+import * as Yup from 'yup'
+
+import profilePics from '../../assets/profilePics.png'
+import AllRoles from '../../components/Roles/AllRoles'
 import {
   useTalentCreationMutation,
   useUploadCvMutation,
@@ -56,13 +57,13 @@ const validationSchema = Yup.object({
     ),
 })
 
-const TalentProfile = () => {
+const TalentProfile: React.FC = () => {
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
 
   const onSubmit = async (
     values: TalentProfileProps,
-    { setSubmitting, setFieldValue },
+    { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
   ) => {
     try {
       if (values.cv) {
@@ -86,8 +87,8 @@ const TalentProfile = () => {
           )
         }
       } else {
-        toast.error('Error uploading cv')
-        throw new Error('Error uploading cv')
+        toast.error('Error uploading CV')
+        throw new Error('Error uploading CV')
       }
     } catch (error: any) {
       console.error('Error submitting', error)
@@ -104,11 +105,10 @@ const TalentProfile = () => {
           <h2 className="font-bold md:text-3xl text-xl">
             Create Talent Profile
           </h2>
-          <div> </div>
         </div>
-        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2 ">
+        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
           <div>
-            <img src={profilePics} alt="" />
+            <img src={profilePics} alt="Profile" />
             <p className="text-[10px] text-[#4884DF]">Change Image</p>
           </div>
           <div className="w-full">
@@ -125,12 +125,12 @@ const TalentProfile = () => {
             <p className="text-[14px] text-[#667085]">
               Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus
               id scelerisque est ultricies ultricies. Duis est sit sed leo nisl,
-              blandit elit{' '}
+              blandit elit
             </p>
           </div>
         </div>
 
-        <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-2 w-[100%] ">
+        <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-2 w-[100%]">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -158,28 +158,14 @@ const TalentProfile = () => {
                 <div className="flex md:flex-row flex-col w-[100%] justify-between mt-16">
                   <div className="md:w-[48%]">
                     <label
-                      htmlFor="names"
-                      className="text-[14px] text-[#344054]">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      // id="names"
-                      // name="names"
-                      placeholder="Williamson Paints"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                  </div>
-                  <div className="md:w-[48%]">
-                    <label
                       htmlFor="role"
                       className="text-[14px] text-[#344054]">
                       Role
                     </label>
-                    <div className="border border-gray-300 p-2 rounded-lg h-[44px] ">
+                    <div className="border border-gray-300 p-2 rounded-lg h-[44px]">
                       <AllRoles
                         name="role"
-                        value={values.role}
+                        value={values.role || []}
                         onChange={(e) =>
                           setFieldValue('role', [e.target.value])
                         }
@@ -190,155 +176,9 @@ const TalentProfile = () => {
 
                 <div className="inline-block mt-6 w-full">
                   <div className="md:w-[48%]">
-                    <label
-                      htmlFor="phoneNumber"
-                      className="text-[14px] text-[#344054]">
-                      Phone number
+                    <label htmlFor="cv" className="text-[14px] text-[#344054]">
+                      Upload CV
                     </label>
-                    <Field
-                      type="text"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      placeholder="08198675757"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="phoneNumber"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
-                  <div className="md:w-[48%]">
-                    <label
-                      htmlFor="github"
-                      className="text-[14px] text-[#344054]">
-                      Github
-                    </label>
-                    <Field
-                      type="text"
-                      id="github"
-                      name="github"
-                      placeholder="Your Github Link"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="github"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-                  <div className="md:w-[48%]">
-                    <label
-                      htmlFor="linkedin"
-                      className="text-[14px] text-[#344054]">
-                      LinkedIn
-                    </label>
-                    <Field
-                      type="text"
-                      id="linkedin"
-                      name="linkedin"
-                      placeholder="Your Linkedin Link"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="linkedin"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
-                  <div className="md:w-[48%]">
-                    <label
-                      htmlFor="portfolio"
-                      className="text-[14px] text-[#344054]">
-                      Portfolio
-                    </label>
-                    <Field
-                      type="text"
-                      id="portfolio"
-                      name="portfolio"
-                      placeholder="Your portfolio Link"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="portfolio"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-                  <div className="md:w-[48%]">
-                    <label
-                      className="text-[14px] text-[#344054]"
-                      htmlFor="experience">
-                      Experience Level
-                    </label>
-                    <Field
-                      as="select"
-                      id="experience"
-                      name="experience"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]">
-                      <option value="">Select experience Level</option>
-                      <option value="senior">Senior</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="junior">Junior</option>
-                    </Field>
-                    <ErrorMessage
-                      name="experience"
-                      component="div"
-                      className="text-red-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
-                  <div className="md:w-[48%]">
-                    <label
-                      htmlFor="minSalary"
-                      className="text-[14px] text-[#344054]">
-                      Min Salary
-                    </label>
-                    <Field
-                      type="text"
-                      id="minSalary"
-                      name="minSalary"
-                      placeholder="Your minSalary"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="minSalary"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-                  <div className="md:w-[48%]">
-                    <label
-                      htmlFor="maxSalary"
-                      className="text-[14px] text-[#344054]">
-                      Max Salary
-                    </label>
-                    <Field
-                      type="text"
-                      id="maxSalary"
-                      name="maxSalary"
-                      placeholder="Your Max Salary"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                    />
-                    <ErrorMessage
-                      name="maxSalary"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-                </div>
-
-                <div className="inline-block mt-6 w-full">
-                  <div className="md:w-[48%]">
-                    <label htmlFor="cv">Upload CV</label>
                     <input
                       id="cv"
                       name="cv"
@@ -357,9 +197,9 @@ const TalentProfile = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end ">
+                <div className="mt-6 flex justify-end">
                   <button
-                    disabled={isSubmitting}
+                    type="button"
                     className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700">
                     Cancel
                   </button>

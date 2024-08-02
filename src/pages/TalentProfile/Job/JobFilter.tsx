@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
 import './JobFilter.scss'
-import AllRoles from '../../../components/Roles/AllRoles'
+
 import { ErrorMessage, Field, Form, Formik } from 'formik'
+import React, { useState } from 'react'
+
 import Location from '../../../components/global/Location'
+import AllRoles from '../../../components/Roles/AllRoles'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
 interface JobFiltersProps {
@@ -10,6 +12,7 @@ interface JobFiltersProps {
 }
 
 export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
+  // eslint-disable-next-line no-unused-vars
   const [selectItemToggle, setSelectItemToggle] = useState(false)
 
   const initialValues: JobFiltersTypes = {
@@ -56,7 +59,9 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
                   className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full"
                   name="role"
                   value={values.role}
-                  onChange={(e) => setFieldValue('role', e.target.value)}
+                  onChange={(e: { target: { value: any } }) =>
+                    setFieldValue('role', e.target.value)
+                  }
                 />
               </div>
               <div className="line" />

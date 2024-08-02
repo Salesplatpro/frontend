@@ -1,9 +1,10 @@
-import { Field, Formik } from 'formik'
-import React, { useState, useEffect } from 'react'
-import { Role } from '../../utils/types'
-import { getRole } from '../../api/api-communication'
 import './Roles.scss'
 
+import { Field } from 'formik'
+import React, { useEffect, useState } from 'react'
+
+import { getRole } from '../../api/api-communication'
+import { Role } from '../../utils/types'
 
 interface roleTypes {
   value: string

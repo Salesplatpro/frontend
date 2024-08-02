@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useIndividualJobQuery } from '../../../redux/api/talent'
 import toast from 'react-hot-toast'
-import Loading from '../../../components/Loading/Loading'
+// eslint-disable-next-line no-unused-vars
 import { FaCopy, FaFacebook, FaTwitter } from 'react-icons/fa'
-import { IoIosLink } from 'react-icons/io'
 import { FaXTwitter } from 'react-icons/fa6'
+import { IoIosLink } from 'react-icons/io'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import Loading from '../../../components/Loading/Loading'
+import { useIndividualJobQuery } from '../../../redux/api/talent'
 
 const shareOptions = [
   {
@@ -42,6 +44,7 @@ interface JobProfileProps {
 
 const IndividualJob = () => {
   const { jobId } = useParams()
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)

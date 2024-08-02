@@ -1,10 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { PiBuildingOfficeBold } from 'react-icons/pi'
-import { JobDetails } from './JobDetails'
-import { Button } from '../../../components'
 import './SingleJob.scss'
+
+import React from 'react'
 import { GoDotFill } from 'react-icons/go'
+import { PiBuildingOfficeBold } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
+
+import { Button } from '../../../components'
+import { JobDetails } from './JobDetails'
 
 export type SingleJobProps = {
   jobId: string
@@ -20,9 +22,12 @@ export type SingleJobProps = {
     state: string
     ciity: string
   }
-  // type: string
-  // level: string
-  // salary: string
+  details?: {
+    location: string
+    type: string
+    level: string
+    salary: string
+  }[]
 }
 
 export const SingleJob = ({
@@ -50,10 +55,12 @@ export const SingleJob = ({
         <div className="details-container">
           <div className="jobdetails">
             <JobDetails
-              location={jobCountry}
-              type={jobRemote}
-              level={jobExperience}
-              salary={jobSalary}
+              location={jobCountry ?? 'Location not specified'}
+              type={jobRemote ?? 'Type not specified'}
+              level={jobExperience ?? 'Experience level not specified'}
+              salary={jobSalary ?? 'Salary not specified'}
+
+              // ?? 'Location not specified': This is the nullish coalescing operator (??). It checks if jobCountry is null or undefined. If it is, it will use the string 'Location not specified' as the default value
             />
           </div>
           <Link to={`/talentDashboard/job/${jobId}`}>

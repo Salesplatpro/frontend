@@ -1,6 +1,5 @@
 import React from 'react'
 
-// @ts-ignore
 import travelIcon from '../../assets/Vectortravel.png'
 
 const TalentSourcing = () => {
@@ -17,7 +16,7 @@ const TalentSourcing = () => {
         <div className="resources">
           <div className="dievs">
             <div className="top">
-              <img src={travelIcon} alt="" />
+              <img src={travelIcon} alt="travel" />
             </div>
             <div className="text">
               <h5>Job posting and management</h5>
@@ -59,7 +58,7 @@ const TalentSourcing = () => {
 
           <div className="dievs">
             <div className="top">
-              <img src={travelIcon} alt="" />
+              <img src={travelIcon} alt="travel" />
             </div>
             <div className="text">
               <h5>Job posting and management</h5>

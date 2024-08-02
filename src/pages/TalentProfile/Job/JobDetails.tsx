@@ -1,8 +1,10 @@
+import './JobDetails.scss'
+
 import React from 'react'
+// eslint-disable-next-line no-unused-vars
 import { GoClock, GoLocation } from 'react-icons/go'
 import { IoBagRemoveOutline } from 'react-icons/io5'
 import { TbMoneybag } from 'react-icons/tb'
-import './JobDetails.scss'
 
 type JobDetailsProps = {
   location: string

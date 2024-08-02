@@ -1,10 +1,7 @@
 import React from 'react'
 
-// @ts-ignore
 import bing1 from '../assets/bing1.png'
-// @ts-ignore
 import bing2 from '../assets/bing2.png'
-// @ts-ignore
 import bing3 from '../assets/bing3.png'
 
 const ServiceSection = () => {
