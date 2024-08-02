@@ -95,6 +95,12 @@ const SignIn = () => {
     setIsModalOpen(false)
   }
 
+  const userTypeData = [
+    { value: '', label: 'Choose an option' },
+    { value: 'talent', label: 'Talent' },
+    { value: 'recruiter', label: 'Recruiter' },
+  ]
+
   return (
     <div>
       <Navbar />
@@ -168,11 +174,7 @@ const SignIn = () => {
                       name="userType"
                       component={DropDown}
                       label="Register as :"
-                      options={[
-                        { value: '', label: 'Choose an option' },
-                        { value: 'talent', label: 'Talent' },
-                        { value: 'recruiter', label: 'Recruiter' },
-                      ]}
+                      options={userTypeData}
                     />
                   </div>
 
