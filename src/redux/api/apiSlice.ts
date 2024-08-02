@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
 import { getToken } from '../../utils/authUtils'
 
 export const api = createApi({

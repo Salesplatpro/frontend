@@ -5,21 +5,23 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
+import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { Button, CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
-// import { useUserSignupMutation } from '../../redux/api/apiSlice'
-// import {
-//   signupFailure,
-//   signupStart,
-//   signupSuccess,
-// } from '../../redux/features/authSlice/authSlice'
+import {
+  signupFailure,
+  signupStart,
+  signupSuccess,
+} from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
+import DropDown from './DropDown'
+import Loading from './Loading'
+import Modal from './Modal'
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -27,53 +29,77 @@ const SignUpSchema = Yup.object().shape({
     .min(8, 'Password must be at least 8 characters')
     .required('Password is required'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
     .required('Confirm Password is required'),
   firstName: Yup.string().required('First Name is required'),
   lastName: Yup.string().required('Last Name is required'),
-  number: Yup.string().required('Phone Number is required'),
+  phone: Yup.string().required('Phone Number is required'),
+  userType: Yup.string()
+    .oneOf(['talent', 'recruiter'], 'User type is required')
+    .required('User type is required'),
 })
 
 const SignIn = () => {
-  // const [signin] = useUserSignupMutation()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalName, setModalName] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (values: any, { setSubmitting }: any) => {
-    setSubmitting(true)
-    dispatch(signinStart())
+  const handleSubmit = async (values: any) => {
+    dispatch(signupStart())
+    setLoading(true) // Set loading to true when submission starts
+
     try {
-      const response = await SignIn(values).unwrap()
+      // eslint-disable-next-line no-unused-vars
+      const { confirmPassword, userType, ...formValues } = values
+
+      let response
+      if (userType === 'talent') {
+        response = await SendTalentReg(formValues)
+      } else if (userType === 'recruiter') {
+        response = await SendRecruiterReg(formValues)
+      } else {
+        throw new Error('Invalid user type')
+      }
+
+      // Dispatch success action and handle the response
       dispatch(
-        signinSuccess({
+        signupSuccess({
           user: response.data.user,
           token: response.data.token,
         }),
       )
       toast.success('Signed up successfully')
-      if (response && response.data) {
-        const userRole = response.data.user?.userRole
-        if (userRole === 'recruiter') {
-          navigate('/recruiterDashboard/postjob')
-        } else if (userRole === 'talent') {
-          navigate('/talentDashboard/')
-        } else if (userRole === 'admin') {
-          navigate('/adminDashboard/viewcandidates')
-        } else {
-          navigate('/')
-        }
-      }
+      setModalName(`${values.lastName}`)
+      setIsModalOpen(true)
     } catch (err: any) {
-      console.log(err)
-      dispatch(signinFailure(err.data?.message || 'Failed to sign up'))
-      toast.error(err.data?.message || 'An error occurred while signing up')
+      console.error('Error signing up:', err)
+
+      // Handle error response
+      dispatch(
+        signupFailure(
+          err.response?.data?.message || 'An error occurred while signing up',
+        ),
+      )
+      toast.error(
+        err.response?.data?.message || 'An error occurred while signing up',
+      )
     } finally {
-      setSubmitting(false)
+      setLoading(false) // Set loading to false when submission is complete
     }
   }
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const userTypeData = [
+    { value: '', label: 'Choose an option' },
+    { value: 'talent', label: 'Talent' },
+    { value: 'recruiter', label: 'Recruiter' },
+  ]
 
   return (
     <div>
@@ -95,16 +121,18 @@ const SignIn = () => {
                 confirmPassword: '',
                 firstName: '',
                 lastName: '',
-                number: '',
+                phone: '',
+                userType: '',
               }}
               validationSchema={SignUpSchema}
               onSubmit={handleSubmit}>
-              {({ isSubmitting, values }) => (
+              {({ values }) => (
                 <Form>
                   <Field
                     title="First Name"
                     label="firstName"
                     name="firstName"
+                    type="text"
                     as={TextInput}
                     placeholder="Enter your First Name"
                   />
@@ -118,6 +146,7 @@ const SignIn = () => {
                     title="Last Name"
                     label="lastName"
                     name="lastName"
+                    type="text"
                     as={TextInput}
                     placeholder="Enter your Last Name"
                   />
@@ -129,9 +158,10 @@ const SignIn = () => {
 
                   <Field
                     title="Email"
-                    label="email"
+                    label="Email"
                     name="email"
                     as={TextInput}
+                    type="email"
                     placeholder="Email"
                   />
                   <ErrorMessage
@@ -139,16 +169,30 @@ const SignIn = () => {
                     component="p"
                     className="text-red-500"
                   />
+                  <div className="flex my-2">
+                    <Field
+                      name="userType"
+                      component={DropDown}
+                      label="Register as :"
+                      options={userTypeData}
+                    />
+                  </div>
 
+                  <ErrorMessage
+                    name="userType"
+                    component="p"
+                    className="text-red-500"
+                  />
                   <Field
                     title="Phone Number"
                     label="Phone Number"
-                    name="number"
+                    name="phone"
                     as={TextInput}
+                    type="number"
                     placeholder="Enter Phone Number"
                   />
                   <ErrorMessage
-                    name="number"
+                    name="phone"
                     component="p"
                     className="text-red-500"
                   />
@@ -156,20 +200,19 @@ const SignIn = () => {
                   <div className="relative">
                     <Field
                       title="Password"
-                      label="password"
                       name="password"
+                      label="password"
                       as={TextInput}
+                      isPassword={!showPassword}
                       placeholder="Enter your password"
-                      type="password"
-                      className="pr-10" // Add padding to the right to make space for the icon
+                      type={showPassword ? 'text' : 'password'}
                     />
+
                     <button
                       type="button"
-                      className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
-                      onClick={() => {
-                        setShowPassword(!showPassword)
-                      }}>
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
+                      onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
 
                     {values.password && values.password.length < 8 && (
@@ -184,7 +227,8 @@ const SignIn = () => {
                       title="Confirm Password"
                       label="confirmPassword"
                       name="confirmPassword"
-                      as={TextInput}
+                      as={TextInput} // Add padding to the right to make space for the icon
+                      isPassword={!showConfirmPassword}
                       placeholder="Confirm your password"
                       className="pr-10" // Add padding to the right to make space for the icon
                     />
@@ -194,7 +238,7 @@ const SignIn = () => {
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }>
-                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                      {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
 
                     {values.confirmPassword &&
@@ -211,19 +255,23 @@ const SignIn = () => {
                     <div className="forgot-password">Forgot password?</div>
                   </div>
                   <div className="buttons">
-                    <Button
-                      type="submit"
-                      title="Sign Up"
-                      disabled={isSubmitting}
-                    />
-                    <div className="already">
+                    {loading ? (
+                      <Loading />
+                    ) : (
+                      <Button title="Sign Up" type="submit" />
+                    )}
+
+                    <div className="already py-2">
                       Already have an account? <a href="/login">Log In</a>
                     </div>
-                    <Button
-                      title="Continue with Google"
-                      variant="secondary"
-                      element={<img src={google} alt="google" />}
-                    />
+                    <div className="py-4">
+                      <Button
+                        title="Continue with Google"
+                        variant="secondary"
+                        element={<img src={google} alt="google" />}
+                      />
+                    </div>
+
                     <Button
                       title="Continue with Salesplat"
                       variant="secondary"
@@ -239,6 +287,9 @@ const SignIn = () => {
           <Carousel />
         </div>
       </div>
+
+      {/* Modal Component */}
+      {isModalOpen && <Modal onClose={closeModal} name={modalName} />}
     </div>
   )
 }

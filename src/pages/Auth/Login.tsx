@@ -1,7 +1,7 @@
 import '../form.scss'
 
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -19,6 +19,7 @@ import {
 } from '../../redux/features/authSlice/authSlice'
 import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
+import Loading from './Loading'
 
 interface LoginFormValues {
   email: string
@@ -34,6 +35,7 @@ const Login: React.FC = () => {
   const [login] = useUserLoginMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
 
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
@@ -41,6 +43,9 @@ const Login: React.FC = () => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
       dispatch(loginStart())
+
+      setLoading(true)
+
       try {
         const response = await login(values).unwrap()
         dispatch(
@@ -69,6 +74,7 @@ const Login: React.FC = () => {
         toast.error(err.data?.message || 'An error occurred while logging in')
       } finally {
         setSubmitting(false)
+        setLoading(false)
       }
     },
   })
@@ -129,11 +135,17 @@ const Login: React.FC = () => {
                 <div className="forgot-password">Forgot password?</div>
               </div>
               <div className="buttons">
-                <Button title="Log In" disabled={formik.isSubmitting} />
-                <div className="already">
-                  Don&apos;t have an account ? <a href="/SignIn">Sign up</a>
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <Button title="Log In" disabled={formik.isSubmitting} />
+                )}
+
+                <div className="already py-2">
+                  Don&apos;t have an account ?{' '}
+                  <a href="/talentRegister">Sign up</a>
                 </div>
-                <div className="btns">
+                <div className="btns space-y-4 py-4">
                   <Button
                     title="Continue with Google"
                     variant="secondary"

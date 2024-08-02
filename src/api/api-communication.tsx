@@ -18,20 +18,21 @@ export const SendTalentReg = async (formValues: FormTalentReg) => {
     body: JSON.stringify(formValues),
   }
 
-  console.log(requestOptions)
+  console.log(requestOptions) // Log request details
+
   try {
     const response = await fetch(`${BASE_URL}/auth/register`, requestOptions)
-    const data = await response.json()
 
-    // Check if the response contains the token
+    // Log the response status and body
+    console.log('Response Status:', response.status)
+    const data = await response.json()
+    console.log('Response Data:', data)
+
     if (!data.data.token) {
       throw new Error('Token not found in response')
     }
 
-    // Extract the token from the response data
     const authToken = data.data.token
-
-    // Store the token in sessionStorage
     sessionStorage.setItem('authToken', authToken)
     return data
   } catch (error) {
@@ -50,26 +51,24 @@ export const SendRecruiterReg = async (formValues: FormTalentReg) => {
   }
 
   console.log(requestOptions)
+
   try {
     const response = await fetch(
-      `${BASE_URL}/auth/register/reuruiter`,
+      `${BASE_URL}/auth/register/recruiter`,
       requestOptions,
     )
     const data = await response.json()
 
-    // Check if the response contains the token
-    if (!data.data.token) {
+    if (!data.data || !data.data.token) {
       throw new Error('Token not found in response')
     }
 
-    // Extract the token from the response data
     const authToken = data.data.token
 
-    // Store the token in sessionStorage
     sessionStorage.setItem('authToken', authToken)
     return data
   } catch (error) {
-    console.error('Error registering User', error)
+    console.error('Error registering recruiter:', error)
     throw error
   }
 }

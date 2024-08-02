@@ -68,16 +68,12 @@ const router = createBrowserRouter([
     element: <CustomerStories />,
   },
   {
-    path: 'talentRegister',
-    element: <TalentRegister />,
-  },
-  {
     path: 'login',
     element: <TalentLogin />,
   },
 
   {
-    path: 'SignIn',
+    path: 'talentRegister',
     element: <SignIn />,
   },
 
