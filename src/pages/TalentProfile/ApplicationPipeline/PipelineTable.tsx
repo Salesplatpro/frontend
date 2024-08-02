@@ -137,7 +137,7 @@ export const PipelineTable = () => {
                 <div style={{ width: '80%' }}>
                   {/* <Button title={getButtonText(application.stage)} /> */}
                   <Link
-                    to={`/talentDashboard/applicationPipeline/${application?._id}`}>
+                    to={`/talentDashboard/applicationPipeline/${application.job?._id}`}>
                     <Button title="View More" />
                   </Link>
                 </div>

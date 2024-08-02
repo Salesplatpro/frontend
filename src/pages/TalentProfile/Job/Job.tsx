@@ -37,7 +37,7 @@ interface JobType {
 
 const Job = () => {
   const user = useSelector((state: RootState) => state.auth)
-  const roleId = user.user.profile.role[0]._id
+  const roleId = user?.user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
