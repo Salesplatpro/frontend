@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import rootReducer from '../features/reducer'
+
 import { api } from '../api/apiSlice'
-import { talentApi } from '../api/talent'
 import { recruiterApi } from '../api/recruiter'
+import { talentApi } from '../api/talent'
+import rootReducer from '../features/reducer'
 
 export const store = configureStore({
   reducer: rootReducer,

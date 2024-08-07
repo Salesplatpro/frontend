@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react'
 import './Job.scss'
+
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { MdKeyboardArrowDown } from 'react-icons/md'
+import { useSelector } from 'react-redux'
+
+import { Button } from '../../../components'
+import Loading from '../../../components/Loading/Loading'
+import { getScreenWidth } from '../../../hooks'
+import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
+import { RootState } from '../../../redux/store/store'
+import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
-import { MdKeyboardArrowDown } from 'react-icons/md'
-import { getScreenWidth } from '../../../hooks'
-import { Button } from '../../../components'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../redux/store/store'
-import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
-import toast from 'react-hot-toast'
-import Loading from '../../../components/Loading/Loading'
-import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
 const defaultFilterValues: JobFiltersTypes = {
   role: '',

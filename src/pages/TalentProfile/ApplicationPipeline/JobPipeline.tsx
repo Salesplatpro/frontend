@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { useParams } from 'react-router-dom'
+
+import Loading from '../../../components/Loading/Loading'
 import {
-  useLazyCvMatchQuery,
   useJobPipelineQuery,
+  useLazyCvMatchQuery,
   useLazyGeneratePersonalizedTestQuery,
   useLazyPersonalityTestQuery,
 } from '../../../redux/api/talent'
-import { useParams } from 'react-router-dom'
-import toast from 'react-hot-toast'
 import PersonalizedTest from '../TalentAssessment/PersonalizedTest'
-import Loading from '../../../components/Loading/Loading'
 
 const JobPipeline = () => {
   const { jobId } = useParams()

@@ -25,3 +25,36 @@ export const myJobPostsData = [
     created: '30 days',
   },
 ]
+
+export const singleJobData = [
+  {
+    name: 'Tobi Amuson',
+    stage: 'Stage 1',
+    status: 'personalized-assessment',
+    dateApplied: '8 days ago',
+  },
+  {
+    name: 'John Doe',
+    stage: 'Stage 3',
+    status: 'not-proceeding',
+    dateApplied: '2 days ago',
+  },
+  {
+    name: 'Fedrick Green',
+    stage: 'Stage 2',
+    status: 'retake-assessment',
+    dateApplied: '12 days ago',
+  },
+  {
+    name: 'Hiphen Forward',
+    stage: 'Stage 5',
+    status: 'shortlisted',
+    dateApplied: '20 days ago',
+  },
+  {
+    name: 'Shine Goodluck',
+    stage: 'Stage 4',
+    status: 'retake-assessment',
+    dateApplied: '16 days ago',
+  },
+]

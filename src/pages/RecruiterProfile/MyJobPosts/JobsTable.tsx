@@ -56,7 +56,7 @@ export const JobsTable = () => {
                 align={align}>{`${job.created} ago`}</StyledTableCell>
               <StyledTableCell align={align}>
                 <div style={{ width: '50%' }}>
-                  <Link to="">
+                  <Link to={`/recruiterDashboard/singleJobPost`}>
                     <Button title="View Application" />
                   </Link>
                 </div>

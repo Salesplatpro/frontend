@@ -1,10 +1,11 @@
-import React from 'react';
-import { CiSearch } from "react-icons/ci";
 import './SearchBox.scss'
 
+import React from 'react'
+import { CiSearch } from 'react-icons/ci'
+
 type SearchBoxProps = {
-  placeholder: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export const SearchBox = () => {
