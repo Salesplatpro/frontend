@@ -22,7 +22,7 @@ export const sidebarData = [
   {
     name: 'My Job Posts',
     icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
-    link: '/recruiterDashboard/jobPost',
+    link: '/recruiterDashboard/myJobPosts',
   },
   {
     name: 'Notification',

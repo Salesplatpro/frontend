@@ -1,11 +1,12 @@
 import React from 'react'
 
 import { Button } from '../../../components'
-import styles from './JobPosts.module.scss'
+import { JobsTable } from './JobsTable'
+import styles from './MyJobPosts.module.scss'
 
-export const JobPosts = () => {
+export const MyJobPosts = () => {
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.topContainer}>
         <div className={styles.titleDesc}>
           <div className={styles.title}>Job Posts</div>
@@ -16,10 +17,12 @@ export const JobPosts = () => {
           </div>
         </div>
         <div style={{ width: '10%' }}>
-          <Button title="Create New" textType="small" />
+          <Button title="Create New" textType="normal" />
         </div>
       </div>
-      <div></div>
+      <div>
+        <JobsTable />
+      </div>
     </div>
   )
 }
