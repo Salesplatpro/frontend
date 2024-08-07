@@ -19,6 +19,8 @@ import {
   signupSuccess,
 } from '../../redux/features/authSlice/authSlice'
 import { Carousel } from './Carousel'
+import DropDown from './DropDown'
+import Loading from './Loading'
 import Modal from './Modal'
 
 const SignUpSchema = Yup.object().shape({
@@ -27,7 +29,7 @@ const SignUpSchema = Yup.object().shape({
     .min(8, 'Password must be at least 8 characters')
     .required('Password is required'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
     .required('Confirm Password is required'),
   firstName: Yup.string().required('First Name is required'),
   lastName: Yup.string().required('Last Name is required'),
@@ -43,10 +45,14 @@ const SignIn = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (values: any) => {
     dispatch(signupStart())
+    setLoading(true) // Set loading to true when submission starts
+
     try {
+      // eslint-disable-next-line no-unused-vars
       const { confirmPassword, userType, ...formValues } = values
 
       let response
@@ -80,12 +86,20 @@ const SignIn = () => {
       toast.error(
         err.response?.data?.message || 'An error occurred while signing up',
       )
+    } finally {
+      setLoading(false) // Set loading to false when submission is complete
     }
   }
 
   const closeModal = () => {
     setIsModalOpen(false)
   }
+
+  const userTypeData = [
+    { value: '', label: 'Choose an option' },
+    { value: 'talent', label: 'Talent' },
+    { value: 'recruiter', label: 'Recruiter' },
+  ]
 
   return (
     <div>
@@ -155,14 +169,15 @@ const SignIn = () => {
                     component="p"
                     className="text-red-500"
                   />
-                  <div className="flex">
-                    <div>Register as:</div>
-                    <Field title="Register as" name="userType" as="select">
-                      <option value="" label="Choose an option" />
-                      <option value="talent" label="Talent" />
-                      <option value="recruiter" label="Recruiter" />
-                    </Field>
+                  <div className="flex my-2">
+                    <Field
+                      name="userType"
+                      component={DropDown}
+                      label="Register as :"
+                      options={userTypeData}
+                    />
                   </div>
+
                   <ErrorMessage
                     name="userType"
                     component="p"
@@ -240,7 +255,11 @@ const SignIn = () => {
                     <div className="forgot-password">Forgot password?</div>
                   </div>
                   <div className="buttons">
-                    <Button title="Sign Up" type="submit" />
+                    {loading ? (
+                      <Loading />
+                    ) : (
+                      <Button title="Sign Up" type="submit" />
+                    )}
 
                     <div className="already py-2">
                       Already have an account? <a href="/login">Log In</a>
