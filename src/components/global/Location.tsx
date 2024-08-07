@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import Geonames from 'geonames.js'
 import { useFormikContext } from 'formik'
-import { LocationProps, LocationOption } from '../../utils/jobPostTypes'
+import Geonames from 'geonames.js'
+import React, { useEffect, useState } from 'react'
+
+import { LocationOption, LocationProps } from '../../utils/jobPostTypes'
 
 const geonames = new Geonames({
   username: 'timmydee',

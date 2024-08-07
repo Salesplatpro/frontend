@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  color: #0D0C22;
+  font-size: 24px;
+}
+
+.applicants {
+  color: #335BC2;
+  font-size: 16px;
+  margin-left: 24px;
+}
+
+.posted {
+  color: #0D0C22;
+  font-size: 16px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}

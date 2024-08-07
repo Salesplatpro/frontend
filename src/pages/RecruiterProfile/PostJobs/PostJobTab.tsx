@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import PostJob from './PostJob'
-import AiConfig from './AiConfig'
-import Question from './Question'
 import { useParams } from 'react-router-dom'
+
+import AiConfig from './AiConfig'
+import PostJob from './PostJob'
+import Question from './Question'
 
 const tabs = [
   {

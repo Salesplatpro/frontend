@@ -1,15 +1,14 @@
-import { ErrorMessage, Field, Form, Formik, FieldArray } from 'formik'
+import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import * as Yup from 'yup'
-import Location from '../../../components/global/Location'
-import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
-import AllRoles from '../../../components/Roles/AllRoles'
-import { PostJobs } from '../../../api/api-communication'
 import toast from 'react-hot-toast'
-import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { Link, useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 
-
+import { PostJobs } from '../../../api/api-communication'
+import Location from '../../../components/global/Location'
+import AllRoles from '../../../components/Roles/AllRoles'
+import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
+import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),

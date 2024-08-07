@@ -1,1 +1,1 @@
-export * from './getScreenWidth';
+export * from './getScreenWidth'

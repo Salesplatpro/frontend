@@ -1,2 +1,2 @@
-export * from './SidebarList';
-export * from './DropDownList';
+export * from './DropDownList'
+export * from './SidebarList'
