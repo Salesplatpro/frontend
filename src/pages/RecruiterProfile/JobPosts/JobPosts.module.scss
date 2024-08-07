@@ -1,0 +1,22 @@
+.topContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleDesc {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  color: #101828;
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.desc {
+  font-size: 20px;
+  color: #101828;
+}

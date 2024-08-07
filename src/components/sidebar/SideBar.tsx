@@ -1,9 +1,10 @@
-import React, { ReactNode, useState } from 'react'
-import logo from '../../assets/logo.png'
-import styles from './sidebar.module.scss'
-import { SidebarList } from '../lists'
-import { feedBack } from './sidebarData'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+
+import logo from '../../assets/logo.png'
+import { SidebarList } from '../lists'
+import styles from './sidebar.module.scss'
+import { feedBack } from './sidebarData'
 
 interface sideBarProps {
   sideBarData: {
@@ -12,7 +13,7 @@ interface sideBarProps {
     count?: number
     link?: string
   }[]
-  handleClick: () => void
+  handleClick?: () => void
 }
 
 export const SideBar: React.FC<sideBarProps> = ({
@@ -23,7 +24,9 @@ export const SideBar: React.FC<sideBarProps> = ({
 
   const handleItemClick = (type: string, index: number) => {
     setActiveItem(`${type}-${index}`)
-    handleClick()
+    if (handleClick) {
+      handleClick()
+    }
   }
 
   return (

@@ -9,22 +9,27 @@
   flex-direction: row;
   align-items: start;
   height: 100vh;
-  position: fixed;
   overflow: hidden;
 }
 
 .dashboard-body {
-  // flex-grow: 1;
-  width: 100%;
-  margin-left: 23%;
+  flex: 1;
+  //width: calc(100vw - 698px);
+}
+
+.outlet {
+  padding: 10px 14px;
 }
 
 .dashboard-nav {
-  // height: 50px;
-  box-shadow: #fcfcfc;
+  height: 80px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0 3px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   background-color: #fcfcfc;
   width: 100%;
-  padding: 10px;
+
   .menu {
     display: none;
   }
@@ -33,7 +38,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 50px;
+    padding-right: 20px;
     gap: 20px;
   }
 
@@ -59,13 +64,16 @@
     .sidebar-container {
       transition: transform 0.3s ease;
     }
+
     .sidebar-container.closed {
       transform: translateX(-100%);
     }
+
     .sidebar-container.open {
       transform: translateX(0);
     }
-    .close{
+
+    .close {
       position: relative;
       right: 3rem;
       top: 1rem;
@@ -77,7 +85,7 @@
     margin-left: 0;
     padding: 0 8px;
   }
-  .outlet{
+  .outlet {
     margin-top: 1rem;
   }
   .dashboard-nav {
