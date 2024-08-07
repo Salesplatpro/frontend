@@ -7,9 +7,31 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
-
 import { Button, StatusBadge } from '../../../components'
 import { applications } from './ApplicationData'
+import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
+import toast from 'react-hot-toast'
+import { Link } from 'react-router-dom'
+
+interface AllJobTypes {
+  currentStage?: string
+  status?: string
+  applicationType?: string
+  job?: {
+    role?: string
+    _id?: string
+    location?: {
+      country: string
+    }
+  }
+  postedBy?: {
+    firstName: string
+  }
+  role?: {
+    name: string
+  }
+  _id?: string
+}
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,7 +71,7 @@ const getButtonText = (stage: string) => {
 
 const getStatusBadgeProps = (status: string) => {
   switch (status) {
-    case 'retake-assessment':
+    case 'pending':
       return { backgroundColor: '#fff4e2', color: '#fbb241' }
     case 'not-proceeding':
       return { backgroundColor: '#fff0ef', color: '#ff6f6d' }
@@ -63,7 +85,18 @@ const getStatusBadgeProps = (status: string) => {
 }
 
 export const PipelineTable = () => {
+  const { data, error, isLoading } = useAllJobApplicationsQuery()
+  const [allJobs, setAllJobs] = React.useState<AllJobTypes[]>([])
   const align = 'left'
+
+  React.useEffect(() => {
+    if (data) {
+      console.log(data)
+      console.log('data')
+      toast.success(data?.message)
+      setAllJobs(data.data.applications)
+    }
+  }, [data])
 
   return (
     <TableContainer component={Paper}>
@@ -79,29 +112,34 @@ export const PipelineTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {applications.map((application, index) => (
+          {allJobs.map((application, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell component="th" align={align}>
-                {application.jobTitle}
+                {application.role?.name}
               </StyledTableCell>
               <StyledTableCell align={align}>
-                {application.companyName}
+                {application.postedBy?.firstName}
               </StyledTableCell>
               <StyledTableCell align={align}>
-                {application.stage}
+                {application.currentStage}
               </StyledTableCell>
               <StyledTableCell align={align}>
+                {/* {application.status} */}
                 <StatusBadge
-                  status={application.status}
-                  {...getStatusBadgeProps(application.status)}
+                  status={application.status || 'unknown'}
+                  {...getStatusBadgeProps(application?.status || 'unknown')}
                 />
               </StyledTableCell>
               <StyledTableCell align={align}>
-                {application.dateApplied}
+                {application.applicationType}
               </StyledTableCell>
               <StyledTableCell align={align}>
                 <div style={{ width: '80%' }}>
-                  <Button title={getButtonText(application.stage)} />
+                  {/* <Button title={getButtonText(application.stage)} /> */}
+                  <Link
+                    to={`/talentDashboard/applicationPipeline/${application.job?._id}`}>
+                    <Button title="View More" />
+                  </Link>
                 </div>
               </StyledTableCell>
             </StyledTableRow>

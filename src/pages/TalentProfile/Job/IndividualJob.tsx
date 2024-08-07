@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import toast from 'react-hot-toast'
 import Loading from '../../../components/Loading/Loading'
@@ -42,7 +42,7 @@ interface JobProfileProps {
 
 const IndividualJob = () => {
   const { jobId } = useParams()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
 
@@ -60,7 +60,6 @@ const IndividualJob = () => {
 
   return (
     <div className="w-full">
-      {/* {jobProfile.map((job, i) => ( */}
       <div className="w-[96%] mx-auto mt-4">
         <h2 className="font-bold md:text-3xl text-xl">
           {jobProfile?.role && jobProfile?.role?.name} at {jobProfile?.title}
@@ -134,11 +133,11 @@ const IndividualJob = () => {
                 )}
               </p>
             </div>
-            <button
-              type="submit"
-              className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
-              Apply for this position
-            </button>
+            <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
+              <button className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+                Apply for this position
+              </button>
+            </Link>
           </div>
 
           <div className="md:w-[30%] w-full mt-7 md:mt-0">

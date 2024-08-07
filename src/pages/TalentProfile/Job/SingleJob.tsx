@@ -7,22 +7,19 @@ import './SingleJob.scss'
 import { GoDotFill } from 'react-icons/go'
 
 export type SingleJobProps = {
-  jobId: string
-  jobTitle: string
-  jobCategory: string
-  jobDescription: string
-  jobRemote?: string
+  jobId?: string
+  jobTitle?: string
+  jobCategory?: string
+  jobDescription?: string
+  jobRemote?: boolean
   jobCountry?: string
   jobExperience?: string
   jobSalary?: string
   location?: {
-    country: string
-    state: string
-    ciity: string
+    city: { name: ''; geoId: null }
+    state: { name: ''; geoId: null }
+    country: { name: ''; geoId: null }
   }
-  // type: string
-  // level: string
-  // salary: string
 }
 
 export const SingleJob = ({
@@ -50,10 +47,10 @@ export const SingleJob = ({
         <div className="details-container">
           <div className="jobdetails">
             <JobDetails
-              location={jobCountry}
+              location={jobCountry || 'Unknown Location'}
               type={jobRemote}
-              level={jobExperience}
-              salary={jobSalary}
+              level={jobExperience || 'Unknown Experience level'}
+              salary={jobSalary || 'Unknown Job salary'}
             />
           </div>
           <Link to={`/talentDashboard/job/${jobId}`}>

@@ -12,25 +12,37 @@ import toast from 'react-hot-toast'
 import Loading from '../../../components/Loading/Loading'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
-const defaultFilterValues = {
+const defaultFilterValues: JobFiltersTypes = {
   role: '',
   experienceLevel: '',
   remote: '',
   location: {
-    city: '',
-    state: '',
-    country: '',
+    city: { name: '', geoId: null },
+    state: { name: '', geoId: null },
+    country: { name: '', geoId: null },
   },
+}
+
+interface JobType {
+  _id: string
+  role: { name: string }
+  experienceLevel: string
+  description: string
+  remote: boolean
+  location: {
+    country: string
+  }
+  maxSalary: string
 }
 
 const Job = () => {
   const user = useSelector((state: RootState) => state.auth)
-  const roleId = user.user.profile.role[0]._id
+  const roleId = user?.user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState<JobType[]>([])
   const screenWidth = getScreenWidth()
 
   // Fetch filtered jobs
@@ -40,12 +52,12 @@ const Job = () => {
     isLoading: isFiltering,
   } = useFilterJobQuery(
     {
-      roleId: filters.role,
-      experienceLevel: filters.experienceLevel,
-      remote: filters.remote,
-      city: filters?.location.city?.name,
-      state: filters?.location.state?.name,
-      country: filters?.location.country?.name,
+      roleId: filters.role || '',
+      experienceLevel: filters.experienceLevel || '',
+      remote: filters.remote || '',
+      city: filters.location?.city?.name || '',
+      state: filters.location?.state?.name || '',
+      country: filters.location?.country?.name || '',
     },
     {
       skip: !filters.role,
@@ -74,7 +86,7 @@ const Job = () => {
 
   if (isLoading || isFiltering) return <Loading />
 
-  const handleFilterSubmit = (filterValues) => {
+  const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
     setFilters(filterValues)
     setShowFilter(false)
   }
@@ -112,7 +124,7 @@ const Job = () => {
               <SingleJob
                 key={index}
                 jobId={job?._id}
-                jobTitle={job?.role?.name}
+                jobTitle={job.role?.name}
                 jobCategory={job?.experienceLevel}
                 jobDescription={job?.description}
                 jobRemote={job?.remote}
