@@ -1,14 +1,21 @@
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
 
+import upload from '../../assets/Featured icon.png'
 import profilePics from '../../assets/profilePics.png'
 import AllRoles from '../../components/Roles/AllRoles'
 import {
   useTalentCreationMutation,
   useUploadCvMutation,
 } from '../../redux/api/talent'
+import { setUser } from '../../redux/features/authSlice/authSlice'
+import { RootState } from '../../redux/store/store'
+import ProgressBar from '../TalentProfile/ProgressBar'
+import { capitalizeEachWord } from './Profile Component/CapitalizeWord'
+import UploadCV from './Profile Component/UploadCV'
 
 interface TalentProfileProps {
   bio?: string
@@ -17,15 +24,6 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
-}
-
-const initialValues: TalentProfileProps = {
-  bio: '',
-  role: [],
-  maxSalary: '',
-  minSalary: '',
-  experience: '',
-  cv: null,
 }
 
 const validationSchema = Yup.object({
@@ -42,7 +40,7 @@ const validationSchema = Yup.object({
     .test(
       'fileSize',
       'File size is too large',
-      (value) => value && value.size <= 5 * 1024 * 1024, // 5MB
+      (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
     )
     .test(
       'fileType',
@@ -53,13 +51,40 @@ const validationSchema = Yup.object({
           'application/pdf',
           'application/msword',
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ].includes(value.type),
+        ].includes((value as File).type),
     ),
 })
 
-const TalentProfile: React.FC = () => {
+const calculateProgress = (values: TalentProfileProps): number => {
+  const fields = ['bio', 'role', 'maxSalary', 'minSalary', 'experience', 'cv']
+  const filledFields = fields.filter(
+    (field) =>
+      values[field as keyof TalentProfileProps] !== undefined &&
+      values[field as keyof TalentProfileProps] !== '',
+  )
+  return (filledFields.length / fields.length) * 100
+}
+
+const TalentProfile = () => {
+  const [progress, setProgress] = useState(0)
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
+  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.auth)
+  const userInfo = user.user
+  const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
+    profilePics,
+  )
+  const [cvFileName, setCvFileName] = useState<string | null>(null)
+
+  const initialValues: TalentProfileProps = {
+    bio: userInfo.profile?.bio || '',
+    role: userInfo.profile?.role[0]?._id || [],
+    maxSalary: userInfo.profile?.maxSalary || '',
+    minSalary: userInfo.profile?.minSalary || '',
+    experience: userInfo.profile?.experience || '',
+    cv: null,
+  }
 
   const onSubmit = async (
     values: TalentProfileProps,
@@ -80,6 +105,12 @@ const TalentProfile: React.FC = () => {
         const data = await talentCreation(updatedFormValue).unwrap()
 
         if (data.status) {
+          dispatch(
+            setUser({
+              user: data.data.user,
+              isLoggedIn: true,
+            }),
+          )
           toast.success('Profile created successfully')
         } else {
           toast.error(
@@ -98,24 +129,55 @@ const TalentProfile: React.FC = () => {
     }
   }
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setProfileImage(reader.result) // Set the selected image
+      }
+      reader.readAsDataURL(file) // Read the file as a data URL
+    }
+  }
+
   return (
     <div className="w-full">
       <div className="md:w-[80%] w-full m-auto">
-        <div className="md:my-3">
+        <div className="md:my-3 flex justify-between items-center">
           <h2 className="font-bold md:text-3xl text-xl">
-            Create Talent Profile
+            {userInfo.profile ? 'Edit Talent Profile' : 'Create Talent Profile'}
           </h2>
+
+          <ProgressBar percentage={progress} />
         </div>
+
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
-          <div>
-            <img src={profilePics} alt="Profile" />
-            <p className="text-[10px] text-[#4884DF]">Change Image</p>
+          <div className="flex justify-center items-center flex-col space-y-2">
+            <img
+              src={profileImage as string}
+              alt="Profile"
+              className="w-24 h-24 object-cover rounded-full"
+            />
+            <input
+              id="profileImage"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+            <button
+              className="text-[10px] text-[#4884DF] cursor-pointer mt-2"
+              onClick={() => document.getElementById('profileImage')?.click()}>
+              Change Image
+            </button>
           </div>
           <div className="w-full">
             <div className="flex justify-between w-full">
               <div className="text-[#101828]">
-                <p className="text-[20px] font-semibold">Williamson Paints</p>
-                <p className="text-[16px]">Customer Success</p>
+                <p className="text-[20px] font-semibold">{`${userInfo.firstName} ${userInfo.lastName}`}</p>
+                <p className="text-[16px]">
+                  {capitalizeEachWord(userInfo.userRole)}
+                </p>
               </div>
               <button className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]">
                 Edit Profile
@@ -133,85 +195,273 @@ const TalentProfile: React.FC = () => {
         <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-2 w-[100%]">
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            validationSchema={!userInfo.profile ? validationSchema : null}
             onSubmit={onSubmit}>
-            {({ values, isSubmitting, setFieldValue }) => (
-              <Form>
-                <div>
-                  <label htmlFor="bio" className="text-[14px] text-[#344054]">
-                    Bio
-                  </label>
-                  <Field
-                    type="text"
-                    id="bio"
-                    name="bio"
-                    placeholder="Tell us about yourself"
-                    className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[128px]"
-                  />
-                  <ErrorMessage
-                    name="bio"
-                    component="div"
-                    className="text-red-500 text-[14px]"
-                  />
-                </div>
+            {({ values, isSubmitting, setFieldValue }) => {
+              useEffect(() => {
+                setProgress(calculateProgress(values))
+              }, [values]) // Update progress on form value change
 
-                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-16">
-                  <div className="md:w-[48%]">
-                    <label
-                      htmlFor="role"
-                      className="text-[14px] text-[#344054]">
-                      Role
+              return (
+                <Form>
+                  <div>
+                    <label htmlFor="bio" className="text-[16px] text-[#344054]">
+                      Bio
                     </label>
-                    <div className="border border-gray-300 p-2 rounded-lg h-[44px]">
-                      <AllRoles
-                        name="role"
-                        value={values.role || []}
-                        onChange={(e) =>
-                          setFieldValue('role', [e.target.value])
+                    <Field
+                      type="text"
+                      id="bio"
+                      name="bio"
+                      placeholder="Tell us about yourself"
+                      className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-2"
+                    />
+                    <ErrorMessage
+                      name="bio"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
+                  </div>
+
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-16">
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="names"
+                        className="text-[14px] text-[#344054]">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Williamson Paints"
+                        value={
+                          `${userInfo.firstName} ${userInfo.lastName}` || ''
                         }
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                        readOnly
+                      />
+                    </div>
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="role"
+                        className="text-[14px] text-[#344054]">
+                        Role
+                      </label>
+                      <div className="border border-gray-300 p-2 rounded-lg h-[44px] mt-2">
+                        <AllRoles
+                          name="role"
+                          value={values.role}
+                          onChange={(e) =>
+                            setFieldValue('role', [e.target.value])
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="inline-block mt-6 w-full">
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="phoneNumber"
+                        className="text-[14px] text-[#344054]">
+                        Phone number
+                      </label>
+                      <Field
+                        type="text"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        placeholder="08198675757"
+                        value={`${userInfo.phone}`}
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      />
+                      <ErrorMessage
+                        name="phoneNumber"
+                        component="div"
+                        className="text-red-500 text-[14px]"
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="inline-block mt-6 w-full">
-                  <div className="md:w-[48%]">
-                    <label htmlFor="cv" className="text-[14px] text-[#344054]">
-                      Upload CV
-                    </label>
-                    <input
-                      id="cv"
-                      name="cv"
-                      type="file"
-                      onChange={(event) => {
-                        if (event.currentTarget.files) {
-                          setFieldValue('cv', event.currentTarget.files[0])
-                        }
-                      }}
-                    />
-                    <ErrorMessage
-                      name="cv"
-                      component="div"
-                      className="text-red-500"
-                    />
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="github"
+                        className="text-[14px] text-[#344054]">
+                        Github
+                      </label>
+                      <Field
+                        type="text"
+                        id="github"
+                        name="github"
+                        placeholder="Your Github Link"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      />
+                      <ErrorMessage
+                        name="github"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="linkedin"
+                        className="text-[14px] text-[#344054]">
+                        LinkedIn
+                      </label>
+                      <Field
+                        type="text"
+                        id="linkedin"
+                        name="linkedin"
+                        placeholder="Your Linkedin Link"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      />
+                      <ErrorMessage
+                        name="linkedin"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex justify-end">
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700">
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
-                  </button>
-                </div>
-              </Form>
-            )}
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="portfolio"
+                        className="text-[14px] text-[#344054]">
+                        Portfolio
+                      </label>
+                      <Field
+                        type="text"
+                        id="portfolio"
+                        name="portfolio"
+                        placeholder="Your portfolio Link"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      />
+                      <ErrorMessage
+                        name="portfolio"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
+                    <div className="md:w-[48%]">
+                      <label
+                        className="text-[14px] text-[#344054]"
+                        htmlFor="experience">
+                        Experience Level
+                      </label>
+                      <Field
+                        as="select"
+                        id="experience"
+                        name="experience"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2">
+                        <option value="">Select experience Level</option>
+                        <option value="senior">Senior</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="junior">Junior</option>
+                      </Field>
+                      <ErrorMessage
+                        name="experience"
+                        component="div"
+                        className="text-red-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="minSalary"
+                        className="text-[14px] text-[#344054]">
+                        Min Salary
+                      </label>
+                      <Field
+                        type="text"
+                        id="minSalary"
+                        name="minSalary"
+                        placeholder="Your minSalary"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      />
+                      <ErrorMessage
+                        name="minSalary"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="maxSalary"
+                        className="text-[14px] text-[#344054]">
+                        Max Salary
+                      </label>
+                      <Field
+                        type="text"
+                        id="maxSalary"
+                        name="maxSalary"
+                        placeholder="Your Max Salary"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      />
+                      <ErrorMessage
+                        name="maxSalary"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="inline-block mt-6 w-full">
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="cv"
+                        className="text-[14px] text-[#344054]">
+                        Upload CV
+                      </label>
+                      <div className="relative w-[100%]">
+                        <input
+                          id="cv"
+                          name="cv"
+                          type="file"
+                          onChange={(event) => {
+                            if (event.currentTarget.files) {
+                              const file = event.currentTarget.files[0]
+                              setFieldValue('cv', file)
+                              setCvFileName(file.name) // Update file name state
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <UploadCV cvFileName={cvFileName} upload={upload} />
+                      </div>
+                      <ErrorMessage
+                        name="cv"
+                        component="div"
+                        className="text-red-500 mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700 mr-2"
+                      onClick={() => {
+                        // handle cancel action if needed
+                      }}>
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                      {userInfo.profile
+                        ? isSubmitting
+                          ? 'Editing...'
+                          : 'Edit'
+                        : isSubmitting
+                        ? 'Submitting...'
+                        : 'Submit'}
+                    </button>
+                  </div>
+                </Form>
+              )
+            }}
           </Formik>
         </div>
       </div>
@@ -220,3 +470,7 @@ const TalentProfile: React.FC = () => {
 }
 
 export default TalentProfile
+
+// function setProgress(arg0: number) {
+//   throw new Error('Function not implemented.')
+// }

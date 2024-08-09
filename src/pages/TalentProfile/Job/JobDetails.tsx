@@ -7,10 +7,10 @@ import { IoBagRemoveOutline } from 'react-icons/io5'
 import { TbMoneybag } from 'react-icons/tb'
 
 type JobDetailsProps = {
-  location: string
-  type: string
-  level: string
-  salary: string
+  location?: string
+  type?: boolean
+  level?: string
+  salary?: string
 }
 
 export const JobDetails = ({

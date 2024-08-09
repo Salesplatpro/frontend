@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <React.Fragment>
       <div className="navi">
-        <div className="container wrapper nav-navigate">
+        <div className="wrapper nav-navigate">
           <nav className="navbar">
             <ul>
               <a href="/" className="logo-li">

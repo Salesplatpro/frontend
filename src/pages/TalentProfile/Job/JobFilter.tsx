@@ -12,11 +12,10 @@ interface JobFiltersProps {
 }
 
 export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [selectItemToggle, setSelectItemToggle] = useState(false)
+  // const [selectItemToggle, setSelectItemToggle] = useState(false)
 
   const initialValues: JobFiltersTypes = {
-    role: '',
+    role: [],
     experienceLevel: '',
     remote: '',
     location: {
@@ -55,14 +54,13 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
                 <label className="block mb-2 font-bold" htmlFor="role">
                   Role
                 </label>
-                <AllRoles
-                  className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full"
-                  name="role"
-                  value={values.role}
-                  onChange={(e: { target: { value: any } }) =>
-                    setFieldValue('role', e.target.value)
-                  }
-                />
+                <div className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full">
+                  <AllRoles
+                    name="role"
+                    value={values.role}
+                    onChange={(e) => setFieldValue('role', e.target.value)}
+                  />
+                </div>
               </div>
               <div className="line" />
 
@@ -125,7 +123,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
 
               <Location
                 locationTitle="State"
-                geoId={values.location.country.geoId}
+                geoId={values.location?.country.geoId}
                 isCountry={false}
                 onChange={(geoId) => {
                   setFieldValue('location.state.geoId', geoId)
@@ -136,7 +134,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
 
               <Location
                 locationTitle="City"
-                geoId={values.location.state.geoId}
+                geoId={values.location?.state.geoId}
                 isCountry={false}
                 onChange={(geoId) => {
                   setFieldValue('location.city.geoId', geoId)

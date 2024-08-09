@@ -14,7 +14,6 @@ import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
 
-// Define default values matching the JobFiltersTypes type
 const defaultFilterValues: JobFiltersTypes = {
   role: '',
   experienceLevel: '',
@@ -22,21 +21,43 @@ const defaultFilterValues: JobFiltersTypes = {
   location: {
     city: { name: '', geoId: null },
     state: { name: '', geoId: null },
-    country: { name: '', geoId: null }, // Match LocationValues type
+    country: { name: '', geoId: null },
   },
+}
+
+interface JobType {
+  _id: string
+  role: { name: string }
+  experienceLevel: string
+  description: string
+  remote: boolean
+  location: {
+    country: string
+  }
+  maxSalary: string
+}
+
+interface JobType {
+  _id: string
+  role: { name: string }
+  experienceLevel: string
+  description: string
+  remote: boolean
+  location: {
+    country: string
+  }
+  maxSalary: string
 }
 
 const Job = () => {
   const user = useSelector((state: RootState) => state.auth)
-  const roleId = user.user.profile.role[0]._id
-
-  // Fetching all jobs
+  const roleId = user?.user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
   // State for filters
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
-  const [jobs, setJobs] = useState<any[]>([]) // Adjust type if needed
+  const [jobs, setJobs] = useState<JobType[]>([])
   const screenWidth = getScreenWidth()
 
   // Fetch filtered jobs based on filters
@@ -46,12 +67,12 @@ const Job = () => {
     isLoading: isFiltering,
   } = useFilterJobQuery(
     {
-      roleId: filters.role,
-      experienceLevel: filters.experienceLevel,
-      remote: filters.remote,
-      city: filters.location?.city,
-      state: filters.location?.state,
-      country: filters.location?.country,
+      roleId: filters.role || '',
+      experienceLevel: filters.experienceLevel || '',
+      remote: filters.remote || '',
+      city: filters.location?.city?.name || '',
+      state: filters.location?.state?.name || '',
+      country: filters.location?.country?.name || '',
     },
     {
       skip: !filters.role, // Skip the query if no role is selected
@@ -120,7 +141,7 @@ const Job = () => {
               <SingleJob
                 key={index}
                 jobId={job?._id}
-                jobTitle={job?.role?.name}
+                jobTitle={job.role?.name}
                 jobCategory={job?.experienceLevel}
                 jobDescription={job?.description}
                 jobRemote={job?.remote}

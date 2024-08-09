@@ -39,7 +39,7 @@ import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 // import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils/authUtils'
-
+import JobPipeline from './pages/TalentProfile/ApplicationPipeline/JobPipeline'
 // const TalentProfileSidebar = React.lazy(
 //   () => import('./pages/TalentProfile/TalentProfileSidebar'),
 // )
@@ -114,6 +114,10 @@ const router = createBrowserRouter([
           {
             path: 'job/:jobId',
             element: <IndividualJob />,
+          },
+          {
+            path: 'applicationPipeline/:jobId',
+            element: <JobPipeline />,
           },
           {
             path: 'applicationPipeline',

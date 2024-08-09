@@ -12,7 +12,7 @@ import { RootState } from '../redux/store/store'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)
-  const roleId = user.user.profile.role[0]._id
+  const roleId = user?.user?.profile?.role[0]?._id
 
   const { data, error, isLoading } = useFetchPretestQuery(roleId)
   const [postAnswer] = usePostPretestMutation()
@@ -31,6 +31,14 @@ const TalentAssessment = () => {
       toast.error('Error fetching questions')
     }
   }, [data, error])
+
+  if (!roleId) {
+    return (
+      <div>
+        <h2>Please complete your profile creation</h2>
+      </div>
+    )
+  }
 
   if (isLoading) return <Loading />
 

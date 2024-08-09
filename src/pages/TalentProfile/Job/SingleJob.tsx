@@ -9,25 +9,19 @@ import { Button } from '../../../components'
 import { JobDetails } from './JobDetails'
 
 export type SingleJobProps = {
-  jobId: string
-  jobTitle: string
-  jobCategory: string
-  jobDescription: string
-  jobRemote?: string
+  jobId?: string
+  jobTitle?: string
+  jobCategory?: string
+  jobDescription?: string
+  jobRemote?: boolean
   jobCountry?: string
   jobExperience?: string
   jobSalary?: string
   location?: {
-    country: string
-    state: string
-    ciity: string
+    city: { name: ''; geoId: null }
+    state: { name: ''; geoId: null }
+    country: { name: ''; geoId: null }
   }
-  details?: {
-    location: string
-    type: string
-    level: string
-    salary: string
-  }[]
 }
 
 export const SingleJob = ({
@@ -55,12 +49,10 @@ export const SingleJob = ({
         <div className="details-container">
           <div className="jobdetails">
             <JobDetails
-              location={jobCountry ?? 'Location not specified'}
-              type={jobRemote ?? 'Type not specified'}
-              level={jobExperience ?? 'Experience level not specified'}
-              salary={jobSalary ?? 'Salary not specified'}
-
-              // ?? 'Location not specified': This is the nullish coalescing operator (??). It checks if jobCountry is null or undefined. If it is, it will use the string 'Location not specified' as the default value
+              location={jobCountry || 'Unknown Location'}
+              type={jobRemote}
+              level={jobExperience || 'Unknown Experience level'}
+              salary={jobSalary || 'Unknown Job salary'}
             />
           </div>
           <Link to={`/talentDashboard/job/${jobId}`}>
