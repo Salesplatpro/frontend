@@ -16,7 +16,7 @@ export const MyJobPosts = () => {
             responded.
           </div>
         </div>
-        <div style={{ width: '10%' }}>
+        <div style={{ width: '16%' }}>
           <Button title="Create New" textType="normal" />
         </div>
       </div>
