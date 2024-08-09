@@ -1,10 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { PiBuildingOfficeBold } from 'react-icons/pi'
-import { JobDetails } from './JobDetails'
-import { Button } from '../../../components'
 import './SingleJob.scss'
+
+import React from 'react'
 import { GoDotFill } from 'react-icons/go'
+import { PiBuildingOfficeBold } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
+
+import { Button } from '../../../components'
+import { JobDetails } from './JobDetails'
 
 export type SingleJobProps = {
   jobId?: string

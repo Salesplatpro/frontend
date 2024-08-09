@@ -1,16 +1,19 @@
 import './TalentProfileSidebar.scss'
+
 import React, { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
-// import { SideBar } from '../../components/TalentProfile/SideBar/sideBar'
-import { SideBar } from '../../components'
+import { AiOutlineCloseCircle } from 'react-icons/ai'
 import {
-  IoMdMenu,
   IoIosArrowDown,
+  IoMdMenu,
   IoMdNotificationsOutline,
 } from 'react-icons/io'
+// eslint-disable-next-line no-unused-vars
+import { NavLink, Outlet } from 'react-router-dom'
+
 import employer from '../../assets/employer.png'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
+// import { SideBar } from '../../components/TalentProfile/SideBar/sideBar'
+import { SideBar } from '../../components'
+import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
 
 const TalentProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)

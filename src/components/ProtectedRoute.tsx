@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
+
 import { RootState } from '../redux/store/store'
-import toast from 'react-hot-toast'
 
 interface ProtectedRouteProps {
   allowedRoles: string[]
