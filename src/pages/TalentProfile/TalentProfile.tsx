@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
 
+import upload from '../../assets/Featured icon.png'
 import profilePics from '../../assets/profilePics.png'
 import AllRoles from '../../components/Roles/AllRoles'
 import {
@@ -13,6 +14,8 @@ import {
 import { setUser } from '../../redux/features/authSlice/authSlice'
 import { RootState } from '../../redux/store/store'
 import ProgressBar from '../TalentProfile/ProgressBar'
+import { capitalizeEachWord } from './Profile Component/CapitalizeWord'
+import UploadCV from './Profile Component/UploadCV'
 
 interface TalentProfileProps {
   bio?: string
@@ -62,17 +65,6 @@ const calculateProgress = (values: TalentProfileProps): number => {
   return (filledFields.length / fields.length) * 100
 }
 
-const capitalizeEachWord = (string: string) => {
-  if (!string) return ''
-  return string
-    .split(' ')
-    .map(
-      (word: string) =>
-        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-    )
-    .join(' ')
-}
-
 const TalentProfile = () => {
   const [progress, setProgress] = useState(0)
   const [talentCreation] = useTalentCreationMutation()
@@ -83,6 +75,7 @@ const TalentProfile = () => {
   const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
     profilePics,
   )
+  const [cvFileName, setCvFileName] = useState<string | null>(null)
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
@@ -220,7 +213,7 @@ const TalentProfile = () => {
                       id="bio"
                       name="bio"
                       placeholder="Tell us about yourself"
-                      className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px]"
+                      className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-2"
                     />
                     <ErrorMessage
                       name="bio"
@@ -242,7 +235,7 @@ const TalentProfile = () => {
                         value={
                           `${userInfo.firstName} ${userInfo.lastName}` || ''
                         }
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                         readOnly
                       />
                     </div>
@@ -252,7 +245,7 @@ const TalentProfile = () => {
                         className="text-[14px] text-[#344054]">
                         Role
                       </label>
-                      <div className="border border-gray-300 p-2 rounded-lg h-[44px]">
+                      <div className="border border-gray-300 p-2 rounded-lg h-[44px] mt-2">
                         <AllRoles
                           name="role"
                           value={values.role}
@@ -277,7 +270,7 @@ const TalentProfile = () => {
                         name="phoneNumber"
                         placeholder="08198675757"
                         value={`${userInfo.phone}`}
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
                         name="phoneNumber"
@@ -299,7 +292,7 @@ const TalentProfile = () => {
                         id="github"
                         name="github"
                         placeholder="Your Github Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
                         name="github"
@@ -318,7 +311,7 @@ const TalentProfile = () => {
                         id="linkedin"
                         name="linkedin"
                         placeholder="Your Linkedin Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
                         name="linkedin"
@@ -340,7 +333,7 @@ const TalentProfile = () => {
                         id="portfolio"
                         name="portfolio"
                         placeholder="Your portfolio Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
                         name="portfolio"
@@ -358,7 +351,7 @@ const TalentProfile = () => {
                         as="select"
                         id="experience"
                         name="experience"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]">
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2">
                         <option value="">Select experience Level</option>
                         <option value="senior">Senior</option>
                         <option value="intermediate">Intermediate</option>
@@ -384,7 +377,7 @@ const TalentProfile = () => {
                         id="minSalary"
                         name="minSalary"
                         placeholder="Your minSalary"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
                         name="minSalary"
@@ -403,7 +396,7 @@ const TalentProfile = () => {
                         id="maxSalary"
                         name="maxSalary"
                         placeholder="Your Max Salary"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
                         name="maxSalary"
@@ -420,21 +413,26 @@ const TalentProfile = () => {
                         className="text-[14px] text-[#344054]">
                         Upload CV
                       </label>
-                      <input
-                        id="cv"
-                        name="cv"
-                        type="file"
-                        onChange={(event) => {
-                          if (event.currentTarget.files) {
-                            setFieldValue('cv', event.currentTarget.files[0])
-                          }
-                        }}
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px]"
-                      />
+                      <div className="relative w-[100%]">
+                        <input
+                          id="cv"
+                          name="cv"
+                          type="file"
+                          onChange={(event) => {
+                            if (event.currentTarget.files) {
+                              const file = event.currentTarget.files[0]
+                              setFieldValue('cv', file)
+                              setCvFileName(file.name) // Update file name state
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <UploadCV cvFileName={cvFileName} upload={upload} />
+                      </div>
                       <ErrorMessage
                         name="cv"
                         component="div"
-                        className="text-red-500"
+                        className="text-red-500 mt-1"
                       />
                     </div>
                   </div>
