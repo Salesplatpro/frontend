@@ -43,11 +43,9 @@ export const feedBack = [
   {
     name: 'Support',
     icon: <MdOutlineContactSupport size={ICON_SIZE} color={COLOR} />,
-    link: '/talentDashboard/TalentProfile',
   },
   {
     name: 'Leave us feedBack',
     icon: <CgProfile size={ICON_SIZE} color={COLOR} />,
-    link: '/talentDashboard/job',
   },
 ]
