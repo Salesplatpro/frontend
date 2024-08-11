@@ -1,6 +1,8 @@
 import React from 'react'
 
+// @ts-ignore
 import cypress from '../../assets/jobpost.png'
+// @ts-ignore
 import jop2 from '../../assets/jobpost.png'
 import JobPost from '../explore/JobPost'
 
@@ -66,7 +68,6 @@ const JobPoster = () => {
             <div className="jobs">
               {jobs.map((job, index) => (
                 <JobPost
-                  key={job.title}
                   title={job.title}
                   description={job.description}
                   badge={job.badge}

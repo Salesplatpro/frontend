@@ -6,16 +6,15 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 import {
-  // fetchTalentProfies,
-  // getTalentMatch,
+  fetchTalentProfies,
+  getTalentMatch,
   getTopTalents,
 } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
-// import Roles from '../../../components/Roles/Roles'
-// import TopTalents from '../TopTalents/TopTalents'
+import Roles from '../../../components/Roles/Roles'
+import TopTalents from '../TopTalents/TopTalents'
 
 interface TalentProfile {
-  _id: any
   firstName: string
   lastName: string
   profile?: {

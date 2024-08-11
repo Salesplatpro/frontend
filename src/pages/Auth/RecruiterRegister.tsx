@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-import { SendRecruiterReg } from '../../api/api-communication'
+import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
 import Navbar from '../../components/Navbar'
 
 interface FormErrors {
@@ -44,7 +44,7 @@ const RecruiterRegister: React.FC = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        await SendRecruiterReg(formValues)
+        const data = await SendRecruiterReg(formValues)
         toast.success('Registered successfully')
         navigate('/login')
       } catch (err) {

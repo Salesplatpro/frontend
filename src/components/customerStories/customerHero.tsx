@@ -1,9 +1,12 @@
 import React from 'react'
 import { CiLocationOn } from 'react-icons/ci'
 
+// @ts-ignore
 import customerDp from '../../assets/Avatar.png'
+// @ts-ignore
 import customerHero from '../../assets/customerHero.webp'
-// import homepages from '../../assets/homepage.png'
+// @ts-ignore
+import homepages from '../../assets/homepage.png'
 
 const CustomerHero = () => {
   return (

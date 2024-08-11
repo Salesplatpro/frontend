@@ -1,23 +1,21 @@
-import './Job.scss'
-
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { MdKeyboardArrowDown } from 'react-icons/md'
-import { useSelector } from 'react-redux'
-
-import { Button } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
-import { getScreenWidth } from '../../../hooks'
-import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
-import { JobFiltersTypes } from '../../../utils/jobPostTypes'
+import './Job.scss'
 import { JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
+import { MdKeyboardArrowDown } from 'react-icons/md'
+import { getScreenWidth } from '../../../hooks'
+import { Button } from '../../../components'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../redux/store/store'
+import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
+import toast from 'react-hot-toast'
+import Loading from '../../../components/Loading/Loading'
+import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
 const defaultFilterValues: JobFiltersTypes = {
   role: '',
   experienceLevel: '',
-  remote: '', // Ensure this is valid per JobFiltersTypes
+  remote: '',
   location: {
     city: { name: '', geoId: null },
     state: { name: '', geoId: null },
@@ -37,30 +35,17 @@ interface JobType {
   maxSalary: string
 }
 
-interface JobType {
-  _id: string
-  role: { name: string }
-  experienceLevel: string
-  description: string
-  remote: boolean
-  location: {
-    country: string
-  }
-  maxSalary: string
-}
-
 const Job = () => {
   const user = useSelector((state: RootState) => state.auth)
   const roleId = user?.user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
-  // State for filters
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
   const [jobs, setJobs] = useState<JobType[]>([])
   const screenWidth = getScreenWidth()
 
-  // Fetch filtered jobs based on filters
+  // Fetch filtered jobs
   const {
     data: filteredData,
     error: filteredError,
@@ -75,11 +60,10 @@ const Job = () => {
       country: filters.location?.country?.name || '',
     },
     {
-      skip: !filters.role, // Skip the query if no role is selected
+      skip: !filters.role,
     },
   )
 
-  // Handle initial data load
   useEffect(() => {
     if (data && !filters.role) {
       setJobs(data.data)
@@ -90,11 +74,10 @@ const Job = () => {
     }
   }, [data, error, filters.role])
 
-  // Handle filtered data load
   useEffect(() => {
     if (filteredData && filters.role) {
       setJobs(filteredData.data)
-      console.log(filteredData.data)
+      console.log(data.data)
     }
     if (filteredError) {
       toast.error('Error fetching filtered jobs')

@@ -1,8 +1,7 @@
-import { useFormikContext } from 'formik'
-import Geonames from 'geonames.js'
 import React, { useEffect, useState } from 'react'
-
-import { LocationOption, LocationProps } from '../../utils/jobPostTypes'
+import Geonames from 'geonames.js'
+import { useFormikContext } from 'formik'
+import { LocationProps, LocationOption } from '../../utils/jobPostTypes'
 
 const geonames = new Geonames({
   username: 'timmydee',
@@ -22,9 +21,8 @@ const Location: React.FC<LocationProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res
         if (isCountry) {
-          res = await geonames.countryInfo({})
+          const res = await geonames.countryInfo({})
           setOptions(
             res.geonames.map((country: any) => ({
               name: country.countryName,
@@ -33,7 +31,7 @@ const Location: React.FC<LocationProps> = ({
             })),
           )
         } else if (geoId) {
-          res = await geonames.children({ geonameId: geoId })
+          const res = await geonames.children({ geonameId: geoId })
           setOptions(
             res.geonames.map((place: any) => ({
               name: place.name,
@@ -48,7 +46,6 @@ const Location: React.FC<LocationProps> = ({
           `Error fetching ${isCountry ? 'countries' : 'states/cities'}:`,
           err,
         )
-        // Consider adding user feedback or error state handling here
       }
     }
 
@@ -59,14 +56,12 @@ const Location: React.FC<LocationProps> = ({
     const selectedOption = options.find(
       (option) => option.geoId === parseInt(e.target.value, 10),
     )
-    if (selectedOption) {
-      const value = {
-        name: isCountry ? selectedOption.countryName : selectedOption.name,
-        geoId: selectedOption.geoId,
-      }
-      setFieldValue(`location.${locationTitle.toLowerCase()}`, value)
-      onChange(value.geoId)
+    const value = {
+      name: isCountry ? selectedOption!.countryName : selectedOption!.name,
+      geoId: selectedOption!.geoId,
     }
+    setFieldValue(`location.${locationTitle.toLowerCase()}`, value)
+    onChange(value.geoId)
   }
 
   return (

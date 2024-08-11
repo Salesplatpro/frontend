@@ -1,5 +1,6 @@
 import React from 'react'
 
+// @ts-ignore
 import quotes from '../assets/quote1.jpeg'
 
 const QuoteSection = () => {

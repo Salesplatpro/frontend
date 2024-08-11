@@ -1,5 +1,6 @@
 import React from 'react'
 
+// @ts-ignore
 import travelIcon from '../../assets/Vectortravel.png'
 
 const TalentSourcing = () => {
@@ -16,20 +17,6 @@ const TalentSourcing = () => {
         <div className="resources">
           <div className="dievs">
             <div className="top">
-              <img src={travelIcon} alt="travel" />
-            </div>
-            <div className="text">
-              <h5>Job posting and management</h5>
-              <p>
-                Create listings with descriptions and requirements, and track
-                applications from submission to hiring. Customize workflows for
-                each role to streamline candidate tracking
-              </p>
-            </div>
-          </div>
-
-          <div className="dievs">
-            <div className="top">
               <img src={travelIcon} alt="" />
             </div>
             <div className="text">
@@ -58,7 +45,21 @@ const TalentSourcing = () => {
 
           <div className="dievs">
             <div className="top">
-              <img src={travelIcon} alt="travel" />
+              <img src={travelIcon} alt="" />
+            </div>
+            <div className="text">
+              <h5>Job posting and management</h5>
+              <p>
+                Create listings with descriptions and requirements, and track
+                applications from submission to hiring. Customize workflows for
+                each role to streamline candidate tracking
+              </p>
+            </div>
+          </div>
+
+          <div className="dievs">
+            <div className="top">
+              <img src={travelIcon} alt="" />
             </div>
             <div className="text">
               <h5>Job posting and management</h5>

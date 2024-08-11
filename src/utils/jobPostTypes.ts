@@ -1,7 +1,7 @@
 export interface LocationOption {
   name: string
   geoId: number
-  countryName?: string
+  countryName?: string;
 }
 
 export interface LocationProps {

@@ -1,74 +1,81 @@
 import React from 'react'
 
+// @ts-ignore
 import logo from '../assets/logo.png'
+// @ts-ignore
 import youtube from '../assets/Lozengeyoutube.svg'
+// @ts-ignore
 import telegram from '../assets/Subtracttelegram.svg'
+// @ts-ignore
 import facebook from '../assets/Vectorfacebook.svg'
+// @ts-ignore
 import linkedin from '../assets/Vectorlinkedin.svg'
+// @ts-ignore
 import twitter from '../assets/Vectortwitter.svg'
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <React.Fragment>
       <div className="footer">
         <div className="main-contain">
           <div className="quick-link">
             <div className="logo">
-              <img src={logo} alt="Company Logo" />
+              <img src={logo} alt="logo" />
+
               <p>
-                Design amazing digital experiences that create more happiness in
-                the world.
+                Design amazing digital experiences that create more happy in the
+                world.
               </p>
             </div>
             <div className="links">
               <div>
-                <h6>Hire Talents</h6>
+                <h6>Hire talents</h6>
                 <div>
-                  <a href="/">Designers</a>
-                  <a href="/">Developers</a>
-                  <a href="/">Sales</a>
-                  <a href="/">Customer Service</a>
-                  <a href="/">Product</a>
+                  <a href="">Designers</a>
+                  <a href="">Developers</a>
+                  <a href="">Sales</a>
+                  <a href="">Customer service</a>
+                  <a href="">Product</a>
                 </div>
               </div>
 
               <div>
                 <h6>Find Jobs</h6>
                 <div>
-                  <a href="/">Remote Jobs</a>
-                  <a href="/">Internship</a>
-                  <a href="/">Developer Jobs</a>
-                  <a href="/">Support & Success</a>
-                  <a href="/">Sales Jobs</a>
-                  <a href="/">Product Jobs</a>
+                  <a href="">Remote Jobs</a>
+                  <a href="">Internship</a>
+                  <a href="">Developers Job</a>
+                  <a href="">Support & Success</a>
+                  <a href="">Sales Job</a>
+                  <a href="">Product Job</a>
                 </div>
               </div>
 
               <div>
                 <h6>Product</h6>
                 <div>
-                  <a href="/solution">Solutions</a>
-                  <a href="/">Pricing</a>
+                  <a href="">Solutions</a>
+                  <a href="">Pricing</a>
                 </div>
               </div>
 
               <div>
                 <h6>Company</h6>
                 <div>
-                  <a href="/">About Us</a>
-                  <a href="/">Contact</a>
-                  <a href="/customerstories">Blog</a>
-                  <a href="/">Help Center</a>
+                  <a href="">About Us</a>
+                  <a href="">Contact</a>
+                  <a href="">Blog</a>
+                  <a href="">Help Center</a>
                 </div>
               </div>
 
               <div>
                 <h6>Legal</h6>
                 <div>
-                  <a href="/">Terms</a>
-                  <a href="/">Privacy</a>
-                  <a href="/">Cookies</a>
-                  <a href="/">Licenses</a>
+                  <a href="">Terms</a>
+                  <a href="">Privacy</a>
+                  <a href="">Cookies</a>
+                  <a href="">Licenses</a>
                 </div>
               </div>
             </div>
@@ -79,44 +86,24 @@ const Footer: React.FC = () => {
               <p>&copy; 2023 Salesplat. All rights reserved.</p>
 
               <div className="socials">
-                <a
-                  href="https://x.com/thegrowthhub30"
-                  aria-label="Twitter"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img src={twitter} alt="Twitter" />
+                <a href="">
+                  <img src={twitter} alt="" />
                 </a>
 
-                <a
-                  href="https://www.linkedin.com/company/the-growth-hub-30/"
-                  aria-label="LinkedIn"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img src={linkedin} alt="LinkedIn" />
+                <a href="">
+                  <img src={linkedin} alt="" />
                 </a>
 
-                <a
-                  href="https://www.facebook.com/p/The-Growth-Hub-100093247235214/"
-                  aria-label="Facebook"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img src={facebook} alt="Facebook" />
+                <a href="">
+                  <img src={facebook} alt="" />
                 </a>
 
-                <a
-                  href="/"
-                  aria-label="Telegram"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img src={telegram} alt="Telegram" />
+                <a href="">
+                  <img src={telegram} alt="" />
                 </a>
 
-                <a
-                  href="/"
-                  aria-label="YouTube"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img src={youtube} alt="YouTube" />
+                <a href="">
+                  <img src={youtube} alt="" />
                 </a>
               </div>
             </div>

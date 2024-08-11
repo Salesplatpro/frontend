@@ -16,13 +16,7 @@
     "target": "ESNext",
     "types": ["vite"]
   },
-  "include": [
-    "./src",
-    "../postcss.config.js",
-    "declaration.d.ts",
-    "Carousel.module.scss.d.ts",
-    "sidebar.module.scss.d.ts"
-  ],
+  "include": ["./src", "../postcss.config.js", "declaration.d.ts"],
   // "exclude": ["node_modules"]
   "exclude": ["node_modules/vite"]
 }

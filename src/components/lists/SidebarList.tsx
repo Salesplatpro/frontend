@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react'
-import { NavLink } from 'react-router-dom'
-
-import { CountBadge } from '../Badges'
 import styles from './sidebarList.module.scss'
+import { CountBadge } from '../Badges'
+import { NavLink } from 'react-router-dom'
 
 type SidebarListProps = {
   icon: ReactNode

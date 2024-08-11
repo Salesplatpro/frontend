@@ -1,5 +1,6 @@
 import React from 'react'
 
+// @ts-ignore
 import arrowIcon from '../../assets/Iconarrow.svg'
 import TalentSourcing from './TalentSourcing'
 

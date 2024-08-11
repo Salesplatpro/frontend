@@ -1,9 +1,9 @@
 import React from 'react'
-// import { BiMessageDetail } from 'react-icons/bi'
-// import { BsChatDots } from 'react-icons/bs'
+import { RxDashboard } from 'react-icons/rx'
+import { MdWorkOutline, MdOutlineContactSupport } from 'react-icons/md'
+import { BiMessageDetail } from 'react-icons/bi'
+import { BsChatDots } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
-import { MdOutlineContactSupport } from 'react-icons/md'
-// import { RxDashboard } from 'react-icons/rx'
 
 const ICON_SIZE = 24
 const COLOR = '#4985DF'

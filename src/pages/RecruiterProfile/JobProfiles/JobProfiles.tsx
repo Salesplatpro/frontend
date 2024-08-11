@@ -3,7 +3,6 @@ import './JobProfiles.scss'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-// eslint-disable-next-line no-unused-vars
 import { fetchTalentProfies, jobProfiles } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
 import Roles from '../../../components/Roles/Roles'

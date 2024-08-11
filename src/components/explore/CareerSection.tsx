@@ -1,8 +1,12 @@
 import React from 'react'
 
+// @ts-ignore
 import arrowIcon from '../../assets/Iconarrow.svg'
+// @ts-ignore
 import jop2 from '../../assets/jobpost.png'
+// @ts-ignore
 import jonImg from '../../assets/jobpost2.png'
+// @ts-ignore
 import searchIcon from '../../assets/searchsearcn.svg'
 import JobPost from './JobPost'
 
@@ -115,7 +119,6 @@ const CareerSection = () => {
             <div className="content">
               {jobs.map((job, index) => (
                 <JobPost
-                  key={index}
                   title={job.title}
                   description={job.description}
                   badge={job.badge}
@@ -129,7 +132,7 @@ const CareerSection = () => {
 
           <div className="job-search">
             <div className="search-tool">
-              <label htmlFor="filter">Filter</label>
+              <label>Filter</label>
               <div className="search-box">
                 <img src={searchIcon} alt="search" />
                 <input type="text" placeholder="Search" />
@@ -137,7 +140,7 @@ const CareerSection = () => {
 
               <div className="divider" />
 
-              <label htmlFor="specialties">Specialties</label>
+              <label>Specialties</label>
 
               <div className="custom-select-container">
                 <select className="custom-select">
@@ -200,7 +203,7 @@ const CareerSection = () => {
 
               <div className="divider" />
 
-              <label htmlFor="location">Location</label>
+              <label>Location</label>
 
               <div className="search-box">
                 <input type="text" placeholder="Enter Loation.." />

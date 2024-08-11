@@ -139,7 +139,7 @@ const SignIn = () => {
                   <ErrorMessage
                     name="firstName"
                     component="p"
-                    className="text-red-500 text-sm"
+                    className="text-red-500"
                   />
 
                   <Field
@@ -153,7 +153,7 @@ const SignIn = () => {
                   <ErrorMessage
                     name="lastName"
                     component="p"
-                    className="text-red-500 text-sm"
+                    className="text-red-500"
                   />
 
                   <Field
@@ -167,7 +167,7 @@ const SignIn = () => {
                   <ErrorMessage
                     name="email"
                     component="p"
-                    className="text-red-500 text-sm"
+                    className="text-red-500"
                   />
                   <div className="flex my-2">
                     <Field
@@ -181,7 +181,7 @@ const SignIn = () => {
                   <ErrorMessage
                     name="userType"
                     component="p"
-                    className="text-red-500 text-sm"
+                    className="text-red-500"
                   />
                   <Field
                     title="Phone Number"
@@ -194,7 +194,7 @@ const SignIn = () => {
                   <ErrorMessage
                     name="phone"
                     component="p"
-                    className="text-red-500 text-sm"
+                    className="text-red-500"
                   />
 
                   <div className="relative">
@@ -216,9 +216,8 @@ const SignIn = () => {
                     </button>
 
                     {values.password && values.password.length < 8 && (
-                      <p className="text-red-500 font-raleway text-sm font-normal leading-[21.38px]">
-                        Password must be at least 8 characters (containing
-                        uppercase, number, special characters)
+                      <p className="text-red-500 font-raleway font-normal leading-[21.38px]">
+                        Password must be at least 8 characters
                       </p>
                     )}
                   </div>
@@ -244,15 +243,11 @@ const SignIn = () => {
 
                     {values.confirmPassword &&
                       values.confirmPassword !== values.password && (
-                        <p className="text-red-500 text-sm">
-                          Passwords do not match
-                        </p>
+                        <p className="text-red-500">Passwords do not match</p>
                       )}
                     {values.confirmPassword &&
                       values.confirmPassword === values.password && (
-                        <p className="text-green-500 text-sm">
-                          Passwords match
-                        </p>
+                        <p className="text-green-500">Passwords match</p>
                       )}
                   </div>
                   <div className="remember-me">
