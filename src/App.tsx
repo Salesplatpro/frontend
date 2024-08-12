@@ -34,6 +34,9 @@ import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils/authUtils'
+import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
+import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
+import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 
 const router = createBrowserRouter([
   {
@@ -89,7 +92,6 @@ const router = createBrowserRouter([
           {
             path: 'talentQuiz',
             element: <TalentAssessment />,
-            // element: <TalentQuiz />,
           },
           {
             path: 'job',
@@ -100,12 +102,21 @@ const router = createBrowserRouter([
             element: <IndividualJob />,
           },
           {
-            path: 'applicationPipeline/:jobId',
-            element: <JobPipeline />,
-          },
-          {
             path: 'applicationPipeline',
             element: <ApplicationPipeline />,
+          },
+          {
+            path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
+            element: <PersonalizedTest />,
+          },
+          {
+            path: 'applicationPipeline/:jobId',
+            element: <ProgressView />,
+            // element: <JobPipeline />,
+          },
+          {
+            path: 'applicationPipeline/personalityTest/:jobId',
+            element: <PersonalityTest />,
           },
         ],
       },
