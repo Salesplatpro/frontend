@@ -7,9 +7,11 @@ import {
   IoMdMenu,
   IoMdNotificationsOutline,
 } from 'react-icons/io'
-import { Outlet } from 'react-router-dom'
+// eslint-disable-next-line no-unused-vars
+import { NavLink, Outlet } from 'react-router-dom'
 
 import employer from '../../assets/employer.png'
+// import { SideBar } from '../../components/TalentProfile/SideBar/sideBar'
 import { SideBar } from '../../components'
 import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
 

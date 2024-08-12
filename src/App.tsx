@@ -2,7 +2,8 @@ import './App.css'
 import './index.scss'
 import './index.css'
 
-import React, { useEffect } from 'react'
+// eslint-disable-next-line no-unused-vars
+import React, { Suspense, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 

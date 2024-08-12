@@ -17,7 +17,7 @@ import { SingleJob } from './SingleJob'
 const defaultFilterValues: JobFiltersTypes = {
   role: '',
   experienceLevel: '',
-  remote: '',
+  remote: '', // Ensure this is valid per JobFiltersTypes
   location: {
     city: { name: '', geoId: null },
     state: { name: '', geoId: null },
@@ -37,17 +37,30 @@ interface JobType {
   maxSalary: string
 }
 
+interface JobType {
+  _id: string
+  role: { name: string }
+  experienceLevel: string
+  description: string
+  remote: boolean
+  location: {
+    country: string
+  }
+  maxSalary: string
+}
+
 const Job = () => {
   const user = useSelector((state: RootState) => state.auth)
   const roleId = user?.user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
+  // State for filters
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
   const [jobs, setJobs] = useState<JobType[]>([])
   const screenWidth = getScreenWidth()
 
-  // Fetch filtered jobs
+  // Fetch filtered jobs based on filters
   const {
     data: filteredData,
     error: filteredError,
@@ -62,10 +75,11 @@ const Job = () => {
       country: filters.location?.country?.name || '',
     },
     {
-      skip: !filters.role,
+      skip: !filters.role, // Skip the query if no role is selected
     },
   )
 
+  // Handle initial data load
   useEffect(() => {
     if (data && !filters.role) {
       setJobs(data.data)
@@ -76,10 +90,11 @@ const Job = () => {
     }
   }, [data, error, filters.role])
 
+  // Handle filtered data load
   useEffect(() => {
     if (filteredData && filters.role) {
       setJobs(filteredData.data)
-      console.log(data.data)
+      console.log(filteredData.data)
     }
     if (filteredError) {
       toast.error('Error fetching filtered jobs')

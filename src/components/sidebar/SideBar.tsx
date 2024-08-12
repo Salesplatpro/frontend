@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import logo from '../../assets/logo.png'
 import { SidebarList } from '../lists'
-import styles from './sidebar.module.scss'
+import styles from './Sidebar.module.scss'
 import { feedBack } from './sidebarData'
 
 interface sideBarProps {

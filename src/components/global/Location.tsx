@@ -22,8 +22,9 @@ const Location: React.FC<LocationProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        let res
         if (isCountry) {
-          const res = await geonames.countryInfo({})
+          res = await geonames.countryInfo({})
           setOptions(
             res.geonames.map((country: any) => ({
               name: country.countryName,
@@ -32,7 +33,7 @@ const Location: React.FC<LocationProps> = ({
             })),
           )
         } else if (geoId) {
-          const res = await geonames.children({ geonameId: geoId })
+          res = await geonames.children({ geonameId: geoId })
           setOptions(
             res.geonames.map((place: any) => ({
               name: place.name,
@@ -47,6 +48,7 @@ const Location: React.FC<LocationProps> = ({
           `Error fetching ${isCountry ? 'countries' : 'states/cities'}:`,
           err,
         )
+        // Consider adding user feedback or error state handling here
       }
     }
 
@@ -57,12 +59,14 @@ const Location: React.FC<LocationProps> = ({
     const selectedOption = options.find(
       (option) => option.geoId === parseInt(e.target.value, 10),
     )
-    const value = {
-      name: isCountry ? selectedOption!.countryName : selectedOption!.name,
-      geoId: selectedOption!.geoId,
+    if (selectedOption) {
+      const value = {
+        name: isCountry ? selectedOption.countryName : selectedOption.name,
+        geoId: selectedOption.geoId,
+      }
+      setFieldValue(`location.${locationTitle.toLowerCase()}`, value)
+      onChange(value.geoId)
     }
-    setFieldValue(`location.${locationTitle.toLowerCase()}`, value)
-    onChange(value.geoId)
   }
 
   return (

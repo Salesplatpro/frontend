@@ -18,10 +18,14 @@ declare module '*.gif' {
   export default value
 }
 
+declare module '*.webp' {
+  const content: string
+  export default content
+}
+
 declare module '*.svg' {
-  // eslint-disable-next-line no-undef
-  const value: React.FunctionComponent<React.SVGAttributes<SVGElement>>
-  export default value
+  const content: string
+  export default content
 }
 
 declare module '*.scss' {
