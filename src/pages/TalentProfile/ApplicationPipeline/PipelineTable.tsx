@@ -125,7 +125,6 @@ export const PipelineTable = () => {
                 {application.currentStage}
               </StyledTableCell>
               <StyledTableCell align={align}>
-                {/* {application.status} */}
                 <StatusBadge
                   status={application.status || 'unknown'}
                   {...getStatusBadgeProps(application?.status || 'unknown')}
