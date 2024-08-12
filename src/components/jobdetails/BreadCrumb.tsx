@@ -4,7 +4,7 @@ const BreadCrumb = () => {
   return (
     <React.Fragment>
       <div className="breadcrumbs">
-        <a href="" className="tab">
+        <a href="/" className="tab">
           all jobs
         </a>
         <svg
@@ -21,7 +21,7 @@ const BreadCrumb = () => {
             strokeLinejoin="round"
           />
         </svg>
-        <a href="" className="tab active">
+        <a href="/" className="tab active">
           job details
         </a>
       </div>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
-  fetchTalentProfies,
+  // fetchTalentProfies,
   filterTalentProfiles,
 } from '../../../api/api-communication'
 import Loading from '../../../components/Loading/Loading'
@@ -23,8 +23,10 @@ interface GetTalent {
 
 const GetTalents = () => {
   const [talentsProfile, setTalentsProfile] = useState<GetTalent[]>([])
+  // eslint-disable-next-line no-unused-vars
   const [roleValue, setRoleValue] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState(true)
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(false)
   const [filter, setFilter] = useState({
     role: '',

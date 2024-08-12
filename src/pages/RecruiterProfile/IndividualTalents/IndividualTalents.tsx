@@ -6,21 +6,34 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { individualTalent } from '../../../api/api-communication'
 
+interface TalentProfile {
+  firstName: string
+  lastName: string
+  profile?: {
+    role?: { name: string }[]
+    experience?: string
+    bio?: string
+    score?: number
+  }
+}
+
 const IndividualTalents = () => {
   const navigate = useNavigate()
-  const { talentId } = useParams()
-  const [talentProfile, setTalentProfile] = useState(null)
+  const { talentId } = useParams<{ talentId: string }>()
+  const [talentProfile, setTalentProfile] = useState<TalentProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await individualTalent(talentId)
-        setTalentProfile(data.data.user)
-        console.log(data.data)
+        if (talentId) {
+          const data = await individualTalent(talentId)
+          setTalentProfile(data.data.user)
+          console.log(data.data)
+        }
       } catch (err) {
-        setError(err)
+        setError('Error fetching talent profile.')
       } finally {
         setLoading(false)
       }
@@ -42,7 +55,7 @@ const IndividualTalents = () => {
 
   return (
     <div className="view-container">
-      <button onClick={() => navigate(-1)}>
+      <button onClick={() => navigate(-1)} aria-label="Go back">
         <FaArrowLeft />
       </button>
       <h2>Talent Profile</h2>
@@ -62,7 +75,9 @@ const IndividualTalents = () => {
           <p>Bio: {talentProfile.profile?.bio || 'Bio not specified'}</p>
           <p>
             Assessment Score:{' '}
-            {talentProfile.profile?.score || 'Assessment Score not Available'}
+            {talentProfile.profile?.score !== undefined
+              ? talentProfile.profile.score
+              : 'Assessment Score not available'}
           </p>
         </div>
       </div>
