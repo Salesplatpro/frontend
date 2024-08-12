@@ -7,11 +7,12 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
-import { Button, StatusBadge } from '../../../components'
-import { applications } from './ApplicationData'
-import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
+
+import { Button, StatusBadge } from '../../../components'
+import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
+import { applications } from './ApplicationData'
 
 interface AllJobTypes {
   currentStage?: string
@@ -124,7 +125,6 @@ export const PipelineTable = () => {
                 {application.currentStage}
               </StyledTableCell>
               <StyledTableCell align={align}>
-                {/* {application.status} */}
                 <StatusBadge
                   status={application.status || 'unknown'}
                   {...getStatusBadgeProps(application?.status || 'unknown')}
