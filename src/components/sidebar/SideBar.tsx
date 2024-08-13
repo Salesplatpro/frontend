@@ -58,7 +58,6 @@ export const SideBar: React.FC<sideBarProps> = ({
               key={index}
               icon={data.icon}
               name={data.name}
-              link={data.link}
               active={activeItem === `feedback-${index}`}
               onClick={() => handleItemClick('feedback', index)}
             />
