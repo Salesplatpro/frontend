@@ -28,16 +28,16 @@ import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSi
 import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import JobPipeline from './pages/TalentProfile/ApplicationPipeline/JobPipeline'
+import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
+import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
+import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils/authUtils'
-import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
-import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
-import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 
 const router = createBrowserRouter([
   {
@@ -140,7 +140,7 @@ const router = createBrowserRouter([
             element: <MyJobPosts />,
           },
           {
-            path: 'singleJobPost',
+            path: 'singleJobPost/:jobId',
             element: <SingleJobPost />,
           },
           {

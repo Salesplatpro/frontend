@@ -10,7 +10,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '../../../components'
-import { myJobPostsData } from './myJobPostsData'
+import {
+  calculateDaysFromCreation,
+  recruiterJobPostsTypes,
+} from '../../../utils'
+
+type JobsTableType = {
+  data: recruiterJobPostsTypes[]
+}
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,7 +38,7 @@ const StyledTableRow = styled(TableRow)(() => ({
   },
 }))
 
-export const JobsTable = () => {
+export const JobsTable = ({ data }: JobsTableType) => {
   const align = 'left'
 
   return (
@@ -46,17 +53,22 @@ export const JobsTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {myJobPostsData.map((job, index) => (
+          {data?.map((job, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell component="th" align={align}>
-                {job.jobTitle}
+                {job.role.name}
               </StyledTableCell>
-              <StyledTableCell align={align}>{job.applicants}</StyledTableCell>
-              <StyledTableCell
-                align={align}>{`${job.created} ago`}</StyledTableCell>
+              <StyledTableCell align={align}>
+                {job.noOfApplicants}
+              </StyledTableCell>
+              <StyledTableCell align={align}>{`${calculateDaysFromCreation(
+                job.createdAt,
+              )} days ago`}</StyledTableCell>
               <StyledTableCell align={align}>
                 <div style={{ width: '100%' }}>
-                  <Link to={`/recruiterDashboard/singleJobPost`}>
+                  <Link
+                    to={`/recruiterDashboard/singleJobPost/${job._id}`}
+                    state={{ jobName: job.role.name, postedAt: job.createdAt }}>
                     <Button title="View Application" />
                   </Link>
                 </div>
