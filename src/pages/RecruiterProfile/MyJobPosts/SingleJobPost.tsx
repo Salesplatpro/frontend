@@ -1,43 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { MdOutlineArrowBackIosNew } from 'react-icons/md'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { fetchRecruiterJobPostDetails } from '../../../api/api-communication'
+import { useFetchRecruiterJobPostDetailsQuery } from '../../../redux/api/recruiter'
 import { calculateDaysFromCreation } from '../../../utils'
 import styles from './SingleJobPost.module.scss'
 import { SingleJobTable } from './SingleJobTable'
 
-type JobType = {
-  name: string
-  stage: string
-  status: string
-  dateApplied: string
-}
-
-export type jobDetailsType = {
-  applications: JobType[]
-}
-
 export const SingleJobPost = () => {
-  const [jobDetails, setJobDetails] = useState([])
-  const navigate = useNavigate()
   const { jobId } = useParams()
+  const { data, error } = useFetchRecruiterJobPostDetailsQuery(jobId ?? '')
+  const navigate = useNavigate()
   const location = useLocation()
   const jobName = location.state?.jobName
   const postedAt = location.state?.postedAt
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        if (jobId) {
-          const response = await fetchRecruiterJobPostDetails(jobId)
-          setJobDetails(response.data)
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    })()
-  }, [jobId])
+  if (error) {
+    return <div>Error loading job details</div>
+  }
 
   return (
     <div className={styles.container}>
@@ -49,12 +29,12 @@ export const SingleJobPost = () => {
         <div className={styles.title}>
           {jobName}
           <span className={styles.applicants}>
-            {jobDetails.length} applicants
+            {data?.data.length || 0} applicants
           </span>
         </div>
         <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>
       </div>
-      <SingleJobTable applications={jobDetails} />
+      <SingleJobTable applications={data?.data || []} />
     </div>
   )
 }
