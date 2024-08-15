@@ -1,6 +1,6 @@
 import './Roles.scss'
 
-import { Field } from 'formik'
+import { Field, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 
 import { getRole } from '../../api/api-communication'

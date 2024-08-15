@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // import { url } from 'inspector'
+
+
+// import { url } from 'inspector'
 import { getToken } from '../../../utils/authUtils'
 
 export const talentApi = createApi({
@@ -148,6 +151,13 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
+    postPersonalityTest: builder.mutation({
+      query: (testAnswer) => ({
+        url: `/questions/answer/personality`,
+        method: 'POST',
+        body: testAnswer,
+      }),
+    }),
     allJobApplications: builder.query({
       query: () => ({
         url: `/user/applications`,
@@ -168,10 +178,11 @@ export const {
   useFilterJobQuery,
   useIndividualJobQuery,
   useJobPipelineQuery,
-  useLazyCvMatchQuery,
-  useLazyPersonalizedTestQuery,
-  useLazyGeneratePersonalizedTestQuery,
+  useCvMatchQuery,
+  usePersonalizedTestQuery,
+  useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
-  useLazyPersonalityTestQuery,
+  usePersonalityTestQuery,
+  usePostPersonalityTestMutation,
   useAllJobApplicationsQuery,
 } = talentApi

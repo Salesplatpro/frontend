@@ -20,6 +20,11 @@ export const sidebarData = [
     link: '/recruiterDashboard/jobProfiles',
   },
   {
+    name: 'My Job Posts',
+    icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
+    link: '/recruiterDashboard/myJobPosts',
+  },
+  {
     name: 'Notification',
     icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
     count: 12,
