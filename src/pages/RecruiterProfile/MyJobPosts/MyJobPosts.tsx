@@ -1,36 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 
-import { fetchRecruiterJobPost } from '../../../api/api-communication'
 import { Button } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
-import { recruiterJobPostsTypes } from '../../../utils'
+import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
 import { JobsTable } from './JobsTable'
 import styles from './MyJobPosts.module.scss'
 
 export const MyJobPosts = () => {
-  const [jobs, setJobs] = useState<recruiterJobPostsTypes[] | []>([])
-  const [loading, setLoading] = useState(false)
+  const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        setLoading(true)
-        const fetchJobs = await fetchRecruiterJobPost()
-        setJobs(fetchJobs.data)
-        toast.success(fetchJobs.message)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
-      }
-    })()
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return <Loading />
   }
-  console.log(jobs)
+
+  if (error) {
+    console.error(error)
+    return <div>Error loading job posts</div>
+  }
 
   return (
     <div className={styles.container}>
@@ -48,7 +34,7 @@ export const MyJobPosts = () => {
         </div>
       </div>
       <div>
-        <JobsTable data={jobs} />
+        <JobsTable data={data?.data || []} />
       </div>
     </div>
   )
