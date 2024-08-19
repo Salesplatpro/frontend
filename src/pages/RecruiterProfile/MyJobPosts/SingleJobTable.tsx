@@ -9,17 +9,7 @@ import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 
 import { Button, StatusBadge } from '../../../components'
-
-type JobType = {
-  name: string
-  stage: string
-  status: string
-  dateApplied: string
-}
-
-interface SingleJobType {
-  data: JobType[]
-}
+import { jobDetailsType } from './SingleJobPost'
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -55,7 +45,7 @@ const getStatusBadgeProps = (status: string) => {
   }
 }
 
-export const SingleJobTable = ({ data }: SingleJobType) => {
+export const SingleJobTable = ({ applications }: jobDetailsType) => {
   const align = 'left'
 
   return (
@@ -71,30 +61,31 @@ export const SingleJobTable = ({ data }: SingleJobType) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((item, index) => (
-            <StyledTableRow key={index}>
-              <StyledTableCell component="th" align={align}>
-                {item.name}
-              </StyledTableCell>
-              <StyledTableCell align={align}>{item.stage}</StyledTableCell>
-              <StyledTableCell align={align}>
-                <div style={{ width: '60%' }}>
-                  <StatusBadge
-                    status={item.status}
-                    {...getStatusBadgeProps(item.status)}
-                  />
-                </div>
-              </StyledTableCell>
-              <StyledTableCell align={align}>
-                {`${item.dateApplied} ago`}
-              </StyledTableCell>
-              <StyledTableCell align={align}>
-                <div style={{ width: '60%' }}>
-                  <Button title="View Application" />
-                </div>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {applications.length > 0 &&
+            applications.map((item, index) => (
+              <StyledTableRow key={index}>
+                <StyledTableCell component="th" align={align}>
+                  {item.name}
+                </StyledTableCell>
+                <StyledTableCell align={align}>{item.stage}</StyledTableCell>
+                <StyledTableCell align={align}>
+                  <div style={{ width: '60%' }}>
+                    <StatusBadge
+                      status={item.status}
+                      {...getStatusBadgeProps(item.status)}
+                    />
+                  </div>
+                </StyledTableCell>
+                <StyledTableCell align={align}>
+                  {`${item.dateApplied} ago`}
+                </StyledTableCell>
+                <StyledTableCell align={align}>
+                  <div style={{ width: '60%' }}>
+                    <Button title="View Application" />
+                  </div>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>

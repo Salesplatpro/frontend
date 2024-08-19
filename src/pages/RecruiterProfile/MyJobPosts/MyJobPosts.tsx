@@ -1,10 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from '../../../components'
+import Loading from '../../../components/Loading/Loading'
+import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
 import { JobsTable } from './JobsTable'
 import styles from './MyJobPosts.module.scss'
 
 export const MyJobPosts = () => {
+  const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (error) {
+    console.error(error)
+    return <div>Error loading job posts</div>
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.topContainer}>
@@ -21,7 +34,7 @@ export const MyJobPosts = () => {
         </div>
       </div>
       <div>
-        <JobsTable />
+        <JobsTable data={data?.data || []} />
       </div>
     </div>
   )

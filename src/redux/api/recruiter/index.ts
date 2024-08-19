@@ -38,6 +38,14 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    fetchRecruiterJobPost: builder.query({
+      query: () =>
+        '/jobs/me?limit=10&offset=0&experienceLevel=senior&remote=true',
+    }),
+    fetchRecruiterJobPostDetails: builder.query({
+      query: (jobId: string) =>
+        `/jobs/applications/${jobId}?experience=senior&minPersonalizedScore=50&minCvSimilarityScore=50&maxSalary=10000000&applicationType=by invitation&applicationStatus=pending`,
+    }),
   }),
 })
 
@@ -45,4 +53,6 @@ export const {
   useJobPostCreationMutation,
   useAiConfigMutation,
   usePatchAiConfigMutation,
+  useFetchRecruiterJobPostQuery,
+  useFetchRecruiterJobPostDetailsQuery,
 } = recruiterApi
