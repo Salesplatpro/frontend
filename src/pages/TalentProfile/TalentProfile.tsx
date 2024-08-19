@@ -108,7 +108,7 @@ const TalentProfile = () => {
       }
 
       formData.append('bio', values.bio || '')
-      formData.append('role', values?.role.join(','))
+      formData.append('role', (values.role as string[]).join(','))
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
