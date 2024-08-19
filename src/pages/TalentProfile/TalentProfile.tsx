@@ -25,9 +25,11 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
-  phoneNumber?: string // Add phoneNumber to the interface
-  firstName?: string
-  lastName?: string
+
+  // not part of the data needed by the backend
+  // phoneNumber?: string // Add phoneNumber to the interface
+  // firstName?: string
+  // lastName?: string
 }
 
 const validationSchema = Yup.object({
@@ -85,14 +87,16 @@ const TalentProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
-    role: userInfo.profile?.role[0]?._id || [],
+    // role: userInfo.profile?.role[0]?._id || [],
+    role: userInfo.profile.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
-    phoneNumber: userInfo.phone || '', // Added phoneNumber
-    firstName: userInfo.firstName || '',
-    lastName: userInfo.lastName || '',
+    // not part of the data needed by the backend
+    // phoneNumber: userInfo.phone || '', // Added phoneNumber
+    // firstName: userInfo.firstName || '',
+    // lastName: userInfo.lastName || '',
   }
 
   const onSubmit = async (
@@ -114,13 +118,14 @@ const TalentProfile = () => {
       }
 
       formData.append('bio', values.bio || '')
-      formData.append('role', values.role ? values.role.join(',') : '')
+      // formData.append('role', values.role ? values.role.join(',') : '')
+      formData.append('role', values?.role.join(','))
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
-      formData.append('firstName', values.firstName || '') // Added firstName
-      formData.append('lastName', values.lastName || '') // Added lastName
-      formData.append('phoneNumber', values.phoneNumber || '') // Added phoneNumber
+      // formData.append('firstName', values.firstName || '') // Added firstName
+      // formData.append('lastName', values.lastName || '') // Added lastName
+      // formData.append('phoneNumber', values.phoneNumber || '') // Added phoneNumber
 
       console.log('FormData:', formData)
 
