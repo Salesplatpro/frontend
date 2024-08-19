@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export const getScreenWidth = (): number => {
+export const useScreenWidth = (): number => {
   const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth)
 
   useEffect(() => {

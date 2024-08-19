@@ -43,3 +43,26 @@ export type recruiterJobPostsTypes = {
   __v: number
   aiConfig: string
 }
+
+export type SingleJobDetails = {
+  _id: string
+  job: string
+  talent: {
+    profile: {
+      _id: string
+      bio: string
+      experience: string
+      maxSalary: number
+      minSalary: number
+    }
+    _id: string
+    email: string
+    firstName: string
+    lastName: string
+  }
+  applicationType: string
+  status: string
+  createdAt: string
+  updatedAt: string
+  cvSimilarityScore: number
+}
