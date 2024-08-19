@@ -62,10 +62,6 @@ export const talentApi = createApi({
         }
         return response
       },
-      // Handles errors in case of parsing issues or non-JSON responses
-      onError: (error, args, context) => {
-        console.error('Error in updateProfile:', error)
-      },
     }),
 
     fetchPretest: builder.query({

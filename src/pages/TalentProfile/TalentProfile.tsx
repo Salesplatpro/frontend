@@ -114,7 +114,7 @@ const TalentProfile = () => {
       }
 
       formData.append('bio', values.bio || '')
-      formData.append('role', values.role ? values.role.join(',') : '')
+      formData.append('role', JSON.stringify(values.role || []))
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
@@ -496,27 +496,6 @@ const TalentProfile = () => {
                   </div>
 
                   <div className="mt-6 flex justify-end">
-                    {/* <button
-                      type="button"
-                      className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700 mr-2"
-                      onClick={() => {
-                        // handle cancel action if needed
-                      }}>
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      // disabled={isSubmitting}
-                      disabled={isSubmitting || !isEditing} // Disable if not editing
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                      {userInfo.profile
-                        ? isSubmitting
-                          ? 'Updating...'
-                          : 'Update Profile'
-                        : isSubmitting
-                        ? 'Submitting...'
-                        : 'Create Profile'}
-                    </button> */}
                     {isEditing && (
                       <>
                         <button
@@ -537,12 +516,7 @@ const TalentProfile = () => {
                           className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 mr-2">
                           Cancel
                         </button>
-                        {/* <button
-                          type="submit"
-                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                          disabled={isSubmitting}>
-                          Save Changes
-                        </button> */}{' '}
+
                         <button
                           type="submit"
                           // disabled={isSubmitting}
