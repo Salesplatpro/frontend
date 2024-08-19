@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
   useGeneratePersonalizedTestQuery,
+  usePersonalityTestQuery,
+  usePostPersonalityTestMutation,
   usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
 import Loading from '../../../components/Loading/Loading'
@@ -32,38 +34,36 @@ interface PostAnswerResponse {
   }
 }
 
-const PersonalizedTest: React.FC = () => {
+const PersonalityTest: React.FC = () => {
   const navigate = useNavigate()
-  const { jobId, talentId } = useParams<{ jobId: string; talentId: string }>()
-  const [personalizedQuestions, setPersonalizedQuestions] = useState<
-    Question[]
-  >([])
-  const [postAnswer] = usePostPersonalizedTestMutation()
+  const { jobId } = useParams()
+  const [personalityQuestions, setPersonalityQuestions] = useState<Question[]>(
+    [],
+  )
+  const [postAnswer] = usePostPersonalityTestMutation()
   const [formData, setFormData] = useState<FormData>({
     jobId: jobId || '',
     answers: {},
   })
 
   const {
-    data: personalizedData,
+    data: personalityData,
     error: personalizedError,
     isLoading: personalizedLoading,
-  } = useGeneratePersonalizedTestQuery({ jobId, talentId })
+  } = usePersonalityTestQuery(jobId)
 
   useEffect(() => {
-    if (personalizedData) {
-      const questions =
-        personalizedData.data.application?.questions ||
-        personalizedData.data.questions
+    if (personalityData) {
+      const questions = personalityData.data
       if (questions) {
-        setPersonalizedQuestions(questions)
+        setPersonalityQuestions(questions)
       }
     }
     if (personalizedError) {
       toast.error('Error loading personalized test data')
       console.error(personalizedError)
     }
-  }, [personalizedData, personalizedError])
+  }, [personalityData, personalizedError])
 
   const handleChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
@@ -104,15 +104,15 @@ const PersonalizedTest: React.FC = () => {
 
   return (
     <div className="w-[70%] mx-auto mt-8">
-      <h2 className="text-3xl text-[#101828] font-bold">Personalized Test</h2>
+      <h2 className="text-3xl text-[#101828] font-bold">Personality Test</h2>
       <p className="text-xl text-[#101828] font-medium mt-3">
-        Welcome to your Personalized test, you have 15 Questions to answer in
+        Welcome to your Personality test, you have 15 Questions to answer in
         this stage.
       </p>
       <div className="md:mt-6 mt-2">
         <form onSubmit={handleSubmit}>
           <ul>
-            {personalizedQuestions.map((question, i) => (
+            {personalityQuestions.map((question, i) => (
               <div key={i} className="bg-[#F8F8F8] mb-6 p-4 rounded-2xl">
                 <div className="flex items-center space-x-3 md:text-lg text-base text-[#101828] font-semibold">
                   <h3>{i + 1}.</h3>
@@ -139,4 +139,4 @@ const PersonalizedTest: React.FC = () => {
   )
 }
 
-export default PersonalizedTest
+export default PersonalityTest

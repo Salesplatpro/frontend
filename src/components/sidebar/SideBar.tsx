@@ -13,7 +13,7 @@ interface sideBarProps {
     count?: number
     link?: string
   }[]
-  handleClick: () => void
+  handleClick?: () => void
 }
 
 export const SideBar: React.FC<sideBarProps> = ({
@@ -24,7 +24,9 @@ export const SideBar: React.FC<sideBarProps> = ({
 
   const handleItemClick = (type: string, index: number) => {
     setActiveItem(`${type}-${index}`)
-    handleClick()
+    if (handleClick) {
+      handleClick()
+    }
   }
 
   return (
@@ -56,7 +58,6 @@ export const SideBar: React.FC<sideBarProps> = ({
               key={index}
               icon={data.icon}
               name={data.name}
-              link={data.link}
               active={activeItem === `feedback-${index}`}
               onClick={() => handleItemClick('feedback', index)}
             />
