@@ -25,9 +25,6 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
-  phoneNumber?: string // Add phoneNumber to the interface
-  firstName?: string
-  lastName?: string
 }
 
 const validationSchema = Yup.object({
@@ -85,14 +82,11 @@ const TalentProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
-    role: userInfo.profile?.role[0]?._id || [],
+    role: userInfo.profile.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
-    phoneNumber: userInfo.phone || '', // Added phoneNumber
-    firstName: userInfo.firstName || '',
-    lastName: userInfo.lastName || '',
   }
 
   const onSubmit = async (
@@ -114,13 +108,13 @@ const TalentProfile = () => {
       }
 
       formData.append('bio', values.bio || '')
-      formData.append('role', JSON.stringify(values.role || []))
+      formData.append('role', values?.role.join(','))
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
-      formData.append('firstName', values.firstName || '') // Added firstName
-      formData.append('lastName', values.lastName || '') // Added lastName
-      formData.append('phoneNumber', values.phoneNumber || '') // Added phoneNumber
+      // formData.append('firstName', values.firstName || '') // Added firstName
+      // formData.append('lastName', values.lastName || '') // Added lastName
+      // formData.append('phoneNumber', values.phoneNumber || '') // Added phoneNumber
 
       console.log('FormData:', formData)
 
@@ -279,14 +273,8 @@ const TalentProfile = () => {
                         id="names"
                         name="names"
                         placeholder="Williamson Paints"
-                        readOnly={!isEditing} // Read-only if not editing
-                        value={`${values.firstName} ${values.lastName}`}
-                        onChange={(e) => {
-                          const [firstName, lastName] =
-                            e.target.value.split(' ')
-                          setFieldValue('firstName', firstName || '')
-                          setFieldValue('lastName', lastName || '')
-                        }}
+                        readOnly // Make it read-only
+                        value={`${userInfo.firstName} ${userInfo.lastName}`}
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                     </div>
@@ -321,10 +309,6 @@ const TalentProfile = () => {
                         name="phoneNumber"
                         placeholder="08198675757"
                         readOnly={!isEditing} // Read-only if not editing
-                        value={values.phoneNumber || ''}
-                        onChange={(e) => {
-                          setFieldValue('phoneNumber', e.target.value)
-                        }}
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
