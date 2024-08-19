@@ -11,6 +11,7 @@ import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import connectorIcon from '../../../../assets/connectorIcon.webp'
 import unconnectorIcon from '../../../../assets/unconnectorIcon.webp'
+import { IoReload } from 'react-icons/io5'
 
 // Type definitions
 interface Application {
@@ -98,6 +99,7 @@ const ProgressView: React.FC = () => {
 
       if (applicationData?.currentStage === 'cv_similarity') {
         triggerCvMatch(jobId)
+        window.location.reload();
       }
     }
 
