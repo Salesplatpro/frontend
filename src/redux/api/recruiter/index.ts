@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { url } from 'inspector'
 
-import { getToken } from '../../../utils/authUtils'
+import { getToken } from '../../../utils'
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
@@ -43,8 +42,7 @@ export const recruiterApi = createApi({
         '/jobs/me?limit=10&offset=0&experienceLevel=senior&remote=true',
     }),
     fetchRecruiterJobPostDetails: builder.query({
-      query: (jobId: string) =>
-        `/jobs/applications/${jobId}?experience=senior&minPersonalizedScore=50&minCvSimilarityScore=50&maxSalary=10000000&applicationType=by invitation&applicationStatus=pending`,
+      query: (jobId: string) => `/jobs/applications/${jobId}`,
     }),
   }),
 })
