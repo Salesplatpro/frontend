@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../redux/store/store'
-import Loading from '../../../components/Loading/Loading'
 import toast from 'react-hot-toast'
-import { Question } from '../../../utils/types'
+import { useSelector } from 'react-redux'
+
+import Loading from '../../../components/Loading/Loading'
 import {
   useFetchPretestQuery,
   usePostPretestMutation,
 } from '../../../redux/api/talent'
+import { Question } from '../../../utils/types'
+import { RootState } from '../redux/store/store'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)

@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import { aiConfigs } from '../../../api/api-communication'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { configProps } from '../../../utils/jobPostTypes'
+import { Link, useParams } from 'react-router-dom'
+import * as Yup from 'yup'
+
+import { aiConfigs } from '../../../api/api-communication'
 import {
   useAiConfigMutation,
   usePatchAiConfigMutation,
 } from '../../../redux/api/recruiter'
-import { Link, useParams } from 'react-router-dom'
+import { configProps } from '../../../utils/jobPostTypes'
 
 const validationSchema = Yup.object({
   // prescreeningAssessment: Yup.string().required('Required'),

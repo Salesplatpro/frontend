@@ -2,15 +2,14 @@ import './App.css'
 import './index.scss'
 import './index.css'
 
+// eslint-disable-next-line no-unused-vars
 import React, { Suspense, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
 import ProtectedRoute from './components/ProtectedRoute'
-// import CreateTalentProfile from './pages/TalentProfile/CreateTalentProfile'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
 import Home from './Home'
@@ -18,37 +17,27 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
-import TalentRegister from './pages/Auth/TalentRegister'
+import { MyJobPosts } from './pages/RecruiterProfile'
 import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
 import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
 import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
 import JobProfiles from './pages/RecruiterProfile/JobProfiles/JobProfiles'
-import PostJob from './pages/RecruiterProfile/PostJobs/PostJob'
-import PostJobs from './pages/RecruiterProfile/PostJobs/PostJobs'
+import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
-import ViewCandidates from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
+import JobPipeline from './pages/TalentProfile/ApplicationPipeline/JobPipeline'
+import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
+import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
+import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
-import TalentQuiz from './pages/TalentProfile/TalentQuiz/TalentQuiz'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils/authUtils'
-import JobPipeline from './pages/TalentProfile/ApplicationPipeline/JobPipeline'
-// const TalentProfileSidebar = React.lazy(
-//   () => import('./pages/TalentProfile/TalentProfileSidebar'),
-// )
-// const TalentProfile = React.lazy(
-//   () => import('./pages/TalentProfile/TalentProfile'),
-// )
-// const TalentQuiz = React.lazy(
-//   () => import('./pages/TalentProfile/TalentQuiz/TalentQuiz'),
-// )
-// const Job = React.lazy(() => import('./pages/TalentProfile/Job'))
 
 const router = createBrowserRouter([
   {
@@ -104,7 +93,6 @@ const router = createBrowserRouter([
           {
             path: 'talentQuiz',
             element: <TalentAssessment />,
-            // element: <TalentQuiz />,
           },
           {
             path: 'job',
@@ -115,12 +103,21 @@ const router = createBrowserRouter([
             element: <IndividualJob />,
           },
           {
-            path: 'applicationPipeline/:jobId',
-            element: <JobPipeline />,
-          },
-          {
             path: 'applicationPipeline',
             element: <ApplicationPipeline />,
+          },
+          {
+            path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
+            element: <PersonalizedTest />,
+          },
+          {
+            path: 'applicationPipeline/:jobId',
+            element: <ProgressView />,
+            // element: <JobPipeline />,
+          },
+          {
+            path: 'applicationPipeline/personalityTest/:jobId',
+            element: <PersonalityTest />,
           },
         ],
       },
@@ -137,6 +134,14 @@ const router = createBrowserRouter([
           {
             path: 'postjob',
             element: <PostJobTab />,
+          },
+          {
+            path: 'myJobPosts',
+            element: <MyJobPosts />,
+          },
+          {
+            path: 'singleJobPost/:jobId',
+            element: <SingleJobPost />,
           },
           {
             path: 'postjob/:aiConfigId',

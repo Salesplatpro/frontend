@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { getToken } from '../../../utils/authUtils'
-import { url } from 'inspector'
+
+import { getToken } from '../../../utils'
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
@@ -37,6 +37,13 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    fetchRecruiterJobPost: builder.query({
+      query: () =>
+        '/jobs/me?limit=10&offset=0&experienceLevel=senior&remote=true',
+    }),
+    fetchRecruiterJobPostDetails: builder.query({
+      query: (jobId: string) => `/jobs/applications/${jobId}`,
+    }),
   }),
 })
 
@@ -44,4 +51,6 @@ export const {
   useJobPostCreationMutation,
   useAiConfigMutation,
   usePatchAiConfigMutation,
+  useFetchRecruiterJobPostQuery,
+  useFetchRecruiterJobPostDetailsQuery,
 } = recruiterApi

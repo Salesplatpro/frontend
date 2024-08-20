@@ -1,12 +1,12 @@
+import { getToken } from '../utils'
+
 const BASE_URL = 'https://supportpro-backend.onrender.com/v1'
 const authToken = sessionStorage.getItem('authToken') || ''
 
 import {
   FormCreateTalentProfile,
-  FormPostJob,
   FormTalentLogin,
   FormTalentReg,
-  QuestionForm,
 } from '../utils/types'
 
 export const SendTalentReg = async (formValues: FormTalentReg) => {
@@ -405,5 +405,59 @@ export const patchJobPost = async (configId) => {
     return data
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const fetchRecruiterJobPost = async () => {
+  const token = getToken()
+
+  if (!token) {
+    throw new Error('Authentication required')
+  }
+
+  const url = `${BASE_URL}/jobs/me?limit=10&offset=0&experienceLevel=senior&remote=true`
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch job posts')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching recruiter job posts:', error)
+    throw error
+  }
+}
+
+export const fetchRecruiterJobPostDetails = async (jobId: string) => {
+  const token = getToken()
+
+  if (!token) {
+    throw new Error('Authentication required')
+  }
+
+  const url = `${BASE_URL}/jobs/applications/${jobId}?experience=senior&minPersonalizedScore=50&minCvSimilarityScore=50&maxSalary=10000000&applicationType=by%20invitation&applicationStatus=pending`
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch job details')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching job details:', error)
+    throw error
   }
 }

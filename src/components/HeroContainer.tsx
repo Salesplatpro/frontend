@@ -20,7 +20,7 @@ const HeroContainer = () => {
               <button>start Hiring</button>
 
               <div className="outer-text">
-                Looking for jobs instead? &nbsp; <a href="#">Apply for jobs</a>
+                Looking for jobs instead? &nbsp; <a href="/">Apply for jobs</a>
               </div>
             </div>
           </div>
