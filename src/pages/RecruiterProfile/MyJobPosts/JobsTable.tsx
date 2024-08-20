@@ -24,11 +24,12 @@ const StyledTableCell = styled(TableCell)(() => ({
     backgroundColor: '#d0d5dd',
     color: '#101828',
     fontWeight: 400,
-    fontSize: 18,
+    fontSize: 16,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 400,
+    padding: 12,
   },
 }))
 
@@ -39,7 +40,7 @@ const StyledTableRow = styled(TableRow)(() => ({
 }))
 
 export const JobsTable = ({ data }: JobsTableType) => {
-  const align = 'left'
+  const align = 'center'
 
   return (
     <TableContainer component={Paper}>
