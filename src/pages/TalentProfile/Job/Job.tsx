@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 
 import { Button } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
-import { getScreenWidth } from '../../../hooks'
+import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
@@ -37,18 +37,6 @@ interface JobType {
   maxSalary: string
 }
 
-interface JobType {
-  _id: string
-  role: { name: string }
-  experienceLevel: string
-  description: string
-  remote: boolean
-  location: {
-    country: string
-  }
-  maxSalary: string
-}
-
 const Job = () => {
   const user = useSelector((state: RootState) => state.auth)
   const roleId = user?.user?.profile?.role[0]?._id
@@ -58,7 +46,7 @@ const Job = () => {
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
   const [jobs, setJobs] = useState<JobType[]>([])
-  const screenWidth = getScreenWidth()
+  const screenWidth = useScreenWidth()
 
   // Fetch filtered jobs based on filters
   const {

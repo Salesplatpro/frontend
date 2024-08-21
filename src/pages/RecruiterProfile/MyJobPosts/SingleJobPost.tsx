@@ -29,12 +29,12 @@ export const SingleJobPost = () => {
         <div className={styles.title}>
           {jobName}
           <span className={styles.applicants}>
-            {data?.data.length || 0} applicants
+            {data?.data?.applications.length || 0} applicants
           </span>
         </div>
         <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>
       </div>
-      <SingleJobTable applications={data?.data || []} />
+      <SingleJobTable applications={data?.data?.applications} />
     </div>
   )
 }

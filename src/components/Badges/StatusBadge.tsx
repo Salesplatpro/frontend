@@ -15,10 +15,11 @@ export const StatusBadge = ({
     <div
       style={{
         background: backgroundColor,
-        padding: '4px',
+        padding: '4px 16px',
         borderRadius: '8px',
         color: color,
         textAlign: 'center',
+        width: 'fit-content',
       }}>
       {status}
     </div>

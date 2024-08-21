@@ -40,6 +40,16 @@ const TalentAssessment = () => {
     )
   }
 
+  if (user.user.profile.prescreeningScore) {
+    return (
+      <div>
+        <h2>
+          You have taken the test already
+        </h2>
+      </div>
+    )
+  }
+
   if (isLoading) return <Loading />
 
   const handleChange = (
