@@ -25,6 +25,7 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
+  cvUrl?: string
 }
 
 const validationSchema = Yup.object({
@@ -87,6 +88,7 @@ const TalentProfile = () => {
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
+    // cvUrl: userInfo.profile?.cv || '',
   }
 
   const onSubmit = async (
@@ -448,11 +450,35 @@ const TalentProfile = () => {
                   </div>
 
                   <div className="inline-block mt-6 w-full">
+                    {userInfo.profile?.cv ? (
+                      // If a CV is already uploaded, show the download link
+                      <div className="md:w-[48%] ">
+                        <label
+                          htmlFor="cv"
+                          className="text-[14px] text-[#344054]">
+                          Current CV
+                        </label>
+                        <div className="relative w-[100%]">
+                          <div>
+                            <a
+                              href={values.cvUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-[#4884DF] mt-2">
+                              {userInfo.profile?.cv.split('/').pop()}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="inline-block mt-6 w-full">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="cv"
                         className="text-[14px] text-[#344054]">
-                        Upload CV
+                        Upload New CV
                       </label>
                       <div className="relative w-[100%]">
                         <input
