@@ -25,11 +25,12 @@ const StyledTableCell = styled(TableCell)(() => ({
     backgroundColor: '#d0d5dd',
     color: '#101828',
     fontWeight: 400,
-    fontSize: 18,
+    fontSize: 16,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 400,
+    padding: 12,
   },
 }))
 
@@ -54,8 +55,24 @@ const getStatusBadgeProps = (status: string) => {
   }
 }
 
+const getStatusStage = (status: string) => {
+  switch (status) {
+    case 'pending':
+      return 'Stage 1'
+    case 'not-proceeding':
+      return 'Stage 2'
+    case 'retake_assessment':
+      return 'Stage 3'
+    case 'shortlisted':
+      return 'Stage 4'
+    default:
+      return ''
+  }
+}
+
 export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
-  const align = 'left'
+  const align = 'center'
+  const alignHeader = 'center'
   const screenWidth = useScreenWidth()
 
   return (
@@ -63,14 +80,15 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
       <Table aria-label="Application pipeline data">
         <TableHead>
           <TableRow>
-            <StyledTableCell align={align}>Name</StyledTableCell>
+            <StyledTableCell align={alignHeader}>Name</StyledTableCell>
             <ResponsiveTableRenderer screenWidth={screenWidth} breakpoint={768}>
-              <StyledTableCell align={align}>Email</StyledTableCell>
-              <StyledTableCell align={align}>Stage</StyledTableCell>
-              <StyledTableCell align={align}>Applied</StyledTableCell>
-              <StyledTableCell align={align}>Date</StyledTableCell>
+              <StyledTableCell align={alignHeader}>Stage</StyledTableCell>
+              <StyledTableCell align={alignHeader}>Job Status</StyledTableCell>
+              <StyledTableCell align={alignHeader}>
+                Date Applied
+              </StyledTableCell>
             </ResponsiveTableRenderer>
-            <StyledTableCell align={align}>Details</StyledTableCell>
+            <StyledTableCell align={alignHeader}>Details</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -84,10 +102,10 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                   screenWidth={screenWidth}
                   breakpoint={768}>
                   <StyledTableCell align={align}>
-                    {item.talent.email}
+                    {getStatusStage(item.status)}
                   </StyledTableCell>
                   <StyledTableCell align={align}>
-                    <div style={{ width: '60%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <StatusBadge
                         status={item.status}
                         {...getStatusBadgeProps(item.status)}
@@ -95,17 +113,11 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                     </div>
                   </StyledTableCell>
                   <StyledTableCell align={align}>
-                    {item.applicationType}
-                  </StyledTableCell>
-                  <StyledTableCell align={align}>
                     {`${calculateDaysFromCreation(item.createdAt)} days ago`}
                   </StyledTableCell>
                 </ResponsiveTableRenderer>
                 <StyledTableCell align={align}>
-                  <div style={{ width: '100%', display: 'flex', gap: '8px' }}>
-                    <Button title="View more" />
-                    <Button title="View Profile" />
-                  </div>
+                  <Button textType="small" title="View Applicantion" />
                 </StyledTableCell>
               </StyledTableRow>
             ))}
