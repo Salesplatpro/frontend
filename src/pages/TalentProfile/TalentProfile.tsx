@@ -25,11 +25,7 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
-
-  // not part of the data needed by the backend
-  // phoneNumber?: string // Add phoneNumber to the interface
-  // firstName?: string
-  // lastName?: string
+  cvUrl?: string
 }
 
 const validationSchema = Yup.object({
@@ -87,16 +83,12 @@ const TalentProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
-    // role: userInfo.profile?.role[0]?._id || [],
     role: userInfo.profile.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
-    // not part of the data needed by the backend
-    // phoneNumber: userInfo.phone || '', // Added phoneNumber
-    // firstName: userInfo.firstName || '',
-    // lastName: userInfo.lastName || '',
+    // cvUrl: userInfo.profile?.cv || '',
   }
 
   const onSubmit = async (
@@ -118,8 +110,7 @@ const TalentProfile = () => {
       }
 
       formData.append('bio', values.bio || '')
-      // formData.append('role', values.role ? values.role.join(',') : '')
-      formData.append('role', values?.role.join(','))
+      formData.append('role', (values.role as string[]).join(','))
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
@@ -284,14 +275,8 @@ const TalentProfile = () => {
                         id="names"
                         name="names"
                         placeholder="Williamson Paints"
-                        readOnly={!isEditing} // Read-only if not editing
-                        value={`${values.firstName} ${values.lastName}`}
-                        onChange={(e) => {
-                          const [firstName, lastName] =
-                            e.target.value.split(' ')
-                          setFieldValue('firstName', firstName || '')
-                          setFieldValue('lastName', lastName || '')
-                        }}
+                        readOnly // Make it read-only
+                        value={`${userInfo.firstName} ${userInfo.lastName}`}
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                     </div>
@@ -326,10 +311,6 @@ const TalentProfile = () => {
                         name="phoneNumber"
                         placeholder="08198675757"
                         readOnly={!isEditing} // Read-only if not editing
-                        value={values.phoneNumber || ''}
-                        onChange={(e) => {
-                          setFieldValue('phoneNumber', e.target.value)
-                        }}
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
@@ -469,11 +450,36 @@ const TalentProfile = () => {
                   </div>
 
                   <div className="inline-block mt-6 w-full">
+                    {userInfo.profile?.cv ? (
+                      // If a CV is already uploaded, show the download link
+                      <div className="md:w-[48%] ">
+                        <label
+                          htmlFor="cv"
+                          className="text-[14px] text-[#344054]">
+                          Current CV
+                        </label>
+                        <div className="relative w-[100%]">
+                          <div>
+                            <a
+                              href={values.cvUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-[#4884DF] mt-2">
+                              {userInfo.profile?.cv.split('/').pop()}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="inline-block mt-6 w-full">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="cv"
                         className="text-[14px] text-[#344054]">
-                        Upload CV
+                        {/* Upload New CV */}
+                        {userInfo.profile?.cv ? 'Replace CV' : 'Upload CV'}
                       </label>
                       <div className="relative w-[100%]">
                         <input
@@ -501,27 +507,6 @@ const TalentProfile = () => {
                   </div>
 
                   <div className="mt-6 flex justify-end">
-                    {/* <button
-                      type="button"
-                      className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700 mr-2"
-                      onClick={() => {
-                        // handle cancel action if needed
-                      }}>
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      // disabled={isSubmitting}
-                      disabled={isSubmitting || !isEditing} // Disable if not editing
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                      {userInfo.profile
-                        ? isSubmitting
-                          ? 'Updating...'
-                          : 'Update Profile'
-                        : isSubmitting
-                        ? 'Submitting...'
-                        : 'Create Profile'}
-                    </button> */}
                     {isEditing && (
                       <>
                         <button
@@ -542,12 +527,7 @@ const TalentProfile = () => {
                           className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 mr-2">
                           Cancel
                         </button>
-                        {/* <button
-                          type="submit"
-                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                          disabled={isSubmitting}>
-                          Save Changes
-                        </button> */}{' '}
+
                         <button
                           type="submit"
                           // disabled={isSubmitting}
