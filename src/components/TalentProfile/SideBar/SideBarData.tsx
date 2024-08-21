@@ -25,7 +25,7 @@ export const sidebarData = [
     link: '/talentDashboard/TalentQuiz',
   },
   {
-    name: 'Job post',
+    name: 'Jobs',
     icon: <IoBagOutline size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/job',
   },

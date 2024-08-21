@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import Loading from '../../../../components/Loading/Loading'
 import {
-  useCvMatchQuery,
+  useLazyCvMatchQuery,
   useJobPipelineQuery,
 } from '../../../../redux/api/talent'
 import pretestIcon from '../../../../assets/pretestIcon.webp'
@@ -11,6 +11,7 @@ import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import connectorIcon from '../../../../assets/connectorIcon.webp'
 import unconnectorIcon from '../../../../assets/unconnectorIcon.webp'
+import { IoReload } from 'react-icons/io5'
 
 // Type definitions
 interface Application {
@@ -85,23 +86,27 @@ const ProgressView: React.FC = () => {
     isLoading: applicationLoading,
   } = useJobPipelineQuery(jobId || '')
 
-  const {
-    data: cvMatchData,
-    error: cvMatchError,
-    isLoading: cvMatchLoading,
-  } = useCvMatchQuery(jobId || '')
+  const [
+    triggerCvMatch,
+    { data: cvMatchData, error: cvMatchError, isLoading: cvMatchLoading },
+  ] = useLazyCvMatchQuery()
 
-  // Display application details based on id
   useEffect(() => {
     if (applications) {
       toast.success(applications.message)
-      setJobProgress(applications.data?.application || null)
+      const applicationData = applications.data?.application || null
+      setJobProgress(applicationData)
+
+      if (applicationData?.currentStage === 'cv_similarity') {
+        triggerCvMatch(jobId)
+        window.location.reload()
+      }
     }
 
     if (applicationError) {
       toast.error('Error loading application data')
     }
-  }, [applications, applicationError])
+  }, [applications, applicationError, jobId, triggerCvMatch])
 
   if (applicationLoading || cvMatchLoading) return <Loading />
 
@@ -113,7 +118,7 @@ const ProgressView: React.FC = () => {
 
   return (
     <div>
-      <div className="mt-4">
+      <div className="mt-4 mb-8">
         <h2 className="font-bold md:text-3xl text-xl text-[#101828]">
           Progress View
         </h2>
@@ -123,9 +128,9 @@ const ProgressView: React.FC = () => {
         </p>
       </div>
       <div>
-        <div className="border max-w-[800px] space-y-2">
+        <div className="max-w-[788px] space-y-2 mx-auto">
           {progresses.map((progress, i) => (
-            <div key={i} className="flex space-x-6 items-center">
+            <div key={i} className="flex lg:space-x-6 space-x-3 items-center">
               <img
                 src={
                   progress.status === 'completed'
@@ -145,14 +150,19 @@ const ProgressView: React.FC = () => {
                   </h6>
                 </div>
                 {progress.status === 'current' &&
-                (progress.title === 'Personalized Test' ||
+                (progress.title === 'Pre-Assessment' ||
+                  progress.title === 'Personalized Test' ||
                   progress.title === 'Personality Test') ? (
                   <Link
-                    to={`/talentDashboard/applicationPipeline/${
-                      progress.title === 'Personalized Test'
-                        ? `personalizedTest/${jobId}/${jobProgress.talent}`
-                        : `personalityTest/${jobId}`
-                    }`}>
+                    to={
+                      progress.title === 'Pre-Assessment'
+                        ? `/talentDashboard/TalentQuiz`
+                        : `/talentDashboard/applicationPipeline/${
+                            progress.title === 'Personalized Test'
+                              ? `personalizedTest/${jobId}/${jobProgress.talent}`
+                              : `personalityTest/${jobId}`
+                          }`
+                    }>
                     <button
                       className="w-[96px] h-[40px] text-white text-base rounded-lg"
                       style={{
