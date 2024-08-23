@@ -81,17 +81,7 @@ const TalentProfile = () => {
   )
   const [cvFileName, setCvFileName] = useState<string | null>(null)
 
-  // const initialValues: TalentProfileProps = {
-  // bio: userInfo.profile?.bio || '',
-  // role: userInfo.profile.role.map((r: any) => r._id) || [],
-  // maxSalary: userInfo.profile?.maxSalary || '',
-  // minSalary: userInfo.profile?.minSalary || '',
-  // experience: userInfo.profile?.experience || '',
-  // cv: null,
-  // cvUrl: userInfo.profile?.cv || '',
-  // }
-
-  const [initialValues, setInitialValues] = useState<TalentProfileProps>({
+  const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
     role: userInfo.profile.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
@@ -99,99 +89,134 @@ const TalentProfile = () => {
     experience: userInfo.profile?.experience || '',
     cv: null,
     // cvUrl: userInfo.profile?.cv || '',
-  })
-
-  console.log(userInfo.profile)
-
-  useEffect(() => {
-    const fetchData = setInitialValues({
-      bio: userInfo.profile?.bio || '',
-      role: userInfo.profile.role.map((r: any) => r._id) || [],
-      maxSalary: userInfo.profile?.maxSalary || '',
-      minSalary: userInfo.profile?.minSalary || '',
-      experience: userInfo.profile?.experience || '',
-      cv: null,
-      // cvUrl: userInfo.profile?.cv || '',
-    })
-
-    fetchData
-  }, [])
+  }
 
   const onSubmit = async (
     values: TalentProfileProps,
     { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
   ) => {
     try {
-      console.log('Form values:', values)
-
-      setInitialValues(values)
-
+      const isNewProfile = !userInfo.profile
       const formData = new FormData()
-      // Append files and form values
-      if (values.cv) {
-        formData.append('file', values.cv)
-      }
 
-      if (profileImage && profileImage !== profilePics) {
-        formData.append('profileImage', profileImage as string)
-      }
+      if (isNewProfile) {
+        formData.append('bio', values.bio || '')
+        formData.append('role', (values.role || []).join(','))
+        formData.append('minSalary', values.minSalary || '')
+        formData.append('maxSalary', values.maxSalary || '')
+        formData.append('experience', values.experience || '')
 
-      formData.append('bio', values.bio || '')
-      formData.append('role', (values.role as string[]).join(','))
-      formData.append('minSalary', values.minSalary || '')
-      formData.append('maxSalary', values.maxSalary || '')
-      formData.append('experience', values.experience || '')
-      // formData.append('firstName', values.firstName || '') // Added firstName
-      // formData.append('lastName', values.lastName || '') // Added lastName
-      // formData.append('phoneNumber', values.phoneNumber || '') // Added phoneNumber
+        if (values.cv) {
+          formData.append('file', values.cv)
+        }
+        if (profileImage && profileImage !== profilePics) {
+          formData.append('profileImage', profileImage as string)
+        }
 
-      console.log('FormData:', formData)
+        const submitCv = values.cv
+          ? await uploadCv(formData).unwrap()
+          : { data: { fileUrl: '' } }
 
-      const submitCv = values.cv
-        ? await uploadCv(formData).unwrap()
-        : { data: { fileUrl: '' } }
+        const updatedFormValues = {
+          ...values,
+          cv: submitCv.data.fileUrl || '',
+        }
 
-      const updatedFormValue = {
-        ...values,
-        cv: submitCv.data.fileUrl || '',
-      }
+        const response = await talentCreation(updatedFormValues).unwrap()
 
-      console.log('Updated form value:', updatedFormValue)
-
-      const response = await (userInfo.profile
-        ? updateProfile(updatedFormValue).unwrap()
-        : talentCreation(updatedFormValue).unwrap())
-
-      console.log('API response:', response)
-
-      if (response.status) {
-        dispatch(
-          setUser({
-            user: response.data.user,
-            isLoggedIn: true,
-          }),
-        )
-        toast.success('Profile updated successfully')
-
-        // Re-fetch profile data to ensure UI reflects the backend state
-        await updateProfile(updatedFormValue).unwrap()
+        if (response.status) {
+          dispatch(
+            setUser({
+              user: response.data.user,
+              isLoggedIn: true,
+            }),
+          )
+          toast.success('Profile created successfully')
+        } else {
+          toast.error(
+            response.message || 'An error occurred while creating profile',
+          )
+        }
       } else {
-        toast.error(
-          response.message || 'An error occurred while updating profile',
-        )
+        // update profile submission
+        const updatedFields: Partial<TalentProfileProps> = {}
+
+        if (values.bio !== initialValues.bio) {
+          updatedFields.bio = values.bio
+        }
+        if (values.role?.join(',') !== initialValues.role?.join(',')) {
+          updatedFields.role = values.role
+        }
+        if (values.minSalary !== initialValues.minSalary) {
+          updatedFields.minSalary = values.minSalary
+        }
+        if (values.maxSalary !== initialValues.maxSalary) {
+          updatedFields.maxSalary = values.maxSalary
+        }
+        if (values.experience !== initialValues.experience) {
+          updatedFields.experience = values.experience
+        }
+        if (values.cv && values.cv !== initialValues.cv) {
+          updatedFields.cv = values.cv
+        }
+
+        if (Object.keys(updatedFields).length === 0) {
+          toast.error('No changes detected')
+          setSubmitting(false)
+          return
+        }
+
+        // Append only the updated fields to formData
+        if (updatedFields.cv) {
+          formData.append('file', updatedFields.cv)
+        }
+        if (updatedFields.bio) {
+          formData.append('bio', updatedFields.bio)
+        }
+        if (updatedFields.role && updatedFields.role.length > 0) {
+          formData.append('role', updatedFields.role.join(','))
+        }
+        if (updatedFields.minSalary) {
+          formData.append('minSalary', updatedFields.minSalary)
+        }
+        if (updatedFields.maxSalary) {
+          formData.append('maxSalary', updatedFields.maxSalary)
+        }
+        if (updatedFields.experience) {
+          formData.append('experience', updatedFields.experience)
+        }
+
+        const updatedCv = updatedFields.cv
+          ? await uploadCv(formData).unwrap()
+          : { data: { fileUrl: '' } }
+
+        if (updatedCv.data.fileUrl) {
+          updatedFields.cv = updatedCv.data.fileUrl
+        }
+
+        const response = await updateProfile(updatedFields).unwrap()
+        // console.log('response', response.data.user)
+
+        if (response.status) {
+          dispatch(
+            setUser({
+              user: response.data.user,
+              isLoggedIn: true,
+            }),
+          )
+          localStorage.setItem('user', JSON.stringify(response.data.user))
+          toast.success('Profile updated successfully')
+        } else {
+          toast.error(
+            response.message || 'An error occurred while updating profile',
+          )
+        }
       }
     } catch (error: any) {
       console.error('Error submitting', error)
-      if (error.originalStatus === 500) {
-        toast.error('Internal Server Error: Please try again later.')
-      } else if (error.status === 'PARSING_ERROR') {
-        toast.error('Parsing error: Received invalid response from the server.')
-      } else {
-        toast.error(
-          error.message ||
-            'An error occurred while creating or updating the profile',
-        )
-      }
+      toast.error(
+        error.message || 'An error occurred while processing your request',
+      )
     } finally {
       setSubmitting(false)
     }
