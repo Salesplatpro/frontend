@@ -44,6 +44,13 @@ export const recruiterApi = createApi({
     fetchRecruiterJobPostDetails: builder.query({
       query: (jobId: string) => `/jobs/applications/${jobId}`,
     }),
+    genJpPersonality: builder.mutation({
+      query: (data) => ({
+        url: `/questions/personality`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -53,4 +60,5 @@ export const {
   usePatchAiConfigMutation,
   useFetchRecruiterJobPostQuery,
   useFetchRecruiterJobPostDetailsQuery,
+  useGenJpPersonalityMutation,
 } = recruiterApi

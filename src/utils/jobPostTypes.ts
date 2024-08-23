@@ -37,6 +37,7 @@ export interface FormValues {
 
 export interface configProps {
   name: string
+  jobId: string
   prescreeningAssessment: string
   minPrescreeningScore: string
   cvSimilarity: string
