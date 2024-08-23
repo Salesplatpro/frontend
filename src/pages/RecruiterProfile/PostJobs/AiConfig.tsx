@@ -7,9 +7,12 @@ import * as Yup from 'yup'
 import { aiConfigs } from '../../../api/api-communication'
 import {
   useAiConfigMutation,
+  useGenJpPersonalityMutation,
+  useGenJpPersonalityQuery,
   usePatchAiConfigMutation,
 } from '../../../redux/api/recruiter'
 import { configProps } from '../../../utils/jobPostTypes'
+import { Button } from '../../../components'
 
 const validationSchema = Yup.object({
   // prescreeningAssessment: Yup.string().required('Required'),
@@ -34,12 +37,40 @@ const validationSchema = Yup.object({
 })
 
 const AiConfig = () => {
-  // const { jobId } = useParams()
+  const { jobId } = useParams()
   const [aiConfigId, setAiConfigId] = useState(null)
   const [aiConfig] = useAiConfigMutation()
-  // const [patchAiConfig] = usePatchAiConfigMutation()
+  const [genJp] = useGenJpPersonalityMutation()
+  const [generatedQuestions, setGeneratedQuestions] = useState({})
+
+  const handleGenerate = async (pair) => {
+    try {
+      // const jobId = '6656d664569637cd6b14e8ad' // Replace with dynamic value if needed
+
+      const result = await genJp({ jobId, dichotomyPair: pair }).unwrap()
+      setGeneratedQuestions((prevState) => ({
+        ...prevState,
+        [pair]: result?.data?.question || null,
+      }))
+    } catch (error) {
+      console.error(`Error generating ${pair}:`, error)
+    }
+  }
+
+  const handleAddQuestion = (push, pair) => {
+    const question = generatedQuestions[pair]?.question
+    if (question) {
+      push(question)
+      setGeneratedQuestions((prevState) => ({
+        ...prevState,
+        [pair]: null,
+      }))
+    }
+  }
+
   const initialValue: configProps = {
     name: '',
+    jobId: jobId || '',
     prescreeningAssessment: '',
     minPrescreeningScore: '',
     cvSimilarity: '',
@@ -74,24 +105,6 @@ const AiConfig = () => {
 
     console.log('Form Submission')
   }
-
-  // const onSubmit = async (values: configProps, { setSubmitting }) => {
-  //   try {
-  //     const data = await aiConfig(values)
-  //     console.log('Form Values:', data)
-  //     if (data.status) {
-  //       toast.success(data?.message)
-  //       setAiConfigId(data.data.config._id)
-  //     } else {
-  //       toast.error(data.message)
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-
-  //   console.log('Form Submission')
-  //   setSubmitting(false)
-  // }
 
   return (
     <div className="p-8 bg-[#FCFCFC] shadow-md rounded w-[70%] mx-auto">
@@ -375,44 +388,73 @@ const AiConfig = () => {
                     </div>
                   ) : null}
                 </div>
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="personalityQuestion"
-                    className="font-medium mb-1">
-                    Questions:
-                  </label>
-                  <FieldArray name="uploadedQuestions">
-                    {({ remove, push }) => (
-                      <div className="space-y-2">
-                        {values.uploadedQuestions.map((pQuestion, index) => (
-                          <div key={index} className="flex flex-row ">
-                            <Field
-                              name={`uploadedQuestions.${index}`}
-                              className="w-full p-2 border border-gray-300 rounded mr-2"
-                            />
-                            <button
-                              type="button"
-                              className="p-2 bg-red-500 text-white rounded"
-                              onClick={() => remove(index)}>
-                              -
-                            </button>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-                          onClick={() => push('')}>
-                          Add Question
-                        </button>
+
+                <FieldArray name="uploadedQuestions">
+                  {({ remove, push }) => (
+                    <>
+                      {['EI', 'SN', 'TF', 'JP'].map((pair) => (
+                        <div key={pair} className="mb-4">
+                          <h3>Dichotomy Pair {pair}</h3>
+                          <button
+                            type="button"
+                            onClick={() => handleGenerate(pair)}
+                            className="p-2 bg-blue-500 text-white rounded mr-2">
+                            {!generatedQuestions[pair]
+                              ? `Generate ${pair}`
+                              : `Regenerate ${pair}`}
+                          </button>
+                          {generatedQuestions[pair] && (
+                            <>
+                              <p>{generatedQuestions[pair].question}</p>
+                              <button
+                                type="button"
+                                onClick={() => handleAddQuestion(push, pair)}
+                                className="p-2 bg-green-500 text-white rounded">
+                                Add {pair} Question
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      ))}
+
+                      <div className="flex flex-col mt-4">
+                        <label
+                          htmlFor="personalityQuestion"
+                          className="font-medium mb-1">
+                          Questions:
+                        </label>
+                        <div className="space-y-2">
+                          {values.uploadedQuestions.map((pQuestion, index) => (
+                            <div key={index} className="flex flex-row">
+                              <Field
+                                name={`uploadedQuestions.${index}`}
+                                className="w-full p-2 border border-gray-300 rounded mr-2"
+                              />
+                              <button
+                                type="button"
+                                className="p-2 bg-red-500 text-white rounded"
+                                onClick={() => remove(index)}>
+                                -
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                            onClick={() => push('')}>
+                            Add Question
+                          </button>
+                        </div>
                       </div>
-                    )}
-                  </FieldArray>
-                  {errors.uploadedQuestions && touched.uploadedQuestions ? (
-                    <div className="text-red-500 text-sm">
-                      {errors.uploadedQuestions}
-                    </div>
-                  ) : null}
-                </div>
+                    </>
+                  )}
+                </FieldArray>
+
+                {errors.uploadedQuestions && touched.uploadedQuestions ? (
+                  <div className="text-red-500 text-sm">
+                    {errors.uploadedQuestions}
+                  </div>
+                ) : null}
               </div>
             </div>
             <div className="mb-4">
@@ -439,7 +481,7 @@ const AiConfig = () => {
                 Submit
               </button>
             </div>
-            <div>
+            {/* <div>
               {aiConfigId !== null ? (
                 <Link to={`/recruiterDashboard/postjob/${aiConfigId}`}>
                   <button
@@ -452,7 +494,7 @@ const AiConfig = () => {
               ) : (
                 ''
               )}
-            </div>
+            </div> */}
           </Form>
         )}
       </Formik>
@@ -461,3 +503,5 @@ const AiConfig = () => {
 }
 
 export default AiConfig
+
+// 66c72696098d396108227ac4

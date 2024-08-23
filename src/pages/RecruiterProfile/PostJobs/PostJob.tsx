@@ -59,7 +59,7 @@ const PostJob: React.FC = () => {
 
   const initialValues: FormValues = {
     description: '',
-    aiConfig: aiConfigId,
+    // aiConfig: aiConfigId,
     role: '',
     minSalary: '',
     maxSalary: '',
@@ -94,6 +94,7 @@ const PostJob: React.FC = () => {
       if (data.status) {
         toast.success('Job Post Created successfully')
         setJobId(data?.data._id)
+        console.log(data?.data._id)
       } else {
         toast.error(data.message)
       }
@@ -374,12 +375,36 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </button>
+              {/* <Link to={`/recruiterDashboard/postjob/${jobId}`}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                </button>
+              </Link> */}
+              <div>
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+                  disabled={isSubmitting}>
+                  Submit
+                </button>
+              </div>
+              <div>
+                {jobId !== null ? (
+                  <Link to={`/recruiterDashboard/postjob/${jobId}`}>
+                    <button
+                      // type="submit"
+                      // disabled={isSubmitting}
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                      Next
+                    </button>
+                  </Link>
+                ) : (
+                  ''
+                )}
+              </div>
             </Form>
           )}
         </Formik>

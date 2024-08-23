@@ -144,7 +144,7 @@ const router = createBrowserRouter([
             element: <SingleJobPost />,
           },
           {
-            path: 'postjob/:aiConfigId',
+            path: 'postjob/:jobId',
             element: <PostJobTab />,
           },
           {
