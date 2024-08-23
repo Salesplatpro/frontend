@@ -81,7 +81,17 @@ const TalentProfile = () => {
   )
   const [cvFileName, setCvFileName] = useState<string | null>(null)
 
-  const initialValues: TalentProfileProps = {
+  // const initialValues: TalentProfileProps = {
+  // bio: userInfo.profile?.bio || '',
+  // role: userInfo.profile.role.map((r: any) => r._id) || [],
+  // maxSalary: userInfo.profile?.maxSalary || '',
+  // minSalary: userInfo.profile?.minSalary || '',
+  // experience: userInfo.profile?.experience || '',
+  // cv: null,
+  // cvUrl: userInfo.profile?.cv || '',
+  // }
+
+  const [initialValues, setInitialValues] = useState<TalentProfileProps>({
     bio: userInfo.profile?.bio || '',
     role: userInfo.profile.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
@@ -89,7 +99,23 @@ const TalentProfile = () => {
     experience: userInfo.profile?.experience || '',
     cv: null,
     // cvUrl: userInfo.profile?.cv || '',
-  }
+  })
+
+  console.log(userInfo.profile)
+
+  useEffect(() => {
+    const fetchData = setInitialValues({
+      bio: userInfo.profile?.bio || '',
+      role: userInfo.profile.role.map((r: any) => r._id) || [],
+      maxSalary: userInfo.profile?.maxSalary || '',
+      minSalary: userInfo.profile?.minSalary || '',
+      experience: userInfo.profile?.experience || '',
+      cv: null,
+      // cvUrl: userInfo.profile?.cv || '',
+    })
+
+    fetchData
+  }, [])
 
   const onSubmit = async (
     values: TalentProfileProps,
@@ -98,8 +124,9 @@ const TalentProfile = () => {
     try {
       console.log('Form values:', values)
 
-      const formData = new FormData()
+      setInitialValues(values)
 
+      const formData = new FormData()
       // Append files and form values
       if (values.cv) {
         formData.append('file', values.cv)
@@ -145,6 +172,9 @@ const TalentProfile = () => {
           }),
         )
         toast.success('Profile updated successfully')
+
+        // Re-fetch profile data to ensure UI reflects the backend state
+        await updateProfile(updatedFormValue).unwrap()
       } else {
         toast.error(
           response.message || 'An error occurred while updating profile',
@@ -236,7 +266,8 @@ const TalentProfile = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={!userInfo.profile ? validationSchema : null}
-            onSubmit={onSubmit}>
+            onSubmit={onSubmit}
+            enableReinitialize>
             {({ values, isSubmitting, setFieldValue }) => {
               useEffect(() => {
                 setProgress(calculateProgress(values))
@@ -554,7 +585,3 @@ const TalentProfile = () => {
 }
 
 export default TalentProfile
-
-// function setProgress(arg0: number) {
-//   throw new Error('Function not implemented.')
-// }
