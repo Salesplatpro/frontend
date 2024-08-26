@@ -89,9 +89,11 @@ const Job = () => {
     }
   }, [filteredData, filteredError, filters.role])
 
-  if (isLoading || isFiltering) return <Loading />
+  // if (isLoading || isFiltering) return <Loading />
+  // if (isFiltering) return <Loading />
 
   const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
+    // setJobs([])
     setFilters(filterValues)
     setShowFilter(false)
   }
@@ -125,6 +127,7 @@ const Job = () => {
             </div>
           </div>
           <div className="job-listing">
+            {(isLoading || isFiltering) && <Loading />}
             {jobs.map((job, index) => (
               <SingleJob
                 key={index}
@@ -136,6 +139,8 @@ const Job = () => {
                 jobCountry={job?.location?.country}
                 jobExperience={job?.experienceLevel}
                 jobSalary={job?.maxSalary}
+                isFiltering={isFiltering}
+                isLoading={isLoading}
               />
             ))}
           </div>
