@@ -3,43 +3,32 @@ import { useParams } from 'react-router-dom'
 
 import AiConfig from './AiConfig'
 import PostJob from './PostJob'
-import Question from './Question'
 
 const tabs = [
   {
     id: '1',
+    tab: 'jobdetails',
+    title: 'Job details',
+    description: 'Enter job details',
+  },
+  {
+    id: '2',
     tab: 'aiconfig',
 
     title: 'Ai config',
     description: 'Select your preferred Ai config',
   },
-  {
-    id: '2',
-    tab: 'jobdetails',
-    title: 'Job details',
-    description: 'Enter job details',
-  },
-  // {
-  //   id: '3',
-  //   tab: 'question',
-
-  //   title: 'Question (Optional)',
-  //   description: 'Set questions/tests for applicants',
-  // },
 ]
 
 const PostJobTab = () => {
-  const { aiConfigId } = useParams()
+  const { jobId } = useParams()
 
-  const [activeTab, setActiveTab] = useState('aiconfig')
-
+  const [activeTab, setActiveTab] = useState(jobId ? 'aiconfig' : 'jobdetails')
+ 
   useEffect(() => {
-    if (aiConfigId) {
-      setActiveTab('jobdetails')
-    } else {
-      setActiveTab('aiconfig')
-    }
-  }, [aiConfigId])
+    console.log(jobId)
+    setActiveTab(jobId ? 'aiconfig' : 'jobdetails')
+  }, [jobId])
 
   const renderContent = () => {
     switch (activeTab) {
@@ -47,10 +36,8 @@ const PostJobTab = () => {
         return <AiConfig />
       case 'jobdetails':
         return <PostJob />
-      // case 'question':
-      //   return <Question />
       default:
-        return <PostJob />
+        return <AiConfig />
     }
   }
 
@@ -63,7 +50,7 @@ const PostJobTab = () => {
         </h2>
         <div className="mt-2 flex flex-row space-x-10 items-center justify-center border-b-2">
           {tabs.map((tab, i) => {
-            const isDisabled = tab.tab === 'jobdetails' && !aiConfigId
+            const isDisabled = tab.tab === 'aiconfig' && !jobId
             return (
               <div
                 key={i}
