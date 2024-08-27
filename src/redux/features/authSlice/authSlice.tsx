@@ -43,6 +43,19 @@ export const authSlice = createSlice({
       state.isLoggedIn = true
     },
 
+    // fetchUserStart(state) {
+    //   state.loading = true
+    // },
+    // fetchUserSuccess(state, action) {
+    //   state.user = action.payload.user
+    //   localStorage.setItem('user', JSON.stringify(action.payload.user))
+    //   state.loading = false
+    // },
+    // fetchUserFailure(state, action) {
+    //   state.error = action.payload
+    //   state.loading = false
+    // },
+
     // Signup reducers
     signupStart(state) {
       state.loading = true
@@ -71,5 +84,8 @@ export const {
   signupStart,
   signupSuccess,
   signupFailure,
+  // fetchUserStart,
+  // fetchUserSuccess,
+  // fetchUserFailure,
 } = authSlice.actions
 export default authSlice.reducer

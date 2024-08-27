@@ -9,6 +9,7 @@ import profilePics from '../../assets/profilePics.png'
 import AllRoles from '../../components/Roles/AllRoles'
 import {
   useTalentCreationMutation,
+  useUpdateProfileMutation,
   useUploadCvMutation,
 } from '../../redux/api/talent'
 import { setUser } from '../../redux/features/authSlice/authSlice'
@@ -24,6 +25,7 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
+  cvUrl?: string
 }
 
 const validationSchema = Yup.object({
@@ -67,8 +69,10 @@ const calculateProgress = (values: TalentProfileProps): number => {
 
 const TalentProfile = () => {
   const [progress, setProgress] = useState(0)
+  const [isEditing, setIsEditing] = useState(false) // New state for editing
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
+  const [updateProfile] = useUpdateProfileMutation()
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.auth)
   const userInfo = user.user
@@ -79,11 +83,12 @@ const TalentProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
-    role: userInfo.profile?.role[0]?._id || [],
+    role: userInfo.profile.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
+    // cvUrl: userInfo.profile?.cv || '',
   }
 
   const onSubmit = async (
@@ -91,39 +96,127 @@ const TalentProfile = () => {
     { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
   ) => {
     try {
-      if (values.cv) {
-        const formData = new FormData()
-        formData.append('file', values.cv)
+      const isNewProfile = !userInfo.profile
+      const formData = new FormData()
 
-        const submitCv = await uploadCv(formData).unwrap()
+      if (isNewProfile) {
+        formData.append('bio', values.bio || '')
+        formData.append('role', (values.role || []).join(','))
+        formData.append('minSalary', values.minSalary || '')
+        formData.append('maxSalary', values.maxSalary || '')
+        formData.append('experience', values.experience || '')
 
-        const updatedFormValue = {
-          ...values,
-          cv: submitCv.data.fileUrl,
+        if (values.cv) {
+          formData.append('file', values.cv)
+        }
+        if (profileImage && profileImage !== profilePics) {
+          formData.append('profileImage', profileImage as string)
         }
 
-        const data = await talentCreation(updatedFormValue).unwrap()
+        const submitCv = values.cv
+          ? await uploadCv(formData).unwrap()
+          : { data: { fileUrl: '' } }
 
-        if (data.status) {
+        const updatedFormValues = {
+          ...values,
+          cv: submitCv.data.fileUrl || '',
+        }
+
+        const response = await talentCreation(updatedFormValues).unwrap()
+
+        if (response.status) {
           dispatch(
             setUser({
-              user: data.data.user,
+              user: response.data.user,
               isLoggedIn: true,
             }),
           )
           toast.success('Profile created successfully')
         } else {
           toast.error(
-            data.message || 'An error occurred while creating profile',
+            response.message || 'An error occurred while creating profile',
           )
         }
       } else {
-        toast.error('Error uploading CV')
-        throw new Error('Error uploading CV')
+        // update profile submission
+        const updatedFields: Partial<TalentProfileProps> = {}
+
+        if (values.bio !== initialValues.bio) {
+          updatedFields.bio = values.bio
+        }
+        if (values.role?.join(',') !== initialValues.role?.join(',')) {
+          updatedFields.role = values.role
+        }
+        if (values.minSalary !== initialValues.minSalary) {
+          updatedFields.minSalary = values.minSalary
+        }
+        if (values.maxSalary !== initialValues.maxSalary) {
+          updatedFields.maxSalary = values.maxSalary
+        }
+        if (values.experience !== initialValues.experience) {
+          updatedFields.experience = values.experience
+        }
+        if (values.cv && values.cv !== initialValues.cv) {
+          updatedFields.cv = values.cv
+        }
+
+        if (Object.keys(updatedFields).length === 0) {
+          toast.error('No changes detected')
+          setSubmitting(false)
+          return
+        }
+
+        // Append only the updated fields to formData
+        if (updatedFields.cv) {
+          formData.append('file', updatedFields.cv)
+        }
+        if (updatedFields.bio) {
+          formData.append('bio', updatedFields.bio)
+        }
+        if (updatedFields.role && updatedFields.role.length > 0) {
+          formData.append('role', updatedFields.role.join(','))
+        }
+        if (updatedFields.minSalary) {
+          formData.append('minSalary', updatedFields.minSalary)
+        }
+        if (updatedFields.maxSalary) {
+          formData.append('maxSalary', updatedFields.maxSalary)
+        }
+        if (updatedFields.experience) {
+          formData.append('experience', updatedFields.experience)
+        }
+
+        const updatedCv = updatedFields.cv
+          ? await uploadCv(formData).unwrap()
+          : { data: { fileUrl: '' } }
+
+        if (updatedCv.data.fileUrl) {
+          updatedFields.cv = updatedCv.data.fileUrl
+        }
+
+        const response = await updateProfile(updatedFields).unwrap()
+        // console.log('response', response.data.user)
+
+        if (response.status) {
+          dispatch(
+            setUser({
+              user: response.data.user,
+              isLoggedIn: true,
+            }),
+          )
+          localStorage.setItem('user', JSON.stringify(response.data.user))
+          toast.success('Profile updated successfully')
+        } else {
+          toast.error(
+            response.message || 'An error occurred while updating profile',
+          )
+        }
       }
     } catch (error: any) {
       console.error('Error submitting', error)
-      toast.error(error.message || 'An error occurred while creating profile')
+      toast.error(
+        error.message || 'An error occurred while processing your request',
+      )
     } finally {
       setSubmitting(false)
     }
@@ -179,7 +272,9 @@ const TalentProfile = () => {
                   {capitalizeEachWord(userInfo.userRole)}
                 </p>
               </div>
-              <button className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]">
+              <button
+                className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]"
+                onClick={() => setIsEditing(true)}>
                 Edit Profile
               </button>
             </div>
@@ -196,7 +291,8 @@ const TalentProfile = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={!userInfo.profile ? validationSchema : null}
-            onSubmit={onSubmit}>
+            onSubmit={onSubmit}
+            enableReinitialize>
             {({ values, isSubmitting, setFieldValue }) => {
               useEffect(() => {
                 setProgress(calculateProgress(values))
@@ -212,6 +308,7 @@ const TalentProfile = () => {
                       type="text"
                       id="bio"
                       name="bio"
+                      readOnly={!isEditing}
                       placeholder="Tell us about yourself"
                       className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-2"
                     />
@@ -229,14 +326,14 @@ const TalentProfile = () => {
                         className="text-[14px] text-[#344054]">
                         Name
                       </label>
-                      <input
+                      <Field
                         type="text"
+                        id="names"
+                        name="names"
                         placeholder="Williamson Paints"
-                        value={
-                          `${userInfo.firstName} ${userInfo.lastName}` || ''
-                        }
+                        readOnly // Make it read-only
+                        value={`${userInfo.firstName} ${userInfo.lastName}`}
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                        readOnly
                       />
                     </div>
                     <div className="md:w-[48%]">
@@ -269,7 +366,7 @@ const TalentProfile = () => {
                         id="phoneNumber"
                         name="phoneNumber"
                         placeholder="08198675757"
-                        value={`${userInfo.phone}`}
+                        readOnly={!isEditing} // Read-only if not editing
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
                       <ErrorMessage
@@ -376,6 +473,7 @@ const TalentProfile = () => {
                         type="text"
                         id="minSalary"
                         name="minSalary"
+                        readOnly={!isEditing} // Read-only if not editing
                         placeholder="Your minSalary"
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
@@ -395,6 +493,7 @@ const TalentProfile = () => {
                         type="text"
                         id="maxSalary"
                         name="maxSalary"
+                        readOnly={!isEditing} // Read-only if not editing
                         placeholder="Your Max Salary"
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
@@ -407,17 +506,43 @@ const TalentProfile = () => {
                   </div>
 
                   <div className="inline-block mt-6 w-full">
+                    {userInfo.profile?.cv ? (
+                      // If a CV is already uploaded, show the download link
+                      <div className="md:w-[48%] ">
+                        <label
+                          htmlFor="cv"
+                          className="text-[14px] text-[#344054]">
+                          Current CV
+                        </label>
+                        <div className="relative w-[100%]">
+                          <div>
+                            <a
+                              href={values.cvUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-[#4884DF] mt-2">
+                              {userInfo.profile?.cv.split('/').pop()}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="inline-block mt-6 w-full">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="cv"
                         className="text-[14px] text-[#344054]">
-                        Upload CV
+                        {/* Upload New CV */}
+                        {userInfo.profile?.cv ? 'Replace CV' : 'Upload CV'}
                       </label>
                       <div className="relative w-[100%]">
                         <input
                           id="cv"
                           name="cv"
                           type="file"
+                          disabled={!isEditing} // Disable if not editing
                           onChange={(event) => {
                             if (event.currentTarget.files) {
                               const file = event.currentTarget.files[0]
@@ -438,26 +563,42 @@ const TalentProfile = () => {
                   </div>
 
                   <div className="mt-6 flex justify-end">
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-blue-WHITE text-black rounded hover:bg-blue-700 mr-2"
-                      onClick={() => {
-                        // handle cancel action if needed
-                      }}>
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                      {userInfo.profile
-                        ? isSubmitting
-                          ? 'Editing...'
-                          : 'Edit'
-                        : isSubmitting
-                        ? 'Submitting...'
-                        : 'Submit'}
-                    </button>
+                    {isEditing && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsEditing(false)
+                            setFieldValue('bio', initialValues.bio)
+                            setFieldValue('role', initialValues.role)
+                            setFieldValue('minSalary', initialValues.minSalary)
+                            setFieldValue('maxSalary', initialValues.maxSalary)
+                            setFieldValue(
+                              'experience',
+                              initialValues.experience,
+                            )
+                            setFieldValue('cv', null)
+                            setCvFileName(null) // Reset CV file name
+                          }}
+                          className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 mr-2">
+                          Cancel
+                        </button>
+
+                        <button
+                          type="submit"
+                          // disabled={isSubmitting}
+                          disabled={isSubmitting || !isEditing} // Disable if not editing
+                          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                          {userInfo.profile
+                            ? isSubmitting
+                              ? 'Updating...'
+                              : 'Update Profile'
+                            : isSubmitting
+                            ? 'Submitting...'
+                            : 'Create Profile'}
+                        </button>
+                      </>
+                    )}
                   </div>
                 </Form>
               )
@@ -470,7 +611,3 @@ const TalentProfile = () => {
 }
 
 export default TalentProfile
-
-// function setProgress(arg0: number) {
-//   throw new Error('Function not implemented.')
-// }
