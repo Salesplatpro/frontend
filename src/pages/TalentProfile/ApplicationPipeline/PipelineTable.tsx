@@ -11,7 +11,9 @@ import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 
 import { Button, StatusBadge } from '../../../components'
+import { useScreenWidth } from '../../../hooks'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
+import { ResponsiveTableRenderer } from '../../../utils'
 import { applications } from './ApplicationData'
 
 interface AllJobTypes {
@@ -90,6 +92,7 @@ export const PipelineTable = () => {
   const { data, error, isLoading } = useAllJobApplicationsQuery()
   const [allJobs, setAllJobs] = React.useState<AllJobTypes[]>([])
   const align = 'left'
+  const screenWidth = useScreenWidth()
 
   React.useEffect(() => {
     if (data) {
@@ -107,9 +110,11 @@ export const PipelineTable = () => {
           <TableRow>
             <StyledTableCell align={align}>Job Title</StyledTableCell>
             <StyledTableCell align={align}>Company Name</StyledTableCell>
-            <StyledTableCell align={align}>Stage</StyledTableCell>
-            <StyledTableCell align={align}>Job Status</StyledTableCell>
-            <StyledTableCell align={align}>Date Applied</StyledTableCell>
+            <ResponsiveTableRenderer screenWidth={screenWidth} breakpoint={768}>
+              <StyledTableCell align={align}>Stage</StyledTableCell>
+              <StyledTableCell align={align}>Job Status</StyledTableCell>
+              <StyledTableCell align={align}>Date Applied</StyledTableCell>
+            </ResponsiveTableRenderer>
             <StyledTableCell align={align}>Details</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -122,26 +127,27 @@ export const PipelineTable = () => {
               <StyledTableCell align={align}>
                 {application.postedBy?.firstName}
               </StyledTableCell>
+              <ResponsiveTableRenderer
+                screenWidth={screenWidth}
+                breakpoint={768}>
+                <StyledTableCell align={align}>
+                  {application.currentStage}
+                </StyledTableCell>
+                <StyledTableCell align={align}>
+                  <StatusBadge
+                    status={application.status || 'unknown'}
+                    {...getStatusBadgeProps(application?.status || 'unknown')}
+                  />
+                </StyledTableCell>
+                <StyledTableCell align={align}>
+                  {application.applicationType}
+                </StyledTableCell>
+              </ResponsiveTableRenderer>
               <StyledTableCell align={align}>
-                {application.currentStage}
-              </StyledTableCell>
-              <StyledTableCell align={align}>
-                <StatusBadge
-                  status={application.status || 'unknown'}
-                  {...getStatusBadgeProps(application?.status || 'unknown')}
-                />
-              </StyledTableCell>
-              <StyledTableCell align={align}>
-                {application.applicationType}
-              </StyledTableCell>
-              <StyledTableCell align={align}>
-                <div style={{ width: '80%' }}>
-                  {/* <Button title={getButtonText(application.stage)} /> */}
-                  <Link
-                    to={`/talentDashboard/applicationPipeline/${application.job?._id}`}>
-                    <Button title="View More" />
-                  </Link>
-                </div>
+                <Link
+                  to={`/talentDashboard/applicationPipeline/${application.job?._id}`}>
+                  <Button title="View More" />
+                </Link>
               </StyledTableCell>
             </StyledTableRow>
           ))}
