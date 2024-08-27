@@ -66,13 +66,11 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 job.createdAt,
               )} days ago`}</StyledTableCell>
               <StyledTableCell align={align}>
-                <div style={{ width: '100%' }}>
-                  <Link
-                    to={`/recruiterDashboard/singleJobPost/${job._id}`}
-                    state={{ jobName: job.role.name, postedAt: job.createdAt }}>
-                    <Button title="View Application" />
-                  </Link>
-                </div>
+                <Link
+                  to={`/recruiterDashboard/singleJobPost/${job._id}`}
+                  state={{ jobName: job.role.name, postedAt: job.createdAt }}>
+                  <Button title="View Application" />
+                </Link>
               </StyledTableCell>
             </StyledTableRow>
           ))}

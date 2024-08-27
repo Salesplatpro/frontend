@@ -1,11 +1,12 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import Loading from '../../../components/Loading/Loading'
 import {
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
-import Loading from '../../../components/Loading/Loading'
 
 // Type definitions
 interface FormData {
