@@ -18,6 +18,7 @@ import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
 import { MyJobPosts } from './pages/RecruiterProfile'
+import Batching from './pages/RecruiterProfile/Batching/Batching'
 import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
 import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
 import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
@@ -139,6 +140,12 @@ const router = createBrowserRouter([
             path: 'myJobPosts',
             element: <MyJobPosts />,
           },
+
+          {
+            path: 'batching',
+            element: <Batching />,
+          },
+
           {
             path: 'singleJobPost/:jobId',
             element: <SingleJobPost />,
