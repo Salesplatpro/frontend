@@ -17,15 +17,15 @@ const Batching = () => {
         </p>
       </div>
 
-      <div className="lg:w-[1100px] h-[550px] flex justify-center items-center flex-col bg-[#F8F8F8] border border-[#D0D5DD] rounded-2xl">
-        <div className="lg:flex lg:justify-center lg:items-center lg:flex-col space-y-4 relative w-[100%]">
+      <div className="flex justify-center items-center lg:w-[1100px] md:w-[850px] sm:w-[670px] h-[550px] lg:flex lg:justify-center lg:items-center md:flex md:justify-center md:items-center sm::flex sm:justify-center sm:items-center flex-col bg-[#F8F8F8] border border-[#D0D5DD] rounded-2xl">
+        <div className="flex justify-center items-center w-[100%] flex-col lg:flex lg:justify-center lg:items-center lg:flex-col md:flex md:justify-center md:items-center sm:flex sm:justify-center sm:items-center space-y-4 relative ">
           {cvFileName ? (
             <>
-              <div className="space-y-2 text-center">
-                <h1 className=" font-raleway text-[#101828] text-[25px] font-bold leading-[28px]">
+              <div className="space-y-2 text-center ">
+                <h1 className=" font-raleway text-[#101828] text-[20px] leading-[22px] lg:text-[25px]  font-bold lg:leading-[28px]">
                   CV Uploaded
                 </h1>
-                <p className="font-raleway font-normal text-[20px] leading-[28px] text-[#101828]">
+                <p className="font-raleway font-normal text-[17px] leading-[20px] lg:text-[20px] lg:leading-[28px] sm:text-[20px] md:text-[22px] md:leading-[25px] text-[#101828]">
                   The CV is already uploaded
                 </p>
               </div>
@@ -46,10 +46,10 @@ const Batching = () => {
           ) : (
             <>
               <div className="space-y-2 text-center">
-                <h1 className=" font-raleway text-[#101828] text-[25px] font-bold leading-[28px]">
+                <h1 className="font-raleway text-[#101828] text-[18px] leading-[20px] lg:text-[25px] font-bold lg:leading-[28px]">
                   Upload applicants CV in batch
                 </h1>
-                <p className="font-raleway font-normal text-[20px] leading-[28px] text-[#101828]">
+                <p className="font-raleway font-normal text-[17px] leading-[20px] lg:text-[20px] lg:leading-[28px] sm:text-[20px] md:text-[22px] md:leading-[25px] text-[#101828]">
                   when uploaded, the CV’s will be checked collectively by an AI
                 </p>
               </div>
@@ -61,7 +61,6 @@ const Batching = () => {
                 onChange={(event) => {
                   if (event.currentTarget.files) {
                     const file = event.currentTarget.files[0]
-                    // setFieldValue('cv', file)
                     setCvFileName(file.name) // Update file name state
                   }
                 }}
@@ -78,9 +77,19 @@ const Batching = () => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center lg:w-[1100px]">
-        <button>Cancel</button>
-        <button>Save</button>
+      <div className="flex justify-between items-center lg:w-[1100px] md:w-[850px] sm:w-[670px]">
+        {cvFileName ? (
+          <>
+            <button
+              className="border-2 border-[#3C6FD4] px-[22px] py-[14px] rounded-xl cursor-pointer text-[#3C6FD4] font-raleway leading-[30px] text-[18.3px] font-medium hover:bg-[#3C6FD4] hover:text-white"
+              onClick={() => setCvFileName(null)}>
+              Cancel
+            </button>
+            <button className="border-2 border-[#3C6FD4] px-[24px] py-[15.3px] rounded-xl cursor-pointer bg-[#3C6FD4] text-white shadow-custom font-raleway leading-[30px] text-[18.3px] font-medium hover:bg-[#3765c0] hover:text-white">
+              Save
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   )
