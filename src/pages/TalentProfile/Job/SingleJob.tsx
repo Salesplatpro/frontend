@@ -6,6 +6,7 @@ import { PiBuildingOfficeBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
 import { Button } from '../../../components'
+import Loading from '../../../components/Loading/Loading'
 import { JobDetails } from './JobDetails'
 
 export type SingleJobProps = {
@@ -17,6 +18,8 @@ export type SingleJobProps = {
   jobCountry?: string
   jobExperience?: string
   jobSalary?: string
+  isFiltering?: boolean
+  isLoading?: boolean
   location?: {
     city: { name: ''; geoId: null }
     state: { name: ''; geoId: null }
@@ -33,7 +36,11 @@ export const SingleJob = ({
   jobExperience,
   jobCountry,
   jobSalary,
+  isFiltering,
+  isLoading,
 }: SingleJobProps) => {
+  if (isFiltering || isLoading) return <Loading />
+
   return (
     <div className="singlejob-container">
       <PiBuildingOfficeBold size={36} />

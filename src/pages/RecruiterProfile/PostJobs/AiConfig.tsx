@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
 import { aiConfigs } from '../../../api/api-communication'
+import { Button } from '../../../components'
 import {
   useAiConfigMutation,
   useGenJpPersonalityMutation,
@@ -12,7 +13,6 @@ import {
   usePatchAiConfigMutation,
 } from '../../../redux/api/recruiter'
 import { configProps } from '../../../utils/jobPostTypes'
-import { Button } from '../../../components'
 
 const validationSchema = Yup.object({
   // prescreeningAssessment: Yup.string().required('Required'),
