@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 
 import { Button, StatusBadge } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
@@ -74,6 +75,7 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
   const align = 'center'
   const alignHeader = 'center'
   const screenWidth = useScreenWidth()
+  console.log(applications)
 
   return (
     <TableContainer component={Paper}>
@@ -81,8 +83,8 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
         <TableHead>
           <TableRow>
             <StyledTableCell align={alignHeader}>Name</StyledTableCell>
+            <StyledTableCell align={alignHeader}>Stage</StyledTableCell>
             <ResponsiveTableRenderer screenWidth={screenWidth} breakpoint={768}>
-              <StyledTableCell align={alignHeader}>Stage</StyledTableCell>
               <StyledTableCell align={alignHeader}>Job Status</StyledTableCell>
               <StyledTableCell align={alignHeader}>
                 Date Applied
@@ -98,12 +100,12 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                 <StyledTableCell align={align}>
                   {item.talent.firstName} {item.talent.lastName}
                 </StyledTableCell>
+                <StyledTableCell align={align}>
+                  {getStatusStage(item.status)}
+                </StyledTableCell>
                 <ResponsiveTableRenderer
                   screenWidth={screenWidth}
                   breakpoint={768}>
-                  <StyledTableCell align={align}>
-                    {getStatusStage(item.status)}
-                  </StyledTableCell>
                   <StyledTableCell align={align}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <StatusBadge
@@ -117,7 +119,10 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                   </StyledTableCell>
                 </ResponsiveTableRenderer>
                 <StyledTableCell align={align}>
-                  <Button textType="small" title="View Applicantion" />
+                  <Link
+                    to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}>
+                    <Button textType="small" title="View Applicantion" />
+                  </Link>
                 </StyledTableCell>
               </StyledTableRow>
             ))}

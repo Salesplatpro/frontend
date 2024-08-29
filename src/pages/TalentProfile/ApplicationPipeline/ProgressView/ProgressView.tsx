@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import Loading from '../../../../components/Loading/Loading'
-import {
-  useLazyCvMatchQuery,
-  useJobPipelineQuery,
-} from '../../../../redux/api/talent'
-import pretestIcon from '../../../../assets/pretestIcon.webp'
+import { IoReload } from 'react-icons/io5'
+import { Link, useParams } from 'react-router-dom'
+
+import connectorIcon from '../../../../assets/connectorIcon.webp'
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
-import connectorIcon from '../../../../assets/connectorIcon.webp'
+import pretestIcon from '../../../../assets/pretestIcon.webp'
 import unconnectorIcon from '../../../../assets/unconnectorIcon.webp'
-import { IoReload } from 'react-icons/io5'
+import Loading from '../../../../components/Loading/Loading'
+import {
+  useJobPipelineQuery,
+  useLazyCvMatchQuery,
+} from '../../../../redux/api/talent'
 
 // Type definitions
 interface Application {

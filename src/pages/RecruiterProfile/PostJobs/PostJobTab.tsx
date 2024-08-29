@@ -24,7 +24,7 @@ const PostJobTab = () => {
   const { jobId } = useParams()
 
   const [activeTab, setActiveTab] = useState(jobId ? 'aiconfig' : 'jobdetails')
- 
+
   useEffect(() => {
     console.log(jobId)
     setActiveTab(jobId ? 'aiconfig' : 'jobdetails')
