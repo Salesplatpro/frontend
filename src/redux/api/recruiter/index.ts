@@ -51,6 +51,9 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    fetchApplicantProgress: builder.query({
+      query: (applicantId: string) => `applications/${applicantId}`,
+    }),
   }),
 })
 
@@ -61,4 +64,5 @@ export const {
   useFetchRecruiterJobPostQuery,
   useFetchRecruiterJobPostDetailsQuery,
   useGenJpPersonalityMutation,
+  useFetchApplicantProgressQuery,
 } = recruiterApi

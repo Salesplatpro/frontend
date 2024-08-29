@@ -6,9 +6,8 @@ import { PiBuildingOfficeBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
 import { Button } from '../../../components'
-import { JobDetails } from './JobDetails'
-
 import Loading from '../../../components/Loading/Loading'
+import { JobDetails } from './JobDetails'
 
 export type SingleJobProps = {
   jobId?: string
