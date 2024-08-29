@@ -51,6 +51,13 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    cvAndCoverLetter: builder.mutation({
+      query: (data) => ({
+        url: `/cv-batching/cv-and-cover-letter`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -61,4 +68,5 @@ export const {
   useFetchRecruiterJobPostQuery,
   useFetchRecruiterJobPostDetailsQuery,
   useGenJpPersonalityMutation,
+  useCvAndCoverLetterMutation, // <-- New hook for the new mutation
 } = recruiterApi
