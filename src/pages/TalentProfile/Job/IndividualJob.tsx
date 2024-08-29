@@ -4,7 +4,9 @@ import toast from 'react-hot-toast'
 import { FaCopy, FaFacebook, FaTwitter } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { IoIosLink } from 'react-icons/io'
+
 import { Link, useNavigate, useParams } from 'react-router-dom'
+
 
 import Loading from '../../../components/Loading/Loading'
 import { useIndividualJobQuery } from '../../../redux/api/talent'

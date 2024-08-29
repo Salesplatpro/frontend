@@ -25,6 +25,13 @@ export const sidebarData = [
     icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
     link: '/recruiterDashboard/myJobPosts',
   },
+
+  {
+    name: 'Batching',
+    icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
+    link: '/recruiterDashboard/batching',
+  },
+
   {
     name: 'Notification',
     icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
