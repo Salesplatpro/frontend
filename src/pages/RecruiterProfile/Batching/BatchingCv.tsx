@@ -15,9 +15,13 @@ const BatchingCv: React.FC<BatchingCvProps> = ({
     <button type="button">
       {/* <img src={upload} alt="uploadCv" /> */}
       {cvFileName ? (
-        <img src={uploadCheck} alt="uploadCv" />
+        <img
+          src={uploadCheck}
+          alt="uploadCv"
+          className="w-[102px] lg:w-[110px]"
+        />
       ) : (
-        <img src={upload} alt="uploadCv" />
+        <img src={upload} alt="uploadCv" className="w-[102px] lg:w-[110px]" />
       )}
     </button>
   )

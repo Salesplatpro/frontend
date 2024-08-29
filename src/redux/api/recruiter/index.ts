@@ -54,6 +54,14 @@ export const recruiterApi = createApi({
     fetchApplicantProgress: builder.query({
       query: (applicantId: string) => `applications/${applicantId}`,
     }),
+
+    cvAndCoverLetter: builder.mutation({
+      query: (data) => ({
+        url: `/cv-batching/cv-and-cover-letter`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -65,4 +73,5 @@ export const {
   useFetchRecruiterJobPostDetailsQuery,
   useGenJpPersonalityMutation,
   useFetchApplicantProgressQuery,
+  useCvAndCoverLetterMutation,
 } = recruiterApi
