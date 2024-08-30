@@ -241,7 +241,12 @@ const TalentProfile = () => {
             {userInfo.profile ? 'Edit Talent Profile' : 'Create Talent Profile'}
           </h2>
 
-          <ProgressBar percentage={progress} />
+          <ProgressBar
+            percentage={progress}
+            textColor="#344054"
+            pathColor="#3C6FD4"
+            trailColor="#F4EBFF"
+          />
         </div>
 
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">

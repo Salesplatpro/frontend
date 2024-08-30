@@ -1,11 +1,40 @@
 import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 
 import UploadCheck from '../../../assets/Upload Check.png'
 import Uploading from '../../../assets/Uploading.png'
+import { useCvAndCoverLetterMutation } from '../../../redux/api/recruiter/index' // Import the hook
 import BatchingCv from './BatchingCv'
 
 const Batching = () => {
   const [cvFileName, setCvFileName] = useState<string | null>(null)
+
+  const [cvAndCoverLetter, { isLoading }] = useCvAndCoverLetterMutation() // Use the hook
+
+  const handleSave = async () => {
+    if (cvFileName) {
+      try {
+        const fileInput = document.getElementById('cv') as HTMLInputElement
+        if (fileInput && fileInput.files) {
+          const file = fileInput.files[0]
+
+          const formData = new FormData()
+          formData.append('cv', file) // Append the actual file, not just the file name
+
+          await cvAndCoverLetter(formData).unwrap() // Call the mutation and unwrap the result
+
+          console.log(formData)
+          console.log('CV and cover letter uploaded successfully')
+
+          toast.success('CV and cover letter uploaded successfully')
+        }
+      } catch (error) {
+        console.error('Error uploading CV and cover letter:', error)
+        toast.error('Error uploading CV and cover letter')
+      }
+    }
+  }
+
   return (
     <div className="py-4 space-y-4 ">
       <div className="space-y-2">
@@ -85,8 +114,11 @@ const Batching = () => {
               onClick={() => setCvFileName(null)}>
               Cancel
             </button>
-            <button className="border-2 border-[#3C6FD4] px-[24px] py-[15.3px] rounded-xl cursor-pointer bg-[#3C6FD4] text-white shadow-custom font-raleway leading-[30px] text-[18.3px] font-medium hover:bg-[#3765c0] hover:text-white">
-              Save
+            <button
+              className="border-2 border-[#3C6FD4] px-[24px] py-[15.3px] rounded-xl cursor-pointer bg-[#3C6FD4] text-white shadow-custom font-raleway leading-[30px] text-[18.3px] font-medium hover:bg-[#3765c0] hover:text-white"
+              onClick={handleSave}
+              disabled={isLoading}>
+              {isLoading ? 'Saving...' : 'Save'}
             </button>
           </>
         ) : null}
