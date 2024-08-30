@@ -3,7 +3,13 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 // import { IoReload } from 'react-icons/io5'
-import { Link, useParams } from 'react-router-dom'
+import {
+  Link,
+  Router,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
 
 import animationData from '../../../../assets/Animation2.json'
 import connectorIcon from '../../../../assets/connectorIcon.webp'
@@ -84,6 +90,9 @@ const getStatusColor = (status: string): string => {
 const ProgressView: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>()
   const [jobProgress, setJobProgress] = useState<Application | null>(null)
+  //navigate to Application pipeline page
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const {
     data: applications,
@@ -134,6 +143,15 @@ const ProgressView: React.FC = () => {
   }
 
   const progresses = getProgresses(jobProgress)
+
+  const homePage = () => {
+    // Remove any hooks from inside conditionals or nested functions
+    if (location.key !== 'default') {
+      navigate(-1) // Go back if there's history
+    } else {
+      null
+    }
+  }
 
   // Calculate the percentage of completed stages
   const completedStages = progresses.filter(
@@ -229,6 +247,14 @@ const ProgressView: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      <div>
+        <button
+          onClick={homePage}
+          className="my-14 ml-4 border-2 border-[#3C6FD4] px-[24px] py-[15.3px] rounded-xl cursor-pointer bg-[#3C6FD4] text-white shadow-custom font-raleway leading-[30px] text-[18.3px] font-medium hover:bg-[#3765c0] hover:text-white">
+          Back to Homepage
+        </button>
       </div>
     </div>
   )
