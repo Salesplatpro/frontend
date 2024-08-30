@@ -17,6 +17,7 @@ export const ApplicationProgress = () => {
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
+  console.log(data)
 
   const progress = [
     {
@@ -32,11 +33,12 @@ export const ApplicationProgress = () => {
     {
       icon: <TbEdit size={iconSize} color={iconColor} />,
       title: 'Personality Test',
-      score: 60,
+      score: data?.data?.application?.personalizedScore || 60,
     },
     {
       icon: <TbEdit size={iconSize} color={iconColor} />,
       title: 'Personalized Test',
+      score: 'INTJ',
     },
   ]
 
@@ -74,13 +76,13 @@ export const ApplicationProgress = () => {
             <div className={styles.title}>{item.title}</div>
           </div>
           <div className={styles.score}>
-            {item.score ? (
+            {typeof item.score === 'number' ? (
               <div>
                 {`${item.score}%`}
                 <span className={styles.scoreItem}>Match</span>
               </div>
             ) : (
-              <div className={styles.noMatch}>Match</div>
+              <div className={styles.noMatch}>{item.score}</div>
             )}
           </div>
         </div>

@@ -2,19 +2,19 @@ import './TalentProfileSidebar.scss'
 
 import React, { useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
-import {
-  IoIosArrowDown,
-  IoMdMenu,
-  IoMdNotificationsOutline,
-} from 'react-icons/io'
+import { IoMdMenu } from 'react-icons/io'
+import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 
-import employer from '../../assets/employer.png'
 import { SideBar } from '../../components'
 import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
+import { RootState } from '../../redux/store/store'
+import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
 const TalentProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const user = useSelector((state: RootState) => state.auth.user)
+  console.log(user)
 
   return (
     <div className="dashboard">
@@ -22,19 +22,7 @@ const TalentProfileSidebar = () => {
         <button className="menu" onClick={() => setIsOpen(!isOpen)}>
           {!isOpen && <IoMdMenu className="text-[30px]" />}
         </button>
-        <div>
-          <div className="employer">
-            <IoMdNotificationsOutline size={24} />
-            <div className="employerDetails">
-              <div>
-                <div className="employerName">Olivia Rhye</div>
-                <div className="employerType">Project Manager</div>
-              </div>
-              <img src={employer} alt="employer" />
-            </div>
-            <IoIosArrowDown size={20} />
-          </div>
-        </div>
+        <LoggedInUserBadge />
       </div>
       <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
