@@ -9,8 +9,6 @@ import { Button } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import { JobDetails } from './JobDetails'
 
-import Loading from '../../../components/Loading/Loading'
-
 export type SingleJobProps = {
   jobId?: string
   jobTitle?: string

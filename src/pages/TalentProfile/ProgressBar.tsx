@@ -7,9 +7,18 @@ import { buildStyles, CircularProgressbar } from 'react-circular-progressbar'
 interface ProgressBarProps {
   percentage: number
   size?: number // Optional prop to define the size of the progress circle
+  textColor: string
+  pathColor: string
+  trailColor: string
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, size = 80 }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  percentage,
+  size = 80,
+  textColor,
+  pathColor,
+  trailColor,
+}) => {
   // Ensure percentage is within valid range
   const clampedPercentage = Math.max(0, Math.min(percentage, 100))
 
@@ -21,9 +30,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage, size = 80 }) => {
         value={clampedPercentage}
         text={`${clampedPercentage.toFixed(0)}%`}
         styles={buildStyles({
-          textColor: '#344054',
-          pathColor: '#3C6FD4',
-          trailColor: '#F4EBFF',
+          textColor,
+          pathColor,
+          trailColor,
           textSize: '25px',
         })}
       />
