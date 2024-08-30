@@ -6,7 +6,7 @@
   color: white;
   border: none;
   cursor: pointer;
-  width: 60%;
+  width: max-content;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,10 +26,9 @@
   padding: 4px;
   border-radius: 10px;
   color: #344054;
-  width: 100%;
   border: 1px solid #d0d5dd;
   cursor: pointer;
-  width: 60%;
+  width: max-content;
   display: flex;
   justify-content: center;
   margin: 0 auto;
