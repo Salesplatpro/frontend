@@ -1,16 +1,15 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { aiConfigs } from '../../../api/api-communication'
-import { Button } from '../../../components'
+import { FaPlus } from 'react-icons/fa6'
+import { RiDeleteBin6Line } from 'react-icons/ri'
+
 import {
   useAiConfigMutation,
   useGenJpPersonalityMutation,
-  useGenJpPersonalityQuery,
-  usePatchAiConfigMutation,
 } from '../../../redux/api/recruiter'
 import { configProps } from '../../../utils/jobPostTypes'
 
@@ -107,12 +106,12 @@ const AiConfig = () => {
   }
 
   return (
-    <div className="p-8 bg-[#FCFCFC] shadow-md rounded w-[70%] mx-auto">
+    <div className="p-8 w-[70%] mx-auto">
       <div>
-        <h2 className="text-[#101828] text-[30px] mt-2 font-bold">
+        <h2 className="text-[#101828] text-[32px] mt-4 font-bold">
           AI Configs
         </h2>
-        <p className="text-[#667085] text-[16px] mt-2 mb-6 font-light">
+        <p className="text-[#667085] text-[16px] mb-6 font-light">
           Select your configurations
         </p>
       </div>
@@ -123,14 +122,16 @@ const AiConfig = () => {
         {({ errors, touched, values, isSubmitting }) => (
           <Form>
             <div className="mb-4">
-              <label className="block mb-2 font-bold" htmlFor="name">
+              <label
+                className="font-bold text-[14px] text-[#434144]"
+                htmlFor="name">
                 Name
               </label>
               <Field
                 type="text"
                 id="name"
                 name="name"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="block border border-[#D0D5DD] p-4 rounded w-full"
               />
               <ErrorMessage
                 name="name"
@@ -139,15 +140,17 @@ const AiConfig = () => {
               />
             </div>
             <div className="mb-6">
-              <h5 className="font-bold text-[18px] mb-2">
+              <h5 className="font-bold text-[16px] text-[#434144]">
                 Pre-screening assessment{' '}
                 <span className="font-light text-[14px]">
                   (These are the list of questions needed to be answered)
                 </span>
               </h5>
-              <div className="border border-gray-300 p-5 mt-2 rounded-lg shadow-lg w-full md:w-[60%]">
+              <div className="bg-[#E7E7E7] p-5 mt-2 rounded-lg shadow w-full">
                 <div className="flex flex-row items-center space-x-4 mb-4">
-                  <p id="enable-pre-assess" className="font-medium">
+                  <p
+                    id="enable-pre-assess"
+                    className="font-semibold text-[16px] text-[#434144] flex-1">
                     Enable Pre-assessment:
                   </p>
                   <label
@@ -182,14 +185,15 @@ const AiConfig = () => {
                 <div className="flex flex-col">
                   <label
                     htmlFor="minPrescreeningScore"
-                    className="font-medium mb-1">
+                    className="font-medium text-[14px] text-[#434144] mb-1">
                     Min pre-assessment score:
                   </label>
                   <Field
                     type="text"
                     id="minPrescreeningScore"
                     name="minPrescreeningScore"
-                    className="border border-gray-300 rounded p-2"
+                    placeholder="Enter score"
+                    className="block border border-[#D0D5DD] p-4 rounded w-full"
                   />
                   {errors.minPrescreeningScore &&
                   touched.minPrescreeningScore ? (
@@ -202,15 +206,17 @@ const AiConfig = () => {
             </div>
             {/* CV SIMILARITY */}
             <div className="mb-6">
-              <h5 className="font-bold text-[18px] mb-2">
+              <h5 className="font-bold text-[16px] text-[#434144] mb-2">
                 Cv similarity Test{' '}
                 <span className="font-light text-[14px]">
                   (Do you want the AI to run a CV check for you)
                 </span>
               </h5>
-              <div className="border border-gray-300 p-5 mt-2 rounded-lg shadow-lg w-full md:w-[60%]">
+              <div className="bg-[#E7E7E7] p-5 mt-2 rounded-lg shadow w-full">
                 <div className="flex flex-row items-center space-x-4 mb-4">
-                  <p id="cvSimilarity" className="font-medium">
+                  <p
+                    id="cvSimilarity"
+                    className="font-semibold text-[16px] text-[#434144] flex-1">
                     Enable CV similarity:
                   </p>
                   <label
@@ -244,14 +250,15 @@ const AiConfig = () => {
                 <div className="flex flex-col">
                   <label
                     htmlFor="minCvSimilarityScore"
-                    className="font-medium mb-1">
+                    className="font-medium text-[14px] text-[#434144] mb-1">
                     Min CV similarity score:
                   </label>
                   <Field
                     type="text"
                     id="minCvSimilarityScore"
                     name="minCvSimilarityScore"
-                    className="border border-gray-300 rounded p-2"
+                    placeholder="Enter score"
+                    className="block border border-[#D0D5DD] p-4 rounded w-full"
                   />
                   {errors.minCvSimilarityScore &&
                   touched.minCvSimilarityScore ? (
@@ -263,14 +270,15 @@ const AiConfig = () => {
                 <div className="flex flex-col">
                   <label
                     htmlFor="noOfCvSimilarCandidates"
-                    className="font-medium mb-1">
+                    className="font-medium text-[14px] text-[#434144] mb-1 mt-2">
                     Number of similar CV candidates:
                   </label>
                   <Field
                     type="text"
                     id="noOfCvSimilarCandidates"
                     name="noOfCvSimilarCandidates"
-                    className="border border-gray-300 rounded p-2"
+                    placeholder="Enter number"
+                    className="block border border-[#D0D5DD] p-4 rounded w-full"
                   />
                   {errors.noOfCvSimilarCandidates &&
                   touched.noOfCvSimilarCandidates ? (
@@ -284,15 +292,17 @@ const AiConfig = () => {
 
             {/* Personalized assessment */}
             <div className="mb-6">
-              <h5 className="font-bold text-[18px] mb-2">
+              <h5 className="font-bold text-[16px] text-[#434144]">
                 Personalized assessment{' '}
                 <span className="font-light text-[14px]">
                   (These are the list of questions needed to be answered)
                 </span>
               </h5>
-              <div className="border border-gray-300 p-5 mt-2 rounded-lg shadow-lg w-full md:w-[60%]">
+              <div className="bg-[#E7E7E7] p-5 mt-2 rounded-lg shadow w-full">
                 <div className="flex flex-row items-center space-x-4 mb-4">
-                  <p id="enable-pre-assess" className="font-medium">
+                  <p
+                    id="enable-pre-assess"
+                    className="font-semibold text-[16px] text-[#434144] flex-1">
                     Enable Personalized assessment:
                   </p>
                   <label
@@ -327,14 +337,14 @@ const AiConfig = () => {
                 <div className="flex flex-col">
                   <label
                     htmlFor="noPersonalizedQuestions"
-                    className="font-medium mb-1">
+                    className="font-medium text-[14px] text-[#434144] mb-1">
                     Number of Personalized Questions:
                   </label>
                   <Field
                     type="text"
                     id="noPersonalizedQuestions"
                     name="noPersonalizedQuestions"
-                    className="border border-gray-300 rounded p-2"
+                    className="block border border-[#D0D5DD] p-4 rounded w-full"
                   />
                   {errors.noPersonalizedQuestions &&
                   touched.noPersonalizedQuestions ? (
@@ -348,15 +358,17 @@ const AiConfig = () => {
 
             {/* Personality evaluation */}
             <div className="mb-6">
-              <h5 className="font-bold text-[18px] mb-2">
+              <h5 className="font-bold text-[16px] text-[#434144] mb-2">
                 Personality Evaluation{' '}
                 <span className="font-light text-[14px]">
                   (These are the list of questions needed to be answered)
                 </span>
               </h5>
-              <div className="border border-gray-300 p-5 mt-2 rounded-lg shadow-lg w-full md:w-[60%]">
+              <div className="bg-[#E7E7E7] p-5 mt-2 rounded-lg shadow w-full">
                 <div className="flex flex-row items-center space-x-4 mb-4">
-                  <p id="enable-pre-assess" className="font-medium">
+                  <p
+                    id="enable-pre-assess"
+                    className="font-semibold text-[16px] text-[#434144] flex-1">
                     Enable Personality evaluation:
                   </p>
                   <label
@@ -394,11 +406,13 @@ const AiConfig = () => {
                     <>
                       {['EI', 'SN', 'TF', 'JP'].map((pair) => (
                         <div key={pair} className="mb-4">
-                          <h3>Dichotomy Pair {pair}</h3>
+                          <h3 className="font-semibold text-[14px] text-[#434144] mb-1">
+                            Dichotomy Pair {pair}
+                          </h3>
                           <button
                             type="button"
                             onClick={() => handleGenerate(pair)}
-                            className="p-2 bg-blue-500 text-white rounded mr-2">
+                            className="p-2 bg-[#3C6FD4] text-white text-[14px] rounded mr-2">
                             {!generatedQuestions[pair]
                               ? `Generate ${pair}`
                               : `Regenerate ${pair}`}
@@ -409,8 +423,10 @@ const AiConfig = () => {
                               <button
                                 type="button"
                                 onClick={() => handleAddQuestion(push, pair)}
-                                className="p-2 bg-green-500 text-white rounded">
-                                Add {pair} Question
+                                className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]">
+                                <span className="flex items-center gap-2">
+                                  <FaPlus /> Add {pair} Question
+                                </span>
                               </button>
                             </>
                           )}
@@ -425,24 +441,27 @@ const AiConfig = () => {
                         </label>
                         <div className="space-y-2">
                           {values.uploadedQuestions.map((pQuestion, index) => (
-                            <div key={index} className="flex flex-row">
+                            <div
+                              key={index}
+                              className="flex flex-row items-center relative">
                               <Field
                                 name={`uploadedQuestions.${index}`}
-                                className="w-full p-2 border border-gray-300 rounded mr-2"
+                                className="border border-[#D0D5DD] p-4 rounded w-full"
                               />
-                              <button
-                                type="button"
-                                className="p-2 bg-red-500 text-white rounded"
+                              <div
+                                className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
                                 onClick={() => remove(index)}>
-                                -
-                              </button>
+                                <RiDeleteBin6Line />
+                              </div>
                             </div>
                           ))}
                           <button
                             type="button"
-                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                            className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
                             onClick={() => push('')}>
-                            Add Question
+                            <span className="flex items-center gap-2">
+                              <FaPlus /> Add Question
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -458,14 +477,14 @@ const AiConfig = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block mb-2 font-bold" htmlFor="recruiterGuide">
+              <label className="font-bold text-[14px] text-[#434144] block" htmlFor="recruiterGuide">
                 Recruiter Guide
               </label>
               <Field
                 type="text"
                 id="recruiterGuide"
                 name="recruiterGuide"
-                className="w-full p-2 border border-gray-300 rounded"
+                className="border border-[#D0D5DD] p-4 rounded w-full"
               />
               <ErrorMessage
                 name="recruiterGuide"
@@ -476,25 +495,11 @@ const AiConfig = () => {
             <div>
               <button
                 type="submit"
-                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+                className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
                 disabled={isSubmitting}>
                 Submit
               </button>
             </div>
-            {/* <div>
-              {aiConfigId !== null ? (
-                <Link to={`/recruiterDashboard/postjob/${aiConfigId}`}>
-                  <button
-                    // type="submit"
-                    // disabled={isSubmitting}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                    Next
-                  </button>
-                </Link>
-              ) : (
-                ''
-              )}
-            </div> */}
           </Form>
         )}
       </Formik>
