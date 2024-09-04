@@ -522,7 +522,7 @@ const TalentProfile = () => {
                         <div className="relative w-[100%]">
                           <div>
                             <a
-                              href={values.cvUrl}
+                              href={userInfo.profile.cv}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="block text-[#4884DF] mt-2">
