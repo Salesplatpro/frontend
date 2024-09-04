@@ -257,31 +257,45 @@ const SignIn = () => {
                   </div>
                   <div className="remember-me">
                     <CheckBox name="remember" label="Remember me" />
-                    <div className="forgot-password">Forgot password?</div>
+                    <div className="forgot-password">Forgot password ?</div>
                   </div>
-                  <div className="buttons">
+                  <div className="flex justify-center items-center flex-col">
                     {loading ? (
                       <Loading />
                     ) : (
-                      <Button title="Sign Up" type="submit" />
+                      <button
+                        className="w-[93%] rounded-lg bg-[#3c6fd4] border flex justify-center items-center hover:bg-[#4b82e1]"
+                        type="submit">
+                        <p className="text-white">Sign Up</p>
+                      </button>
                     )}
 
                     <div className="already py-2">
                       Already have an account? <a href="/login">Log In</a>
                     </div>
-                    <div className="py-4">
-                      <Button
-                        title="Continue with Google"
-                        variant="secondary"
-                        element={<img src={google} alt="google" />}
-                      />
-                    </div>
+                    <div className=" w-[93%] space-y-4 py-4">
+                      <button className="w-[100%] rounded-lg border flex justify-center items-center hover:bg-[#f7f7f7]">
+                        <img
+                          src={google}
+                          alt="google"
+                          className="w-[30px] h-[30px]"
+                        />
+                        <p className="text-[16px] text-[#344054] font-raleway font-semibold leading-[24px]">
+                          Continue with Google
+                        </p>
+                      </button>
 
-                    <Button
-                      title="Continue with Salesplat"
-                      variant="secondary"
-                      element={<img src={Salesplat} alt="salesplat logo" />}
-                    />
+                      <button className="w-[100%] rounded-lg border flex justify-center items-center hover:bg-[#f7f7f7]">
+                        <img
+                          src={Salesplat}
+                          alt="salesplat logo"
+                          className="w-[30px] h-[30px]"
+                        />
+                        <p className="text-[16px] text-[#344054] font-raleway font-semibold leading-[24px]">
+                          Continue with Salesplat
+                        </p>
+                      </button>
+                    </div>
                   </div>
                 </Form>
               )}
