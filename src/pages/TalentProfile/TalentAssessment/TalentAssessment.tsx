@@ -82,7 +82,8 @@ const TalentAssessment = () => {
       const response = await postAnswer(formData).unwrap()
       console.log(formData)
       if (response.status) {
-        toast.success(`${response.message} ${response.data.scorePercent}`)
+        toast.success(`${response.message}`)
+        // toast.success(`${response.message} ${response.data.scorePercent}`)
       } else {
         toast.error(response.message || 'Error submitting question')
       }

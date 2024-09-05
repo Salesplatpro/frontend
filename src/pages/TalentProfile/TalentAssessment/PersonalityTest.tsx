@@ -107,7 +107,7 @@ const PersonalityTest: React.FC = () => {
     <div className="w-[70%] mx-auto mt-8">
       <h2 className="text-3xl text-[#101828] font-bold">Personality Test</h2>
       <p className="text-xl text-[#101828] font-medium mt-3">
-        Welcome to your Personality test, you have 15 Questions to answer in
+        Welcome to your Personality test, you have these Questions to answer in
         this stage.
       </p>
       <div className="md:mt-6 mt-2">
