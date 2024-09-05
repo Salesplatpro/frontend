@@ -83,7 +83,7 @@ const TalentProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
-    role: userInfo.profile.role.map((r: any) => r._id) || [],
+    role: userInfo.profile?.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
@@ -241,7 +241,12 @@ const TalentProfile = () => {
             {userInfo.profile ? 'Edit Talent Profile' : 'Create Talent Profile'}
           </h2>
 
-          <ProgressBar percentage={progress} />
+          <ProgressBar
+            percentage={progress}
+            textColor="#344054"
+            pathColor="#3C6FD4"
+            trailColor="#F4EBFF"
+          />
         </div>
 
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
@@ -517,7 +522,7 @@ const TalentProfile = () => {
                         <div className="relative w-[100%]">
                           <div>
                             <a
-                              href={values.cvUrl}
+                              href={userInfo.profile.cv}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="block text-[#4884DF] mt-2">

@@ -1,7 +1,9 @@
+import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 
+import animationData from '../../../assets/Animation - check.json'
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchPretestQuery,
@@ -42,9 +44,17 @@ const TalentAssessment = () => {
 
   if (user.user.profile.prescreeningScore) {
     return (
-      <div>
-        <h2>
-          You have taken the test already
+      <div className="flex justify-center items-center flex-col w-full h-full">
+        <div>
+          <Lottie
+            animationData={animationData}
+            loop={false}
+            className="w-28 h-28 lg:w-44 lg:h-44 md:w-36 md:h-36"
+          />
+        </div>
+
+        <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-[#4b4b4b] pt-4">
+          You Have Taken The Test Already
         </h2>
       </div>
     )

@@ -2,11 +2,12 @@ import React from 'react'
 import { BiMessageDetail } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
+import { FiDownload } from 'react-icons/fi'
 import { MdOutlineContactSupport, MdWorkOutline } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
 
 const ICON_SIZE = 24
-const COLOR = '#4985DF'
+const COLOR = '#ffffff'
 
 export const sidebarData = [
   {
@@ -25,6 +26,13 @@ export const sidebarData = [
     icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
     link: '/recruiterDashboard/myJobPosts',
   },
+
+  {
+    name: 'Scout',
+    icon: <FiDownload size={ICON_SIZE} color={COLOR} />,
+    link: '/recruiterDashboard/scout',
+  },
+
   {
     name: 'Notification',
     icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,

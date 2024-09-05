@@ -24,7 +24,7 @@ const PostJobTab = () => {
   const { jobId } = useParams()
 
   const [activeTab, setActiveTab] = useState(jobId ? 'aiconfig' : 'jobdetails')
- 
+
   useEffect(() => {
     console.log(jobId)
     setActiveTab(jobId ? 'aiconfig' : 'jobdetails')
@@ -44,11 +44,12 @@ const PostJobTab = () => {
   return (
     <div className="p-4">
       <div>
-        <p className="text-[#333333] text-[13px]">Back</p>
-        <h2 className="text-[#101828] text-[30px] mt-1 font-bold">
+        <h2 className="text-[#101828] text-[32px] mt-1 font-bold">
           Create a new job
         </h2>
-        <div className="mt-2 flex flex-row space-x-10 items-center justify-center border-b-2">
+        Input information needed to land a role with your organization
+        <p className="text-[#101828] text-[20px] font-medium"></p>
+        <div className="mt-8 flex flex-row space-x-10 items-center justify-center">
           {tabs.map((tab, i) => {
             const isDisabled = tab.tab === 'aiconfig' && !jobId
             return (
@@ -56,9 +57,9 @@ const PostJobTab = () => {
                 key={i}
                 className={`${
                   activeTab === tab.tab
-                    ? 'border-blue-600 border-t-4 text-blue-600'
-                    : 'border-t-4 text-[#344054]'
-                } min-w-[202px] py-2 ${
+                    ? 'border-[#006BFF] border-t-4 text-[#006BFF]'
+                    : 'border-t-4 text-[##344054]'
+                } min-w-[232px] py-2 text-[14px] ${
                   isDisabled ? 'cursor-not-allowed opacity-50' : ''
                 }`}>
                 <button

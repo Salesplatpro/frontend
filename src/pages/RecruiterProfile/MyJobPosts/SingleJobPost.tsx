@@ -2,6 +2,7 @@ import React from 'react'
 import { MdOutlineArrowBackIosNew } from 'react-icons/md'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import Loading from '../../../components/Loading/Loading'
 import { useFetchRecruiterJobPostDetailsQuery } from '../../../redux/api/recruiter'
 import { calculateDaysFromCreation } from '../../../utils'
 import styles from './SingleJobPost.module.scss'
@@ -9,14 +10,21 @@ import { SingleJobTable } from './SingleJobTable'
 
 export const SingleJobPost = () => {
   const { jobId } = useParams()
-  const { data, error } = useFetchRecruiterJobPostDetailsQuery(jobId ?? '')
+  const { data, error, isLoading } = useFetchRecruiterJobPostDetailsQuery(
+    jobId ?? '',
+  )
   const navigate = useNavigate()
   const location = useLocation()
   const jobName = location.state?.jobName
   const postedAt = location.state?.postedAt
+  console.log(jobId)
 
   if (error) {
     return <div>Error loading job details</div>
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
