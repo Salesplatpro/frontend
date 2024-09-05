@@ -28,9 +28,9 @@ export const sidebarData = [
   },
 
   {
-    name: 'Batching',
+    name: 'Scout',
     icon: <FiDownload size={ICON_SIZE} color={COLOR} />,
-    link: '/recruiterDashboard/batching',
+    link: '/recruiterDashboard/scout',
   },
 
   {

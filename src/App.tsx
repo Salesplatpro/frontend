@@ -17,11 +17,11 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
-
-import Batching from './pages/RecruiterProfile/Batching/Batching'
-
 import { ApplicationProgress, MyJobPosts } from './pages/RecruiterProfile'
-
+import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
+import Batching from './pages/RecruiterProfile/Batching/Batching'
+import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
+import UploadBatch from './pages/RecruiterProfile/Batching/UploadBatch'
 import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
 import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
 import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
@@ -145,8 +145,23 @@ const router = createBrowserRouter([
           },
 
           {
-            path: 'batching',
+            path: 'scout',
             element: <Batching />,
+          },
+
+          {
+            path: 'scout/cv-upload',
+            element: <BatchCVUpload />,
+          },
+
+          {
+            path: 'scout/create-jd',
+            element: <CreateJD />,
+          },
+
+          {
+            path: 'scout/upload-cv-in-batch',
+            element: <UploadBatch />,
           },
 
           {

@@ -11,7 +11,7 @@ import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
-import { Button, CheckBox, TextInput } from '../../components'
+import { CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
 import {
   signupFailure,
