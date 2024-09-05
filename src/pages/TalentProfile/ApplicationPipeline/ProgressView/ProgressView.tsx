@@ -113,7 +113,7 @@ const ProgressView: React.FC = () => {
 
       if (applicationData?.currentStage === 'cv_similarity') {
         triggerCvMatch(jobId)
-        window.location.reload()
+        // window.location.reload()
       }
     }
 
