@@ -29,8 +29,8 @@ const BatchCVUpload = () => {
           toast.success('CV and cover letter uploaded successfully')
         }
       } catch (error) {
-        console.error('Error uploading CV and cover letter:', error)
-        toast.error('Error uploading CV and cover letter')
+        console.error('DisplayError uploading CV and cover letter:', error)
+        toast.error('DisplayError uploading CV and cover letter')
       }
     }
   }

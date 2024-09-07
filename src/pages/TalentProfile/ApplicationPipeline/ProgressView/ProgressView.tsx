@@ -118,7 +118,7 @@ const ProgressView: React.FC = () => {
     }
 
     if (applicationError) {
-      toast.error('Error loading application data')
+      toast.error('DisplayError loading application data')
     }
   }, [applications, applicationError, jobId, triggerCvMatch])
 

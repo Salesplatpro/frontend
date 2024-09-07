@@ -30,7 +30,7 @@ const TalentAssessment = () => {
       console.log(data.data)
     }
     if (error) {
-      toast.error('Error fetching questions')
+      toast.error('DisplayError fetching questions')
     }
   }, [data, error])
 
@@ -85,11 +85,11 @@ const TalentAssessment = () => {
         toast.success(`${response.message}`)
         // toast.success(`${response.message} ${response.data.scorePercent}`)
       } else {
-        toast.error(response.message || 'Error submitting question')
+        toast.error(response.message || 'DisplayError submitting question')
       }
     } catch (error) {
       console.log(error)
-      toast.error('Error submitting quiz')
+      toast.error('DisplayError submitting quiz')
     }
   }
 

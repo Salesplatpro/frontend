@@ -64,7 +64,7 @@ export const talentApi = createApi({
       },
       // Handles errors in case of parsing issues or non-JSON responses
       onError: (error, args, context) => {
-        console.error('Error in updateProfile:', error)
+        console.error('DisplayError in updateProfile:', error)
       },
     }),
 

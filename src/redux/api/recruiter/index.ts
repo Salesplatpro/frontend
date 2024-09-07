@@ -61,6 +61,13 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    createJD: builder.mutation({
+      query: (data) => ({
+        url: `/scout/jobs`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -73,4 +80,5 @@ export const {
   useGenJpPersonalityMutation,
   useFetchApplicantProgressQuery,
   useCvAndCoverLetterMutation,
+  useCreateJDMutation,
 } = recruiterApi

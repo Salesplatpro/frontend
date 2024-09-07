@@ -33,7 +33,7 @@ const IndividualTalents = () => {
           console.log(data.data)
         }
       } catch (err) {
-        setError('Error fetching talent profile.')
+        setError('DisplayError fetching talent profile.')
       } finally {
         setLoading(false)
       }
