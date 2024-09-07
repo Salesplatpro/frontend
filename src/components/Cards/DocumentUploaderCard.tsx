@@ -5,6 +5,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 
 import { Uploader } from '../Loading'
 import styles from './DocumentUploaderCard.module.scss'
+import { FileDesign } from './FileDesign'
 
 export const DocumentUploaderCard = () => {
   const completed = true
@@ -12,11 +13,7 @@ export const DocumentUploaderCard = () => {
     <div className={styles.container}>
       <div className={styles.innerContainer}>
         <div className={styles.file}>
-          <div className={styles.fileIconOuter}>
-            <div className={styles.fileIcon}>
-              <FaRegFile size={13} />
-            </div>
-          </div>
+          <FileDesign icon={<FaRegFile size={13} />} />
           <div className={styles.text}>
             <div>Tech design requirements.pdf</div>
             <div>200KB</div>

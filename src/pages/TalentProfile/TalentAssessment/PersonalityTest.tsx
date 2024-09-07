@@ -61,7 +61,7 @@ const PersonalityTest: React.FC = () => {
       }
     }
     if (personalizedError) {
-      toast.error('Error loading personalized test data')
+      toast.error('DisplayError loading personalized test data')
       console.error(personalizedError)
     }
   }, [personalityData, personalizedError])
@@ -90,12 +90,12 @@ const PersonalityTest: React.FC = () => {
       if (response.status) {
         toast.success(`${response.message} ${response.data.scorePercent}%`)
       } else {
-        toast.error(response.message || 'Error submitting question')
+        toast.error(response.message || 'DisplayError submitting question')
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
       console.error(error)
-      toast.error('Error submitting quiz')
+      toast.error('DisplayError submitting quiz')
     }
   }
 

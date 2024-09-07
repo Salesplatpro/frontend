@@ -1,13 +1,13 @@
 import './Roles.scss'
 
-import { Field, Formik } from 'formik'
+import { Field } from 'formik'
 import React, { useEffect, useState } from 'react'
 
 import { getRole } from '../../api/api-communication'
 import { Role } from '../../utils/types'
 
 interface roleTypes {
-  value: string[] | undefined
+  value: string
   name: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }

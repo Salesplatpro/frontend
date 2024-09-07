@@ -1,11 +1,10 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { useParams } from 'react-router-dom'
-import * as Yup from 'yup'
-
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import { useParams } from 'react-router-dom'
+import * as Yup from 'yup'
 
 import {
   useAiConfigMutation,
@@ -96,7 +95,7 @@ const AiConfig = () => {
         toast.error(data.data.message)
       }
     } catch (error) {
-      console.error('Error during form submission:', error)
+      console.error('DisplayError during form submission:', error)
       toast.error('An unexpected error occurred. Please try again later.')
     } finally {
       setSubmitting(false)
@@ -477,7 +476,9 @@ const AiConfig = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label className="font-bold text-[14px] text-[#434144] block" htmlFor="recruiterGuide">
+              <label
+                className="font-bold text-[14px] text-[#434144] block"
+                htmlFor="recruiterGuide">
                 Recruiter Guide
               </label>
               <Field

@@ -1,94 +1,163 @@
-import React from 'react'
+import { Alert } from '@mui/material'
+import { Field, Form, Formik } from 'formik'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { getRole } from '../../../api/api-communication'
+import { useCreateJDMutation } from '../../../redux/api/recruiter'
+
+type RoleType = {
+  _id: string
+  name: string
+  description: string
+}
 
 const CreateJD = () => {
   const navigate = useNavigate()
+  const [fetchedRoles, setFetchedRoles] = useState<RoleType[]>([])
+  const [roleDescription, setRoleDescription] = useState('')
+  const [error, setError] = useState<string | null>(null) // State for error
 
-  const handleNavigate = () => {
-    navigate('upload-cv-in-batch') // Navigate to the cv-upload child route
+  const [createJD, { isLoading }] = useCreateJDMutation()
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await getRole()
+        setFetchedRoles(response.data)
+      } catch (err) {
+        console.error('Error fetching roles:', err)
+        setError('Error fetching roles')
+      }
+    }
+    fetchRoles()
+  }, [])
+
+  const handleRoleChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    setFieldValue: (field: string, value: any) => void,
+  ) => {
+    const selectedRoleId = e.target.value
+    setFieldValue('role', selectedRoleId)
+
+    const selectedRole = fetchedRoles.find(
+      (role) => role._id === selectedRoleId,
+    )
+    if (selectedRole) {
+      setRoleDescription(selectedRole.description)
+      setFieldValue('description', selectedRole.description)
+    }
   }
+
+  const handleSubmit = async (values: any) => {
+    console.log(values)
+    try {
+      await createJD(values).unwrap()
+      navigate('/recruiterDashboard/scout/choose-method')
+    } catch (error: any) {
+      console.error('Error creating Job Description:', error.data.message)
+      setError('Error creating Job Description')
+    }
+  }
+
   return (
     <div className="py-4 space-y-4">
       <div className="space-y-2">
-        <h1 className=" font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
+        <h1 className="font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
           Scout
         </h1>
         <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
-          Upload cv in batch for collective AI assesment
+          Upload CV in batch for collective AI assessment
         </p>
       </div>
-
+      {error && <Alert severity="error">{error} </Alert>}
       <div className="mx-32">
-        <form className="flex justify-center items-start lg:w-[700px] md:w-[850px] sm:w-[670px] h-[550px] lg:flex lg:justify-start lg:items-start md:flex md:justify-center md:items-center sm::flex sm:justify-center sm:items-center flex-col rounded-2xl mt-10 ">
-          <div className="flex flex-col justify-start items-start">
-            <div className="py-3">
-              <label
-                htmlFor="name"
-                className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
-                Name
-              </label>
-              <input
-                title="Name"
-                name="name"
-                type="text"
-                placeholder="Company  name"
-                className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 font-raleway text-[16px] font-normal leading-[22px] mt-2"
-              />
-            </div>
+        <Formik
+          initialValues={{
+            companyName: '',
+            role: '',
+            description: '',
+            recruiterGuide: '',
+          }}
+          onSubmit={handleSubmit}>
+          {({ setFieldValue, values }) => (
+            <Form className="flex flex-col justify-start items-start lg:w-[700px] md:w-[850px] sm:w-[670px] h-[550px] rounded-2xl mt-10 space-y-3">
+              <div>
+                <label
+                  htmlFor="companyName"
+                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  Company Name
+                </label>
+                <Field
+                  name="companyName"
+                  type="text"
+                  placeholder="Company name"
+                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                />
+              </div>
 
-            <div className="py-3">
-              <label
-                htmlFor="name"
-                className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
-                Job Title
-              </label>
-              <input
-                title="Job Title"
-                name="JobTitle"
-                type="text"
-                className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 font-raleway text-[16px] font-normal leading-[22px] mt-2"
-                placeholder="Job Name"
-              />
-            </div>
+              <div>
+                <label
+                  htmlFor="role"
+                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  Job Title (Role)
+                </label>
+                <Field
+                  as="select"
+                  name="role"
+                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    handleRoleChange(e, setFieldValue)
+                  }>
+                  <option value="" label="Select a role" />
+                  {fetchedRoles.map((role: RoleType) => (
+                    <option key={role._id} value={role._id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </Field>
+              </div>
 
-            <div className="py-3">
-              <label
-                htmlFor="name"
-                className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
-                Description
-              </label>
-              <input
-                title="Description"
-                name="description"
-                type="text"
-                className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 font-raleway text-[16px] font-normal leading-[22px] mt-2"
-                placeholder="Add Job description here"
-              />
-            </div>
+              <div>
+                <label
+                  htmlFor="description"
+                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  Description
+                </label>
+                <Field
+                  name="description"
+                  type="text"
+                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  placeholder="Add Job description here"
+                  value={roleDescription}
+                />
+              </div>
 
-            <div className="py-3">
-              <label
-                htmlFor="name"
-                className="text-[#434144] font-raleway font-bold leading-4 py-4 text-[16px]">
-                Recruiters guide
-              </label>
-              <input
-                title="Recruiters Guide"
-                name="RecruitersGuide"
-                type="text"
-                className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 font-raleway text-[16px] font-normal leading-[22px] mt-2"
-                placeholder="Enter your preferred guide here"
-              />
-            </div>
-            <button
-              onClick={handleNavigate}
-              className="w-[358px] rounded-lg bg-[#3c6fd4] border flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8">
-              <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
-                Create
-              </p>
-            </button>
-          </div>
-        </form>
+              <div>
+                <label
+                  htmlFor="recruiterGuide"
+                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  Recruiters Guide
+                </label>
+                <Field
+                  name="recruiterGuide"
+                  type="text"
+                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  placeholder="Enter your preferred guide here"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-[358px] rounded-lg bg-[#3c6fd4] flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
+                disabled={isLoading}>
+                <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
+                  {isLoading ? 'Submitting...' : 'Create'}
+                </p>
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   )
