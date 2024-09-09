@@ -19,12 +19,6 @@ interface Question {
   question: string
 }
 
-interface PersonalizedData {
-  data: {
-    questions: Question[]
-  }
-}
-
 interface PostAnswerResponse {
   status: boolean
   message: string
@@ -94,7 +88,6 @@ const PersonalizedTest: React.FC = () => {
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
-      console.error(error)
       toast.error('Error submitting quiz')
     }
   }

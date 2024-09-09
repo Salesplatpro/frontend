@@ -4,13 +4,16 @@ import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 
 import animationData from '../../../assets/Animation - check.json'
+
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchPretestQuery,
   usePostPretestMutation,
 } from '../../../redux/api/talent'
+
 import { Question } from '../../../utils/types'
-import { RootState } from '../redux/store/store'
+
+import { RootState } from '../../../redux/store/store'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)
@@ -30,6 +33,7 @@ const TalentAssessment = () => {
       console.log(data.data)
     }
     if (error) {
+      // console.log(error?.data?.message || )
       toast.error('Error fetching questions')
     }
   }, [data, error])
@@ -88,8 +92,8 @@ const TalentAssessment = () => {
         toast.error(response.message || 'Error submitting question')
       }
     } catch (error) {
-      console.log(error)
       toast.error('Error submitting quiz')
+      // console.log(error?.data.message || 'Error submitting quiz')
     }
   }
 
