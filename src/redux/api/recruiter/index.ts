@@ -68,6 +68,12 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    fetchTalentProfile: builder.query({
+      query: ({ id }) => ({
+        url: `/user/profile/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -81,4 +87,5 @@ export const {
   useFetchApplicantProgressQuery,
   useCvAndCoverLetterMutation,
   useCreateJDMutation,
+  useFetchTalentProfileQuery,
 } = recruiterApi
