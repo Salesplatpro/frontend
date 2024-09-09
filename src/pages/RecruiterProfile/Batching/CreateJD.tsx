@@ -71,7 +71,7 @@ const CreateJD = () => {
         </p>
       </div>
       {error && <Alert severity="error">{error} </Alert>}
-      <div className="mx-32">
+      <div className="flex justify-center items-center lg:mx-32 md:mx-24 sm:mx-20 ">
         <Formik
           initialValues={{
             companyName: '',
@@ -81,7 +81,7 @@ const CreateJD = () => {
           }}
           onSubmit={handleSubmit}>
           {({ setFieldValue, values }) => (
-            <Form className="flex flex-col justify-start items-start lg:w-[700px] md:w-[850px] sm:w-[670px] h-[550px] rounded-2xl mt-10 space-y-3">
+            <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
               <div>
                 <label
                   htmlFor="companyName"
@@ -92,7 +92,7 @@ const CreateJD = () => {
                   name="companyName"
                   type="text"
                   placeholder="Company name"
-                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                 />
               </div>
 
@@ -105,7 +105,7 @@ const CreateJD = () => {
                 <Field
                   as="select"
                   name="role"
-                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     handleRoleChange(e, setFieldValue)
                   }>
@@ -127,7 +127,7 @@ const CreateJD = () => {
                 <Field
                   name="description"
                   type="text"
-                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] flex flex-col lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                   placeholder="Add Job description here"
                   value={roleDescription}
                 />
@@ -142,14 +142,14 @@ const CreateJD = () => {
                 <Field
                   name="recruiterGuide"
                   type="text"
-                  className="w-[674px] h-[54px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                   placeholder="Enter your preferred guide here"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-[358px] rounded-lg bg-[#3c6fd4] flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
+                className="w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-[#3c6fd4] flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
                 disabled={isLoading}>
                 <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                   {isLoading ? 'Submitting...' : 'Create'}

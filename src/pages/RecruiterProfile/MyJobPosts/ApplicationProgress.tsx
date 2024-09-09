@@ -6,7 +6,10 @@ import { TbEdit } from 'react-icons/tb'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Loading from '../../../components/Loading/Loading'
-import { useFetchApplicantProgressQuery } from '../../../redux/api/recruiter'
+import {
+  useFetchApplicantProgressQuery,
+  useFetchTalentProfileQuery,
+} from '../../../redux/api/recruiter'
 import styles from './applicationProgress.module.scss'
 
 export const ApplicationProgress = () => {
@@ -17,28 +20,40 @@ export const ApplicationProgress = () => {
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
-  console.log(data)
+
+  const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
+    id: data?.data?.application?.talent?._id,
+  })
 
   const progress = [
     {
       icon: <GoTasklist size={iconSize} color={iconColor} />,
       title: 'Pre-Assessment',
-      score: 60,
+      score: fetching ? (
+        <div className={styles.loading}>
+          <div className={styles.loadingChild}></div>
+        </div>
+      ) : (
+        result?.data?.user?.profile?.prescreeningScore ||
+        'No pre-assessment test'
+      ),
     },
     {
       icon: <SiReaddotcv size={iconSize} color={iconColor} />,
       title: 'CV-Matching',
-      score: data?.data?.application?.cvSimilarityScore,
+      score:
+        data?.data?.application?.cvSimilarityScore || 'No cv-matching score',
     },
     {
       icon: <TbEdit size={iconSize} color={iconColor} />,
       title: 'Personality Test',
-      score: data?.data?.application?.personalizedScore || 60,
+      score:
+        data?.data?.application?.personalizedScore || 'No personality test',
     },
     {
       icon: <TbEdit size={iconSize} color={iconColor} />,
       title: 'Personalized Test',
-      score: 'INTJ',
+      score: data?.data?.application?.mbtiType || 'No personalized test',
     },
   ]
 
