@@ -113,12 +113,12 @@ const ProgressView: React.FC = () => {
 
       if (applicationData?.currentStage === 'cv_similarity') {
         triggerCvMatch(jobId)
-        window.location.reload()
+        // window.location.reload()
       }
     }
 
     if (applicationError) {
-      toast.error('Error loading application data')
+      toast.error('DisplayError loading application data')
     }
   }, [applications, applicationError, jobId, triggerCvMatch])
 

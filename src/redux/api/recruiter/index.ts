@@ -38,8 +38,7 @@ export const recruiterApi = createApi({
       }),
     }),
     fetchRecruiterJobPost: builder.query({
-      query: () =>
-        '/jobs/me?limit=10&offset=0&experienceLevel=senior&remote=true',
+      query: () => '/jobs/me?limit=10&offset=0',
     }),
     fetchRecruiterJobPostDetails: builder.query({
       query: (jobId: string) => `/jobs/applications/${jobId}`,
@@ -62,6 +61,13 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    createJD: builder.mutation({
+      query: (data) => ({
+        url: `/scout/jobs`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -74,4 +80,5 @@ export const {
   useGenJpPersonalityMutation,
   useFetchApplicantProgressQuery,
   useCvAndCoverLetterMutation,
+  useCreateJDMutation,
 } = recruiterApi

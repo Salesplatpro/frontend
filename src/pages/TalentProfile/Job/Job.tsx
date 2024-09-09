@@ -74,7 +74,7 @@ const Job = () => {
       console.log(data.data)
     }
     if (error) {
-      toast.error('Error fetching jobs')
+      toast.error('DisplayError fetching jobs')
     }
   }, [data, error, filters.role])
 
@@ -85,7 +85,7 @@ const Job = () => {
       console.log(filteredData.data)
     }
     if (filteredError) {
-      toast.error('Error fetching filtered jobs')
+      toast.error('DisplayError fetching filtered jobs')
     }
   }, [filteredData, filteredError, filters.role])
 

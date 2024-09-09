@@ -33,7 +33,7 @@ const JobProfiles = () => {
           setLoading(false)
         }
       } catch (error) {
-        console.error('Error Fetching Jobs', error)
+        console.error('DisplayError Fetching Jobs', error)
         setError(true)
         setLoading(false)
       }

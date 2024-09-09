@@ -17,9 +17,14 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
-import { ApplicationProgress, MyJobPosts } from './pages/RecruiterProfile'
+import {
+  ApplicationProgress,
+  MyJobPosts,
+  SearchTalent,
+} from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
+import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import UploadBatch from './pages/RecruiterProfile/Batching/UploadBatch'
 import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
@@ -31,7 +36,6 @@ import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
-import JobPipeline from './pages/TalentProfile/ApplicationPipeline/JobPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
@@ -41,7 +45,7 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
-import { getToken } from './utils/authUtils'
+import { getToken } from './utils'
 
 const router = createBrowserRouter([
   {
@@ -148,12 +152,18 @@ const router = createBrowserRouter([
             path: 'scout',
             element: <Batching />,
           },
-
+          {
+            path: 'scout/choose-method',
+            element: <ChooseMethod />,
+          },
           {
             path: 'scout/cv-upload',
             element: <BatchCVUpload />,
           },
-
+          {
+            path: 'scout/search-talent',
+            element: <SearchTalent />,
+          },
           {
             path: 'scout/create-jd',
             element: <CreateJD />,
