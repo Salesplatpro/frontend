@@ -52,7 +52,7 @@ const RecruiterRegister: React.FC = () => {
       }
     } else {
       setErrors(validationErrors)
-      toast.error('Error registering recruiter details , check your ')
+      toast.error('DisplayError registering recruiter details , check your ')
     }
   }
 

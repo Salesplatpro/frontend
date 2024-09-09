@@ -36,7 +36,7 @@ export const SendTalentReg = async (formValues: FormTalentReg) => {
     sessionStorage.setItem('authToken', authToken)
     return data
   } catch (error) {
-    console.error('Error registering User', error)
+    console.error('DisplayError registering User', error)
     throw error
   }
 }
@@ -68,7 +68,7 @@ export const SendRecruiterReg = async (formValues: FormTalentReg) => {
     sessionStorage.setItem('authToken', authToken)
     return data
   } catch (error) {
-    console.error('Error registering recruiter:', error)
+    console.error('DisplayError registering recruiter:', error)
     throw error
   }
 }
@@ -104,7 +104,7 @@ export const SendTalentLogin = async (formValues: FormTalentLogin) => {
 
     return data
   } catch (error) {
-    console.error('Error logging User', error)
+    console.error('DisplayError logging User', error)
     throw error
   }
 }
@@ -134,7 +134,7 @@ export const TalentCreation = async (formValues: FormCreateTalentProfile) => {
 
     return data
   } catch (error) {
-    console.log('Error posting profile', error)
+    console.log('DisplayError posting profile', error)
     throw error
   }
 }
@@ -430,7 +430,7 @@ export const fetchRecruiterJobPost = async () => {
 
     return await response.json()
   } catch (error) {
-    console.error('Error fetching recruiter job posts:', error)
+    console.error('DisplayError fetching recruiter job posts:', error)
     throw error
   }
 }
@@ -457,7 +457,7 @@ export const fetchRecruiterJobPostDetails = async (jobId: string) => {
 
     return await response.json()
   } catch (error) {
-    console.error('Error fetching job details:', error)
+    console.error('DisplayError fetching job details:', error)
     throw error
   }
 }
