@@ -4,10 +4,10 @@ import React from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
 import logo from '../../assets/logo.png'
-import { useAuth } from '../../context/contextHook'
+// import { useAuth } from '../../context/contextHook'
 
 const AdminProfileSidebar = () => {
-  const auth = useAuth()
+  // const auth = useAuth()
 
   return (
     <div className="dashboard">
@@ -26,7 +26,7 @@ const AdminProfileSidebar = () => {
         </nav>
       </div>
 
-      <div className="dashboard-body">
+      {/* <div className="dashboard-body">
         {!auth?.isLoggedIn ? (
           <div>
             <h6>You need to be a registered admin</h6>
@@ -39,7 +39,7 @@ const AdminProfileSidebar = () => {
         ) : (
           <Outlet />
         )}
-      </div>
+      </div> */}
     </div>
   )
 }
