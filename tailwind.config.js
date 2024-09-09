@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       fontFamily: {
         raleway: ['Raleway, san-serif'],
+        poppins: ['Poppins, san-serif'],
       },
       boxShadow: {
         custom: '0px 1.52px 3.05px 0px rgba(16, 24, 40, 0.05)',

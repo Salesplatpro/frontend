@@ -33,9 +33,9 @@ interface UploaderProps {
 }
 
 export const Uploader = ({
-  initialProgress = 1,
+  initialProgress = 10,
   interval = 800,
-  increment = 1,
+  increment = 10,
   maxProgress = 100,
 }: UploaderProps) => {
   const [progress, setProgress] = React.useState(initialProgress)
@@ -43,13 +43,16 @@ export const Uploader = ({
   React.useEffect(() => {
     const timer = setInterval(() => {
       setProgress((prevProgress) =>
-        prevProgress >= maxProgress
-          ? initialProgress
-          : prevProgress + increment,
+        prevProgress >= maxProgress ? maxProgress : prevProgress + increment,
       )
     }, interval)
+
+    if (progress >= maxProgress) {
+      clearInterval(timer)
+    }
+
     return () => clearInterval(timer)
-  }, [initialProgress, increment, interval, maxProgress])
+  }, [progress, initialProgress, increment, interval, maxProgress])
 
   return (
     <Box sx={{ width: '80%' }}>

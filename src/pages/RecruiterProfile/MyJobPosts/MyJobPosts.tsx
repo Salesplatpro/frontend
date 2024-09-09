@@ -1,7 +1,5 @@
-import Lottie from 'lottie-react'
 import React from 'react'
 
-import animationData from '../../../assets/Animation2.json'
 import { Button, DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
