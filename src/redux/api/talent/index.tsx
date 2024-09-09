@@ -44,28 +44,9 @@ export const talentApi = createApi({
         url: '/user/profile', // Assumes that the base URL is set up correctly in your API service
         method: 'PATCH',
         body: data,
-        // Optionally, you can include headers if needed
-        headers: {
-          'Content-Type': 'application/json', // Ensures the request is sent as JSON
-        },
       }),
       // Invalidates the 'Talent' cache, so other parts of the app can refetch updated data
-      invalidatesTags: ['Talent'],
-      transformResponse: (response, meta, arg) => {
-        // If the response is HTML, we might want to handle it differently
-        if (
-          meta?.response?.headers.get('content-type')?.includes('text/html')
-        ) {
-          throw new Error(
-            'Server returned an HTML error page. Please try again later.',
-          )
-        }
-        return response
-      },
-      // Handles errors in case of parsing issues or non-JSON responses
-      onError: (error, args, context) => {
-        console.error('DisplayError in updateProfile:', error)
-      },
+      // invalidatesTags: ['Talent'],
     }),
 
     fetchPretest: builder.query({
@@ -161,6 +142,12 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
+    getRole: builder.query({
+      query: () => ({
+        url: `/roles?limit=1000`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -182,4 +169,5 @@ export const {
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
   useAllJobApplicationsQuery,
+  useGetRoleQuery,
 } = talentApi

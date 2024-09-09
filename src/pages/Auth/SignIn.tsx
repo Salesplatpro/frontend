@@ -7,7 +7,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
 
-import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
+// import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
+import { useTalentRegMutation, useRecruiterRegMutation } from '../../redux/api/apiSlice'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
@@ -40,6 +41,8 @@ const SignUpSchema = Yup.object().shape({
 })
 
 const SignIn = () => {
+  const [SendTalentReg] = useTalentRegMutation()
+  const [SendRecruiterReg] = useRecruiterRegMutation()
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -57,9 +60,9 @@ const SignIn = () => {
 
       let response
       if (userType === 'talent') {
-        response = await SendTalentReg(formValues)
+        response = await SendTalentReg(formValues).unwrap()
       } else if (userType === 'recruiter') {
-        response = await SendRecruiterReg(formValues)
+        response = await SendRecruiterReg(formValues).unwrap()
       } else {
         throw new Error('Invalid user type')
       }

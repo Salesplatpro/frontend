@@ -4,13 +4,16 @@ import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 
 import animationData from '../../../assets/Animation - check.json'
+
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchPretestQuery,
   usePostPretestMutation,
 } from '../../../redux/api/talent'
+
 import { Question } from '../../../utils/types'
-import { RootState } from '../redux/store/store'
+
+import { RootState } from '../../../redux/store/store'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)

@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-import { SendRecruiterReg } from '../../api/api-communication'
+// import { SendRecruiterReg } from '../../api/api-communication'
+import { useRecruiterRegMutation } from '../../redux/api/apiSlice'
 import Navbar from '../../components/Navbar'
 
 interface FormErrors {
@@ -17,6 +18,7 @@ interface FormErrors {
 }
 
 const RecruiterRegister: React.FC = () => {
+  const [SendRecruiterReg] = useRecruiterRegMutation()
   const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     email: '',
@@ -44,7 +46,7 @@ const RecruiterRegister: React.FC = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        await SendRecruiterReg(formValues)
+        await SendRecruiterReg(formValues).unwrap()
         toast.success('Registered successfully')
         navigate('/login')
       } catch (err) {

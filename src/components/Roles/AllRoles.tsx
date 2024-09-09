@@ -1,31 +1,23 @@
 import './Roles.scss'
 
 import { Field } from 'formik'
-import React, { useEffect, useState } from 'react'
-
-import { getRole } from '../../api/api-communication'
+import React from 'react'
+import { useGetRoleQuery } from '../../redux/api/talent'
 import { Role } from '../../utils/types'
 
-interface roleTypes {
+interface RoleTypes {
   value: string
   name: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
-const AllRoles = ({ value, onChange, name }: roleTypes) => {
-  const [roles, setRoles] = useState<Role[]>([])
+const AllRoles = ({ value, onChange, name }: RoleTypes) => {
+  // Call the query hook to fetch roles data
+  const { data, error, isLoading } = useGetRoleQuery(undefined)
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const data = await getRole()
-        setRoles(data.data)
-      } catch (error) {
-        console.log('error fetching roles', error)
-      }
-    }
-    fetchRoles()
-  }, [])
+  // Handle loading and error states
+  if (isLoading) return <p>Loading roles...</p>
+  if (error) return <p>Error fetching roles.</p>
 
   return (
     <div className="roles-container">
@@ -38,7 +30,7 @@ const AllRoles = ({ value, onChange, name }: roleTypes) => {
           value={value}
           onChange={onChange}>
           <option value="">Select a Role ......</option>
-          {roles.map((role) => (
+          {data?.data.map((role: Role) => (
             <option key={role._id} value={role._id}>
               {role.name}
             </option>

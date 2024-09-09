@@ -4,10 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import Loading from '../../../components/Loading/Loading'
 import {
-  useGeneratePersonalizedTestQuery,
+  // useGeneratePersonalizedTestQuery,
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
-  usePostPersonalizedTestMutation,
+  // usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
 
 // Type definitions
@@ -21,11 +21,11 @@ interface Question {
   question: string
 }
 
-interface PersonalizedData {
-  data: {
-    questions: Question[]
-  }
-}
+// interface PersonalityData {
+//   data: {
+//     questions: Question[]
+//   }
+// }
 
 interface PostAnswerResponse {
   status: boolean
@@ -49,8 +49,8 @@ const PersonalityTest: React.FC = () => {
 
   const {
     data: personalityData,
-    error: personalizedError,
-    isLoading: personalizedLoading,
+    error: personalityError,
+    isLoading: personalityLoading,
   } = usePersonalityTestQuery(jobId)
 
   useEffect(() => {
@@ -60,11 +60,11 @@ const PersonalityTest: React.FC = () => {
         setPersonalityQuestions(questions)
       }
     }
-    if (personalizedError) {
-      toast.error('DisplayError loading personalized test data')
-      console.error(personalizedError)
+    if (personalityError) {
+      toast.error('Error loading personality test data')
+      console.error(personalityError)
     }
-  }, [personalityData, personalizedError])
+  }, [personalityData, personalityError])
 
   const handleChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
@@ -99,7 +99,7 @@ const PersonalityTest: React.FC = () => {
     }
   }
 
-  if (personalizedLoading) {
+  if (personalityLoading) {
     return <Loading />
   }
 
@@ -107,8 +107,8 @@ const PersonalityTest: React.FC = () => {
     <div className="w-[70%] mx-auto mt-8">
       <h2 className="text-3xl text-[#101828] font-bold">Personality Test</h2>
       <p className="text-xl text-[#101828] font-medium mt-3">
-        Welcome to your Personality test, you have these Questions to answer in
-        this stage.
+        Welcome to your Personality test, you have the following Questions to
+        answer in this stage.
       </p>
       <div className="md:mt-6 mt-2">
         <form onSubmit={handleSubmit}>
