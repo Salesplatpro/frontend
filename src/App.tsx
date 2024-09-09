@@ -27,14 +27,9 @@ import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import UploadBatch from './pages/RecruiterProfile/Batching/UploadBatch'
-import GetMatch from './pages/RecruiterProfile/GetMatch/GetMatch'
-import GetTalents from './pages/RecruiterProfile/GetTalents/GetTalents'
-import IndividualTalents from './pages/RecruiterProfile/IndividualTalents/IndividualTalents'
-import JobProfiles from './pages/RecruiterProfile/JobProfiles/JobProfiles'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
-import ViewTalents from './pages/RecruiterProfile/ViewCandidates/ViewTalents'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
@@ -186,26 +181,6 @@ const router = createBrowserRouter([
             path: 'postjob/:jobId',
             element: <PostJobTab />,
           },
-          {
-            path: 'viewcandidates',
-            element: <ViewTalents />,
-          },
-          {
-            path: 'getTalents',
-            element: <GetTalents />,
-          },
-          {
-            path: 'jobProfiles',
-            element: <JobProfiles />,
-          },
-          {
-            path: 'getMatch/:jobId',
-            element: <GetMatch />,
-          },
-          {
-            path: 'individualTalents/:talentId',
-            element: <IndividualTalents />,
-          },
         ],
       },
     ],
@@ -216,7 +191,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'viewcandidates',
-        element: <ViewTalents />,
+        // element: <ViewTalents />,
       },
     ],
   },
