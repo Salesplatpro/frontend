@@ -82,7 +82,7 @@ const CreateJD = () => {
             </div>
             <button
               onClick={handleNavigate}
-              className="w-[358px] rounded-lg bg-[#3c6fd4] border flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8">
+              className="w-[100px] lg:w-[358px] md:w-[300px] sm:w-[280px] rounded-lg bg-[#3c6fd4] border flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8">
               <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                 Create
               </p>
