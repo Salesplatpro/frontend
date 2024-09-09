@@ -12,12 +12,7 @@ interface RoleTypes {
 }
 
 const AllRoles = ({ value, onChange, name }: RoleTypes) => {
-  // Call the query hook to fetch roles data
-  const { data, error, isLoading } = useGetRoleQuery(undefined)
-
-  // Handle loading and error states
-  if (isLoading) return <p>Loading roles...</p>
-  if (error) return <p>Error fetching roles.</p>
+  const { data } = useGetRoleQuery(undefined)
 
   return (
     <div className="roles-container">
