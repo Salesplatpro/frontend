@@ -75,7 +75,7 @@ const SignIn = () => {
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
     } catch (err: any) {
-      console.error('Error signing up:', err)
+      console.error('DisplayError signing up:', err)
 
       // Handle error response
       dispatch(

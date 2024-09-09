@@ -4,11 +4,14 @@ import toast from 'react-hot-toast'
 import { Link, useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { PostJobs } from '../../../api/api-communication'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
+
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
+
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { FaPlus } from 'react-icons/fa6'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),
@@ -108,10 +111,10 @@ const PostJob: React.FC = () => {
   return (
     <div className="p-4 w-full">
       <div className="w-[50%] m-auto">
-        <h2 className="text-[#101828] text-[28px] mt-6 font-bold">
+        <h2 className="text-[#101828] text-[32px] mt-6 font-bold">
           Job details
         </h2>
-        <p className="text-[#667085] text-[16px] mt-2 mb-6 font-light">
+        <p className="text-[#667085] text-[16px] mb-6 font-light">
           Tell us about your job
         </p>
         <Formik
@@ -120,9 +123,11 @@ const PostJob: React.FC = () => {
           onSubmit={onSubmit}>
           {({ values, isSubmitting, setFieldValue, errors, touched }) => (
             <Form>
-              <div className="mb-6">
-                <h5 className="font-bold text-[18px] mb-2">Select Role</h5>
-                <div className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full]">
+              <div className="mb-4">
+                <h5 className="font-bold text-[14px] text-[#434144]">
+                  Select Role
+                </h5>
+                <div className="border border-[#D0D5DD] py-5 pl-5 rounded w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
@@ -134,14 +139,17 @@ const PostJob: React.FC = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="description">
+                <label
+                  className="font-bold text-[14px] text-[#434144]"
+                  htmlFor="description">
                   Description
                 </label>
                 <Field
                   type="text"
                   id="description"
                   name="description"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="Add Job description"
+                  className="block border border-[#D0D5DD] p-4 rounded w-full"
                 />
                 <ErrorMessage
                   name="description"
@@ -150,7 +158,7 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <Location
-                locationTitle="country"
+                locationTitle="Country"
                 geoId={null}
                 isCountry={true}
                 onChange={(geoId) => {
@@ -160,7 +168,7 @@ const PostJob: React.FC = () => {
                 }}
               />
               <Location
-                locationTitle="state"
+                locationTitle="State"
                 geoId={values.location.country.geoId}
                 isCountry={false}
                 onChange={(geoId) => {
@@ -169,7 +177,7 @@ const PostJob: React.FC = () => {
                 }}
               />
               <Location
-                locationTitle="city"
+                locationTitle="City"
                 geoId={values.location.state.geoId}
                 isCountry={false}
                 onChange={(geoId) => {
@@ -177,14 +185,16 @@ const PostJob: React.FC = () => {
                 }}
               />
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="minSalary">
+                <label
+                  className="block font-bold text-[14px] text-[#434144]"
+                  htmlFor="minSalary">
                   Min Salary
                 </label>
                 <Field
                   type="text"
                   id="minSalary"
                   name="minSalary"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="border border-[#D0D5DD] p-4 rounded w-full"
                 />
                 <ErrorMessage
                   name="minSalary"
@@ -193,14 +203,17 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="maxSalary">
+                <label
+                  className="block font-bold text-[14px] text-[#434144]"
+                  htmlFor="maxSalary">
                   Max Salary
                 </label>
                 <Field
                   type="text"
                   id="maxSalary"
                   name="maxSalary"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  placeholder="100000"
+                  className="border border-[#D0D5DD] p-4 rounded w-full"
                 />
                 <ErrorMessage
                   name="maxSalary"
@@ -210,15 +223,15 @@ const PostJob: React.FC = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block mb-2 font-bold"
+                  className="block font-bold text-[14px] text-[#434144]"
                   htmlFor="experienceLevel">
-                  experience Level
+                  Experience Level
                 </label>
                 <Field
                   as="select"
                   id="experienceLevel"
                   name="experienceLevel"
-                  className="w-full p-2 border border-gray-300 rounded">
+                  className="border border-[#D0D5DD] p-5 rounded w-full">
                   <option value="">Select experience Level</option>
                   <option value="senior">Senior</option>
                   <option value="intermediate">Intermediate</option>
@@ -231,14 +244,16 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="address">
+                <label
+                  className="block font-bold text-[14px] text-[#434144] block"
+                  htmlFor="address">
                   Address
                 </label>
                 <Field
                   type="text"
                   id="address"
                   name="address"
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="border border-[#D0D5DD] p-4 rounded w-full"
                 />
                 <ErrorMessage
                   name="address"
@@ -247,14 +262,16 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="remote">
+                <label
+                  className="font-bold text-[14px] text-[#434144] block"
+                  htmlFor="remote">
                   Remote
                 </label>
                 <Field
                   as="select"
                   id="remote"
                   name="remote"
-                  className="w-full p-2 border border-gray-300 rounded">
+                  className="border border-[#D0D5DD] p-5 rounded w-full">
                   <option value="">Select Remote Option</option>
                   <option value="true">True</option>
                   <option value="false">False</option>
@@ -267,7 +284,7 @@ const PostJob: React.FC = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block mb-2 font-bold"
+                  className="font-bold text-[14px] text-[#434144] block"
                   htmlFor="responsibilities">
                   Responsibilities
                 </label>
@@ -275,24 +292,27 @@ const PostJob: React.FC = () => {
                   {({ remove, push }) => (
                     <div>
                       {values.responsibilities.map((responsibility, index) => (
-                        <div key={index} className="flex mb-2 items-center">
+                        <div
+                          key={index}
+                          className="flex mb-2 items-center relative">
                           <Field
                             name={`responsibilities.${index}`}
-                            className="w-full p-2 border border-gray-300 rounded mr-2"
+                            className="border border-[#D0D5DD] p-4 rounded w-full"
                           />
-                          <button
-                            type="button"
-                            className="p-2 bg-red-500 text-white rounded"
+                          <div
+                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
                             onClick={() => remove(index)}>
-                            -
-                          </button>
+                            <RiDeleteBin6Line />
+                          </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
                         onClick={() => push('')}>
-                        Add Responsibility
+                        <span className="flex items-center gap-2">
+                          <FaPlus /> Add Responsibility
+                        </span>
                       </button>
                     </div>
                   )}
@@ -304,31 +324,36 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="skills">
+                <label
+                  className="font-bold text-[14px] text-[#434144] block"
+                  htmlFor="skills">
                   Skills
                 </label>
                 <FieldArray name="skills">
                   {({ remove, push }) => (
                     <div>
                       {values.skills.map((skill, index) => (
-                        <div key={index} className="flex mb-2 items-center">
+                        <div
+                          key={index}
+                          className="flex mb-2 items-center relative">
                           <Field
                             name={`skills.${index}`}
-                            className="w-full p-2 border border-gray-300 rounded mr-2"
+                            className="border border-[#D0D5DD] p-4 rounded w-full"
                           />
-                          <button
-                            type="button"
-                            className="p-2 bg-red-500 text-white rounded"
+                          <div
+                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
                             onClick={() => remove(index)}>
-                            -
-                          </button>
+                            <RiDeleteBin6Line />
+                          </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
                         onClick={() => push('')}>
-                        Add Skill
+                        <span className="flex items-center gap-2">
+                          <FaPlus /> Add Skill
+                        </span>
                       </button>
                     </div>
                   )}
@@ -340,31 +365,36 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block mb-2 font-bold" htmlFor="goals">
+                <label
+                  className="font-bold text-[14px] text-[#434144] block"
+                  htmlFor="goals">
                   Goals
                 </label>
                 <FieldArray name="goals">
                   {({ remove, push }) => (
                     <div>
                       {values.goals.map((goal, index) => (
-                        <div key={index} className="flex mb-2 items-center">
+                        <div
+                          key={index}
+                          className="flex mb-2 items-center relative">
                           <Field
                             name={`goals.${index}`}
-                            className="w-full p-2 border border-gray-300 rounded mr-2"
+                            className="border border-[#D0D5DD] p-4 rounded w-full"
                           />
-                          <button
-                            type="button"
-                            className="p-2 bg-red-500 text-white rounded"
+                          <div
+                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
                             onClick={() => remove(index)}>
-                            -
-                          </button>
+                            <RiDeleteBin6Line />
+                          </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
                         onClick={() => push('')}>
-                        Add Goal
+                        <span className="flex items-center gap-2">
+                          <FaPlus /> Add Goal
+                        </span>
                       </button>
                     </div>
                   )}
