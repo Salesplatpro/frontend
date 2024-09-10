@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import CreateJD from '../../../assets/batchImg.png'
-import { DocumentUploaderCard } from '../../../components/Cards'
+// import { DocumentUploaderCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 
 const Batching = () => {

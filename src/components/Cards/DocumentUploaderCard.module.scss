@@ -1,4 +1,5 @@
 .container {
+  width: 600px;
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #e4e7ec;
@@ -13,17 +14,21 @@
 .file {
   display: flex;
   align-items: center;
-  gap: 16px
+  gap: 16px;
 }
 
 .text {
   display: flex;
   flex-direction: column;
+  padding-left: 3px;
 }
 
 .icon {
   display: flex;
+  justify-content: start;
   align-items: center;
+  padding-left: 3px;
+  margin-top: 10px;
   gap: 27px;
 }
 

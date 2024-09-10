@@ -26,6 +26,7 @@ import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
+import CVUploadFiles from './pages/RecruiterProfile/Batching/CVUploadFiles'
 import UploadBatch from './pages/RecruiterProfile/Batching/UploadBatch'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
@@ -148,9 +149,14 @@ const router = createBrowserRouter([
             element: <Batching />,
           },
           {
+            path: 'scout/cv-upload-files',
+            element: <CVUploadFiles />,
+          },
+          {
             path: 'scout/choose-method',
             element: <ChooseMethod />,
           },
+
           {
             path: 'scout/cv-upload',
             element: <BatchCVUpload />,
