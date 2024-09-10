@@ -17,11 +17,8 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
-import {
-  ApplicationProgress,
-  MyJobPosts,
-  SearchTalent,
-} from './pages/RecruiterProfile'
+import { ApplicationProgress, MyJobPosts } from './pages/RecruiterProfile'
+import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
