@@ -1,7 +1,7 @@
 import './JobFilter.scss'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React, { useState } from 'react'
+import React from 'react'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
