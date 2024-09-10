@@ -68,6 +68,23 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    searchTalentDb: builder.query({
+      query: (data) => {
+        const { role, experienceLevel, location } = data
+
+        const roleId = role || ''
+        const experience = experienceLevel || ''
+        const country = location?.country?.name || ''
+
+        return {
+          url: `/scout/talents?roleId=${roleId}&experience=${experience}&location=${encodeURIComponent(
+            country,
+          )}&remote=true`,
+          method: 'GET',
+        }
+      },
+    }),
+
     fetchTalentProfile: builder.query({
       query: ({ id }) => ({
         url: `/user/profile/${id}`,
@@ -87,5 +104,6 @@ export const {
   useFetchApplicantProgressQuery,
   useCvAndCoverLetterMutation,
   useCreateJDMutation,
+  useSearchTalentDbQuery,
   useFetchTalentProfileQuery,
 } = recruiterApi
