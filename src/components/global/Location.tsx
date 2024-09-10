@@ -70,7 +70,7 @@ const Location: React.FC<LocationProps> = ({
   }
 
   return (
-    <div className="mb-4">
+    <div className="">
       <label
         className="font-bold text-[14px] text-[#434144] mb-2"
         htmlFor={locationTitle}>
@@ -80,7 +80,7 @@ const Location: React.FC<LocationProps> = ({
         id={locationTitle}
         name={locationTitle.toLowerCase()}
         onChange={handleChange}
-        className="border border-[#D0D5DD] mt-2 p-5 rounded w-full">
+        className="border border-[#D0D5DD] mt-2 p-4 rounded-lg w-full">
         <option value="">Select a {locationTitle.toLowerCase()}...</option>
         {options.map((option) => (
           <option key={option.geoId} value={option.geoId}>
