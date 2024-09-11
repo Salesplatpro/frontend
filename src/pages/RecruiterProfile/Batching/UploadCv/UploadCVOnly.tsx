@@ -1,0 +1,72 @@
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import uploadCheck from '../../../../assets/cvuploadonly.png'
+import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
+import { setFiles } from '../../../../redux/features/filesSlice/fileSlice'
+import { RootState } from '../../../../redux/store/store'
+
+export const UploadCVOnly = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const files = useSelector((state: RootState) => state.file.files)
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files
+    if (selectedFiles) {
+      const filesArray = Array.from(selectedFiles)
+      dispatch(setFiles(filesArray))
+    }
+  }
+
+  return (
+    <div>
+      <PageHeaderTitle
+        title="CV Upload"
+        description="Upload CV in batch for collective AI assessment"
+      />
+
+      <div
+        className="flex justify-center items-center flex-col pt-24 cursor-pointer"
+        onClick={() => document.getElementById('fileInput')?.click()}>
+        <div className="flex justify-center items-center w-full max-w-4xl bg-[#F8F8F8] border border-[#D0D5DD] rounded-2xl">
+          <div className="flex justify-center items-center w-full flex-col space-y-4 pb-12 pt-1 px-6 relative">
+            <div className="flex flex-row pt-3">
+              <h1 className="font-poppins text-[#101828] text-[18px] leading-[22px] lg:text-[20px] font-medium lg:leading-[28px]">
+                {files.length > 0
+                  ? files.map((file) => file.name).join(', ')
+                  : 'No files selected'}{' '}
+                <span className="font-raleway font-normal text-[17px] leading-[20px] lg:text-[20px] lg:leading-[28px] sm:text-[20px] md:text-[22px] md:leading-[25px] text-[#101828]">
+                  click or drag and drop
+                </span>
+              </h1>
+            </div>
+            <img
+              src={uploadCheck}
+              alt="uploadCv"
+              className="w-[102px] lg:w-[110px] align-middle"
+            />
+          </div>
+        </div>
+        <input
+          type="file"
+          id="fileInput"
+          multiple
+          onChange={handleFileChange}
+          className="hidden"
+        />
+      </div>
+      <div className="flex justify-center -mt-4">
+        <button
+          onClick={() => navigate('/recruiterDashboard/scout/process-cv')}
+          disabled={files.length === 0}
+          className="w-full max-w-xs lg:max-w-md rounded-lg bg-[#3c6fd4] border hover:bg-[#4b82e1] py-3 my-9">
+          <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
+            Upload files
+          </p>
+        </button>
+      </div>
+    </div>
+  )
+}

@@ -23,7 +23,7 @@ export const ChooseMethod = () => {
       name: 'Upload CV',
       description,
       icon: <AiOutlineCloudUpload size={20} />,
-      link: '/recruiterDashboard/scout/upload-cv-in-batch',
+      link: '/recruiterDashboard/scout/upload-cv',
     },
     {
       id: 2,

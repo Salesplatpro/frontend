@@ -8,11 +8,12 @@ import rootReducer from '../features/reducer'
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      api.middleware,
-      talentApi.middleware,
-      recruiterApi.middleware,
-    ),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['file/setFiles'],
+        ignoredPaths: ['file.files'],
+      },
+    }).concat(api.middleware, talentApi.middleware, recruiterApi.middleware),
   devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in development
 })
 
