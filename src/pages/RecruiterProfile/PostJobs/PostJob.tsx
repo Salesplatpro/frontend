@@ -57,7 +57,7 @@ const validationSchema = Yup.object({
 
 const PostJob: React.FC = () => {
   const [jobId, setJobId] = useState(null)
-  const { aiConfigId } = useParams()
+  // const { aiConfigId } = useParams()
   const [jobPostCreation] = useJobPostCreationMutation()
 
   const initialValues: FormValues = {
@@ -157,33 +157,39 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
-              <Location
-                locationTitle="Country"
-                geoId={null}
-                isCountry={true}
-                onChange={(geoId) => {
-                  setFieldValue('location.country.geoId', geoId)
-                  setFieldValue('location.state', { name: '', geoId: null })
-                  setFieldValue('location.city', { name: '', geoId: null })
-                }}
-              />
-              <Location
-                locationTitle="State"
-                geoId={values.location.country.geoId}
-                isCountry={false}
-                onChange={(geoId) => {
-                  setFieldValue('location.state.geoId', geoId)
-                  setFieldValue('location.city', { name: '', geoId: null })
-                }}
-              />
-              <Location
-                locationTitle="City"
-                geoId={values.location.state.geoId}
-                isCountry={false}
-                onChange={(geoId) => {
-                  setFieldValue('location.city.geoId', geoId)
-                }}
-              />
+              <div className="mb-4">
+                <Location
+                  locationTitle="Country"
+                  geoId={null}
+                  isCountry={true}
+                  onChange={(geoId) => {
+                    setFieldValue('location.country.geoId', geoId)
+                    setFieldValue('location.state', { name: '', geoId: null })
+                    setFieldValue('location.city', { name: '', geoId: null })
+                  }}
+                />
+              </div>
+              <div className="mb-4">
+                <Location
+                  locationTitle="State"
+                  geoId={values.location.country.geoId}
+                  isCountry={false}
+                  onChange={(geoId) => {
+                    setFieldValue('location.state.geoId', geoId)
+                    setFieldValue('location.city', { name: '', geoId: null })
+                  }}
+                />
+              </div>
+              <div className="mb-4">
+                <Location
+                  locationTitle="City"
+                  geoId={values.location.state.geoId}
+                  isCountry={false}
+                  onChange={(geoId) => {
+                    setFieldValue('location.city.geoId', geoId)
+                  }}
+                />
+              </div>
               <div className="mb-4">
                 <label
                   className="block font-bold text-[14px] text-[#434144]"
