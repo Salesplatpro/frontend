@@ -4,55 +4,63 @@ import LinearProgress, {
 } from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import { useDispatch } from 'react-redux'
 
-interface LinearProgressWithLabelProps extends LinearProgressProps {
-  value: number
+import { markUploadCompleted } from '../../redux/features/filesSlice/fileSlice'
+
+const LinearProgressWithLabel = (
+  props: LinearProgressProps & { value: number },
+) => {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography
+          variant="body2"
+          sx={{ color: 'text.secondary' }}>{`${Math.round(
+          props.value,
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  )
 }
-
-const LinearProgressWithLabel = ({
-  value,
-  ...props
-}: LinearProgressWithLabelProps) => (
-  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-    <Box sx={{ width: '100%', mr: 2 }}>
-      <LinearProgress variant="determinate" value={value} {...props} />
-    </Box>
-    <Box sx={{ minWidth: 35 }}>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {`${Math.round(value)}%`}
-      </Typography>
-    </Box>
-  </Box>
-)
 
 interface UploaderProps {
-  initialProgress?: number
-  interval: number
-  increment: number
-  maxProgress?: number
+  size: number
+  index: number
 }
 
-export const Uploader = ({
-  initialProgress = 0,
-  interval,
-  increment,
-  maxProgress = 100,
-}: UploaderProps) => {
-  const [progress, setProgress] = React.useState(initialProgress)
+export const Uploader = ({ size, index }: UploaderProps) => {
+  const dispatch = useDispatch()
+  const [progress, setProgress] = React.useState(0)
 
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= maxProgress ? maxProgress : prevProgress + increment,
-      )
-    }, interval)
+    const intervalDuration = Math.max(10, 1000 / size)
+    const incrementValue = 1000000 / size
 
-    if (progress >= maxProgress) {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        const newProgress = Math.min(prevProgress + incrementValue, 100)
+        if (newProgress >= 100) {
+          clearInterval(timer)
+          return 100
+        }
+        return newProgress
+      })
+    }, intervalDuration)
+
+    return () => {
       clearInterval(timer)
     }
+  }, [size])
 
-    return () => clearInterval(timer)
-  }, [progress, initialProgress, increment, interval, maxProgress])
+  React.useEffect(() => {
+    if (progress === 100) {
+      dispatch(markUploadCompleted(index))
+    }
+  }, [progress, dispatch, index])
 
   return (
     <Box sx={{ width: '80%' }}>

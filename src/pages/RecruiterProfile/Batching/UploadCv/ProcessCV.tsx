@@ -1,9 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { RecruiterButton } from '../../../../components'
+import { IsProcessing, RecruiterButton } from '../../../../components'
 import {
   ChooseMethodCard,
   DocumentUploaderCard,
@@ -13,6 +13,7 @@ import { useUploadCVOnlyMutation } from '../../../../redux/api/recruiter'
 import {
   addFiles,
   removeFile,
+  saveFileResult,
 } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
 import styles from './ProcessCV.module.scss'
@@ -32,8 +33,12 @@ export const ProcessCV = () => {
   const dispatch = useDispatch()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const files = useSelector((state: RootState) => state.file.files)
+  const result = useSelector((state: RootState) => state.file.results)
   const [handleCvUpload] = useUploadCVOnlyMutation()
   const scoutJobId = params.id ?? ''
+  const [moreFilesToProcess, setMoreFilesToProcess] = useState(false)
+  const [isReevaluating, setIsReevaluating] = useState(false)
+  const [allFilesProcessed, setAllFilesProcessed] = useState(false)
 
   const handleFileUpload = () => {
     fileInputRef.current?.click()
@@ -47,25 +52,69 @@ export const ProcessCV = () => {
   }
 
   const handleSubmit = async () => {
-    const cv = files[0]
-    if (!cv) return
+    let batchId = ''
+    setIsReevaluating(true)
 
-    const formData = new FormData()
-    formData.append('scoutJobId', scoutJobId)
-    formData.append('cv', cv)
+    for (const [index, file] of files.entries()) {
+      if (result[index]?.result) {
+        continue
+      }
 
-    // Check formData content for debugging
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value)
+      const formData = new FormData()
+      formData.append('scoutJobId', scoutJobId)
+      formData.append('cv', file)
+
+      if (batchId) {
+        formData.append('batchId', batchId)
+      }
+
+      try {
+        const uploadResult = await handleCvUpload(formData).unwrap()
+        if (uploadResult.status === true) {
+          dispatch(saveFileResult({ index, result: uploadResult }))
+
+          if (index === 0) {
+            batchId = uploadResult.data.scout.batchId
+          }
+        } else {
+          console.log('Error uploading CV')
+        }
+      } catch (error) {
+        console.log('Upload Error:', error)
+      }
+
+      setAllFilesProcessed(
+        files.every((_, index) => result[index]?.result?.status === true),
+      )
     }
 
-    try {
-      const result = await handleCvUpload(formData).unwrap()
-      console.log(result)
-    } catch (error) {
-      console.log('Upload Error:', error)
+    if (!allFilesProcessed) {
+      setMoreFilesToProcess(true)
+    } else {
+      setMoreFilesToProcess(false)
     }
+
+    setIsReevaluating(false)
   }
+
+  const getResultEvaluationScore = (index: number) =>
+    result.length > 0 ? result[index]?.result?.data?.evaluationScore : undefined
+
+  const displayButton =
+    result.length === files.length &&
+    result.every((res) => res !== undefined && res !== null)
+      ? 'hidden'
+      : ''
+
+  const buttonTitle = isReevaluating ? (
+    <IsProcessing />
+  ) : moreFilesToProcess ? (
+    'Try evaluating again'
+  ) : files.length === 1 ? (
+    'Process Document'
+  ) : (
+    'Process Documents'
+  )
 
   return (
     <div>
@@ -80,8 +129,10 @@ export const ProcessCV = () => {
         {files.map((file, index) => (
           <DocumentUploaderCard
             key={index}
+            index={index}
             fileName={file.name}
             fileSize={file.size}
+            result={getResultEvaluationScore(index)}
             onDelete={() => dispatch(removeFile(index))}
           />
         ))}
@@ -95,11 +146,10 @@ export const ProcessCV = () => {
       />
       <div>
         <RecruiterButton
-          buttonTitle={
-            files.length === 1 ? 'Process Document' : 'Process Documents'
-          }
-          disabled={files.length === 0}
+          buttonTitle={buttonTitle}
+          disabled={files.length === 0 || isReevaluating}
           onClick={handleSubmit}
+          className={displayButton}
         />
       </div>
     </div>
