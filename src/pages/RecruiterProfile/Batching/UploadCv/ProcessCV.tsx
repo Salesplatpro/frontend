@@ -13,6 +13,7 @@ import { useUploadCVOnlyMutation } from '../../../../redux/api/recruiter'
 import {
   addFiles,
   removeFile,
+  saveFileResult,
 } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
 import styles from './ProcessCV.module.scss'
@@ -32,7 +33,8 @@ export const ProcessCV = () => {
   const dispatch = useDispatch()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const files = useSelector((state: RootState) => state.file.files)
-  const [handleCvUpload] = useUploadCVOnlyMutation()
+  const result = useSelector((state: RootState) => state.file.results)
+  const [handleCvUpload, { isLoading }] = useUploadCVOnlyMutation()
   const scoutJobId = params.id ?? ''
 
   const handleFileUpload = () => {
@@ -47,25 +49,36 @@ export const ProcessCV = () => {
   }
 
   const handleSubmit = async () => {
-    const cv = files[0]
-    if (!cv) return
+    let batchId = ''
 
-    const formData = new FormData()
-    formData.append('scoutJobId', scoutJobId)
-    formData.append('cv', cv)
+    for (const [index, file] of files.entries()) {
+      const formData = new FormData()
+      formData.append('scoutJobId', scoutJobId)
+      formData.append('cv', file)
 
-    // Check formData content for debugging
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value)
-    }
+      if (batchId) {
+        formData.append('batchId', batchId)
+      }
 
-    try {
-      const result = await handleCvUpload(formData).unwrap()
-      console.log(result)
-    } catch (error) {
-      console.log('Upload Error:', error)
+      try {
+        const result = await handleCvUpload(formData).unwrap()
+        if (result.status === true) {
+          console.log(`File ${index + 1} uploaded:`, result)
+          dispatch(saveFileResult({ index, result }))
+
+          if (index === 0) {
+            batchId = result.data.scout.batchId
+          }
+        } else {
+          console.log('Error uploading CV')
+        }
+      } catch (error) {
+        console.log('Upload Error:', error)
+      }
     }
   }
+
+  console.log(result)
 
   return (
     <div>
@@ -96,7 +109,11 @@ export const ProcessCV = () => {
       <div>
         <RecruiterButton
           buttonTitle={
-            files.length === 1 ? 'Process Document' : 'Process Documents'
+            isLoading
+              ? 'Submitting...'
+              : files.length === 1
+              ? 'Process Document'
+              : 'Process Documents'
           }
           disabled={files.length === 0}
           onClick={handleSubmit}
