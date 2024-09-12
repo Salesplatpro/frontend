@@ -1,4 +1,5 @@
 export * from './authUtils'
 export * from './calculateDaysFromCreation'
+export * from './convertFileSize'
 export * from './recruiterJobPostsTypes'
 export * from './ResponsiveTableRenderer'
