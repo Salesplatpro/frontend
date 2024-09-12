@@ -51,7 +51,8 @@ const AiConfig = () => {
         [pair]: result?.data?.question || null,
       }))
     } catch (error) {
-      console.error(`Error generating ${pair}:`, error)
+      console.error(`Error generating ${pair} question:`, error)
+      toast.error(`Error generating ${pair} question`)
     }
   }
 
@@ -82,20 +83,37 @@ const AiConfig = () => {
   }
 
   const onSubmit = async (values: configProps, { setSubmitting }) => {
-    try {
-      const data = await aiConfig(values)
-      console.log('Form Values:', data)
-      console.log(data.data.message)
-      console.log(data.data.data.config._id)
+    // conditionally submit the the aiconfig
+    const cleanedValues = { ...values }
+    if (values.prescreeningAssessment === 'false') {
+      delete cleanedValues.minPrescreeningScore
+    }
 
-      if (data.data.status) {
-        toast.success(data.data.message)
-        setAiConfigId(data.data.data.config._id)
+    if (values.cvSimilarity === 'false') {
+      delete cleanedValues.minCvSimilarityScore
+      delete cleanedValues.noOfCvSimilarCandidates
+    }
+
+    if (values.personalizedAssessment === 'false') {
+      delete cleanedValues.noPersonalizedQuestions
+    }
+
+    if (values.personalityEvaluation === 'false') {
+      delete cleanedValues.uploadedQuestions
+    }
+
+    // console.log('Cleaned Submission Values:', cleanedValues)
+    // console.log(values)
+    try {
+      const data = await aiConfig(cleanedValues)
+
+      if (data && data.status) {
+        toast.success(data.data?.message || 'Submitted successful')
+        setAiConfigId(data.data?.data?.config?._id)
       } else {
-        toast.error(data.data.message)
+        toast.error(data?.error?.data?.message || 'An error occurred.')
       }
     } catch (error) {
-      console.error('DisplayError during form submission:', error)
       toast.error('An unexpected error occurred. Please try again later.')
     } finally {
       setSubmitting(false)
@@ -417,17 +435,17 @@ const AiConfig = () => {
                               : `Regenerate ${pair}`}
                           </button>
                           {generatedQuestions[pair] && (
-                            <>
+                            <div className="bg-white shadow-md p-4 rounded-lg my-3">
                               <p>{generatedQuestions[pair].question}</p>
                               <button
                                 type="button"
                                 onClick={() => handleAddQuestion(push, pair)}
-                                className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]">
+                                className="px-4 mt-2 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]">
                                 <span className="flex items-center gap-2">
                                   <FaPlus /> Add {pair} Question
                                 </span>
                               </button>
-                            </>
+                            </div>
                           )}
                         </div>
                       ))}
