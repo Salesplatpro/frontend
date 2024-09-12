@@ -1,2 +1,2 @@
 export * from './TalentSearch/SearchTalent'
-export * from './UploadBatch'
+export * from './UploadCv'

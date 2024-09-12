@@ -17,14 +17,17 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
-import { ApplicationProgress, MyJobPosts } from './pages/RecruiterProfile'
-import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
+import {
+  ApplicationProgress,
+  MyJobPosts,
+  ProcessCV,
+  UploadCVOnly,
+} from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
-import CVUploadFiles from './pages/RecruiterProfile/Batching/CVUploadFiles'
-import UploadBatch from './pages/RecruiterProfile/Batching/UploadBatch'
+import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
@@ -146,11 +149,7 @@ const router = createBrowserRouter([
             element: <Batching />,
           },
           {
-            path: 'scout/cv-upload-files',
-            element: <CVUploadFiles />,
-          },
-          {
-            path: 'scout/choose-method',
+            path: 'scout/:id',
             element: <ChooseMethod />,
           },
 
@@ -168,10 +167,13 @@ const router = createBrowserRouter([
           },
 
           {
-            path: 'scout/upload-cv-in-batch',
-            element: <UploadBatch />,
+            path: 'scout/upload-cv/:id',
+            element: <UploadCVOnly />,
           },
-
+          {
+            path: 'scout/process-cv/:id',
+            element: <ProcessCV />,
+          },
           {
             path: 'singleJobPost/:jobId',
             element: <SingleJobPost />,

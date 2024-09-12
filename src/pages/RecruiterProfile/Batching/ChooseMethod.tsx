@@ -1,9 +1,9 @@
 import React from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { FileDesign } from '../../../components/Cards/FileDesign'
+import { ChooseMethodCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import styles from './chooseMethod.module.scss'
 
@@ -15,6 +15,8 @@ const description = (
 )
 
 export const ChooseMethod = () => {
+  const params = useParams()
+  console.log(params.id)
   const navigate = useNavigate()
 
   const chooseMethodArray = [
@@ -23,7 +25,7 @@ export const ChooseMethod = () => {
       name: 'Upload CV',
       description,
       icon: <AiOutlineCloudUpload size={20} />,
-      link: '/recruiterDashboard/scout/upload-cv-in-batch',
+      link: `/recruiterDashboard/scout/upload-cv/${params.id}`,
     },
     {
       id: 2,
@@ -49,13 +51,11 @@ export const ChooseMethod = () => {
       />
       <div className={styles.parent}>
         {chooseMethodArray.map((item, index) => (
-          <div className={styles.container} onClick={() => navigate(item.link)}>
-            {item.name}
-            <div className={styles.innerContainer}>
-              <FileDesign icon={item.icon} />
-              <div className={styles.description}>{item.description}</div>
-            </div>
-          </div>
+          <ChooseMethodCard
+            key={index}
+            item={item}
+            onClick={() => navigate(item.link)}
+          />
         ))}
       </div>
     </div>

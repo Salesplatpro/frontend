@@ -27,15 +27,15 @@ const LinearProgressWithLabel = ({
 
 interface UploaderProps {
   initialProgress?: number
-  interval?: number
-  increment?: number
+  interval: number
+  increment: number
   maxProgress?: number
 }
 
 export const Uploader = ({
-  initialProgress = 10,
-  interval = 800,
-  increment = 10,
+  initialProgress = 0,
+  interval,
+  increment,
   maxProgress = 100,
 }: UploaderProps) => {
   const [progress, setProgress] = React.useState(initialProgress)

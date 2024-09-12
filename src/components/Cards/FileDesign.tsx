@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import styles from './DocumentUploaderCard.module.scss'
 
 type IconType = {
-  icon: React.ReactElement
+  icon: ReactNode
 }
 
 export const FileDesign = ({ icon }: IconType) => {

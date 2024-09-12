@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 
-import UploadCheck from '../../../assets/Upload Check.png'
-import Uploading from '../../../assets/Uploading.png'
-import { useCvAndCoverLetterMutation } from '../../../redux/api/recruiter/index' // Import the hook
-import BatchingCv from './BatchingCv'
+import uploadCheck from '../../../assets/cvuploadonly.png'
+import { useCvAndCoverLetterMutation } from '../../../redux/api/recruiter' //
 
 const BatchCVUpload = () => {
   const [cvFileName, setCvFileName] = useState<string | null>(null)
@@ -97,10 +95,10 @@ const BatchCVUpload = () => {
             </>
           )}
 
-          <BatchingCv
-            cvFileName={cvFileName}
-            upload={Uploading}
-            uploadCheck={UploadCheck}
+          <img
+            src={uploadCheck}
+            alt="uploadCv"
+            className="w-[102px] lg:w-[110px] align-middle"
           />
         </div>
       </div>
