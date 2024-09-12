@@ -8,11 +8,13 @@ interface FileResult {
 interface FileState {
   files: File[]
   results: FileResult[]
+  uploads: boolean[]
 }
 
 const initialState: FileState = {
   files: [],
   results: [],
+  uploads: [],
 }
 
 const fileSlice = createSlice({
@@ -32,10 +34,19 @@ const fileSlice = createSlice({
       const { index, result } = action.payload
       state.results[index] = { index, result }
     },
+    markUploadCompleted: (state, action: PayloadAction<number>) => {
+      const index = action.payload
+      state.uploads[index] = true
+    },
   },
 })
 
-export const { setFiles, addFiles, removeFile, saveFileResult } =
-  fileSlice.actions
+export const {
+  setFiles,
+  addFiles,
+  removeFile,
+  saveFileResult,
+  markUploadCompleted,
+} = fileSlice.actions
 
 export default fileSlice.reducer

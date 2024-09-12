@@ -4,6 +4,9 @@ import LinearProgress, {
 } from '@mui/material/LinearProgress'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import { useDispatch } from 'react-redux'
+
+import { markUploadCompleted } from '../../redux/features/filesSlice/fileSlice'
 
 const LinearProgressWithLabel = (
   props: LinearProgressProps & { value: number },
@@ -26,9 +29,11 @@ const LinearProgressWithLabel = (
 
 interface UploaderProps {
   size: number
+  index: number
 }
 
-export const Uploader = ({ size }: UploaderProps) => {
+export const Uploader = ({ size, index }: UploaderProps) => {
+  const dispatch = useDispatch()
   const [progress, setProgress] = React.useState(0)
 
   React.useEffect(() => {
@@ -37,11 +42,12 @@ export const Uploader = ({ size }: UploaderProps) => {
 
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
-        if (prevProgress >= 100) {
+        const newProgress = Math.min(prevProgress + incrementValue, 100)
+        if (newProgress >= 100) {
           clearInterval(timer)
           return 100
         }
-        return Math.min(prevProgress + incrementValue, 100)
+        return newProgress
       })
     }, intervalDuration)
 
@@ -49,6 +55,12 @@ export const Uploader = ({ size }: UploaderProps) => {
       clearInterval(timer)
     }
   }, [size])
+
+  React.useEffect(() => {
+    if (progress === 100) {
+      dispatch(markUploadCompleted(index))
+    }
+  }, [progress, dispatch, index])
 
   return (
     <Box sx={{ width: '80%' }}>

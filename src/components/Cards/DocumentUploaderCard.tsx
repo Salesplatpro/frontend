@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { FaRegFile } from 'react-icons/fa'
 import { IoMdCheckmarkCircle } from 'react-icons/io'
 import { RiDeleteBinLine } from 'react-icons/ri'
+import { useSelector } from 'react-redux'
 
 import { AnalyzedPercentage } from '../../pages/RecruiterProfile'
+import { RootState } from '../../redux/store/store'
 import { convertFileSize } from '../../utils'
 import { Uploader } from '../Loading'
 import styles from './DocumentUploaderCard.module.scss'
@@ -15,25 +17,19 @@ type DocumentUploaderCardProps = {
   fileName: string
   onDelete: () => void
   result?: number
+  index: number
   onSeeAnalysis?: () => void
 }
 
 export const DocumentUploaderCard = ({
+  index,
   fileSize,
   fileName,
   onDelete,
   result,
   onSeeAnalysis,
 }: DocumentUploaderCardProps) => {
-  const [completed, setCompleted] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCompleted(true)
-    }, 8000)
-
-    return () => clearTimeout(timer)
-  }, [])
+  const uploads = useSelector((state: RootState) => state.file.uploads)
 
   if (result) {
     return (
@@ -78,12 +74,12 @@ export const DocumentUploaderCard = ({
         )}
       </div>
       <div className={styles.icon}>
-        {completed ? (
+        {uploads[index] ? (
           <IoMdCheckmarkCircle size={24} color="#4985df" />
         ) : (
           <AiOutlineCloudUpload size={24} color="#4985df" />
         )}
-        <Uploader size={fileSize} />
+        <Uploader size={fileSize} index={index} />
       </div>
     </div>
   )

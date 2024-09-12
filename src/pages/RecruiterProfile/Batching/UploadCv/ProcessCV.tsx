@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react'
-import toast from 'react-hot-toast'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -35,9 +34,11 @@ export const ProcessCV = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const files = useSelector((state: RootState) => state.file.files)
   const result = useSelector((state: RootState) => state.file.results)
-  const [handleCvUpload, { isLoading }] = useUploadCVOnlyMutation()
+  const [handleCvUpload] = useUploadCVOnlyMutation()
   const scoutJobId = params.id ?? ''
   const [moreFilesToProcess, setMoreFilesToProcess] = useState(false)
+  const [isReevaluating, setIsReevaluating] = useState(false)
+  const [allFilesProcessed, setAllFilesProcessed] = useState(false)
 
   const handleFileUpload = () => {
     fileInputRef.current?.click()
@@ -52,8 +53,13 @@ export const ProcessCV = () => {
 
   const handleSubmit = async () => {
     let batchId = ''
+    setIsReevaluating(true)
 
     for (const [index, file] of files.entries()) {
+      if (result[index]?.result) {
+        continue
+      }
+
       const formData = new FormData()
       formData.append('scoutJobId', scoutJobId)
       formData.append('cv', file)
@@ -63,13 +69,12 @@ export const ProcessCV = () => {
       }
 
       try {
-        const result = await handleCvUpload(formData).unwrap()
-        if (result.status === true) {
-          console.log(`File ${index + 1} uploaded:`, result)
-          dispatch(saveFileResult({ index, result }))
+        const uploadResult = await handleCvUpload(formData).unwrap()
+        if (uploadResult.status === true) {
+          dispatch(saveFileResult({ index, result: uploadResult }))
 
           if (index === 0) {
-            batchId = result.data.scout.batchId
+            batchId = uploadResult.data.scout.batchId
           }
         } else {
           console.log('Error uploading CV')
@@ -77,26 +82,34 @@ export const ProcessCV = () => {
       } catch (error) {
         console.log('Upload Error:', error)
       }
+
+      setAllFilesProcessed(
+        files.every((_, index) => result[index]?.result?.status === true),
+      )
     }
 
-    const checkIfAllFilesHasResult = files.length === result.length
-    if (!checkIfAllFilesHasResult) {
+    if (!allFilesProcessed) {
       setMoreFilesToProcess(true)
-      toast.error('Some files has not been analyzed, Try Again!')
+    } else {
+      setMoreFilesToProcess(false)
     }
+
+    setIsReevaluating(false)
   }
 
   const getResultEvaluationScore = (index: number) =>
     result.length > 0 ? result[index]?.result?.data?.evaluationScore : undefined
 
-  const displayButton = files.length === result.length ? 'hidden' : ''
+  const displayButton =
+    result.length === files.length &&
+    result.every((res) => res !== undefined && res !== null)
+      ? 'hidden'
+      : ''
 
-  console.log(result)
-
-  const buttonTitle = moreFilesToProcess ? (
-    'Try evaluating again'
-  ) : isLoading ? (
+  const buttonTitle = isReevaluating ? (
     <IsProcessing />
+  ) : moreFilesToProcess ? (
+    'Try evaluating again'
   ) : files.length === 1 ? (
     'Process Document'
   ) : (
@@ -116,6 +129,7 @@ export const ProcessCV = () => {
         {files.map((file, index) => (
           <DocumentUploaderCard
             key={index}
+            index={index}
             fileName={file.name}
             fileSize={file.size}
             result={getResultEvaluationScore(index)}
@@ -133,7 +147,7 @@ export const ProcessCV = () => {
       <div>
         <RecruiterButton
           buttonTitle={buttonTitle}
-          disabled={files.length === 0}
+          disabled={files.length === 0 || isReevaluating}
           onClick={handleSubmit}
           className={displayButton}
         />
