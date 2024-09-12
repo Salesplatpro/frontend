@@ -3,26 +3,39 @@ import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { FaRegFile } from 'react-icons/fa'
 import { IoMdCheckmarkCircle } from 'react-icons/io'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { useLocation } from 'react-router-dom'
 
+import { convertFileSize } from '../../utils'
 import { Uploader } from '../Loading'
 import styles from './DocumentUploaderCard.module.scss'
 import { FileDesign } from './FileDesign'
 
-const DocumentUploaderCard = () => {
+type DocumentUploaderCardProps = {
+  fileSize: number
+  fileName: string
+  onDelete: () => void
+}
+
+const DEFAULT_PROGRESS_GRANULARITY = 1
+const DEFAULT_UPDATE_PER_SECS = 2
+
+export const DocumentUploaderCard = ({
+  fileSize,
+  fileName,
+  onDelete,
+}: DocumentUploaderCardProps) => {
   const [completed, setCompleted] = useState(false)
 
-  // Simulate upload completion (you can replace this with actual logic)
+  const increment = (fileSize * DEFAULT_PROGRESS_GRANULARITY) / 100
+  const interval = fileSize / DEFAULT_UPDATE_PER_SECS
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      setCompleted(true) // Mark the upload as completed after a delay (e.g., 3 seconds)
+      setCompleted(true)
     }, 8000)
 
-    return () => clearTimeout(timer) // Cleanup timer on component unmount
+    return () => clearTimeout(timer)
   }, [])
 
-  const location = useLocation()
-  const { fileName, fileSize, fileUnit } = location.state || {}
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
@@ -30,13 +43,11 @@ const DocumentUploaderCard = () => {
           <FileDesign icon={<FaRegFile size={20} />} />
           <div className={styles.text}>
             <div>{fileName}</div>
-            <div>
-              {fileSize} {fileUnit}
-            </div>
+            <div>{convertFileSize(fileSize)}</div>
           </div>
         </div>
         <div className="cursor-pointer">
-          <RiDeleteBinLine size={20} />
+          <RiDeleteBinLine size={20} onClick={onDelete} />
         </div>
       </div>
       <div className={styles.icon}>
@@ -45,9 +56,8 @@ const DocumentUploaderCard = () => {
         ) : (
           <AiOutlineCloudUpload size={24} color="#4985df" />
         )}
-        <Uploader />
+        <Uploader increment={increment} interval={interval} />
       </div>
     </div>
   )
 }
-export default DocumentUploaderCard

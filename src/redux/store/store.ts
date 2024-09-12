@@ -10,7 +10,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['file/setFiles'],
+        ignoredActions: ['file/setFiles', 'file/addFiles'],
         ignoredPaths: ['file.files'],
       },
     }).concat(api.middleware, talentApi.middleware, recruiterApi.middleware),

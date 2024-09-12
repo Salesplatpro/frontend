@@ -15,9 +15,15 @@ const fileSlice = createSlice({
     setFiles(state, action: PayloadAction<File[]>) {
       state.files = action.payload
     },
+    addFiles(state, action: PayloadAction<File[]>) {
+      state.files = [...state.files, ...action.payload]
+    },
+    removeFile(state, action: PayloadAction<number>) {
+      state.files.splice(action.payload, 1)
+    },
   },
 })
 
-export const { setFiles } = fileSlice.actions
+export const { setFiles, addFiles, removeFile } = fileSlice.actions
 
 export default fileSlice.reducer

@@ -91,6 +91,13 @@ export const recruiterApi = createApi({
         method: 'GET',
       }),
     }),
+    uploadCVOnly: builder.mutation({
+      query: (data) => ({
+        url: `/scout/cv`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -106,4 +113,5 @@ export const {
   useCreateJDMutation,
   useSearchTalentDbQuery,
   useFetchTalentProfileQuery,
+  useUploadCVOnlyMutation,
 } = recruiterApi

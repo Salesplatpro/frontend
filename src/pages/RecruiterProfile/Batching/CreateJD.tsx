@@ -1,6 +1,7 @@
 import { Alert } from '@mui/material'
 import { Field, Form, Formik } from 'formik'
 import React, { ChangeEvent, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import { getRole } from '../../../api/api-communication'
@@ -52,8 +53,9 @@ const CreateJD = () => {
   const handleSubmit = async (values: any) => {
     console.log(values)
     try {
-      await createJD(values).unwrap()
-      navigate('/recruiterDashboard/scout/choose-method')
+      const result = await createJD(values).unwrap()
+      toast.success(result.message)
+      navigate(`/recruiterDashboard/scout/${result.data._id}`)
     } catch (error: any) {
       console.error('Error creating Job Description:', error.data.message)
       setError('Error creating Job Description')
@@ -74,7 +76,7 @@ const CreateJD = () => {
       <div className="flex justify-center items-center lg:mx-32 md:mx-24 sm:mx-20 ">
         <Formik
           initialValues={{
-            companyName: '',
+            name: '',
             role: '',
             description: '',
             recruiterGuide: '',
@@ -84,14 +86,14 @@ const CreateJD = () => {
             <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
               <div>
                 <label
-                  htmlFor="companyName"
+                  htmlFor="name"
                   className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
-                  Company Name
+                  Campaign Name
                 </label>
                 <Field
-                  name="companyName"
+                  name="name"
                   type="text"
-                  placeholder="Company name"
+                  placeholder="Campaign name"
                   className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                 />
               </div>

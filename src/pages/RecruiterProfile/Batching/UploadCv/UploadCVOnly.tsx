@@ -1,13 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import uploadCheck from '../../../../assets/cvuploadonly.png'
+import { RecruiterButton } from '../../../../components'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 import { setFiles } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
 
 export const UploadCVOnly = () => {
+  const params = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const files = useSelector((state: RootState) => state.file.files)
@@ -57,16 +59,13 @@ export const UploadCVOnly = () => {
           className="hidden"
         />
       </div>
-      <div className="flex justify-center -mt-4">
-        <button
-          onClick={() => navigate('/recruiterDashboard/scout/process-cv')}
-          disabled={files.length === 0}
-          className="w-full max-w-xs lg:max-w-md rounded-lg bg-[#3c6fd4] border hover:bg-[#4b82e1] py-3 my-9">
-          <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
-            Upload files
-          </p>
-        </button>
-      </div>
+      <RecruiterButton
+        buttonTitle="Upload files"
+        onClick={() =>
+          navigate(`/recruiterDashboard/scout/process-cv/${params.id}`)
+        }
+        disabled={files.length === 0}
+      />
     </div>
   )
 }

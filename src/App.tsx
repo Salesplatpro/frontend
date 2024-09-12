@@ -149,7 +149,7 @@ const router = createBrowserRouter([
             element: <Batching />,
           },
           {
-            path: 'scout/choose-method',
+            path: 'scout/:id',
             element: <ChooseMethod />,
           },
 
@@ -167,11 +167,11 @@ const router = createBrowserRouter([
           },
 
           {
-            path: 'scout/upload-cv',
+            path: 'scout/upload-cv/:id',
             element: <UploadCVOnly />,
           },
           {
-            path: 'scout/process-cv',
+            path: 'scout/process-cv/:id',
             element: <ProcessCV />,
           },
           {
