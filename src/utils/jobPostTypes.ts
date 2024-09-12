@@ -18,7 +18,7 @@ export interface LocationValues {
 
 export interface FormValues {
   description: string
-  aiConfig: string
+  // aiConfig: string
   role: string
   minSalary: string
   maxSalary: string
@@ -39,14 +39,14 @@ export interface configProps {
   name: string
   jobId: string
   prescreeningAssessment: string
-  minPrescreeningScore: string
+  minPrescreeningScore?: string
   cvSimilarity: string
-  minCvSimilarityScore: string
-  noOfCvSimilarCandidates: string
+  minCvSimilarityScore?: string
+  noOfCvSimilarCandidates?: string
   personalizedAssessment: string
-  noPersonalizedQuestions: string
+  noPersonalizedQuestions?: string
   personalityEvaluation: string
-  uploadedQuestions: string[]
+  uploadedQuestions?: string[]
   recruiterGuide: string
 }
 
