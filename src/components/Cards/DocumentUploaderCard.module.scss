@@ -7,6 +7,7 @@
 
 .innerContainer {
   display: flex;
+  align-items: flex-start;
   flex: 1;
   justify-content: space-between;
 }
@@ -48,4 +49,8 @@
   height: 32px;
   border-radius: 32px;
   background-color: #eeeeee;
+}
+
+.textColor {
+  color: #3c6fd4
 }

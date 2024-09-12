@@ -5,6 +5,7 @@ import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { IsProcessing } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchApplicantProgressQuery,
@@ -30,9 +31,7 @@ export const ApplicationProgress = () => {
       icon: <GoTasklist size={iconSize} color={iconColor} />,
       title: 'Pre-Assessment',
       score: fetching ? (
-        <div className={styles.loading}>
-          <div className={styles.loadingChild}></div>
-        </div>
+        <IsProcessing />
       ) : (
         result?.data?.user?.profile?.prescreeningScore ||
         'No pre-assessment test'

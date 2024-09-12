@@ -1,11 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+interface FileResult {
+  index: number
+  result: any
+}
+
 interface FileState {
   files: File[]
+  results: FileResult[]
+  uploads: boolean[]
 }
 
 const initialState: FileState = {
   files: [],
+  results: [],
+  uploads: [],
 }
 
 const fileSlice = createSlice({
@@ -21,9 +30,23 @@ const fileSlice = createSlice({
     removeFile(state, action: PayloadAction<number>) {
       state.files.splice(action.payload, 1)
     },
+    saveFileResult: (state, action: PayloadAction<FileResult>) => {
+      const { index, result } = action.payload
+      state.results[index] = { index, result }
+    },
+    markUploadCompleted: (state, action: PayloadAction<number>) => {
+      const index = action.payload
+      state.uploads[index] = true
+    },
   },
 })
 
-export const { setFiles, addFiles, removeFile } = fileSlice.actions
+export const {
+  setFiles,
+  addFiles,
+  removeFile,
+  saveFileResult,
+  markUploadCompleted,
+} = fileSlice.actions
 
 export default fileSlice.reducer
