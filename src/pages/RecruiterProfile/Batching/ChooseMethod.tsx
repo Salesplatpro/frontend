@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ChooseMethodCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import styles from './chooseMethod.module.scss'
+import { CustomToolTip } from './CustomToolTip'
 
 const description = (
   <div>
@@ -26,13 +27,15 @@ export const ChooseMethod = () => {
       description,
       icon: <AiOutlineCloudUpload size={20} />,
       link: `/recruiterDashboard/scout/upload-cv/${params.id}`,
+      toolTip: false,
     },
     {
       id: 2,
       name: 'Upload CV and Cover letter',
       description,
       icon: <AiOutlineCloudUpload size={20} />,
-      link: '/recruiterDashboard/scout/cv-upload',
+      link: `/recruiterDashboard/scout/upload-cv-cover-letter/${params.id}`,
+      toolTip: true,
     },
     {
       id: 3,
@@ -40,6 +43,7 @@ export const ChooseMethod = () => {
       icon: <CiSearch size={20} />,
       description: <span>Search here</span>,
       link: '/recruiterDashboard/scout/search-talent',
+      toolTip: false,
     },
   ]
 
@@ -55,6 +59,7 @@ export const ChooseMethod = () => {
             key={index}
             item={item}
             onClick={() => navigate(item.link)}
+            tooltip={item.toolTip}
           />
         ))}
       </div>

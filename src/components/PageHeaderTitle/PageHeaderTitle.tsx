@@ -10,7 +10,7 @@ export const PageHeaderTitle = ({
   description,
 }: PageHeaderTitleProps) => {
   return (
-    <div className="space-y-2">
+    <div className="pt-2">
       <h1 className=" font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
         {title}
       </h1>

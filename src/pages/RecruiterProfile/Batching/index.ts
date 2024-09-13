@@ -1,3 +1,4 @@
 export * from './AnalyzedPercentage'
+export * from './CustomToolTip'
 export * from './TalentSearch/SearchTalent'
 export * from './UploadCv'
