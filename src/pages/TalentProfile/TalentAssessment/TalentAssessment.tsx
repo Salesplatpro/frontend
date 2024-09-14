@@ -2,6 +2,7 @@ import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 
 import animationData from '../../../assets/Animation - check.json'
 
@@ -18,7 +19,8 @@ import { RootState } from '../../../redux/store/store'
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)
   const roleId = user?.user?.profile?.role[0]?._id
-
+  const location = useLocation()
+  const canRetakeAssessment = location.state?.canRetakeAssessment || false
   const { data, error, isLoading } = useFetchPretestQuery(roleId)
   const [postAnswer] = usePostPretestMutation()
   const [questions, setQuestions] = useState<Question[]>([])
@@ -45,7 +47,7 @@ const TalentAssessment = () => {
     )
   }
 
-  if (user.user.profile.prescreeningScore) {
+  if (user.user.profile.prescreeningScore && !canRetakeAssessment) {
     return (
       <div className="flex justify-center items-center flex-col w-full h-full">
         <div>
