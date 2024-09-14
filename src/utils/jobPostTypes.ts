@@ -6,7 +6,7 @@ export interface LocationOption {
 
 export interface LocationProps {
   locationTitle?: string
-  geoId?: number | null
+  geoId?: number | null | string
   isCountry?: boolean
   onChange: (geoId: number) => void
 }
