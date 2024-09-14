@@ -70,21 +70,20 @@ export const recruiterApi = createApi({
     }),
     searchTalentDb: builder.query({
       query: (data) => {
-        const { role, experienceLevel, location } = data
+        const { role, experienceLevel, location, scoutJobId } = data
 
         const roleId = role || ''
         const experience = experienceLevel || ''
         const country = location?.country?.name || ''
 
         return {
-          url: `/scout/talents?roleId=${roleId}&experience=${experience}&location=${encodeURIComponent(
+          url: `/scout/${scoutJobId}/talents?roleId=${roleId}&experience=${experience}&location=${encodeURIComponent(
             country,
           )}&remote=true`,
           method: 'GET',
         }
       },
     }),
-
     fetchTalentProfile: builder.query({
       query: ({ id }) => ({
         url: `/user/profile/${id}`,
