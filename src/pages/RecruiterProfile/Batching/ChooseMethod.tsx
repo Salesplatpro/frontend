@@ -32,14 +32,14 @@ export const ChooseMethod = () => {
       name: 'Upload CV and Cover letter',
       description,
       icon: <AiOutlineCloudUpload size={20} />,
-      link: '/recruiterDashboard/scout/cv-upload',
+      link: `/recruiterDashboard/scout/cv-upload/${params.id}`,
     },
     {
       id: 3,
       name: 'Search Talent DB',
       icon: <CiSearch size={20} />,
       description: <span>Search here</span>,
-      link: '/recruiterDashboard/scout/search-talent',
+      link: `/recruiterDashboard/scout/search-talent/${params.id}`,
     },
   ]
 

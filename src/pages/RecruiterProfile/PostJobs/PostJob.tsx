@@ -57,7 +57,7 @@ const validationSchema = Yup.object({
 
 const PostJob: React.FC = () => {
   const [jobId, setJobId] = useState(null)
-  const { aiConfigId } = useParams()
+  // const { aiConfigId } = useParams()
   const [jobPostCreation] = useJobPostCreationMutation()
 
   const initialValues: FormValues = {
@@ -110,7 +110,7 @@ const PostJob: React.FC = () => {
   }
   return (
     <div className="p-4 w-full">
-      <div className="w-[50%] m-auto">
+      <div className="w-[60%] mx-auto">
         <h2 className="text-[#101828] text-[32px] mt-6 font-bold">
           Job details
         </h2>
@@ -127,7 +127,7 @@ const PostJob: React.FC = () => {
                 <h5 className="font-bold text-[14px] text-[#434144]">
                   Select Role
                 </h5>
-                <div className="border border-[#D0D5DD] py-5 pl-5 rounded w-full">
+                <div className="border border-[#D0D5DD] py-4 pl-4 rounded-lg w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
@@ -149,7 +149,7 @@ const PostJob: React.FC = () => {
                   id="description"
                   name="description"
                   placeholder="Add Job description"
-                  className="block border border-[#D0D5DD] p-4 rounded w-full"
+                  className="block border border-[#D0D5DD] p-4 rounded-lg w-full"
                 />
                 <ErrorMessage
                   name="description"
@@ -157,33 +157,39 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
-              <Location
-                locationTitle="Country"
-                geoId={null}
-                isCountry={true}
-                onChange={(geoId) => {
-                  setFieldValue('location.country.geoId', geoId)
-                  setFieldValue('location.state', { name: '', geoId: null })
-                  setFieldValue('location.city', { name: '', geoId: null })
-                }}
-              />
-              <Location
-                locationTitle="State"
-                geoId={values.location.country.geoId}
-                isCountry={false}
-                onChange={(geoId) => {
-                  setFieldValue('location.state.geoId', geoId)
-                  setFieldValue('location.city', { name: '', geoId: null })
-                }}
-              />
-              <Location
-                locationTitle="City"
-                geoId={values.location.state.geoId}
-                isCountry={false}
-                onChange={(geoId) => {
-                  setFieldValue('location.city.geoId', geoId)
-                }}
-              />
+              <div className="mb-4">
+                <Location
+                  locationTitle="Country"
+                  geoId={null}
+                  isCountry={true}
+                  onChange={(geoId) => {
+                    setFieldValue('location.country.geoId', geoId)
+                    setFieldValue('location.state', { name: '', geoId: null })
+                    setFieldValue('location.city', { name: '', geoId: null })
+                  }}
+                />
+              </div>
+              <div className="mb-4">
+                <Location
+                  locationTitle="State"
+                  geoId={values.location.country.geoId}
+                  isCountry={false}
+                  onChange={(geoId) => {
+                    setFieldValue('location.state.geoId', geoId)
+                    setFieldValue('location.city', { name: '', geoId: null })
+                  }}
+                />
+              </div>
+              <div className="mb-4">
+                <Location
+                  locationTitle="City"
+                  geoId={values.location.state.geoId}
+                  isCountry={false}
+                  onChange={(geoId) => {
+                    setFieldValue('location.city.geoId', geoId)
+                  }}
+                />
+              </div>
               <div className="mb-4">
                 <label
                   className="block font-bold text-[14px] text-[#434144]"
@@ -194,7 +200,7 @@ const PostJob: React.FC = () => {
                   type="text"
                   id="minSalary"
                   name="minSalary"
-                  className="border border-[#D0D5DD] p-4 rounded w-full"
+                  className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                 />
                 <ErrorMessage
                   name="minSalary"
@@ -213,7 +219,7 @@ const PostJob: React.FC = () => {
                   id="maxSalary"
                   name="maxSalary"
                   placeholder="100000"
-                  className="border border-[#D0D5DD] p-4 rounded w-full"
+                  className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                 />
                 <ErrorMessage
                   name="maxSalary"
@@ -231,7 +237,7 @@ const PostJob: React.FC = () => {
                   as="select"
                   id="experienceLevel"
                   name="experienceLevel"
-                  className="border border-[#D0D5DD] p-5 rounded w-full">
+                  className="border border-[#D0D5DD] p-5 rounded-lg w-full">
                   <option value="">Select experience Level</option>
                   <option value="senior">Senior</option>
                   <option value="intermediate">Intermediate</option>
@@ -245,7 +251,7 @@ const PostJob: React.FC = () => {
               </div>
               <div className="mb-4">
                 <label
-                  className="block font-bold text-[14px] text-[#434144] block"
+                  className="block font-bold text-[14px] text-[#434144]"
                   htmlFor="address">
                   Address
                 </label>
@@ -253,7 +259,8 @@ const PostJob: React.FC = () => {
                   type="text"
                   id="address"
                   name="address"
-                  className="border border-[#D0D5DD] p-4 rounded w-full"
+                  placeholder="address"
+                  className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                 />
                 <ErrorMessage
                   name="address"
@@ -271,7 +278,7 @@ const PostJob: React.FC = () => {
                   as="select"
                   id="remote"
                   name="remote"
-                  className="border border-[#D0D5DD] p-5 rounded w-full">
+                  className="border border-[#D0D5DD] p-5 rounded-lg w-full">
                   <option value="">Select Remote Option</option>
                   <option value="true">True</option>
                   <option value="false">False</option>
@@ -297,10 +304,10 @@ const PostJob: React.FC = () => {
                           className="flex mb-2 items-center relative">
                           <Field
                             name={`responsibilities.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded w-full"
+                            className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                           />
                           <div
-                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
+                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded-lg absolute right-2"
                             onClick={() => remove(index)}>
                             <RiDeleteBin6Line />
                           </div>
@@ -338,10 +345,10 @@ const PostJob: React.FC = () => {
                           className="flex mb-2 items-center relative">
                           <Field
                             name={`skills.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded w-full"
+                            className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                           />
                           <div
-                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
+                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded-lg absolute right-2"
                             onClick={() => remove(index)}>
                             <RiDeleteBin6Line />
                           </div>
@@ -405,34 +412,22 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
-              {/* <Link to={`/recruiterDashboard/postjob/${jobId}`}>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
-                </button>
-              </Link> */}
-              <div>
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-                  disabled={isSubmitting}>
-                  Submit
-                </button>
-              </div>
-              <div>
+              <div className="mt-10">
                 {jobId !== null ? (
                   <Link to={`/recruiterDashboard/postjob/${jobId}`}>
-                    <button
-                      // type="submit"
-                      // disabled={isSubmitting}
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                    <button className="px-20 py-3 bg-[#3C6FD4] text-white rounded hover:bg-blue-700">
                       Next
                     </button>
                   </Link>
                 ) : (
-                  ''
+                  <div>
+                    <button
+                      type="submit"
+                      className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
+                      disabled={isSubmitting}>
+                      {isSubmitting ? 'Submitting' : 'Submit'}
+                    </button>
+                  </div>
                 )}
               </div>
             </Form>

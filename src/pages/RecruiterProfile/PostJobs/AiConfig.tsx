@@ -1,16 +1,21 @@
-import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+import { useParams } from 'react-router-dom'
+import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { useParams } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import * as Yup from 'yup'
-
 import {
   useAiConfigMutation,
   useGenJpPersonalityMutation,
 } from '../../../redux/api/recruiter'
 import { configProps } from '../../../utils/jobPostTypes'
+
+type GeneratedQuestion = {
+  [key: string]: {
+    question: string | null
+  }
+}
 
 const validationSchema = Yup.object({
   // prescreeningAssessment: Yup.string().required('Required'),
@@ -36,26 +41,26 @@ const validationSchema = Yup.object({
 
 const AiConfig = () => {
   const { jobId } = useParams()
-  const [aiConfigId, setAiConfigId] = useState(null)
+  // const [aiConfigId, setAiConfigId] = useState(null)
   const [aiConfig] = useAiConfigMutation()
   const [genJp] = useGenJpPersonalityMutation()
-  const [generatedQuestions, setGeneratedQuestions] = useState({})
+  const [generatedQuestions, setGeneratedQuestions] =
+    useState<GeneratedQuestion>({})
 
-  const handleGenerate = async (pair) => {
+  const handleGenerate = async (pair: string) => {
     try {
-      // const jobId = '6656d664569637cd6b14e8ad' // Replace with dynamic value if needed
-
       const result = await genJp({ jobId, dichotomyPair: pair }).unwrap()
       setGeneratedQuestions((prevState) => ({
         ...prevState,
         [pair]: result?.data?.question || null,
       }))
     } catch (error) {
-      console.error(`Error generating ${pair}:`, error)
+      console.error(`Error generating ${pair} question:`, error)
+      toast.error(`Error generating ${pair} question`)
     }
   }
 
-  const handleAddQuestion = (push, pair) => {
+  const handleAddQuestion = (push: any, pair: any) => {
     const question = generatedQuestions[pair]?.question
     if (question) {
       push(question)
@@ -82,20 +87,35 @@ const AiConfig = () => {
   }
 
   const onSubmit = async (values: configProps, { setSubmitting }) => {
-    try {
-      const data = await aiConfig(values)
-      console.log('Form Values:', data)
-      console.log(data.data.message)
-      console.log(data.data.data.config._id)
+    // conditionally submit the the aiconfig
+    const cleanedValues = { ...values }
+    if (values.prescreeningAssessment === 'false') {
+      delete cleanedValues.minPrescreeningScore
+    }
 
-      if (data.data.status) {
-        toast.success(data.data.message)
-        setAiConfigId(data.data.data.config._id)
+    if (values.cvSimilarity === 'false') {
+      delete cleanedValues.minCvSimilarityScore
+      delete cleanedValues.noOfCvSimilarCandidates
+    }
+
+    if (values.personalizedAssessment === 'false') {
+      delete cleanedValues.noPersonalizedQuestions
+    }
+
+    if (values.personalityEvaluation === 'false') {
+      delete cleanedValues.uploadedQuestions
+    }
+
+    try {
+      const data = await aiConfig(cleanedValues)
+
+      if (data && data.status) {
+        toast.success(data.data?.message || 'Submitted successful')
+        // setAiConfigId(data.data?.data?.config?._id)
       } else {
-        toast.error(data.data.message)
+        toast.error(data?.error?.data?.message || 'An error occurred.')
       }
     } catch (error) {
-      console.error('DisplayError during form submission:', error)
       toast.error('An unexpected error occurred. Please try again later.')
     } finally {
       setSubmitting(false)
@@ -105,7 +125,7 @@ const AiConfig = () => {
   }
 
   return (
-    <div className="p-8 w-[70%] mx-auto">
+    <div className="p-8 w-[60%] mx-auto">
       <div>
         <h2 className="text-[#101828] text-[32px] mt-4 font-bold">
           AI Configs
@@ -417,17 +437,17 @@ const AiConfig = () => {
                               : `Regenerate ${pair}`}
                           </button>
                           {generatedQuestions[pair] && (
-                            <>
+                            <div className="bg-white shadow-md p-4 rounded-lg my-3">
                               <p>{generatedQuestions[pair].question}</p>
                               <button
                                 type="button"
                                 onClick={() => handleAddQuestion(push, pair)}
-                                className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]">
+                                className="px-4 mt-2 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]">
                                 <span className="flex items-center gap-2">
                                   <FaPlus /> Add {pair} Question
                                 </span>
                               </button>
-                            </>
+                            </div>
                           )}
                         </div>
                       ))}
@@ -439,7 +459,7 @@ const AiConfig = () => {
                           Questions:
                         </label>
                         <div className="space-y-2">
-                          {values.uploadedQuestions.map((pQuestion, index) => (
+                          {values.uploadedQuestions?.map((pQuestion, index) => (
                             <div
                               key={index}
                               className="flex flex-row items-center relative">

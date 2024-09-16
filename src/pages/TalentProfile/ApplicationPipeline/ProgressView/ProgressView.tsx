@@ -2,14 +2,7 @@ import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
-// import { IoReload } from 'react-icons/io5'
-import {
-  Link,
-  Router,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import animationData from '../../../../assets/Animation2.json'
 import connectorIcon from '../../../../assets/connectorIcon.webp'
@@ -24,10 +17,12 @@ import {
 } from '../../../../redux/api/talent'
 import ProgressBar from '../../ProgressBar'
 
-// Type definitions
 interface Application {
   currentStage: string
-  stages: { [key: string]: string }
+  stages: Record<
+    'prescreening' | 'cv_similarity' | 'personalized' | 'personality',
+    string
+  >
   talent: string
 }
 
@@ -47,7 +42,9 @@ const getProgresses = (application: Application): Progress[] => {
   }
 
   const progresses: Progress[] = []
-  const stages = Object.keys(application.stages)
+  const stages = Object.keys(
+    application.stages,
+  ) as (keyof typeof stagesMapping)[]
   let currentStage = application.currentStage
   let currentStageFound = false
 
@@ -90,7 +87,6 @@ const getStatusColor = (status: string): string => {
 const ProgressView: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>()
   const [jobProgress, setJobProgress] = useState<Application | null>(null)
-  //navigate to Application pipeline page
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -100,10 +96,8 @@ const ProgressView: React.FC = () => {
     isLoading: applicationLoading,
   } = useJobPipelineQuery(jobId || '')
 
-  const [
-    triggerCvMatch,
-    { data: cvMatchData, error: cvMatchError, isLoading: cvMatchLoading },
-  ] = useLazyCvMatchQuery()
+  const [triggerCvMatch, { data, error, isLoading: cvMatchLoading }] =
+    useLazyCvMatchQuery()
 
   useEffect(() => {
     if (applications) {
@@ -112,7 +106,9 @@ const ProgressView: React.FC = () => {
       setJobProgress(applicationData)
 
       if (applicationData?.currentStage === 'cv_similarity') {
-        triggerCvMatch(jobId)
+        if (jobId) {
+          triggerCvMatch(jobId)
+        }
         // window.location.reload()
       }
     }
@@ -216,24 +212,28 @@ const ProgressView: React.FC = () => {
                 (progress.title === 'Pre-Assessment' ||
                   progress.title === 'Personalized Test' ||
                   progress.title === 'Personality Test') ? (
-                  <Link
-                    to={
-                      progress.title === 'Pre-Assessment'
-                        ? `/talentDashboard/TalentQuiz`
-                        : `/talentDashboard/applicationPipeline/${
-                            progress.title === 'Personalized Test'
-                              ? `personalizedTest/${jobId}/${jobProgress.talent}`
-                              : `personalityTest/${jobId}`
-                          }`
-                    }>
-                    <button
-                      className="w-[96px] h-[40px] text-white text-base rounded-lg"
-                      style={{
-                        backgroundColor: getStatusColor(progress.status),
-                      }}>
-                      Take Test
-                    </button>
-                  </Link>
+                  <button
+                    onClick={() => {
+                      if (progress.title === 'Pre-Assessment') {
+                        navigate('/talentDashboard/TalentQuiz', {
+                          state: { canRetakeAssessment: true },
+                        })
+                      } else if (progress.title === 'Personalized Test') {
+                        navigate(
+                          `/talentDashboard/applicationPipeline/personalizedTest/${jobId}/${jobProgress.talent}`,
+                        )
+                      } else if (progress.title === 'Personality Test') {
+                        navigate(
+                          `/talentDashboard/applicationPipeline/personalityTest/${jobId}`,
+                        )
+                      }
+                    }}
+                    className="w-[96px] h-[40px] text-white text-base rounded-lg"
+                    style={{
+                      backgroundColor: getStatusColor(progress.status),
+                    }}>
+                    Take Test
+                  </button>
                 ) : (
                   <button
                     className="w-[96px] h-[40px] text-white text-base rounded-lg"
