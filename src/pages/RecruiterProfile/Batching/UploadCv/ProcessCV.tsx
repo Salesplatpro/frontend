@@ -18,7 +18,7 @@ import {
 import { RootState } from '../../../../redux/store/store'
 import styles from './ProcessCV.module.scss'
 
-const details = {
+export const details = {
   description: (
     <div>
       <span>Click to upload</span> or drag and drop SVG, PNG, JPG, or GIF (max

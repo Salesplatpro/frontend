@@ -29,6 +29,23 @@ export const FileUploader = ({
   buttonTitle,
   disabled,
 }: FileUploaderProps) => {
+  const renderFileNames = () => {
+    if (!files || files.length === 0) {
+      return 'No files selected'
+    }
+
+    return files
+      .map((file) => {
+        if (file instanceof File) {
+          return file.name
+        } else if ('cv' in file && 'coverLetter' in file) {
+          return `${file.cv.name}, ${file.coverLetter.name}`
+        }
+        return ''
+      })
+      .join(', ')
+  }
+
   return (
     <div>
       <PageHeaderTitle title={pageTitle} description={pageDescription} />
@@ -42,10 +59,9 @@ export const FileUploader = ({
           <div className="flex justify-center items-center w-full flex-col space-y-4 pb-12 pt-1 px-6 relative">
             <div className="flex flex-row pt-3">
               <h1 className="font-poppins text-[#101828] text-[18px] leading-[22px] lg:text-[20px] font-medium lg:leading-[28px]">
-                {files && files?.length > 0
-                  ? files.map((file) => file.name).join(', ')
-                  : 'No files selected'}
+                {renderFileNames()}
                 <span className="font-raleway font-normal text-[17px] leading-[20px] lg:text-[20px] lg:leading-[28px] sm:text-[20px] md:text-[22px] md:leading-[25px] text-[#101828]">
+                  {' '}
                   click or drag and drop
                 </span>
               </h1>

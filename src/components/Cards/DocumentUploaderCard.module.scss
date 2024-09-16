@@ -12,6 +12,12 @@
   justify-content: space-between;
 }
 
+.fileContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .file {
   display: flex;
   align-items: center;

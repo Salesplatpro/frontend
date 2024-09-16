@@ -21,6 +21,7 @@ import {
   ApplicationProgress,
   MyJobPosts,
   ProcessCV,
+  ProcessCvAndCoverLetter,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
@@ -157,6 +158,10 @@ const router = createBrowserRouter([
           {
             path: 'scout/upload-cv-cover-letter/:id',
             element: <UploadCvAndCoverLetter />,
+          },
+          {
+            path: 'scout/process-cv-cover-letter/:id',
+            element: <ProcessCvAndCoverLetter />,
           },
           {
             path: 'scout/search-talent',

@@ -13,8 +13,8 @@ type ItemType = {
 
 type ChooseMethodCardProps = {
   onClick?: () => void
-  item: ItemType
-  tooltip: boolean
+  item?: ItemType
+  tooltip?: boolean
 }
 
 const toolTipMessage =
@@ -28,18 +28,18 @@ export const ChooseMethodCard = ({
   <div className={styles.container} onClick={onClick}>
     {tooltip ? (
       <CustomToolTip message={toolTipMessage}>
-        {item.name}
+        {item?.name}
         <div className={styles.innerContainer}>
-          <FileDesign icon={item.icon} />
-          <div className={styles.description}>{item.description}</div>
+          <FileDesign icon={item?.icon} />
+          <div className={styles.description}>{item?.description}</div>
         </div>
       </CustomToolTip>
     ) : (
       <>
-        {item.name}
+        {item?.name}
         <div className={styles.innerContainer}>
-          <FileDesign icon={item.icon} />
-          <div className={styles.description}>{item.description}</div>
+          <FileDesign icon={item?.icon} />
+          <div className={styles.description}>{item?.description}</div>
         </div>
       </>
     )}
