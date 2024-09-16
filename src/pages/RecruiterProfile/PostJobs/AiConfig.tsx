@@ -1,11 +1,10 @@
-import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+import { useParams } from 'react-router-dom'
+import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { useParams } from 'react-router-dom'
+import toast from 'react-hot-toast'
 import * as Yup from 'yup'
-
 import {
   useAiConfigMutation,
   useGenJpPersonalityMutation,
@@ -43,8 +42,6 @@ const AiConfig = () => {
 
   const handleGenerate = async (pair) => {
     try {
-      // const jobId = '6656d664569637cd6b14e8ad' // Replace with dynamic value if needed
-
       const result = await genJp({ jobId, dichotomyPair: pair }).unwrap()
       setGeneratedQuestions((prevState) => ({
         ...prevState,
@@ -102,8 +99,6 @@ const AiConfig = () => {
       delete cleanedValues.uploadedQuestions
     }
 
-    // console.log('Cleaned Submission Values:', cleanedValues)
-    // console.log(values)
     try {
       const data = await aiConfig(cleanedValues)
 
@@ -123,7 +118,7 @@ const AiConfig = () => {
   }
 
   return (
-    <div className="p-8 w-[70%] mx-auto">
+    <div className="p-8 w-[60%] mx-auto">
       <div>
         <h2 className="text-[#101828] text-[32px] mt-4 font-bold">
           AI Configs
