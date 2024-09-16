@@ -14,11 +14,12 @@ export const store = configureStore({
           'file/setFiles',
           'file/addFiles',
           'file/addCvCoverLetter',
+          'file/setCvCoverLetter',
         ],
-        ignoredPaths: ['file.files', 'file.cvCoverLetter'],
+        ignoredPaths: ['file.files', 'file.cvCoverLetter', 'file.results'],
       },
     }).concat(api.middleware, talentApi.middleware, recruiterApi.middleware),
-  devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in development
+  devTools: process.env.NODE_ENV !== 'production',
 })
 
 export type RootState = ReturnType<typeof rootReducer>

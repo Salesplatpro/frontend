@@ -29,7 +29,9 @@ export const DocumentUploaderCard2 = ({
   result,
   onSeeAnalysis,
 }: DocumentUploaderCardProps) => {
-  const uploads = useSelector((state: RootState) => state.file.uploads)
+  const uploads = useSelector(
+    (state: RootState) => state.file.cvCoverLetterUploads,
+  )
   const fileSize = (cv?.size || 0) + (coverLetter?.size || 0)
 
   if (result) {

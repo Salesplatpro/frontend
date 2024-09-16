@@ -10,7 +10,7 @@ interface CustomToolTipProps {
 export const CustomToolTip = ({ children, message }: CustomToolTipProps) => {
   return (
     <Tooltip title={message} placement="top" style={{ fontWeight: 'normal' }}>
-      {children}
+      <>{children}</>
     </Tooltip>
   )
 }
