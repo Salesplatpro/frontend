@@ -26,6 +26,7 @@ import {
 } from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
+import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
@@ -164,14 +165,17 @@ const router = createBrowserRouter([
             element: <ProcessCvAndCoverLetter />,
           },
           {
-            path: 'scout/search-talent',
+            path: 'scout/search-talent/:id',
             element: <SearchTalent />,
+          },
+          {
+            path: 'scout/search-results',
+            element: <SearchResult />,
           },
           {
             path: 'scout/create-jd',
             element: <CreateJD />,
           },
-
           {
             path: 'scout/upload-cv/:id',
             element: <UploadCVOnly />,

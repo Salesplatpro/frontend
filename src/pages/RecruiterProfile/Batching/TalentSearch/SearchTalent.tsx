@@ -1,12 +1,9 @@
 import { Alert } from '@mui/material'
 import { Field, Form, Formik } from 'formik'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
 import { getRole } from '../../../../api/api-communication'
-import { useSearchTalentDbQuery } from '../../../../redux/api/recruiter'
 import Location from '../../../../components/global/Location'
-import Loading from '../../../../components/Loading/Loading'
 
 type RoleType = {
   _id: string
@@ -15,18 +12,26 @@ type RoleType = {
 }
 
 const SearchTalent = () => {
-  // const navigate = useNavigate()
-
-  const [searchParams, setSearchParams] = useState<any | null>(null)
+  const navigate = useNavigate()
+  const scoutJobId = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [fetchedRoles, setFetchedRoles] = useState<RoleType[]>([])
-  const [roleDescription, setRoleDescription] = useState('')
-  const [error, setError] = useState<string | null>(null) // State for error
-
-  const {
-    data,
-    isLoading,
-    error: talentDbError,
-  } = useSearchTalentDbQuery(searchParams, { skip: !searchParams })
+  const [error, setError] = useState<string | null>(null)
+  console.log(scoutJobId.id, 'search')
+  // Initialize form values from URL params
+  const initialSearchValues = {
+    scoutJobId: searchParams.get('scoutJobId') || scoutJobId.id,
+    // scoutJobId: '66e80ed27554c2d493122a67',
+    role: searchParams.get('role') || '',
+    description: searchParams.get('description') || '',
+    location: {
+      country: {
+        name: searchParams.get('countryName') || '',
+        geoId: searchParams.get('geoId') || null,
+      },
+    },
+    experienceLevel: searchParams.get('experienceLevel') || '',
+  }
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -52,18 +57,34 @@ const SearchTalent = () => {
       (role) => role._id === selectedRoleId,
     )
     if (selectedRole) {
-      setRoleDescription(selectedRole.description)
       setFieldValue('description', selectedRole.description)
     }
   }
 
   const onSubmit = async (values: any) => {
-    console.log(values)
-    try {
-      setSearchParams(values)
-    } catch (error) {
-      console.log(error)
-    }
+    const { scoutJobId, role, description, location, experienceLevel } = values
+
+    // Set search parameters in URL
+    setSearchParams({
+      scoutJobId,
+      role,
+      description,
+      countryName: location.country.name,
+      geoId: location.country.geoId,
+      experienceLevel,
+    })
+
+    // Navigate to the results page
+    const queryParams = new URLSearchParams({
+      scoutJobId,
+      role,
+      description,
+      countryName: location.country.name,
+      geoId: location.country.geoId,
+      experienceLevel,
+    }).toString()
+
+    navigate(`/recruiterDashboard/scout/search-results?${queryParams}`)
   }
 
   return (
@@ -73,21 +94,12 @@ const SearchTalent = () => {
           Filter Talent Search
         </h1>
         <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
-          find qualified talents by searching
+          Find qualified talents by searching
         </p>
       </div>
       {error && <Alert severity="error">{error} </Alert>}
       <div className="flex justify-center items-center mx-auto w-full ">
-        <Formik
-          initialValues={{
-            role: '',
-            description: '',
-            location: {
-              country: { name: '', geoId: null },
-            },
-            experienceLevel: '',
-          }}
-          onSubmit={onSubmit}>
+        <Formik initialValues={initialSearchValues} onSubmit={onSubmit}>
           {({ setFieldValue, values }) => (
             <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
               <div>
@@ -123,14 +135,17 @@ const SearchTalent = () => {
                   type="text"
                   className="w-[320px] flex flex-col lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                   placeholder="Add Job description here"
-                  value={roleDescription}
+                  value={values.description}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFieldValue('description', e.target.value)
+                  }
                 />
               </div>
 
               <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
                 <Location
                   locationTitle="Country"
-                  geoId={null}
+                  geoId={values.location.country.geoId}
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
@@ -157,43 +172,14 @@ const SearchTalent = () => {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-[#3c6fd4] hover:bg-[#4b82e1] py-3 mt-8 mx-auto"
-                disabled={isLoading}>
+                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-[#3c6fd4] hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
                 <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
-                  {isLoading ? 'Submitting...' : 'Create'}
+                  Search
                 </p>
               </button>
             </Form>
           )}
         </Formik>
-      </div>
-
-      <div>
-        {isLoading && <Loading />}
-        {data && (
-          <div>
-            {data?.data.talents.map((talent: any) => (
-              <div
-                key={talent.id}
-                className="flex border w-full items-center p-4 rounded-lg">
-                <div className="flex-1">
-                  <h2 className="text-[#0D0C22] font-semibold">
-                    {talent.firstName} {talent.lastName}
-                  </h2>
-                  <h2 className="text-[#0D0C22] text-sm">
-                    {talent.profile.experience}
-                  </h2>
-                  <h2 className="text-black">{talent.profile.role.name}</h2>
-                </div>
-                <div>
-                  <Link to="#" className="text-[#3C6FD4] text-sm">
-                    See analysis
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )
