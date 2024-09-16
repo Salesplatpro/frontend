@@ -11,6 +11,7 @@ const SearchResult = () => {
   const [talents, setTalents] = useState([])
 
   const initialSearchValues = {
+    scoutJobId: searchParams.get('scoutJobId') || '',
     role: searchParams.get('role') || '',
     description: searchParams.get('description') || '',
     location: {

@@ -17,10 +17,11 @@ const SearchTalent = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [fetchedRoles, setFetchedRoles] = useState<RoleType[]>([])
   const [error, setError] = useState<string | null>(null)
-
+  console.log(scoutJobId.id, 'search')
   // Initialize form values from URL params
   const initialSearchValues = {
-    scoutJobId: scoutJobId.id || '',
+    scoutJobId: searchParams.get('scoutJobId') || scoutJobId.id,
+    // scoutJobId: '66e80ed27554c2d493122a67',
     role: searchParams.get('role') || '',
     description: searchParams.get('description') || '',
     location: {
@@ -61,10 +62,11 @@ const SearchTalent = () => {
   }
 
   const onSubmit = async (values: any) => {
-    const { role, description, location, experienceLevel } = values
+    const { scoutJobId, role, description, location, experienceLevel } = values
 
     // Set search parameters in URL
     setSearchParams({
+      scoutJobId,
       role,
       description,
       countryName: location.country.name,
@@ -74,6 +76,7 @@ const SearchTalent = () => {
 
     // Navigate to the results page
     const queryParams = new URLSearchParams({
+      scoutJobId,
       role,
       description,
       countryName: location.country.name,
