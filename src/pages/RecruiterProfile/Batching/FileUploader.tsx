@@ -4,11 +4,12 @@ import React from 'react'
 import uploadCheck from '../../../assets/cvuploadonly.png'
 import { RecruiterButton } from '../../../components'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
+import { CvCoverLetter } from '../../../redux/features/filesSlice/fileSlice'
 
 interface FileUploaderProps {
   pageTitle: string
   pageDescription: string
-  files?: File[]
+  files?: File[] | CvCoverLetter[]
   handleFileChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onUploadClick?: () => void
   buttonTitle: string
