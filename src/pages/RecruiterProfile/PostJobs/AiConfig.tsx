@@ -11,6 +11,12 @@ import {
 } from '../../../redux/api/recruiter'
 import { configProps } from '../../../utils/jobPostTypes'
 
+type GeneratedQuestion = {
+  [key: string]: {
+    question: string | null
+  }
+}
+
 const validationSchema = Yup.object({
   // prescreeningAssessment: Yup.string().required('Required'),
   // minPrescreeningScore: Yup.number()
@@ -35,12 +41,13 @@ const validationSchema = Yup.object({
 
 const AiConfig = () => {
   const { jobId } = useParams()
-  const [aiConfigId, setAiConfigId] = useState(null)
+  // const [aiConfigId, setAiConfigId] = useState(null)
   const [aiConfig] = useAiConfigMutation()
   const [genJp] = useGenJpPersonalityMutation()
-  const [generatedQuestions, setGeneratedQuestions] = useState({})
+  const [generatedQuestions, setGeneratedQuestions] =
+    useState<GeneratedQuestion>({})
 
-  const handleGenerate = async (pair) => {
+  const handleGenerate = async (pair: string) => {
     try {
       const result = await genJp({ jobId, dichotomyPair: pair }).unwrap()
       setGeneratedQuestions((prevState) => ({
@@ -53,7 +60,7 @@ const AiConfig = () => {
     }
   }
 
-  const handleAddQuestion = (push, pair) => {
+  const handleAddQuestion = (push: any, pair: any) => {
     const question = generatedQuestions[pair]?.question
     if (question) {
       push(question)
@@ -104,7 +111,7 @@ const AiConfig = () => {
 
       if (data && data.status) {
         toast.success(data.data?.message || 'Submitted successful')
-        setAiConfigId(data.data?.data?.config?._id)
+        // setAiConfigId(data.data?.data?.config?._id)
       } else {
         toast.error(data?.error?.data?.message || 'An error occurred.')
       }
@@ -452,7 +459,7 @@ const AiConfig = () => {
                           Questions:
                         </label>
                         <div className="space-y-2">
-                          {values.uploadedQuestions.map((pQuestion, index) => (
+                          {values.uploadedQuestions?.map((pQuestion, index) => (
                             <div
                               key={index}
                               className="flex flex-row items-center relative">
