@@ -6,7 +6,10 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useDispatch } from 'react-redux'
 
-import { markUploadCompleted } from '../../redux/features/filesSlice/fileSlice'
+import {
+  markCvCoverLetterUploadCompleted,
+  markUploadCompleted,
+} from '../../redux/features/filesSlice/fileSlice'
 
 const LinearProgressWithLabel = (
   props: LinearProgressProps & { value: number },
@@ -58,7 +61,8 @@ export const Uploader = ({ size, index }: UploaderProps) => {
 
   React.useEffect(() => {
     if (progress === 100) {
-      dispatch(markUploadCompleted(index))
+      dispatch(markUploadCompleted(index)) ||
+        dispatch(markCvCoverLetterUploadCompleted(index))
     }
   }, [progress, dispatch, index])
 

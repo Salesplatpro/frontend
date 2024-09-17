@@ -10,11 +10,16 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['file/setFiles', 'file/addFiles'],
-        ignoredPaths: ['file.files'],
+        ignoredActions: [
+          'file/setFiles',
+          'file/addFiles',
+          'file/addCvCoverLetter',
+          'file/setCvCoverLetter',
+        ],
+        ignoredPaths: ['file.files', 'file.cvCoverLetter', 'file.results'],
       },
     }).concat(api.middleware, talentApi.middleware, recruiterApi.middleware),
-  devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in development
+  devTools: process.env.NODE_ENV !== 'production',
 })
 
 export type RootState = ReturnType<typeof rootReducer>

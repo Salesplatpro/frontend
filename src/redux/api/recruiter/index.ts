@@ -97,6 +97,13 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    uploadCvAndCoverLetter: builder.mutation({
+      query: (data) => ({
+        url: `scout/cv-and-cover-letter`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -113,4 +120,5 @@ export const {
   useSearchTalentDbQuery,
   useFetchTalentProfileQuery,
   useUploadCVOnlyMutation,
+  useUploadCvAndCoverLetterMutation,
 } = recruiterApi
