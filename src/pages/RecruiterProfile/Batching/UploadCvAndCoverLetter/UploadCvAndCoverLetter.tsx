@@ -1,11 +1,10 @@
+import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import {
-  addCvCoverLetter,
-  setCvCoverLetter,
-} from '../../../../redux/features/filesSlice/fileSlice'
+import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
+import { setCvCoverLetter } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
 import { sortCvAndCoverLetter } from '../../../../utils/sortCvAndCoverLetter'
 import { FileUploader } from '../FileUploader'
@@ -31,20 +30,30 @@ export const UploadCvAndCoverLetter = () => {
   }
 
   return (
-    <FileUploader
-      showAlert={showAlert}
-      alertMessage="Make sure candidate's Cv and Cover letter are saved with same name"
-      pageTitle="Cv and cover letter Assessment method"
-      pageDescription="Upload cv and cover letter in batch for collective AI assesment"
-      buttonTitle="upload files"
-      files={files}
-      disabled={files.length === 0}
-      handleFileChange={handleFileChange}
-      onUploadClick={() =>
-        navigate(
-          `/recruiterDashboard/scout/process-cv-cover-letter/${params.id}`,
-        )
-      }
-    />
+    <>
+      <PageHeaderTitle
+        title="Cv and cover letter Assessment method"
+        description="Upload cv and cover letter in batch for collective AI assesment"
+      />
+      <div className="mt-4">
+        {showAlert && (
+          <Alert severity="info">
+            Make sure candidate&lsquo;s Cv and Cover letter are saved with same
+            name
+          </Alert>
+        )}
+      </div>
+      <FileUploader
+        buttonTitle="upload files"
+        files={files}
+        disabled={files.length === 0}
+        handleFileChange={handleFileChange}
+        onUploadClick={() =>
+          navigate(
+            `/recruiterDashboard/scout/process-cv-cover-letter/${params.id}`,
+          )
+        }
+      />
+    </>
   )
 }

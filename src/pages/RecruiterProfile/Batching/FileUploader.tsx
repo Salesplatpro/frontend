@@ -1,28 +1,18 @@
-import { Alert } from '@mui/material'
 import React from 'react'
 
 import uploadCheck from '../../../assets/cvuploadonly.png'
 import { RecruiterButton } from '../../../components'
-import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import { CvCoverLetter } from '../../../redux/features/filesSlice/fileSlice'
 
 interface FileUploaderProps {
-  pageTitle: string
-  pageDescription: string
   files?: File[] | CvCoverLetter[]
   handleFileChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onUploadClick?: () => void
   buttonTitle: string
   disabled?: boolean
-  showAlert?: boolean
-  alertMessage?: string
 }
 
 export const FileUploader = ({
-  showAlert,
-  alertMessage,
-  pageTitle,
-  pageDescription,
   files,
   handleFileChange,
   onUploadClick,
@@ -47,14 +37,8 @@ export const FileUploader = ({
   }
 
   return (
-    <div>
-      <PageHeaderTitle title={pageTitle} description={pageDescription} />
-      <div className="mt-4">
-        {showAlert && <Alert severity="info">{alertMessage}</Alert>}
-      </div>
-      <div
-        className="flex justify-center items-center flex-col pt-24 cursor-pointer"
-        onClick={() => document.getElementById('fileInput')?.click()}>
+    <>
+      <div className="flex justify-center items-center flex-col pt-24 cursor-pointer">
         <div className="flex justify-center items-center w-full max-w-4xl bg-[#F8F8F8] border border-[#D0D5DD] rounded-2xl">
           <div className="flex justify-center items-center w-full flex-col space-y-4 pb-12 pt-1 px-6 relative">
             <div className="flex flex-row pt-3">
@@ -86,6 +70,6 @@ export const FileUploader = ({
         onClick={onUploadClick}
         disabled={disabled}
       />
-    </div>
+    </>
   )
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 import { setFiles } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
 import { FileUploader } from '../FileUploader'
@@ -21,10 +22,12 @@ export const UploadCVOnly = () => {
   }
 
   return (
-    <div>
+    <>
+      <PageHeaderTitle
+        title="CV Upload"
+        description="Upload CV in batch for collective AI assessment"
+      />
       <FileUploader
-        pageTitle="CV Upload"
-        pageDescription="Upload CV in batch for collective AI assessment"
         files={files}
         handleFileChange={handleFileChange}
         onUploadClick={() =>
@@ -33,6 +36,6 @@ export const UploadCVOnly = () => {
         buttonTitle="Upload files"
         disabled={files.length === 0}
       />
-    </div>
+    </>
   )
 }
