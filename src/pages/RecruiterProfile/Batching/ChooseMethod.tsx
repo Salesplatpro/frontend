@@ -42,7 +42,7 @@ export const ChooseMethod = () => {
       name: 'Search Talent DB',
       icon: <CiSearch size={20} />,
       description: <span>Search here</span>,
-      link: '/recruiterDashboard/scout/search-talent',
+      link: `/recruiterDashboard/scout/search-talent/${params.id}`,
       toolTip: false,
     },
   ]
