@@ -68,8 +68,11 @@ export const UploadCvAndCoverLetter = () => {
     setShowAddButton(false)
     let batchId = ''
     setIsReevaluating(true)
+
+    // Start with the first file
     for (const [index, file] of files.entries()) {
-      if (result[index]?.result) {
+      // Skip already processed files
+      if (result[index]?.result?.status === true) {
         continue
       }
 
@@ -90,26 +93,32 @@ export const UploadCvAndCoverLetter = () => {
           formData,
         ).unwrap()
         console.log(uploadResult)
+
         if (uploadResult.status === true) {
           dispatch(saveCvCoverLetterResult({ index, result: uploadResult }))
           if (index === 0) {
-            batchId = uploadResult.data.scout.batchId
+            batchId = uploadResult.data.scout.batchId // Update batchId only for the first file
           }
         } else {
-          console.log('Error uploading CV and Cover Letter')
+          // Stop further processing if the first file fails
+          setMoreFilesToProcess(true)
+          break
         }
       } catch (error) {
         console.log('Upload Error:', error)
+        // Stop further processing if an error occurs
+        setMoreFilesToProcess(true)
+        break
       }
 
+      // Check if all files have been processed
       setAllFilesProcessed(
-        files.every((_, index) => result[index]?.result?.status === true),
+        files.every((_, idx) => result[idx]?.result?.status === true),
       )
     }
 
-    if (!allFilesProcessed) {
-      setMoreFilesToProcess(true)
-    } else {
+    // Adjust button state based on processing results
+    if (allFilesProcessed) {
       setMoreFilesToProcess(false)
     }
 
