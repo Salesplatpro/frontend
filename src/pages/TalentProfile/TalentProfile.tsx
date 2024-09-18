@@ -83,8 +83,6 @@ const TalentProfile = () => {
   )
   const [cvFileName, setCvFileName] = useState<string | null>(null)
 
-  const [isRemote, setIsRemote] = useState(false)
-
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
     remote: userInfo.profile?.remote || false, // Correctly initialize remote based on user profile
@@ -246,13 +244,6 @@ const TalentProfile = () => {
       }
       reader.readAsDataURL(file) // Read the file as a data URL
     }
-  }
-
-  // Function to handle checkbox change
-  const handleChange = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) }
-  }) => {
-    setIsRemote(event.target.checked)
   }
 
   return (
@@ -532,44 +523,46 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="flex mt-6 w-full">
-                    {userInfo.profile?.cv ? (
-                      // If a CV is already uploaded, show the download link
-                      <div className="md:w-[48%] ">
-                        <label
-                          htmlFor="cv"
-                          className="text-[14px] text-[#344054]">
-                          Current CV
-                        </label>
-                        <div className="relative w-[100%]">
-                          <div>
-                            <a
-                              href={userInfo.profile.cv}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block text-[#4884DF] mt-2">
-                              {userInfo.profile?.cv.split('/').pop()}
-                            </a>
+                  <div className="lg:flex lg:justify-center lg:items-center lg:flex-row md:flex md:justify-start md:items-start md:flex-col">
+                    <div className="flex mt-6 w-full">
+                      {userInfo.profile?.cv ? (
+                        // If a CV is already uploaded, show the download link
+                        <div className="md:w-[48%] ">
+                          <label
+                            htmlFor="cv"
+                            className="text-[14px] text-[#344054]">
+                            Current CV
+                          </label>
+                          <div className="relative w-[100%]">
+                            <div>
+                              <a
+                                href={userInfo.profile.cv}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block text-[#4884DF] mt-2">
+                                {userInfo.profile?.cv.split('/').pop()}
+                              </a>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ) : null}
-                  </div>
+                      ) : null}
+                    </div>
 
-                  <div>
-                    <label htmlFor="remote">Remote:</label>
-                    <input
-                      type="checkbox"
-                      id="remote"
-                      name="remote"
-                      checked={values.remote}
-                      onChange={() => setFieldValue('remote', !values.remote)}
-                    />
-                    <ErrorMessage
-                      name="remote"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
+                    <div className="w-full pt-3 lg:space-x-2 lg:pl-8 lg:pb-7">
+                      <label htmlFor="remote">Remote:</label>
+                      <input
+                        type="checkbox"
+                        id="remote"
+                        name="remote"
+                        checked={values.remote}
+                        onChange={() => setFieldValue('remote', !values.remote)}
+                      />
+                      <ErrorMessage
+                        name="remote"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
                   </div>
 
                   <div className="inline-block mt-6 w-full">
