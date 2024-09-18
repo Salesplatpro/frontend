@@ -12,7 +12,7 @@ interface FileUploaderProps {
   disabled?: boolean
 }
 
-export const FileUploader = ({
+export const CvDocumentPicker = ({
   files,
   handleFileChange,
   onUploadClick,
