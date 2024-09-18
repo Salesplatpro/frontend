@@ -26,10 +26,12 @@ interface TalentProfileProps {
   experience?: string
   cv?: File | null
   cvUrl?: string
+  remote?: boolean
 }
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
+  remote: Yup.boolean().required('Remote status is required'),
   minSalary: Yup.number()
     .required('Minimum Salary is required')
     .positive('Minimum Salary must be positive'),
@@ -81,8 +83,11 @@ const TalentProfile = () => {
   )
   const [cvFileName, setCvFileName] = useState<string | null>(null)
 
+  const [isRemote, setIsRemote] = useState(false)
+
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
+    remote: userInfo.profile?.remote || false, // Correctly initialize remote based on user profile
     role: userInfo.profile?.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
@@ -105,6 +110,8 @@ const TalentProfile = () => {
         formData.append('minSalary', values.minSalary || '')
         formData.append('maxSalary', values.maxSalary || '')
         formData.append('experience', values.experience || '')
+        // Append `remote` field to FormData
+        formData.append('remote', values.remote ? 'true' : 'false')
 
         if (values.cv) {
           formData.append('file', values.cv)
@@ -160,6 +167,10 @@ const TalentProfile = () => {
           updatedFields.cv = values.cv
         }
 
+        if (updatedFields.remote !== initialValues.remote) {
+          updatedFields.remote = values.remote
+        }
+
         if (Object.keys(updatedFields).length === 0) {
           toast.error('No changes detected')
           setSubmitting(false)
@@ -184,6 +195,10 @@ const TalentProfile = () => {
         }
         if (updatedFields.experience) {
           formData.append('experience', updatedFields.experience)
+        }
+
+        if (updatedFields.remote) {
+          formData.append('remote', updatedFields.remote ? 'true' : 'false')
         }
 
         const updatedCv = updatedFields.cv
@@ -231,6 +246,13 @@ const TalentProfile = () => {
       }
       reader.readAsDataURL(file) // Read the file as a data URL
     }
+  }
+
+  // Function to handle checkbox change
+  const handleChange = (event: {
+    target: { checked: boolean | ((prevState: boolean) => boolean) }
+  }) => {
+    setIsRemote(event.target.checked)
   }
 
   return (
@@ -510,7 +532,7 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="inline-block mt-6 w-full">
+                  <div className="flex mt-6 w-full">
                     {userInfo.profile?.cv ? (
                       // If a CV is already uploaded, show the download link
                       <div className="md:w-[48%] ">
@@ -532,6 +554,22 @@ const TalentProfile = () => {
                         </div>
                       </div>
                     ) : null}
+                  </div>
+
+                  <div>
+                    <label htmlFor="remote">Remote:</label>
+                    <input
+                      type="checkbox"
+                      id="remote"
+                      name="remote"
+                      checked={values.remote}
+                      onChange={() => setFieldValue('remote', !values.remote)}
+                    />
+                    <ErrorMessage
+                      name="remote"
+                      component="div"
+                      className="text-red-500 text-[14px]"
+                    />
                   </div>
 
                   <div className="inline-block mt-6 w-full">
