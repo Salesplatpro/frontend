@@ -14,6 +14,7 @@ import {
 } from '../../redux/api/talent'
 import { setUser } from '../../redux/features/authSlice/authSlice'
 import { RootState } from '../../redux/store/store'
+import DropDown from '../Auth/DropDown'
 import ProgressBar from '../TalentProfile/ProgressBar'
 import { capitalizeEachWord } from './Profile Component/CapitalizeWord'
 import UploadCV from './Profile Component/UploadCV'
@@ -26,7 +27,6 @@ interface TalentProfileProps {
   experience?: string
   cv?: File | null
   cvUrl?: string
-  remote?: boolean
 }
 
 const validationSchema = Yup.object({
@@ -69,6 +69,19 @@ const calculateProgress = (values: TalentProfileProps): number => {
   return (filledFields.length / fields.length) * 100
 }
 
+const userTypeData = [
+  { value: 'onsite', label: 'OnSite' },
+  { value: 'remote', label: 'Remote' },
+  { value: 'hybrid', label: 'Hybrid' },
+]
+
+const experienceTypeData = [
+  { value: '', label: 'Select experience Level' },
+  { value: 'senior', label: 'Senior' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'junior', label: 'Junior' },
+]
+
 const TalentProfile = () => {
   const [progress, setProgress] = useState(0)
   const [isEditing, setIsEditing] = useState(false) // New state for editing
@@ -85,7 +98,6 @@ const TalentProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
-    remote: userInfo.profile?.remote || false, // Correctly initialize remote based on user profile
     role: userInfo.profile?.role.map((r: any) => r._id) || [],
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
@@ -108,8 +120,6 @@ const TalentProfile = () => {
         formData.append('minSalary', values.minSalary || '')
         formData.append('maxSalary', values.maxSalary || '')
         formData.append('experience', values.experience || '')
-        // Append `remote` field to FormData
-        formData.append('remote', values.remote ? 'true' : 'false')
 
         if (values.cv) {
           formData.append('file', values.cv)
@@ -165,10 +175,6 @@ const TalentProfile = () => {
           updatedFields.cv = values.cv
         }
 
-        if (updatedFields.remote !== initialValues.remote) {
-          updatedFields.remote = values.remote
-        }
-
         if (Object.keys(updatedFields).length === 0) {
           toast.error('No changes detected')
           setSubmitting(false)
@@ -195,9 +201,9 @@ const TalentProfile = () => {
           formData.append('experience', updatedFields.experience)
         }
 
-        if (updatedFields.remote) {
-          formData.append('remote', updatedFields.remote ? 'true' : 'false')
-        }
+        // if (updatedFields.remote) {
+        //   formData.append('remote', updatedFields.remote ? 'true' : 'false')
+        // }
 
         const updatedCv = updatedFields.cv
           ? await uploadCv(formData).unwrap()
@@ -372,7 +378,7 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="inline-block mt-6 w-full">
+                  <div className="flex justify-between mt-6 w-full">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="phoneNumber"
@@ -389,6 +395,24 @@ const TalentProfile = () => {
                       />
                       <ErrorMessage
                         name="phoneNumber"
+                        component="div"
+                        className="text-red-500 text-[14px]"
+                      />
+                    </div>
+
+                    <div className="md:w-[48%]">
+                      <label
+                        htmlFor="linkedin"
+                        className="text-[14px] text-[#344054]">
+                        Work Type
+                      </label>
+                      <Field
+                        name="userType"
+                        component={DropDown}
+                        options={userTypeData}
+                      />
+                      <ErrorMessage
+                        name="linkedin"
                         component="div"
                         className="text-red-500 text-[14px]"
                       />
@@ -462,7 +486,7 @@ const TalentProfile = () => {
                         htmlFor="experience">
                         Experience Level
                       </label>
-                      <Field
+                      {/* <Field
                         as="select"
                         id="experience"
                         name="experience"
@@ -471,7 +495,14 @@ const TalentProfile = () => {
                         <option value="senior">Senior</option>
                         <option value="intermediate">Intermediate</option>
                         <option value="junior">Junior</option>
-                      </Field>
+                      </Field> */}
+
+                      <Field
+                        name="experience"
+                        id="experience"
+                        component={DropDown}
+                        options={experienceTypeData}
+                      />
                       <ErrorMessage
                         name="experience"
                         component="div"
@@ -546,22 +577,6 @@ const TalentProfile = () => {
                           </div>
                         </div>
                       ) : null}
-                    </div>
-
-                    <div className="w-full pt-3 lg:space-x-2 lg:pl-8 lg:pb-7">
-                      <label htmlFor="remote">Remote:</label>
-                      <input
-                        type="checkbox"
-                        id="remote"
-                        name="remote"
-                        checked={values.remote}
-                        onChange={() => setFieldValue('remote', !values.remote)}
-                      />
-                      <ErrorMessage
-                        name="remote"
-                        component="div"
-                        className="text-red-500 text-[14px]"
-                      />
                     </div>
                   </div>
 

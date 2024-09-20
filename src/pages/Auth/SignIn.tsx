@@ -7,13 +7,16 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
 
-// import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
-import { useTalentRegMutation, useRecruiterRegMutation } from '../../redux/api/apiSlice'
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
+// import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
+import {
+  useRecruiterRegMutation,
+  useTalentRegMutation,
+} from '../../redux/api/apiSlice'
 import {
   signupFailure,
   signupStart,
