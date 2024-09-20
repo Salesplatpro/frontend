@@ -26,9 +26,9 @@ import {
 } from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
-import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
+import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
@@ -155,7 +155,6 @@ const router = createBrowserRouter([
             path: 'scout/:id',
             element: <ChooseMethod />,
           },
-
           {
             path: 'scout/upload-cv-cover-letter/:id',
             element: <UploadCvAndCoverLetter />,

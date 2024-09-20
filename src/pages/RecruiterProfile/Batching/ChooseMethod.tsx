@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ChooseMethodCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import styles from './chooseMethod.module.scss'
-import { CustomToolTip } from './CustomToolTip'
 
 const description = (
   <div>

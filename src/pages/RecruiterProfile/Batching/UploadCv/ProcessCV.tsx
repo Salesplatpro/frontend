@@ -56,7 +56,7 @@ export const ProcessCV = () => {
     setIsReevaluating(true)
 
     for (const [index, file] of files.entries()) {
-      if (result[index]?.result) {
+      if (result[index]?.result?.status === true) {
         continue
       }
 
@@ -77,10 +77,13 @@ export const ProcessCV = () => {
             batchId = uploadResult.data.scout.batchId
           }
         } else {
-          console.log('Error uploading CV')
+          setMoreFilesToProcess(true)
+          break
         }
       } catch (error) {
         console.log('Upload Error:', error)
+        setMoreFilesToProcess(true)
+        break
       }
 
       setAllFilesProcessed(
@@ -88,9 +91,7 @@ export const ProcessCV = () => {
       )
     }
 
-    if (!allFilesProcessed) {
-      setMoreFilesToProcess(true)
-    } else {
+    if (allFilesProcessed) {
       setMoreFilesToProcess(false)
     }
 
