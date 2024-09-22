@@ -9,7 +9,10 @@ import {
   DocumentUploaderCard,
 } from '../../../../components/Cards'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import { useUploadCVOnlyMutation } from '../../../../redux/api/recruiter'
+import {
+  useGetCampaignNameQuery,
+  useUploadCVOnlyMutation,
+} from '../../../../redux/api/recruiter'
 import {
   addFiles,
   removeFile,
@@ -39,6 +42,7 @@ export const ProcessCV = () => {
   const [moreFilesToProcess, setMoreFilesToProcess] = useState(false)
   const [isReevaluating, setIsReevaluating] = useState(false)
   const [allFilesProcessed, setAllFilesProcessed] = useState(false)
+  const { data, isLoading } = useGetCampaignNameQuery(params)
 
   const handleFileUpload = () => {
     fileInputRef.current?.click()
@@ -56,7 +60,7 @@ export const ProcessCV = () => {
     setIsReevaluating(true)
 
     for (const [index, file] of files.entries()) {
-      if (result[index]?.result) {
+      if (result[index]?.result?.status === true) {
         continue
       }
 
@@ -77,10 +81,13 @@ export const ProcessCV = () => {
             batchId = uploadResult.data.scout.batchId
           }
         } else {
-          console.log('Error uploading CV')
+          setMoreFilesToProcess(true)
+          break
         }
       } catch (error) {
         console.log('Upload Error:', error)
+        setMoreFilesToProcess(true)
+        break
       }
 
       setAllFilesProcessed(
@@ -88,9 +95,7 @@ export const ProcessCV = () => {
       )
     }
 
-    if (!allFilesProcessed) {
-      setMoreFilesToProcess(true)
-    } else {
+    if (allFilesProcessed) {
       setMoreFilesToProcess(false)
     }
 
@@ -119,7 +124,7 @@ export const ProcessCV = () => {
   return (
     <div>
       <PageHeaderTitle
-        title="CV Upload"
+        title={isLoading ? '' : `${data?.data?.name} scouting`}
         description="Upload CV in batch for collective AI assessment"
       />
       <div>
