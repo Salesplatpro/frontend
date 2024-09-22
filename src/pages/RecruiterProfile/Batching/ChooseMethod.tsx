@@ -5,9 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { ChooseMethodCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
+import { useGetCampaignNameQuery } from '../../../redux/api/recruiter'
 import styles from './chooseMethod.module.scss'
 
-const description = (
+export const description = (
   <div>
     <span>Click to upload</span> or drag and drop SVG,PNG, JPG or GIF (max
     800px, 400px)
@@ -18,6 +19,7 @@ export const ChooseMethod = () => {
   const params = useParams()
   console.log(params.id)
   const navigate = useNavigate()
+  const { data, isLoading } = useGetCampaignNameQuery(params)
 
   const chooseMethodArray = [
     {
@@ -49,7 +51,7 @@ export const ChooseMethod = () => {
   return (
     <div className={styles.topContainer}>
       <PageHeaderTitle
-        title="Choose Assessment method"
+        title={isLoading ? '' : `${data?.data?.name} scouting`}
         description="Upload cv in batch for collective AI assesment"
       />
       <div className={styles.parent}>
@@ -58,7 +60,6 @@ export const ChooseMethod = () => {
             key={index}
             item={item}
             onClick={() => navigate(item.link)}
-            tooltip={item.toolTip}
           />
         ))}
       </div>

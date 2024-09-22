@@ -104,6 +104,12 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    getCampaignName: builder.query({
+      query: ({ id }) => ({
+        url: `/scout/jobs/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -121,4 +127,5 @@ export const {
   useFetchTalentProfileQuery,
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
+  useGetCampaignNameQuery,
 } = recruiterApi

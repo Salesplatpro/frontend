@@ -1,11 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { AiOutlineCloudUpload } from 'react-icons/ai'
+import { IoDocumentTextOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import { IsProcessing, RecruiterButton } from '../../../../components'
 import { DocumentUploaderCard2 } from '../../../../components/Cards'
+import { FileDesign } from '../../../../components/Cards/FileDesign'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import { useUploadCvAndCoverLetterMutation } from '../../../../redux/api/recruiter'
+import {
+  useGetCampaignNameQuery,
+  useUploadCvAndCoverLetterMutation,
+} from '../../../../redux/api/recruiter'
 import {
   addCvCoverLetter,
   removeCvCoverLetter,
@@ -41,6 +47,7 @@ export const UploadCvAndCoverLetter = () => {
   )
   const scoutJobId = params.id ?? ''
   const [handleUploadCvAndCoverLetter] = useUploadCvAndCoverLetterMutation()
+  const { data, isLoading } = useGetCampaignNameQuery(params)
 
   useEffect(() => {
     if (cv.current) cv.current.value = ''
@@ -69,9 +76,7 @@ export const UploadCvAndCoverLetter = () => {
     let batchId = ''
     setIsReevaluating(true)
 
-    // Start with the first file
     for (const [index, file] of files.entries()) {
-      // Skip already processed files
       if (result[index]?.result?.status === true) {
         continue
       }
@@ -97,27 +102,23 @@ export const UploadCvAndCoverLetter = () => {
         if (uploadResult.status === true) {
           dispatch(saveCvCoverLetterResult({ index, result: uploadResult }))
           if (index === 0) {
-            batchId = uploadResult.data.scout.batchId // Update batchId only for the first file
+            batchId = uploadResult.data.scout.batchId
           }
         } else {
-          // Stop further processing if the first file fails
           setMoreFilesToProcess(true)
           break
         }
       } catch (error) {
         console.log('Upload Error:', error)
-        // Stop further processing if an error occurs
         setMoreFilesToProcess(true)
         break
       }
 
-      // Check if all files have been processed
       setAllFilesProcessed(
         files.every((_, idx) => result[idx]?.result?.status === true),
       )
     }
 
-    // Adjust button state based on processing results
     if (allFilesProcessed) {
       setMoreFilesToProcess(false)
     }
@@ -147,39 +148,10 @@ export const UploadCvAndCoverLetter = () => {
   return (
     <>
       <PageHeaderTitle
-        title="Cv and cover letter Assessment method"
+        title={isLoading ? '' : `${data?.data?.name} scouting`}
         description="Upload cv and cover letter in batch for collective AI assessment"
       />
       <div>
-        {showAddButton && (
-          <>
-            <div>
-              <p>Pick CV</p>
-              <input
-                type="file"
-                ref={cv}
-                onChange={(e) => handleFileChange(e, 'cv')}
-              />
-            </div>
-            <div>
-              <p>Pick a Cover Letter</p>
-              <input
-                type="file"
-                ref={cover}
-                onChange={(e) => handleFileChange(e, 'coverLetter')}
-              />
-            </div>
-          </>
-        )}
-        {showAddButton && (
-          <RecruiterButton
-            buttonTitle={
-              files.length > 0 ? 'Add another profile' : 'Add profile'
-            }
-            onClick={handleAddFileToState}
-          />
-        )}
-
         <div className={styles.uploader}>
           {files.length > 0 &&
             files.map((file, index) => (
@@ -193,6 +165,85 @@ export const UploadCvAndCoverLetter = () => {
               />
             ))}
         </div>
+
+        {showAddButton && (
+          <div className={styles.parentContainer}>
+            <div
+              className={styles.container}
+              onClick={() => cv.current?.click()}>
+              Upload talent Cv
+              {selectedFiles.cv ? (
+                <div className={styles.innerContainer}>
+                  <IoDocumentTextOutline size={28} color="#3c6fd4" />
+                  <div className={styles.description}>
+                    <div>
+                      <span>{selectedFiles.cv.name}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.innerContainer}>
+                  <FileDesign
+                    icon={<AiOutlineCloudUpload size={20} color="#3c6fd4" />}
+                  />
+                  <div className={styles.description}>
+                    <div>
+                      <span>Click to upload</span> or drag and drop SVG,PNG, JPG
+                      or GIF (max 800px, 400px)
+                    </div>
+                  </div>
+                </div>
+              )}
+              <input
+                type="file"
+                ref={cv}
+                onChange={(e) => handleFileChange(e, 'cv')}
+                style={{ display: 'none' }}
+              />
+            </div>
+            <div
+              className={styles.container}
+              onClick={() => cover.current?.click()}>
+              Upload talent Cover Letter
+              {selectedFiles.coverLetter ? (
+                <div className={styles.innerContainer}>
+                  <IoDocumentTextOutline size={28} color="#3c6fd4" />
+                  <div className={styles.description}>
+                    <div>
+                      <span>{selectedFiles.coverLetter.name}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.innerContainer}>
+                  <FileDesign
+                    icon={<AiOutlineCloudUpload size={20} color="#3c6fd4" />}
+                  />
+                  <div className={styles.description}>
+                    <div>
+                      <span>Click to upload</span> or drag and drop SVG,PNG, JPG
+                      or GIF (max 800px, 400px)
+                    </div>
+                  </div>
+                </div>
+              )}
+              <input
+                type="file"
+                ref={cover}
+                onChange={(e) => handleFileChange(e, 'coverLetter')}
+                style={{ display: 'none' }}
+              />
+            </div>
+            <div className="w-1/2 mx-auto -py-20">
+              <RecruiterButton
+                buttonTitle={
+                  files.length > 0 ? 'Add another profile' : 'Add profile'
+                }
+                onClick={handleAddFileToState}
+              />
+            </div>
+          </div>
+        )}
         {files.length > 0 && (
           <RecruiterButton
             buttonTitle={buttonTitle}

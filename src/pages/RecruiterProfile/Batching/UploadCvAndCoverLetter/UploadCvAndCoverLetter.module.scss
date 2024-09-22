@@ -6,3 +6,38 @@
   margin: 30px auto;
   cursor: pointer;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 536px;
+  margin: 30px auto;
+  cursor: pointer;
+}
+
+.innerContainer {
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid #e4e7eC;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.description {
+  max-width: 300px;
+  color: #667085;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.parentContainer {
+  max-width: 536px;
+  margin: 30px auto;
+  background: #F8F8F8;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
