@@ -13,12 +13,11 @@ export const sidebarData = [
   {
     name: 'Dashboard',
     icon: <RxDashboard size={ICON_SIZE} color={COLOR} />,
-    link: '',
+    link: '/recruiterDashboard/dashboard',
   },
   {
     name: 'Post a Job',
     icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
-    // link: '/recruiterDashboard/jobProfiles',
     link: '/recruiterDashboard/postjob',
   },
   {
