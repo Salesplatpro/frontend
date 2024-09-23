@@ -75,11 +75,19 @@ export const recruiterApi = createApi({
         const roleId = role || ''
         const experience = experienceLevel || ''
         const country = location?.country?.name || ''
+        const state = location?.state?.name || ''
+        const city = location?.city?.name || ''
+
+        const queryParams = new URLSearchParams()
+
+        if (roleId) queryParams.append('roleId', roleId)
+        if (experience) queryParams.append('experience', experience)
+        if (country) queryParams.append('country', country)
+        if (state) queryParams.append('state', state)
+        if (city) queryParams.append('city', city)
 
         return {
-          url: `/scout/${scoutJobId}/talents?roleId=${roleId}&experience=${experience}&location=${encodeURIComponent(
-            country,
-          )}&remote=true`,
+          url: `/scout/${scoutJobId}/talents?${queryParams.toString()}`,
           method: 'GET',
         }
       },
