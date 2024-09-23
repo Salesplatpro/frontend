@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import uploadCheck from '../../../../assets/cvuploadonly.png'
 import { RecruiterButton } from '../../../../components'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import { useGetCampaignNameQuery } from '../../../../redux/api/recruiter'
 import { setFiles } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
 
@@ -14,7 +13,6 @@ export const UploadCVOnly = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const files = useSelector((state: RootState) => state.file.files)
-  const { data, isLoading } = useGetCampaignNameQuery(params)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files
@@ -27,7 +25,7 @@ export const UploadCVOnly = () => {
   return (
     <div>
       <PageHeaderTitle
-        title={isLoading ? '' : `${data?.data?.name} scouting`}
+        paramsId={params}
         description="Upload CV in batch for collective AI assessment"
       />
 

@@ -1,76 +1,49 @@
-import { Alert } from '@mui/material'
 import { Field, Form, Formik } from 'formik'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React from 'react'
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom'
-import { getRole } from '../../../../api/api-communication'
 import Location from '../../../../components/global/Location'
+import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
+import AllRoles from '../../../../components/Roles/AllRoles'
 
-type RoleType = {
-  _id: string
-  name: string
-  description: string
-}
 
 const SearchTalent = () => {
   const navigate = useNavigate()
   const scoutJobId = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [fetchedRoles, setFetchedRoles] = useState<RoleType[]>([])
-  const [error, setError] = useState<string | null>(null)
-  console.log(scoutJobId.id, 'search')
+
   // Initialize form values from URL params
   const initialSearchValues = {
     scoutJobId: searchParams.get('scoutJobId') || scoutJobId.id,
-    // scoutJobId: '66e80ed27554c2d493122a67',
     role: searchParams.get('role') || '',
-    description: searchParams.get('description') || '',
     location: {
       country: {
         name: searchParams.get('countryName') || '',
         geoId: searchParams.get('geoId') || null,
       },
+      state: {
+        name: searchParams.get('stateName') || '',
+        geoId: searchParams.get('geoId') || null,
+      },
+      city: {
+        name: searchParams.get('cityName') || '',
+      },
     },
     experienceLevel: searchParams.get('experienceLevel') || '',
   }
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await getRole()
-        setFetchedRoles(response.data)
-      } catch (err) {
-        console.error('Error fetching roles:', err)
-        setError('Error fetching roles')
-      }
-    }
-    fetchRoles()
-  }, [])
-
-  const handleRoleChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    setFieldValue: (field: string, value: any) => void,
-  ) => {
-    const selectedRoleId = e.target.value
-    setFieldValue('role', selectedRoleId)
-
-    const selectedRole = fetchedRoles.find(
-      (role) => role._id === selectedRoleId,
-    )
-    if (selectedRole) {
-      setFieldValue('description', selectedRole.description)
-    }
-  }
-
   const onSubmit = async (values: any) => {
-    const { scoutJobId, role, description, location, experienceLevel } = values
+    const { scoutJobId, role, location, experienceLevel } = values
 
     // Set search parameters in URL
     setSearchParams({
       scoutJobId,
       role,
-      description,
       countryName: location.country.name,
-      geoId: location.country.geoId,
+      countryGeoId: location.country.geoId,
+      stateName: location.state.name,
+      stateGeoId: location.state.geoId,
+      cityName: location.city.name,
+      cityGeoId: location.city.geoId,
       experienceLevel,
     })
 
@@ -78,9 +51,12 @@ const SearchTalent = () => {
     const queryParams = new URLSearchParams({
       scoutJobId,
       role,
-      description,
       countryName: location.country.name,
       geoId: location.country.geoId,
+      stateName: location.state.name,
+      stateGeoId: location.state.geoId,
+      cityName: location.city.name,
+      cityGeoId: location.city.geoId,
       experienceLevel,
     }).toString()
 
@@ -89,16 +65,11 @@ const SearchTalent = () => {
 
   return (
     <div className="py-4 space-y-4">
-      <div className="space-y-2">
-        <h1 className="font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
-          Filter Talent Search
-        </h1>
-        <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
-          Find qualified talents by searching
-        </p>
-      </div>
-      {error && <Alert severity="error">{error} </Alert>}
-      <div className="flex justify-center items-center mx-auto w-full ">
+      <PageHeaderTitle
+        paramsId={scoutJobId}
+        description="Find qualified talents by searching"
+      />
+      <div className="flex justify-center items-center mx-auto md:w-[60%] w-full ">
         <Formik initialValues={initialSearchValues} onSubmit={onSubmit}>
           {({ setFieldValue, values }) => (
             <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
@@ -108,38 +79,13 @@ const SearchTalent = () => {
                   className="text-[#434144] font-raleway font-bold leading-4 text-[14px]">
                   Job Title
                 </label>
-                <Field
-                  as="select"
-                  name="role"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                    handleRoleChange(e, setFieldValue)
-                  }>
-                  <option value="" label="Select a role" />
-                  {fetchedRoles.map((role: RoleType) => (
-                    <option key={role._id} value={role._id}>
-                      {role.name}
-                    </option>
-                  ))}
-                </Field>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="description"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[14px]">
-                  Description
-                </label>
-                <Field
-                  name="description"
-                  type="text"
-                  className="w-[320px] flex flex-col lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
-                  placeholder="Add Job description here"
-                  value={values.description}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFieldValue('description', e.target.value)
-                  }
-                />
+                <div className="border border-[#D0D5DD] py-4 pl-4 rounded-lg w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+                  <AllRoles
+                    name="role"
+                    value={values.role}
+                    onChange={(e) => setFieldValue('role', e.target.value)}
+                  />
+                </div>
               </div>
 
               <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
@@ -149,6 +95,29 @@ const SearchTalent = () => {
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
+                    setFieldValue('location.state', { name: '', geoId: null })
+                    setFieldValue('location.city', { name: '', geoId: null })
+                  }}
+                />
+              </div>
+              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+                <Location
+                  locationTitle="State"
+                  geoId={values.location.country.geoId}
+                  isCountry={false}
+                  onChange={(geoId) => {
+                    setFieldValue('location.state.geoId', geoId)
+                    setFieldValue('location.city', { name: '', geoId: null })
+                  }}
+                />
+              </div>
+              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+                <Location
+                  locationTitle="City"
+                  geoId={values.location.state.geoId}
+                  isCountry={false}
+                  onChange={(geoId) => {
+                    setFieldValue('location.city.geoId', geoId)
                   }}
                 />
               </div>
@@ -163,7 +132,8 @@ const SearchTalent = () => {
                   as="select"
                   id="experienceLevel"
                   name="experienceLevel"
-                  className="w-full p-2 border border-gray-300 rounded-lg py-5 mt-2">
+                  required
+                  className="w-full p-2 border border-gray-300 rounded-lg py-4">
                   <option value="">Select Experience Level</option>
                   <option value="senior">Senior</option>
                   <option value="intermediate">Intermediate</option>

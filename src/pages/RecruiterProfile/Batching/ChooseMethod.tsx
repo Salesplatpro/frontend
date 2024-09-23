@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { ChooseMethodCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
-import { useGetCampaignNameQuery } from '../../../redux/api/recruiter'
 import styles from './chooseMethod.module.scss'
 
 export const description = (
@@ -19,7 +18,6 @@ export const ChooseMethod = () => {
   const params = useParams()
   console.log(params.id)
   const navigate = useNavigate()
-  const { data, isLoading } = useGetCampaignNameQuery(params)
 
   const chooseMethodArray = [
     {
@@ -43,7 +41,7 @@ export const ChooseMethod = () => {
       name: 'Search Talent DB',
       icon: <CiSearch size={20} />,
       description: <span>Search here</span>,
-      link: '/recruiterDashboard/scout/search-talent',
+      link: `/recruiterDashboard/scout/search-talent/${params.id}`,
       toolTip: false,
     },
   ]
@@ -51,7 +49,7 @@ export const ChooseMethod = () => {
   return (
     <div className={styles.topContainer}>
       <PageHeaderTitle
-        title={isLoading ? '' : `${data?.data?.name} scouting`}
+        paramsId={params}
         description="Upload cv in batch for collective AI assesment"
       />
       <div className={styles.parent}>

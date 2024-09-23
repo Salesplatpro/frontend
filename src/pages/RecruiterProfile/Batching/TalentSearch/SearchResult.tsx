@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
+import { useSearchParams, Link, useParams } from 'react-router-dom'
 import { AnalyzedPercentage } from '../AnalyzedPercentage'
 import { Alert } from '@mui/material'
 import { useSearchTalentDbQuery } from '../../../../redux/api/recruiter'
 import talentdb from '../../../../assets/talentdb.webp'
 import Loading from '../../../../components/Loading/Loading'
+import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 
 const SearchResult = () => {
   const [searchParams] = useSearchParams()
@@ -13,11 +14,17 @@ const SearchResult = () => {
   const initialSearchValues = {
     scoutJobId: searchParams.get('scoutJobId') || '',
     role: searchParams.get('role') || '',
-    description: searchParams.get('description') || '',
     location: {
       country: {
         name: searchParams.get('countryName') || '',
         geoId: searchParams.get('geoId') || null,
+      },
+      state: {
+        name: searchParams.get('stateName') || '',
+        geoId: searchParams.get('geoId') || null,
+      },
+      city: {
+        name: searchParams.get('cityName') || '',
       },
     },
     experienceLevel: searchParams.get('experienceLevel') || '',
@@ -47,21 +54,17 @@ const SearchResult = () => {
 
   return (
     <div>
-      <div className="space-y-2 mt-4 mb-10">
-        <h1 className="font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
-          Talent Search Result
-        </h1>
-        <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
-          Find qualified talents by searching
-        </p>
-      </div>
+      <PageHeaderTitle
+        paramsId={initialSearchValues.scoutJobId}
+        description="Find qualified talents by searching"
+      />
       {talents.length === 0 ? (
         <Alert severity="error">No Talents fit this description</Alert>
       ) : (
-        <div className="md:w-[60%] w-[80%] mx-auto md:max-w[528px]">
-          {talents.map((talent: any) => (
+        <div className="md:w-[60%] w-[80%] mx-auto md:max-w[528px] mt-10">
+          {talents.map((talent: any, i) => (
             <div
-              key={talent.id}
+              key={i}
               className="flex border border-[#E4E7EC] w-full items-start justify-center rounded-lg p-3">
               <div className="flex-1 flex space-x-4">
                 <img src={talentdb} alt="" className="w-9 h-9" />
