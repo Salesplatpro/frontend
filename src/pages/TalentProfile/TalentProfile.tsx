@@ -27,11 +27,18 @@ interface TalentProfileProps {
   experience?: string
   cv?: File | null
   cvUrl?: string
+  workType?: string // 'remote', 'onSite', or 'hybrid'
+  remote?: boolean // Add these lines
+  onSite?: boolean
+  hybrid?: boolean
 }
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
-  remote: Yup.boolean().required('Remote status is required'),
+  workType: Yup.string().required('Please select a work type'),
+  remote: Yup.boolean().required(),
+  onSite: Yup.boolean().required(),
+  hybrid: Yup.boolean().required(),
   minSalary: Yup.number()
     .required('Minimum Salary is required')
     .positive('Minimum Salary must be positive'),
@@ -69,7 +76,7 @@ const calculateProgress = (values: TalentProfileProps): number => {
   return (filledFields.length / fields.length) * 100
 }
 
-const userTypeData = [
+const workTypeData = [
   { value: 'onsite', label: 'OnSite' },
   { value: 'remote', label: 'Remote' },
   { value: 'hybrid', label: 'Hybrid' },
@@ -103,7 +110,10 @@ const TalentProfile = () => {
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
-    // cvUrl: userInfo.profile?.cv || '',
+    workType: userInfo.profile?.workType || '',
+    remote: userInfo.profile?.remote || false, // Set to boolean
+    onSite: userInfo.profile?.onSite || false, // Set to boolean
+    hybrid: userInfo.profile?.hybrid || false, // Set to boolean
   }
 
   const onSubmit = async (
@@ -114,12 +124,25 @@ const TalentProfile = () => {
       const isNewProfile = !userInfo.profile
       const formData = new FormData()
 
+      // Initialize boolean values for work types
+      // const workTypeBooleans = {
+      //   remote: values.remote || false,
+      //   onSite: values.onSite || false,
+      //   hybrid: values.hybrid || false,
+      // }
+
+      // // Append work type booleans to formData
+      formData.append('remote', String(values.remote))
+      formData.append('onSite', String(values.onSite))
+      formData.append('hybrid', String(values.hybrid))
+
       if (isNewProfile) {
         formData.append('bio', values.bio || '')
         formData.append('role', (values.role || []).join(','))
         formData.append('minSalary', values.minSalary || '')
         formData.append('maxSalary', values.maxSalary || '')
         formData.append('experience', values.experience || '')
+        formData.append('workType', values.workType || '')
 
         if (values.cv) {
           formData.append('file', values.cv)
@@ -175,6 +198,21 @@ const TalentProfile = () => {
           updatedFields.cv = values.cv
         }
 
+        if (values.workType !== initialValues.workType) {
+          updatedFields.workType = values.workType
+        }
+
+        // Check and assign updated work type booleans
+        // if (values.remote !== initialValues.remote) {
+        //   updatedFields.remote = values.remote
+        // }
+        // if (values.onSite !== initialValues.onSite) {
+        //   updatedFields.onSite = values.onSite
+        // }
+        // if (values.hybrid !== initialValues.hybrid) {
+        //   updatedFields.hybrid = values.hybrid
+        // }
+
         if (Object.keys(updatedFields).length === 0) {
           toast.error('No changes detected')
           setSubmitting(false)
@@ -201,9 +239,14 @@ const TalentProfile = () => {
           formData.append('experience', updatedFields.experience)
         }
 
-        // if (updatedFields.remote) {
-        //   formData.append('remote', updatedFields.remote ? 'true' : 'false')
-        // }
+        if (updatedFields.workType) {
+          formData.append('experience', updatedFields.workType)
+        }
+
+        // Append work type values to formData
+        // formData.append('remote', String(updatedFields.remote ?? false))
+        // formData.append('onSite', String(updatedFields.onSite ?? false))
+        // formData.append('hybrid', String(updatedFields.hybrid ?? false))
 
         const updatedCv = updatedFields.cv
           ? await uploadCv(formData).unwrap()
@@ -402,17 +445,17 @@ const TalentProfile = () => {
 
                     <div className="md:w-[48%]">
                       <label
-                        htmlFor="linkedin"
+                        htmlFor="work type"
                         className="text-[14px] text-[#344054]">
                         Work Type
                       </label>
                       <Field
-                        name="userType"
+                        name="workType"
                         component={DropDown}
-                        options={userTypeData}
+                        options={workTypeData}
                       />
                       <ErrorMessage
-                        name="linkedin"
+                        name="work type"
                         component="div"
                         className="text-red-500 text-[14px]"
                       />
