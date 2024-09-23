@@ -8,10 +8,7 @@ import { IsProcessing, RecruiterButton } from '../../../../components'
 import { DocumentUploaderCard2 } from '../../../../components/Cards'
 import { FileDesign } from '../../../../components/Cards/FileDesign'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import {
-  useGetCampaignNameQuery,
-  useUploadCvAndCoverLetterMutation,
-} from '../../../../redux/api/recruiter'
+import { useUploadCvAndCoverLetterMutation } from '../../../../redux/api/recruiter'
 import {
   addCvCoverLetter,
   removeCvCoverLetter,
@@ -47,7 +44,6 @@ export const UploadCvAndCoverLetter = () => {
   )
   const scoutJobId = params.id ?? ''
   const [handleUploadCvAndCoverLetter] = useUploadCvAndCoverLetterMutation()
-  const { data, isLoading } = useGetCampaignNameQuery(params)
 
   useEffect(() => {
     if (cv.current) cv.current.value = ''
@@ -148,7 +144,7 @@ export const UploadCvAndCoverLetter = () => {
   return (
     <>
       <PageHeaderTitle
-        title={isLoading ? '' : `${data?.data?.name} scouting`}
+        paramsId={params}
         description="Upload cv and cover letter in batch for collective AI assessment"
       />
       <div>
