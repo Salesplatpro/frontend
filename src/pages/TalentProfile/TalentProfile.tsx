@@ -26,19 +26,16 @@ interface TalentProfileProps {
   minSalary?: string
   experience?: string
   cv?: File | null
-  cvUrl?: string
-  workType?: string // 'remote', 'onSite', or 'hybrid'
-  remote?: boolean // Add these lines
-  onSite?: boolean
-  hybrid?: boolean
+  // cvUrl?: string
+  workType?: 'remote' | 'onSite' | 'hybrid' | undefined // // Define workType as a union of
 }
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
-  workType: Yup.string().required('Please select a work type'),
-  remote: Yup.boolean().required(),
-  onSite: Yup.boolean().required(),
-  hybrid: Yup.boolean().required(),
+  workType: Yup.string()
+    .oneOf(['remote', 'onSite', 'hybrid'], 'Please select a valid work type') // Ensure it's one of the specified values
+    .required('Please select a work type'),
+
   minSalary: Yup.number()
     .required('Minimum Salary is required')
     .positive('Minimum Salary must be positive'),
@@ -64,6 +61,9 @@ const validationSchema = Yup.object({
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         ].includes((value as File).type),
     ),
+  remote: Yup.boolean().required('Remote is required'), // Validation for remote
+  onSite: Yup.boolean().required('On-site is required'), // Validation for on-site
+  hybrid: Yup.boolean().required('Hybrid is required'),
 })
 
 const calculateProgress = (values: TalentProfileProps): number => {
@@ -77,7 +77,7 @@ const calculateProgress = (values: TalentProfileProps): number => {
 }
 
 const workTypeData = [
-  { value: 'onsite', label: 'OnSite' },
+  { value: 'onSite', label: 'OnSite' },
   { value: 'remote', label: 'Remote' },
   { value: 'hybrid', label: 'Hybrid' },
 ]
@@ -110,10 +110,7 @@ const TalentProfile = () => {
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
     cv: null,
-    workType: userInfo.profile?.workType || '',
-    remote: userInfo.profile?.remote || false, // Set to boolean
-    onSite: userInfo.profile?.onSite || false, // Set to boolean
-    hybrid: userInfo.profile?.hybrid || false, // Set to boolean
+    workType: userInfo.profile?.workType || undefined,
   }
 
   const onSubmit = async (
@@ -121,20 +118,10 @@ const TalentProfile = () => {
     { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
   ) => {
     try {
+      console.log('Selected Work Type:', values.workType)
+
       const isNewProfile = !userInfo.profile
       const formData = new FormData()
-
-      // Initialize boolean values for work types
-      // const workTypeBooleans = {
-      //   remote: values.remote || false,
-      //   onSite: values.onSite || false,
-      //   hybrid: values.hybrid || false,
-      // }
-
-      // // Append work type booleans to formData
-      formData.append('remote', String(values.remote))
-      formData.append('onSite', String(values.onSite))
-      formData.append('hybrid', String(values.hybrid))
 
       if (isNewProfile) {
         formData.append('bio', values.bio || '')
@@ -142,13 +129,34 @@ const TalentProfile = () => {
         formData.append('minSalary', values.minSalary || '')
         formData.append('maxSalary', values.maxSalary || '')
         formData.append('experience', values.experience || '')
-        formData.append('workType', values.workType || '')
 
         if (values.cv) {
           formData.append('file', values.cv)
         }
         if (profileImage && profileImage !== profilePics) {
           formData.append('profileImage', profileImage as string)
+        }
+
+        // Append work type values
+        const workTypeValue = values.workType
+        if (workTypeValue) {
+          formData.append(
+            'remote',
+            workTypeValue === 'remote' ? 'true' : 'false',
+          )
+          formData.append(
+            'onSite',
+            workTypeValue === 'onSite' ? 'true' : 'false',
+          )
+          formData.append(
+            'hybrid',
+            workTypeValue === 'hybrid' ? 'true' : 'false',
+          )
+        } else {
+          // Handle case where workType is not selected
+          formData.append('remote', 'false')
+          formData.append('onSite', 'false')
+          formData.append('hybrid', 'false')
         }
 
         const submitCv = values.cv
@@ -198,20 +206,25 @@ const TalentProfile = () => {
           updatedFields.cv = values.cv
         }
 
-        if (values.workType !== initialValues.workType) {
-          updatedFields.workType = values.workType
-        }
+        // Check for changes in workType
+        if (values.workType && values.workType !== initialValues.workType) {
+          updatedFields.workType = values.workType // Capture the updated workType
 
-        // Check and assign updated work type booleans
-        // if (values.remote !== initialValues.remote) {
-        //   updatedFields.remote = values.remote
-        // }
-        // if (values.onSite !== initialValues.onSite) {
-        //   updatedFields.onSite = values.onSite
-        // }
-        // if (values.hybrid !== initialValues.hybrid) {
-        //   updatedFields.hybrid = values.hybrid
-        // }
+          // Append the updated workType to formData
+          const workTypeValue = values.workType
+          formData.append(
+            'remote',
+            workTypeValue === 'remote' ? 'true' : 'false',
+          )
+          formData.append(
+            'onSite',
+            workTypeValue === 'onSite' ? 'true' : 'false',
+          )
+          formData.append(
+            'hybrid',
+            workTypeValue === 'hybrid' ? 'true' : 'false',
+          )
+        }
 
         if (Object.keys(updatedFields).length === 0) {
           toast.error('No changes detected')
@@ -239,14 +252,22 @@ const TalentProfile = () => {
           formData.append('experience', updatedFields.experience)
         }
 
+        // Convert workType to boolean fields
         if (updatedFields.workType) {
-          formData.append('experience', updatedFields.workType)
+          const workTypeValue = updatedFields.workType
+          formData.append(
+            'remote',
+            workTypeValue === 'remote' ? 'true' : 'false',
+          )
+          formData.append(
+            'onSite',
+            workTypeValue === 'onSite' ? 'true' : 'false',
+          )
+          formData.append(
+            'hybrid',
+            workTypeValue === 'hybrid' ? 'true' : 'false',
+          )
         }
-
-        // Append work type values to formData
-        // formData.append('remote', String(updatedFields.remote ?? false))
-        // formData.append('onSite', String(updatedFields.onSite ?? false))
-        // formData.append('hybrid', String(updatedFields.hybrid ?? false))
 
         const updatedCv = updatedFields.cv
           ? await uploadCv(formData).unwrap()
@@ -445,7 +466,7 @@ const TalentProfile = () => {
 
                     <div className="md:w-[48%]">
                       <label
-                        htmlFor="work type"
+                        htmlFor="workType"
                         className="text-[14px] text-[#344054]">
                         Work Type
                       </label>
@@ -455,7 +476,7 @@ const TalentProfile = () => {
                         options={workTypeData}
                       />
                       <ErrorMessage
-                        name="work type"
+                        name="workType"
                         component="div"
                         className="text-red-500 text-[14px]"
                       />
