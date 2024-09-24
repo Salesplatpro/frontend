@@ -1,8 +1,9 @@
 import React from 'react'
+
 import { useGetCampaignNameQuery } from '../../redux/api/recruiter'
 
 type PageHeaderTitleProps = {
-  paramsId: any
+  paramsId?: any
   description: string
 }
 

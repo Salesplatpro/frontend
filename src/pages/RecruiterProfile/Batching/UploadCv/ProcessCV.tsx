@@ -42,7 +42,7 @@ export const ProcessCV = () => {
   const [moreFilesToProcess, setMoreFilesToProcess] = useState(false)
   const [isReevaluating, setIsReevaluating] = useState(false)
   const [allFilesProcessed, setAllFilesProcessed] = useState(false)
-  const { data, isLoading } = useGetCampaignNameQuery(params)
+  // const { data, isLoading } = useGetCampaignNameQuery(params)
 
   const handleFileUpload = () => {
     fileInputRef.current?.click()
@@ -124,7 +124,7 @@ export const ProcessCV = () => {
   return (
     <div>
       <PageHeaderTitle
-        title={isLoading ? '' : `${data?.data?.name} scouting`}
+        paramsId={params}
         description="Upload CV in batch for collective AI assessment"
       />
       <div>
