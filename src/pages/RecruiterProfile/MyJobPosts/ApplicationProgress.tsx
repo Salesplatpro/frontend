@@ -25,6 +25,8 @@ export const ApplicationProgress = () => {
     applicationId ?? '',
   )
 
+  console.log(data)
+
   const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
     id: data?.data?.application?.talent?._id,
   })
