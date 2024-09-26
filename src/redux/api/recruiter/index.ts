@@ -121,6 +121,13 @@ export const recruiterApi = createApi({
     getRecruiterShortlist: builder.query({
       query: () => `recruiter/shortlist/`,
     }),
+    patchApplicationStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/applications/${id}/status`,
+        method: 'PATCH',
+        body: status,
+      }),
+    }),
   }),
 })
 
@@ -140,4 +147,5 @@ export const {
   useUploadCvAndCoverLetterMutation,
   useGetCampaignNameQuery,
   useGetRecruiterShortlistQuery,
+  usePatchApplicationStatusMutation,
 } = recruiterApi

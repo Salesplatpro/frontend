@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
@@ -13,6 +14,7 @@ import Loading from '../../../components/Loading/Loading'
 import {
   useFetchApplicantProgressQuery,
   useFetchTalentProfileQuery,
+  usePatchApplicationStatusMutation,
 } from '../../../redux/api/recruiter'
 import { EachProgressDetails } from './EachProgressDetails'
 import { ProfileCard } from './ProfileCard'
@@ -24,12 +26,42 @@ export const ApplicationProgress = () => {
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
-
-  console.log(data)
+  const [loadingShortlist, setLoadingShortlist] = useState(false)
+  const [loadingReject, setLoadingReject] = useState(false)
 
   const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
     id: data?.data?.application?.talent?._id,
   })
+
+  const [patchApplicationStatus] = usePatchApplicationStatusMutation()
+
+  const handleStatusUpdate = async (status: 'rejected' | 'shortlisted') => {
+    if (status === 'rejected') {
+      setLoadingReject(true)
+    } else {
+      setLoadingShortlist(true)
+    }
+
+    try {
+      const response = await patchApplicationStatus({
+        id: applicationId,
+        status: { status },
+      }).unwrap()
+
+      console.log(response)
+      toast.success(
+        `Talent is ${response.data.application.status} successfully`,
+      )
+    } catch (error) {
+      console.error('Failed to update status:', error)
+    } finally {
+      if (status === 'rejected') {
+        setLoadingReject(false)
+      } else {
+        setLoadingShortlist(false)
+      }
+    }
+  }
 
   const progress = [
     {
@@ -96,10 +128,18 @@ export const ApplicationProgress = () => {
       <div className="text-center">rank: 2 of 1090 applicants</div>
       <div className="flex justify-center space-x-2">
         <div className="w-1/3">
-          <OutlineButton buttonTitle="Reject" />
+          <OutlineButton
+            buttonTitle={loadingReject ? 'Rejecting...' : 'Reject'}
+            onClick={() => handleStatusUpdate('rejected')}
+            disabled={loadingReject}
+          />
         </div>
         <div className="w-1/3">
-          <RecruiterButton buttonTitle="Shortlist" />
+          <RecruiterButton
+            buttonTitle={loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
+            onClick={() => handleStatusUpdate('shortlisted')}
+            disabled={loadingShortlist}
+          />
         </div>
       </div>
     </div>
