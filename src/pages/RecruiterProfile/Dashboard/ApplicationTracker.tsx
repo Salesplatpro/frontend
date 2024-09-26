@@ -1,45 +1,60 @@
 import React from 'react'
 import { AnalyzedPercentage } from '../Batching'
 import ProgressBar from '../../TalentProfile/ProgressBar'
+import Loading from '../../../components/Loading/Loading'
 
-const infoData = [
-  {
-    trackerName: 'campaign',
-    amount: '1100',
-    percentage: 67,
-    color: '',
-  },
-  {
-    trackerName: 'campaign',
-    amount: '1100',
-    percentage: 67,
-  },
-  {
-    trackerName: 'campaign',
-    amount: '1100',
-    percentage: 67,
-  },
-]
+interface StatsType {
+  infoData: any
+}
 
-const ApplicationTracker = () => {
+const ApplicationTracker: React.FC<StatsType> = ({ infoData }) => {
+  const allData = [
+    {
+      trackerName: 'Campaigns',
+      amount: infoData?.campaignCount,
+      ratio: true,
+      completionRatio: infoData?.completionRatio,
+      bgColor: '#4884DF',
+      textColor: '#fff',
+    },
+    {
+      trackerName: 'Applications',
+      amount: infoData?.applicationsCount,
+      ratio: false,
+      bgColor: '#F4F6F7',
+      textColor: '#000',
+    },
+    {
+      trackerName: 'Shortlists',
+      amount: infoData?.shortlistCount,
+      ratio: false,
+      bgColor: '#4884DF',
+      textColor: '#fff',
+    },
+  ]
+
   return (
-    <div className="flex justify-between gap-5">
-      {infoData.map((info, i) => (
+    <div className="flex flex-col items-center md:flex-row justify-between gap-5 ">
+      {allData.map((info, i) => (
         <div
           key={i}
-          className="bg-[#4884DF] w-[340px] h-[114px] rounded-lg flex justify-between items-center lg:px-10 md:px-7 px-3">
+          style={{
+            backgroundColor: info.bgColor,
+            color: info.textColor,
+          }}
+          className="w-[340px] h-[114px] rounded-lg flex justify-between items-center lg:px-10 md:px-7 px-3">
           <div>
-            <h6 className="text-white text-sm font-medium">
-              {info.trackerName}
-            </h6>
-            <h6 className="text-white text-lg font-semibold">{info.amount}</h6>
+            <h6 className="text-sm font-extralight">{info.trackerName}</h6>
+            <h6 className="text-lg font-semibold">{info.amount}</h6>
           </div>
-          <ProgressBar
-            percentage={info.percentage}
-            textColor="#fff"
-            pathColor="#72A9E8"
-            trailColor="#F4EBFF"
-          />
+          {info.ratio && (
+            <ProgressBar
+              percentage={info.completionRatio}
+              textColor={info.textColor}
+              pathColor="#fff"
+              trailColor="#72A9E8"
+            />
+          )}
         </div>
       ))}
     </div>
