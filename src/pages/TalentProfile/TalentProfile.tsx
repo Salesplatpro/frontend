@@ -246,6 +246,7 @@ const TalentProfile = () => {
             textColor="#344054"
             pathColor="#3C6FD4"
             trailColor="#F4EBFF"
+            size={80}
           />
         </div>
 

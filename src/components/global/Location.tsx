@@ -48,7 +48,6 @@ const Location: React.FC<LocationProps> = ({
           `Error fetching ${isCountry ? 'countries' : 'states/cities'}:`,
           err,
         )
-        // Consider adding user feedback or error state handling here
       }
     }
 

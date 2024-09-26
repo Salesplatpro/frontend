@@ -45,6 +45,7 @@ import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
+import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 
 const router = createBrowserRouter([
   {
@@ -139,6 +140,10 @@ const router = createBrowserRouter([
         element: <RecruiterProfileSidebar />,
         children: [
           {
+            path: 'dashboard',
+            element: <Dashboard />,
+          },
+          {
             path: 'postjob',
             element: <PostJobTab />,
           },
@@ -168,7 +173,7 @@ const router = createBrowserRouter([
             element: <SearchTalent />,
           },
           {
-            path: 'scout/search-results',
+            path: 'scout/search-results/:id',
             element: <SearchResult />,
           },
           {

@@ -58,7 +58,7 @@ const Login: React.FC = () => {
         const userRole = response.data.user?.userRole
         switch (userRole) {
           case 'recruiter':
-            navigate('/recruiterDashboard/postjob')
+            navigate('/recruiterDashboard/dashboard')
             break
           case 'talent':
             navigate('/talentDashboard/TalentProfile')

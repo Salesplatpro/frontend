@@ -5,7 +5,6 @@ import Location from '../../../../components/global/Location'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 import AllRoles from '../../../../components/Roles/AllRoles'
 
-
 const SearchTalent = () => {
   const navigate = useNavigate()
   const scoutJobId = useParams()
@@ -60,7 +59,9 @@ const SearchTalent = () => {
       experienceLevel,
     }).toString()
 
-    navigate(`/recruiterDashboard/scout/search-results?${queryParams}`)
+    navigate(
+      `/recruiterDashboard/scout/search-results/${scoutJobId}?${queryParams}`,
+    )
   }
 
   return (

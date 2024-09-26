@@ -10,6 +10,7 @@ import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 const SearchResult = () => {
   const [searchParams] = useSearchParams()
   const [talents, setTalents] = useState([])
+  const param = useParams()
 
   const initialSearchValues = {
     scoutJobId: searchParams.get('scoutJobId') || '',
@@ -55,7 +56,7 @@ const SearchResult = () => {
   return (
     <div>
       <PageHeaderTitle
-        paramsId={initialSearchValues.scoutJobId}
+        paramsId={param}
         description="Find qualified talents by searching"
       />
       {talents.length === 0 ? (
