@@ -23,6 +23,17 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    fetchDashboard: builder.query({
+      query: ({ jobId }: { jobId?: string }) => {
+        const baseUrl = '/recruiter/dashboard'
+        const url = jobId ? `${baseUrl}?jobId=${jobId}` : baseUrl
+        return {
+          url,
+          method: 'GET',
+        }
+      },
+    }),
+
     aiConfig: builder.mutation({
       query: (data) => ({
         url: `/ai-config`,
@@ -123,6 +134,7 @@ export const recruiterApi = createApi({
 
 export const {
   useJobPostCreationMutation,
+  useFetchDashboardQuery,
   useAiConfigMutation,
   usePatchAiConfigMutation,
   useFetchRecruiterJobPostQuery,
