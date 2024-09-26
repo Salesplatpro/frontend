@@ -53,6 +53,7 @@ const ApplicationTracker: React.FC<StatsType> = ({ infoData }) => {
               textColor={info.textColor}
               pathColor="#fff"
               trailColor="#72A9E8"
+              size={50}
             />
           )}
         </div>
