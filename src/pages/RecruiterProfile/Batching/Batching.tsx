@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import CreateJD from '../../../assets/batchImg.png'
 // import { DocumentUploaderCard } from '../../../components/Cards'
-import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 
 const Batching = () => {
   const navigate = useNavigate()
@@ -14,10 +13,14 @@ const Batching = () => {
 
   return (
     <div className="py-4 space-y-4">
-      <PageHeaderTitle
-        title="Scout"
-        description="Upload cv in batch for collective AI assessment"
-      />
+      <div className="space-y-2">
+        <h1 className="font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
+          Scout
+        </h1>
+        <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
+          Upload CV in batch for collective AI assessment
+        </p>
+      </div>
 
       <div>
         <div className=" flex justify-center items-center lg:w-[1100px] md:w-[850px] sm:w-[670px] h-[550px] lg:flex lg:justify-center lg:items-center md:flex md:justify-center md:items-center sm::flex sm:justify-center sm:items-center flex-col bg-[#F8F8F8] border border-[#D0D5DD] rounded-2xl mt-10">
