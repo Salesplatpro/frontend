@@ -118,6 +118,9 @@ export const recruiterApi = createApi({
         method: 'GET',
       }),
     }),
+    getRecruiterShortlist: builder.query({
+      query: () => `recruiter/shortlist/`,
+    }),
   }),
 })
 
@@ -136,4 +139,5 @@ export const {
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
   useGetCampaignNameQuery,
+  useGetRecruiterShortlistQuery,
 } = recruiterApi
