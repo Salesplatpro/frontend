@@ -9,43 +9,43 @@ import {
   Paper,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
+import { calculateDaysFromCreation } from '../../../utils'
 
-const rows = [
-  {
-    name: 'Tayo Amosun',
-    preScreening: '80%',
-    cvMatch: '69%',
-    dateApplied: '16 days ago',
-  },
-  {
-    name: 'Tayo Amosun',
-    preScreening: '80%',
-    cvMatch: '69%',
-    dateApplied: '16 days ago',
-  },
-  {
-    name: 'Tayo Amosun',
-    preScreening: '80%',
-    cvMatch: '69%',
-    dateApplied: '16 days ago',
-  },
-]
+interface ApplicationRow {
+  applicantName: string
+  prescreeningScore?: number
+  cvSimilarityScore?: number
+  dateApplied: string
+}
+
+interface RecentApplicationsProps {
+  infoData: ApplicationRow[]
+}
 
 const tableHeadStyle = {
   color: '#101828',
+  backgroundColor: '#F8F8F8',
   fontSize: '18px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
 }
 
 const tableCellStyle = {
   color: '#101828',
   fontSize: '16px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
 }
 
-const RecentApplications = () => {
+const RecentApplications: React.FC<RecentApplicationsProps> = ({
+  infoData,
+}) => {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h4 className="text-lg text-[#000] font-semibold">Recent Applications</h4>
+        <h4 className="text-lg text-[#000] font-semibold">
+          Recent Applications
+        </h4>
         <Link to="#" className="text-base text-[#4985DF]">
           View all
         </Link>
@@ -67,19 +67,19 @@ const RecentApplications = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
+            {infoData.map((row, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row" sx={tableCellStyle}>
-                  {row.name}
+                  {row.applicantName}
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyle}>
-                  {row.preScreening}
+                  {row.prescreeningScore || 'nill'}%
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyle}>
-                  {row.cvMatch}
+                  {row.cvSimilarityScore || 'nill'}%
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyle}>
-                  {row.dateApplied}
+                  {calculateDaysFromCreation(row.dateApplied)} days ago
                 </TableCell>
               </TableRow>
             ))}
