@@ -41,7 +41,7 @@ export const Shortlist = () => {
   const screenWidth = useScreenWidth()
   const { data, isLoading } = useGetRecruiterShortlistQuery({})
 
-  console.log(data?.data.scouts)
+  console.log(data?.data.campaigns)
 
   return (
     <div className="flex flex-col space-y-12">
@@ -76,7 +76,7 @@ export const Shortlist = () => {
                     <StyledTableRow key={index}>
                       <StyledTableCell>{item.job?.role?.name}</StyledTableCell>
                       <StyledTableCell>{item.talent}</StyledTableCell>
-                      <StyledTableCell>3</StyledTableCell>
+                      <StyledTableCell>{item.rank}</StyledTableCell>
                       <StyledTableCell>
                         <Link to="">
                           <Button textType="small" title="Details" />

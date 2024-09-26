@@ -28,7 +28,6 @@ export const ApplicationProgress = () => {
   )
   const [loadingShortlist, setLoadingShortlist] = useState(false)
   const [loadingReject, setLoadingReject] = useState(false)
-
   const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
     id: data?.data?.application?.talent?._id,
   })
@@ -125,7 +124,11 @@ export const ApplicationProgress = () => {
           personality={personality.score}
         />
       </div>
-      <div className="text-center">rank: 2 of 1090 applicants</div>
+      <div className="flex justify-center"></div>
+      <div className="text-center">
+        rank: {data?.data?.application?.rank} of{' '}
+        {data?.data?.application?.job?.noOfApplicants} applicants
+      </div>
       <div className="flex justify-center space-x-2">
         <div className="w-1/3">
           <OutlineButton
