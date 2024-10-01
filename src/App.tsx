@@ -22,6 +22,7 @@ import {
   MyJobPosts,
   ProcessCV,
   ProcessCvAndCoverLetter,
+  Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
@@ -199,6 +200,10 @@ const router = createBrowserRouter([
           {
             path: 'postjob/:jobId',
             element: <PostJobTab />,
+          },
+          {
+            path: 'shortlist',
+            element: <Shortlist />,
           },
         ],
       },

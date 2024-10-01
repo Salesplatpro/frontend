@@ -75,7 +75,6 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
   const align = 'center'
   const alignHeader = 'center'
   const screenWidth = useScreenWidth()
-  console.log(applications)
 
   return (
     <TableContainer component={Paper}>

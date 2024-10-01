@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useSearchParams, Link, useParams } from 'react-router-dom'
-import { AnalyzedPercentage } from '../AnalyzedPercentage'
 import { Alert } from '@mui/material'
-import { useSearchTalentDbQuery } from '../../../../redux/api/recruiter'
+import React, { useEffect, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+
 import talentdb from '../../../../assets/talentdb.webp'
 import Loading from '../../../../components/Loading/Loading'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
+import { useSearchTalentDbQuery } from '../../../../redux/api/recruiter'
+import { AnalyzedPercentage } from '../AnalyzedPercentage'
 
 const SearchResult = () => {
   const [searchParams] = useSearchParams()

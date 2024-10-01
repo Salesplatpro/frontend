@@ -2,6 +2,7 @@ import './Roles.scss'
 
 import { Field } from 'formik'
 import React from 'react'
+
 import { useGetRoleQuery } from '../../redux/api/talent'
 import { Role } from '../../utils/types'
 
