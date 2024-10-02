@@ -17,6 +17,7 @@ import {
   usePatchApplicationStatusMutation,
 } from '../../../redux/api/recruiter'
 import { EachProgressDetails } from './EachProgressDetails'
+import { Message } from './Message'
 import { ProfileCard } from './ProfileCard'
 
 export const ApplicationProgress = () => {
@@ -144,6 +145,21 @@ export const ApplicationProgress = () => {
             disabled={loadingShortlist}
           />
         </div>
+      </div>
+      <div className="flex flex-col justify-center gap-16">
+        <div>
+          <div className="text-[20px] font-medium">Messages</div>
+          <Message />
+        </div>
+        <div>
+          <textarea
+            className="border rounded-[10px] border-gray-300 p-4 resize-none w-full sm:max-w-[803px]"
+            cols={91}
+            rows={5}
+            placeholder="Type here..."
+          />
+        </div>
+        <RecruiterButton buttonTitle="Send" />
       </div>
     </div>
   )

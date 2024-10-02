@@ -139,6 +139,13 @@ export const recruiterApi = createApi({
         body: status,
       }),
     }),
+    postTalentMessage: builder.mutation({
+      query: ({ data }) => ({
+        url: '/messages',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -160,4 +167,5 @@ export const {
   useGetCampaignNameQuery,
   useGetRecruiterShortlistQuery,
   usePatchApplicationStatusMutation,
+  usePostTalentMessageMutation,
 } = recruiterApi
