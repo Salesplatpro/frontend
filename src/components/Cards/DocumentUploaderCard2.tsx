@@ -13,8 +13,8 @@ import styles from './DocumentUploaderCard.module.scss'
 import { FileDesign } from './FileDesign'
 
 type DocumentUploaderCardProps = {
-  cv?: File
-  coverLetter?: File
+  cv?: File | null
+  coverLetter?: File | null
   onDelete?: () => void
   result?: number
   index: number

@@ -23,6 +23,17 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    fetchDashboard: builder.query({
+      query: ({ jobId }: { jobId?: string }) => {
+        const baseUrl = '/recruiter/dashboard'
+        const url = jobId ? `${baseUrl}?jobId=${jobId}` : baseUrl
+        return {
+          url,
+          method: 'GET',
+        }
+      },
+    }),
+
     aiConfig: builder.mutation({
       query: (data) => ({
         url: `/ai-config`,
@@ -75,11 +86,19 @@ export const recruiterApi = createApi({
         const roleId = role || ''
         const experience = experienceLevel || ''
         const country = location?.country?.name || ''
+        const state = location?.state?.name || ''
+        const city = location?.city?.name || ''
+
+        const queryParams = new URLSearchParams()
+
+        if (roleId) queryParams.append('roleId', roleId)
+        if (experience) queryParams.append('experience', experience)
+        if (country) queryParams.append('country', country)
+        if (state) queryParams.append('state', state)
+        if (city) queryParams.append('city', city)
 
         return {
-          url: `/scout/${scoutJobId}/talents?roleId=${roleId}&experience=${experience}&location=${encodeURIComponent(
-            country,
-          )}&remote=true`,
+          url: `/scout/${scoutJobId}/talents?${queryParams.toString()}`,
           method: 'GET',
         }
       },
@@ -104,11 +123,28 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    getCampaignName: builder.query({
+      query: ({ id }) => ({
+        url: `/scout/jobs/${id}`,
+        method: 'GET',
+      }),
+    }),
+    getRecruiterShortlist: builder.query({
+      query: () => `recruiter/shortlist/`,
+    }),
+    patchApplicationStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/applications/${id}/status`,
+        method: 'PATCH',
+        body: status,
+      }),
+    }),
   }),
 })
 
 export const {
   useJobPostCreationMutation,
+  useFetchDashboardQuery,
   useAiConfigMutation,
   usePatchAiConfigMutation,
   useFetchRecruiterJobPostQuery,
@@ -121,4 +157,7 @@ export const {
   useFetchTalentProfileQuery,
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
+  useGetCampaignNameQuery,
+  useGetRecruiterShortlistQuery,
+  usePatchApplicationStatusMutation,
 } = recruiterApi

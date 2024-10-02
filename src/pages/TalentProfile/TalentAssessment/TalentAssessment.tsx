@@ -5,16 +5,13 @@ import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 import animationData from '../../../assets/Animation - check.json'
-
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchPretestQuery,
   usePostPretestMutation,
 } from '../../../redux/api/talent'
-
-import { Question } from '../../../utils/types'
-
 import { RootState } from '../../../redux/store/store'
+import { Question } from '../../../utils/types'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)

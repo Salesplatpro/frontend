@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
+import { CgProfile } from 'react-icons/cg'
+import { MdSupport } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 
 import logo from '../../assets/logo.png'
 import { SidebarList } from '../lists'
-import styles from './Sidebar.module.scss'
-import { feedBack } from './sidebarData'
+import styles from './sidebar.module.scss'
 
 interface sideBarProps {
   sideBarData: {
@@ -15,6 +16,17 @@ interface sideBarProps {
   }[]
   handleClick?: () => void
 }
+
+const feedBack = [
+  {
+    name: 'Support',
+    icon: <MdSupport size={24} />,
+  },
+  {
+    name: 'Leave us feedBack',
+    icon: <CgProfile size={24} />,
+  },
+]
 
 export const SideBar: React.FC<sideBarProps> = ({
   sideBarData,
@@ -51,18 +63,16 @@ export const SideBar: React.FC<sideBarProps> = ({
           ))}
         </div>
       </div>
-      <div className={styles.employer}>
-        <div>
-          {feedBack.map((data, index) => (
-            <SidebarList
-              key={index}
-              icon={data.icon}
-              name={data.name}
-              active={activeItem === `feedback-${index}`}
-              onClick={() => handleItemClick('feedback', index)}
-            />
-          ))}
-        </div>
+      <div>
+        {feedBack.map((data, index) => (
+          <SidebarList
+            key={index}
+            icon={data.icon}
+            name={data.name}
+            active={activeItem === `feedback-${index}`}
+            onClick={() => handleItemClick('feedback', index)}
+          />
+        ))}
       </div>
     </div>
   )
