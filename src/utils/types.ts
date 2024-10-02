@@ -21,6 +21,19 @@ export interface FormTalentLogin {
   password?: any
 }
 
+export interface TalentProfileProps {
+  bio?: string
+  role?: string[]
+  maxSalary?: string
+  minSalary?: string
+  experience?: string
+  cv?: File | null
+  remote: boolean
+  onSite: boolean
+  hybrid: boolean
+  cvUrl?: string
+}
+
 export interface FormPostJob {
   role?: string
   description?: string
@@ -36,6 +49,27 @@ export interface FormPostJob {
   responsibilities?: string[]
   skills?: string[]
   goals?: string[]
+}
+
+export interface AllJobTypes {
+  currentStage?: string
+  status?: string
+  applicationType?: string
+  createdAt?: any
+  job?: {
+    role?: string
+    _id?: string
+    location?: {
+      country: string
+    }
+  }
+  postedBy?: {
+    firstName: string
+  }
+  role?: {
+    name: string
+  }
+  _id?: string
 }
 
 export interface Role {
