@@ -25,13 +25,14 @@ import {
   Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
-import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
+// import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
+import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
@@ -48,7 +49,6 @@ import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
-import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 
 const router = createBrowserRouter([
   {
