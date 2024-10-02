@@ -8,18 +8,16 @@ import {
   TableRow,
   Paper,
 } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
 import { calculateDaysFromCreation } from '../../../utils'
+import Loading from '../../../components/Loading/Loading'
+import { DisplayError } from '../../../components'
 
 interface ApplicationRow {
   applicantName: string
   prescreeningScore?: number
   cvSimilarityScore?: number
-  dateApplied: string
-}
-
-interface RecentApplicationsProps {
-  infoData: ApplicationRow[]
+  createdAt: string
 }
 
 const tableHeadStyle = {
@@ -37,18 +35,20 @@ const tableCellStyle = {
   fontWeight: 600,
 }
 
-const RecentApplications: React.FC<RecentApplicationsProps> = ({
-  infoData,
-}) => {
+const AllApplications: React.FC = () => {
+  const { data, isLoading, error } = useFetchAllApplicationsQuery({})
+  const applications: ApplicationRow[] = data?.data?.applications || []
+
+  if (isLoading) return <Loading />
+
+  if (error) {
+    return <DisplayError message="Error loading applications" />
+  }
+
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h4 className="text-lg text-[#000] font-semibold">
-          Recent Applications
-        </h4>
-        <Link to="allapplications" className="text-base text-[#4985DF]">
-          View all
-        </Link>
+        <h4 className="text-lg text-[#000] font-semibold">Applications</h4>
       </div>
       <TableContainer component={Paper}>
         <Table>
@@ -67,7 +67,7 @@ const RecentApplications: React.FC<RecentApplicationsProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {infoData.map((row, index) => (
+            {applications.map((row, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row" sx={tableCellStyle}>
                   {row.applicantName}
@@ -79,7 +79,7 @@ const RecentApplications: React.FC<RecentApplicationsProps> = ({
                   {row.cvSimilarityScore || 'nill'}%
                 </TableCell>
                 <TableCell align="center" sx={tableCellStyle}>
-                  {calculateDaysFromCreation(row.dateApplied)} days ago
+                  {calculateDaysFromCreation(row.createdAt)} days ago
                 </TableCell>
               </TableRow>
             ))}
@@ -90,4 +90,4 @@ const RecentApplications: React.FC<RecentApplicationsProps> = ({
   )
 }
 
-export default RecentApplications
+export default AllApplications

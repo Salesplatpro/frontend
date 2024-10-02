@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { getToken } from '../../../utils'
+import { url } from 'inspector'
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
@@ -32,6 +33,12 @@ export const recruiterApi = createApi({
           method: 'GET',
         }
       },
+    }),
+    fetchAllApplications: builder.query({
+      query: () => ({
+        url: `/recruiter/applications`,
+        method: 'GET',
+      }),
     }),
 
     aiConfig: builder.mutation({
@@ -145,6 +152,7 @@ export const recruiterApi = createApi({
 export const {
   useJobPostCreationMutation,
   useFetchDashboardQuery,
+  useFetchAllApplicationsQuery,
   useAiConfigMutation,
   usePatchAiConfigMutation,
   useFetchRecruiterJobPostQuery,
