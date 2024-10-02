@@ -26,7 +26,7 @@ import {
   Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
-import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
+import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
@@ -47,7 +47,6 @@ import TalentProfile from './pages/TalentProfile/Profile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
-import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 
 const router = createBrowserRouter([
   {
@@ -123,7 +122,6 @@ const router = createBrowserRouter([
           {
             path: 'applicationPipeline/:jobId',
             element: <ProgressView />,
-            // element: <JobPipeline />,
           },
           {
             path: 'applicationPipeline/personalityTest/:jobId',
