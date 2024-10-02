@@ -5,6 +5,7 @@ import ChatModal from './ChatModal'
 const Chat = () => {
   // Define state for each message using an array
   const [expandedMessages, setExpandedMessages] = useState([false, false])
+  // eslint-disable-next-line no-unused-vars
   const [acknowledgedMessages, setAcknowledgedMessages] = useState([
     false,
     false,
@@ -15,7 +16,7 @@ const Chat = () => {
 
   const messages = [
     "Congratulations you have passed this stage, others failed; but you didn't, say cheese. Congratulations you have passed this stage, others failed; but you didn't, say cheese. Congratulations you have passed this stage, others failed; but you didn't, say cheese.",
-    'This is another message, which should also be independently toggled. This will have its own Read More and Read Less functionality.',
+    'This is another message, which should also be independently toggled.',
   ]
 
   const truncateLimit = 120
@@ -49,7 +50,7 @@ const Chat = () => {
         const displayMessage = isExpanded
           ? message
           : message.length > truncateLimit
-          ? `${message.slice(0, truncateLimit)}`
+          ? `${message.slice(0, truncateLimit)}...`
           : message
 
         return (
