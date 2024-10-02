@@ -26,9 +26,9 @@ import {
 } from './pages/RecruiterProfile'
 import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
-import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
+import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
@@ -36,8 +36,10 @@ import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
+import Chat from './pages/TalentProfile/Chat/Chat'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
+import Notification from './pages/TalentProfile/Notification/Notification'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
@@ -104,6 +106,16 @@ const router = createBrowserRouter([
           {
             path: 'job',
             element: <Job />,
+          },
+
+          {
+            path: 'Chat',
+            element: <Chat />,
+          },
+
+          {
+            path: 'Notification',
+            element: <Notification />,
           },
           {
             path: 'job/:jobId',
