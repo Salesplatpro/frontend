@@ -63,7 +63,7 @@ const Chat = () => {
                 Salesplat Campaign
               </h1>
 
-              <p className="lg:w-[540px] lg:min-h-[26px] font-raleway font-normal text-[16px] leading-[19px] text-[#0D0C22]">
+              <p className="lg:w-[540px] lg:min-h-[26px] font-raleway font-normal text-[16px] leading-[24px] text-[#0D0C22]">
                 {displayMessage}
               </p>
 
