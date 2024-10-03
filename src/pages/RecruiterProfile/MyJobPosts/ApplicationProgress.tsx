@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
@@ -10,67 +10,26 @@ import Loading from '../../../components/Loading/Loading'
 import {
   useFetchApplicantProgressQuery,
   usePatchApplicationStatusMutation,
-  useSendTalentMessageMutation,
 } from '../../../redux/api/recruiter'
 import { EachProgressDetails } from './EachProgressDetails'
-import { Message } from './Message'
+import { getApplicationDetails } from './getApplicationDetails'
+import { Messaging } from './Messaging/Messaging'
 import { ProfileCard } from './ProfileCard'
 
 const iconSize = 32
 const iconColor = ' #4985df'
 
-interface MessageProps {
-  content: string
-  application?: string
-  recipient: string
-}
-
 export const ApplicationProgress = () => {
   const { applicationId } = useParams()
   const talentId = useFetchApplicantProgressQuery(applicationId ?? '')?.data
     ?.data?.application?.talent?._id
-
   const [loadingShortlist, setLoadingShortlist] = useState(false)
   const [loadingReject, setLoadingReject] = useState(false)
-  const [sendMessage, setSendMessage] = useState<MessageProps>({
-    content: '',
-    recipient: '',
-    application: applicationId,
-  })
 
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
   const [patchApplicationStatus] = usePatchApplicationStatusMutation()
-  const [sendTalentMessage, { isLoading: isSending }] =
-    useSendTalentMessageMutation()
-
-  useEffect(() => {
-    if (talentId) {
-      setSendMessage((prevState) => ({
-        ...prevState,
-        recipient: talentId,
-      }))
-    }
-  }, [talentId])
-
-  const getApplicationDetails = (data: any) => {
-    const talent = data?.data?.application?.talent || {}
-    const profile = talent.profile || {}
-    const application = data?.data?.application || {}
-
-    return {
-      firstName: talent.firstName || '',
-      lastName: talent.lastName || '',
-      bio: profile.bio || '',
-      experience: profile.experience || '',
-      prescreeningScore: profile.prescreeningScore || 'No pre-assessment test',
-      cvSimilarityScore:
-        application.cvSimilarityScore || 'No cv-matching score',
-      personalizedScore: application.personalizedScore || 'No personality test',
-      type: application.mbtiType || 'No personalized test',
-    }
-  }
 
   const {
     firstName,
@@ -118,7 +77,6 @@ export const ApplicationProgress = () => {
         status: { status },
       }).unwrap()
 
-      setSendMessage((prevState) => ({ ...prevState, content: '' }))
       toast.success(
         `Talent is ${response.data.application.status} successfully`,
       )
@@ -126,23 +84,6 @@ export const ApplicationProgress = () => {
       console.error('Failed to update status:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleSendMessage = async () => {
-    if (!sendMessage.content.trim()) {
-      toast.error('Message can not be empty')
-      return
-    }
-    try {
-      await sendTalentMessage({
-        data: sendMessage,
-      }).unwrap()
-
-      setSendMessage((prevState) => ({ ...prevState, content: '' }))
-      toast.success('Message sent successfully')
-    } catch (error) {
-      console.error('Error sending message:', error)
     }
   }
 
@@ -197,31 +138,8 @@ export const ApplicationProgress = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col justify-center gap-16">
-        <div>
-          <div className="text-[20px] font-medium">Messages</div>
-          <Message />
-        </div>
-        <div>
-          <textarea
-            className="border rounded-[10px] border-gray-300 p-4 resize-none w-full sm:max-w-[803px]"
-            cols={91}
-            rows={5}
-            placeholder="Type here..."
-            value={sendMessage.content}
-            onChange={(e) =>
-              setSendMessage((prevState) => ({
-                ...prevState,
-                content: e.target.value,
-              }))
-            }
-          />
-        </div>
-        <RecruiterButton
-          buttonTitle={`${isSending ? 'Sending...' : 'Send'}`}
-          onClick={handleSendMessage}
-          disabled={isSending}
-        />
+      <div>
+        <Messaging applicationId={applicationId} talentId={talentId} />
       </div>
     </div>
   )

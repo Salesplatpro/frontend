@@ -140,6 +140,12 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    getMessagesSentToTalent: builder.query({
+      query: ({ applicationId }) => ({
+        url: `messages?application=${applicationId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -161,4 +167,5 @@ export const {
   useGetRecruiterShortlistQuery,
   usePatchApplicationStatusMutation,
   useSendTalentMessageMutation,
+  useGetMessagesSentToTalentQuery,
 } = recruiterApi
