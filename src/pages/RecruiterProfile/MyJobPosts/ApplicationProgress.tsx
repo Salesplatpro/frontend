@@ -1,46 +1,116 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 
-import {
-  IsProcessing,
-  OutlineButton,
-  RecruiterButton,
-} from '../../../components'
+import { OutlineButton, RecruiterButton } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchApplicantProgressQuery,
-  useFetchTalentProfileQuery,
   usePatchApplicationStatusMutation,
+  useSendTalentMessageMutation,
 } from '../../../redux/api/recruiter'
 import { EachProgressDetails } from './EachProgressDetails'
 import { Message } from './Message'
 import { ProfileCard } from './ProfileCard'
 
+const iconSize = 32
+const iconColor = ' #4985df'
+
+interface MessageProps {
+  content: string
+  application?: string
+  recipient: string
+}
+
 export const ApplicationProgress = () => {
   const { applicationId } = useParams()
-  const iconSize = 32
-  const iconColor = ' #4985df'
+  const talentId = useFetchApplicantProgressQuery(applicationId ?? '')?.data
+    ?.data?.application?.talent?._id
+
+  const [loadingShortlist, setLoadingShortlist] = useState(false)
+  const [loadingReject, setLoadingReject] = useState(false)
+  const [sendMessage, setSendMessage] = useState<MessageProps>({
+    content: '',
+    recipient: '',
+    application: applicationId,
+  })
+
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
-  const [loadingShortlist, setLoadingShortlist] = useState(false)
-  const [loadingReject, setLoadingReject] = useState(false)
-  const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
-    id: data?.data?.application?.talent?._id,
-  })
-
   const [patchApplicationStatus] = usePatchApplicationStatusMutation()
+  const [sendTalentMessage, { isLoading: isSending }] =
+    useSendTalentMessageMutation()
+
+  useEffect(() => {
+    if (talentId) {
+      setSendMessage((prevState) => ({
+        ...prevState,
+        recipient: talentId,
+      }))
+    }
+  }, [talentId])
+
+  const getApplicationDetails = (data: any) => {
+    const talent = data?.data?.application?.talent || {}
+    const profile = talent.profile || {}
+    const application = data?.data?.application || {}
+
+    return {
+      firstName: talent.firstName || '',
+      lastName: talent.lastName || '',
+      bio: profile.bio || '',
+      experience: profile.experience || '',
+      prescreeningScore: profile.prescreeningScore || 'No pre-assessment test',
+      cvSimilarityScore:
+        application.cvSimilarityScore || 'No cv-matching score',
+      personalizedScore: application.personalizedScore || 'No personality test',
+      type: application.mbtiType || 'No personalized test',
+    }
+  }
+
+  const {
+    firstName,
+    lastName,
+    bio,
+    experience,
+    prescreeningScore,
+    cvSimilarityScore,
+    personalizedScore,
+    type,
+  } = getApplicationDetails(data)
+
+  const progress = [
+    {
+      icon: <GoTasklist size={iconSize} color={iconColor} />,
+      title: 'Pre-Assessment',
+      score: prescreeningScore,
+    },
+    {
+      icon: <SiReaddotcv size={iconSize} color={iconColor} />,
+      title: 'CV-Matching',
+      score: cvSimilarityScore,
+    },
+    {
+      icon: <TbEdit size={iconSize} color={iconColor} />,
+      title: 'Personality Test',
+      score: personalizedScore,
+    },
+  ]
+
+  const personality = {
+    icon: <TbEdit size={iconSize} color={iconColor} />,
+    title: 'Personalized Test',
+    score: type,
+  }
 
   const handleStatusUpdate = async (status: 'rejected' | 'shortlisted') => {
-    if (status === 'rejected') {
-      setLoadingReject(true)
-    } else {
-      setLoadingShortlist(true)
-    }
+    const setLoading =
+      status === 'rejected' ? setLoadingReject : setLoadingShortlist
+    setLoading(true)
 
     try {
       const response = await patchApplicationStatus({
@@ -48,50 +118,32 @@ export const ApplicationProgress = () => {
         status: { status },
       }).unwrap()
 
-      console.log(response)
+      setSendMessage((prevState) => ({ ...prevState, content: '' }))
       toast.success(
         `Talent is ${response.data.application.status} successfully`,
       )
     } catch (error) {
       console.error('Failed to update status:', error)
     } finally {
-      if (status === 'rejected') {
-        setLoadingReject(false)
-      } else {
-        setLoadingShortlist(false)
-      }
+      setLoading(false)
     }
   }
 
-  const progress = [
-    {
-      icon: <GoTasklist size={iconSize} color={iconColor} />,
-      title: 'Pre-Assessment',
-      score: fetching ? (
-        <IsProcessing />
-      ) : (
-        result?.data?.user?.profile?.prescreeningScore ||
-        'No pre-assessment test'
-      ),
-    },
-    {
-      icon: <SiReaddotcv size={iconSize} color={iconColor} />,
-      title: 'CV-Matching',
-      score:
-        data?.data?.application?.cvSimilarityScore || 'No cv-matching score',
-    },
-    {
-      icon: <TbEdit size={iconSize} color={iconColor} />,
-      title: 'Personality Test',
-      score:
-        data?.data?.application?.personalizedScore || 'No personality test',
-    },
-  ]
+  const handleSendMessage = async () => {
+    if (!sendMessage.content.trim()) {
+      toast.error('Message can not be empty')
+      return
+    }
+    try {
+      await sendTalentMessage({
+        data: sendMessage,
+      }).unwrap()
 
-  const personality = {
-    icon: <TbEdit size={iconSize} color={iconColor} />,
-    title: 'Personalized Test',
-    score: data?.data?.application?.mbtiType || 'No personalized test',
+      setSendMessage((prevState) => ({ ...prevState, content: '' }))
+      toast.success('Message sent successfully')
+    } catch (error) {
+      console.error('Error sending message:', error)
+    }
   }
 
   if (error) {
@@ -105,10 +157,10 @@ export const ApplicationProgress = () => {
   return (
     <div className="m-auto max-w-[781px] space-y-5">
       <ProfileCard
-        firstName={result?.data?.user?.firstName}
-        lastName={result?.data?.user?.lastName}
-        role={result?.data?.user?.profile?.role[0]?.name}
-        description={result?.data?.user?.profile?.role[0]?.description}
+        firstName={firstName}
+        lastName={lastName}
+        role={experience}
+        description={bio}
       />
       <div className="flex flex-col space-y-3">
         {progress.map((item, index) => (
@@ -125,7 +177,6 @@ export const ApplicationProgress = () => {
           personality={personality.score}
         />
       </div>
-      <div className="flex justify-center"></div>
       <div className="text-center">
         rank: {data?.data?.application?.rank} of{' '}
         {data?.data?.application?.job?.noOfApplicants} applicants
@@ -157,9 +208,20 @@ export const ApplicationProgress = () => {
             cols={91}
             rows={5}
             placeholder="Type here..."
+            value={sendMessage.content}
+            onChange={(e) =>
+              setSendMessage((prevState) => ({
+                ...prevState,
+                content: e.target.value,
+              }))
+            }
           />
         </div>
-        <RecruiterButton buttonTitle="Send" />
+        <RecruiterButton
+          buttonTitle={`${isSending ? 'Sending...' : 'Send'}`}
+          onClick={handleSendMessage}
+          disabled={isSending}
+        />
       </div>
     </div>
   )

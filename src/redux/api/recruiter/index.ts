@@ -103,12 +103,6 @@ export const recruiterApi = createApi({
         }
       },
     }),
-    fetchTalentProfile: builder.query({
-      query: ({ id }) => ({
-        url: `/user/profile/${id}`,
-        method: 'GET',
-      }),
-    }),
     uploadCVOnly: builder.mutation({
       query: (data) => ({
         url: `/scout/cv`,
@@ -139,7 +133,7 @@ export const recruiterApi = createApi({
         body: status,
       }),
     }),
-    postTalentMessage: builder.mutation({
+    sendTalentMessage: builder.mutation({
       query: ({ data }) => ({
         url: '/messages',
         method: 'POST',
@@ -161,11 +155,10 @@ export const {
   useCvAndCoverLetterMutation,
   useCreateJDMutation,
   useSearchTalentDbQuery,
-  useFetchTalentProfileQuery,
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
   useGetCampaignNameQuery,
   useGetRecruiterShortlistQuery,
   usePatchApplicationStatusMutation,
-  usePostTalentMessageMutation,
+  useSendTalentMessageMutation,
 } = recruiterApi
