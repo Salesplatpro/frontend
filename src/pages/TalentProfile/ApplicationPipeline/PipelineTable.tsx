@@ -13,28 +13,13 @@ import { Link } from 'react-router-dom'
 import { Button, StatusBadge } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
-import { ResponsiveTableRenderer } from '../../../utils'
-import { applications } from './ApplicationData'
-
-interface AllJobTypes {
-  currentStage?: string
-  status?: string
-  applicationType?: string
-  job?: {
-    role?: string
-    _id?: string
-    location?: {
-      country: string
-    }
-  }
-  postedBy?: {
-    firstName: string
-  }
-  role?: {
-    name: string
-  }
-  _id?: string
-}
+import {
+  calculateDaysFromCreation,
+  ResponsiveTableRenderer,
+} from '../../../utils'
+import Loading from '../../../components/Loading/Loading'
+import { AllJobTypes } from '../../../utils/types'
+// import { applications } from './ApplicationData'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -56,22 +41,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
-const getButtonText = (stage: string) => {
-  switch (stage) {
-    case 'Stage 1':
-      return 'View Application'
-    case 'Stage 2':
-      return 'View Assessment'
-    case 'Stage 3':
-      return 'View Interview'
-    case 'Stage 4':
-      return 'Retake Assessment'
-    case 'Stage 5':
-      return 'View Offer'
-    default:
-      return 'Details'
-  }
-}
+// const getButtonText = (stage: string) => {
+//   switch (stage) {
+//     case 'Stage 1':
+//       return 'View Application'
+//     case 'Stage 2':
+//       return 'View Assessment'
+//     case 'Stage 3':
+//       return 'View Interview'
+//     case 'Stage 4':
+//       return 'Retake Assessment'
+//     case 'Stage 5':
+//       return 'View Offer'
+//     default:
+//       return 'Details'
+//   }
+// }
 
 const getStatusBadgeProps = (status: string) => {
   switch (status) {
@@ -89,7 +74,7 @@ const getStatusBadgeProps = (status: string) => {
 }
 
 export const PipelineTable = () => {
-  const { data, error, isLoading } = useAllJobApplicationsQuery()
+  const { data, error, isLoading } = useAllJobApplicationsQuery({})
   const [allJobs, setAllJobs] = React.useState<AllJobTypes[]>([])
   const align = 'left'
   const screenWidth = useScreenWidth()
@@ -102,6 +87,8 @@ export const PipelineTable = () => {
       setAllJobs(data.data.applications)
     }
   }, [data])
+
+  if (isLoading) return <Loading />
 
   return (
     <TableContainer component={Paper}>
@@ -140,7 +127,7 @@ export const PipelineTable = () => {
                   />
                 </StyledTableCell>
                 <StyledTableCell align={align}>
-                  {application.applicationType}
+                  {calculateDaysFromCreation(application.createdAt)} days ago
                 </StyledTableCell>
               </ResponsiveTableRenderer>
               <StyledTableCell align={align}>

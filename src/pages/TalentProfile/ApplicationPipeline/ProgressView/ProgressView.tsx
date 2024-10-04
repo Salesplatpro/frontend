@@ -15,7 +15,7 @@ import {
   useJobPipelineQuery,
   useLazyCvMatchQuery,
 } from '../../../../redux/api/talent'
-import ProgressBar from '../../ProgressBar'
+import ProgressBar from '../../../../utils/ProgressBar'
 
 interface Application {
   currentStage: string
@@ -183,6 +183,7 @@ const ProgressView: React.FC = () => {
           textColor="#344054"
           pathColor="#FF9500"
           trailColor="#f8ddba"
+          size={60}
         />
       </div>
 

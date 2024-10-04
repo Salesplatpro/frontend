@@ -3,30 +3,22 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
-
-import upload from '../../assets/Featured icon.png'
-import profilePics from '../../assets/profilePics.png'
-import AllRoles from '../../components/Roles/AllRoles'
+import upload from '../../../assets/Featured icon.png'
+import profilePics from '../../../assets/profilePics.png'
+import AllRoles from '../../../components/Roles/AllRoles'
 import {
   useTalentCreationMutation,
   useUpdateProfileMutation,
   useUploadCvMutation,
-} from '../../redux/api/talent'
-import { setUser } from '../../redux/features/authSlice/authSlice'
-import { RootState } from '../../redux/store/store'
-import ProgressBar from '../TalentProfile/ProgressBar'
-import { capitalizeEachWord } from './Profile Component/CapitalizeWord'
-import UploadCV from './Profile Component/UploadCV'
-
-interface TalentProfileProps {
-  bio?: string
-  role?: string[]
-  maxSalary?: string
-  minSalary?: string
-  experience?: string
-  cv?: File | null
-  cvUrl?: string
-}
+} from '../../../redux/api/talent'
+import { RootState } from '../../../redux/store/store'
+import ProgressBar from '../../../utils/ProgressBar'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import UploadCV from './UploadCV'
+import Worktype from '../../../components/Worktype'
+import { TalentProfileProps } from '../../../utils/types'
+import { handleProfileSubmit } from './TalentProfileOnSubmit'
+import { handleImageChange } from '../../../utils/HandleImageChange'
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
@@ -87,150 +79,10 @@ const TalentProfile = () => {
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
+    remote: userInfo.profile?.remote || false,
+    onSite: userInfo.profile?.onSite || false,
+    hybrid: userInfo.profile?.hybrid || false,
     cv: null,
-    // cvUrl: userInfo.profile?.cv || '',
-  }
-
-  const onSubmit = async (
-    values: TalentProfileProps,
-    { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
-  ) => {
-    try {
-      const isNewProfile = !userInfo.profile
-      const formData = new FormData()
-
-      if (isNewProfile) {
-        formData.append('bio', values.bio || '')
-        formData.append('role', (values.role || []).join(','))
-        formData.append('minSalary', values.minSalary || '')
-        formData.append('maxSalary', values.maxSalary || '')
-        formData.append('experience', values.experience || '')
-
-        if (values.cv) {
-          formData.append('file', values.cv)
-        }
-        if (profileImage && profileImage !== profilePics) {
-          formData.append('profileImage', profileImage as string)
-        }
-
-        const submitCv = values.cv
-          ? await uploadCv(formData).unwrap()
-          : { data: { fileUrl: '' } }
-
-        const updatedFormValues = {
-          ...values,
-          cv: submitCv.data.fileUrl || '',
-        }
-
-        const response = await talentCreation(updatedFormValues).unwrap()
-
-        if (response.status) {
-          dispatch(
-            setUser({
-              user: response.data.user,
-              isLoggedIn: true,
-            }),
-          )
-          toast.success('Profile created successfully')
-        } else {
-          toast.error(
-            response.message || 'An error occurred while creating profile',
-          )
-        }
-      } else {
-        // update profile submission
-        const updatedFields: Partial<TalentProfileProps> = {}
-
-        if (values.bio !== initialValues.bio) {
-          updatedFields.bio = values.bio
-        }
-        if (values.role?.join(',') !== initialValues.role?.join(',')) {
-          updatedFields.role = values.role
-        }
-        if (values.minSalary !== initialValues.minSalary) {
-          updatedFields.minSalary = values.minSalary
-        }
-        if (values.maxSalary !== initialValues.maxSalary) {
-          updatedFields.maxSalary = values.maxSalary
-        }
-        if (values.experience !== initialValues.experience) {
-          updatedFields.experience = values.experience
-        }
-        if (values.cv && values.cv !== initialValues.cv) {
-          updatedFields.cv = values.cv
-        }
-
-        if (Object.keys(updatedFields).length === 0) {
-          toast.error('No changes detected')
-          setSubmitting(false)
-          return
-        }
-
-        // Append only the updated fields to formData
-        if (updatedFields.cv) {
-          formData.append('file', updatedFields.cv)
-        }
-        if (updatedFields.bio) {
-          formData.append('bio', updatedFields.bio)
-        }
-        if (updatedFields.role && updatedFields.role.length > 0) {
-          formData.append('role', updatedFields.role.join(','))
-        }
-        if (updatedFields.minSalary) {
-          formData.append('minSalary', updatedFields.minSalary)
-        }
-        if (updatedFields.maxSalary) {
-          formData.append('maxSalary', updatedFields.maxSalary)
-        }
-        if (updatedFields.experience) {
-          formData.append('experience', updatedFields.experience)
-        }
-
-        const updatedCv = updatedFields.cv
-          ? await uploadCv(formData).unwrap()
-          : { data: { fileUrl: '' } }
-
-        if (updatedCv.data.fileUrl) {
-          updatedFields.cv = updatedCv.data.fileUrl
-        }
-
-        const response = await updateProfile(updatedFields).unwrap()
-        // console.log('response', response.data.user)
-
-        if (response.status) {
-          dispatch(
-            setUser({
-              user: response.data.user,
-              isLoggedIn: true,
-            }),
-          )
-          localStorage.setItem('user', JSON.stringify(response.data.user))
-          toast.success('Profile updated successfully')
-        } else {
-          toast.error(
-            response.message || 'An error occurred while updating profile',
-          )
-        }
-      }
-    } catch (error: any) {
-      console.error('DisplayError submitting', error)
-      toast.error(
-        error.message || 'An error occurred while processing your request',
-      )
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setProfileImage(reader.result) // Set the selected image
-      }
-      reader.readAsDataURL(file) // Read the file as a data URL
-    }
   }
 
   return (
@@ -249,7 +101,6 @@ const TalentProfile = () => {
             size={80}
           />
         </div>
-
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
@@ -262,7 +113,7 @@ const TalentProfile = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handleImageChange}
+              onChange={(event) => handleImageChange(event, setProfileImage)} // Call handleImageChange on file selection
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-2"
@@ -297,7 +148,20 @@ const TalentProfile = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={!userInfo.profile ? validationSchema : null}
-            onSubmit={onSubmit}
+            onSubmit={(values, { setSubmitting }) =>
+              handleProfileSubmit(
+                values,
+                setSubmitting,
+                userInfo,
+                dispatch,
+                profileImage,
+                'defaultProfileImage',
+                initialValues,
+                talentCreation,
+                uploadCv,
+                updateProfile,
+              )
+            }
             enableReinitialize>
             {({ values, isSubmitting, setFieldValue }) => {
               useEffect(() => {
@@ -360,7 +224,7 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="inline-block mt-6 w-full">
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="phoneNumber"
@@ -372,6 +236,7 @@ const TalentProfile = () => {
                         id="phoneNumber"
                         name="phoneNumber"
                         placeholder="08198675757"
+                        value={userInfo.phone}
                         readOnly={!isEditing} // Read-only if not editing
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
@@ -381,49 +246,32 @@ const TalentProfile = () => {
                         className="text-red-500 text-[14px]"
                       />
                     </div>
-                  </div>
 
-                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label
-                        htmlFor="github"
+                        htmlFor="workTypes"
                         className="text-[14px] text-[#344054]">
-                        Github
+                        Work Type
                       </label>
-                      <Field
-                        type="text"
-                        id="github"
-                        name="github"
-                        placeholder="Your Github Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                      />
-                      <ErrorMessage
-                        name="github"
-                        component="div"
-                        className="text-red-500 text-[14px]"
-                      />
-                    </div>
-                    <div className="md:w-[48%]">
-                      <label
-                        htmlFor="linkedin"
-                        className="text-[14px] text-[#344054]">
-                        LinkedIn
-                      </label>
-                      <Field
-                        type="text"
-                        id="linkedin"
-                        name="linkedin"
-                        placeholder="Your Linkedin Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                      />
-                      <ErrorMessage
-                        name="linkedin"
-                        component="div"
-                        className="text-red-500 text-[14px]"
+                      <Worktype
+                        options={[
+                          { value: 'remote', label: 'Remote' },
+                          { value: 'onSite', label: 'On Site' },
+                          { value: 'hybrid', label: 'Hybrid' },
+                        ]}
+                        initialSelected={{
+                          remote: values.remote,
+                          onSite: values.onSite,
+                          hybrid: values.hybrid,
+                        }}
+                        onSelectionChange={(selected) => {
+                          setFieldValue('remote', selected.remote)
+                          setFieldValue('onSite', selected.onSite)
+                          setFieldValue('hybrid', selected.hybrid)
+                        }}
                       />
                     </div>
                   </div>
-
                   <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label

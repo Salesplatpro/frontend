@@ -1,6 +1,6 @@
 import React from 'react'
 import { AnalyzedPercentage } from '../Batching'
-import ProgressBar from '../../TalentProfile/ProgressBar'
+import ProgressBar from '../../../utils/ProgressBar'
 import Loading from '../../../components/Loading/Loading'
 
 interface StatsType {

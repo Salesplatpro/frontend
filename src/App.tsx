@@ -17,6 +17,7 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
+import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import {
   ApplicationProgress,
   MyJobPosts,
@@ -25,7 +26,7 @@ import {
   Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
-import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
+import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
@@ -42,11 +43,10 @@ import Job from './pages/TalentProfile/Job/Job'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
-import TalentProfile from './pages/TalentProfile/TalentProfile'
+import TalentProfile from './pages/TalentProfile/Profile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
-import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 
 const router = createBrowserRouter([
   {
@@ -122,7 +122,6 @@ const router = createBrowserRouter([
           {
             path: 'applicationPipeline/:jobId',
             element: <ProgressView />,
-            // element: <JobPipeline />,
           },
           {
             path: 'applicationPipeline/personalityTest/:jobId',
@@ -143,6 +142,10 @@ const router = createBrowserRouter([
           {
             path: 'dashboard',
             element: <Dashboard />,
+          },
+          {
+            path: 'dashboard/allapplications',
+            element: <AllApplications />,
           },
           {
             path: 'postjob',

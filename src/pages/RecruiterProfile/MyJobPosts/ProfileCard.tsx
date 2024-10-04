@@ -2,7 +2,7 @@ import { capitalize } from '@mui/material'
 import React from 'react'
 
 import profile from '../../../assets/profile.jpeg'
-import { capitalizeEachWord } from '../../TalentProfile/Profile Component/CapitalizeWord'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 
 type ProfileCardProps = {
   firstName: string
