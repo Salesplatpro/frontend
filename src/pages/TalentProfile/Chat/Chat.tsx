@@ -76,13 +76,13 @@ const Chat = () => {
               )}
             </div>
 
-            <div className="lg:flex lg:justify-end lg:items-center lg:mx-8 space-x-2 my-4">
-              <button className="lg:w-[100px] rounded-lg flex justify-center items-center font-semibold font-raleway text-[16px] leading-[24px] text-[#3c6fd4] hover:cursor-pointer py-3">
+            <div className="flex justify-end items-center mx-5 lg:flex lg:justify-end lg:items-center lg:mx-8 md:flex md:justify-end md:items-center md:mx-8 sm:flex sm:justify-end sm:items-center sm:mx-8 space-x-2 my-4">
+              <button className="lg:w-[100px] rounded-lg flex justify-center items-center font-semibold font-raleway text-[15px] lg:text-[16px] md:text-[16px] sm:text-[16px] leading-[24px] text-[#3c6fd4] hover:cursor-pointer py-3">
                 Reject
               </button>
 
               <button
-                className="w-[250px] lg:w-[151px] h-[44px] md:w-[120px] sm:w-[280px] rounded-lg bg-[#3c6fd4] border flex justify-center items-center font-semibold font-raleway text-[16px] leading-[24px] text-white hover:bg-[#4b82e1] py-3"
+                className="w-[110px] text-[14px] lg:w-[151px] h-[44px] md:w-[151px] sm:w-[151px] rounded-lg bg-[#3c6fd4] border flex justify-center items-center font-semibold font-raleway lg:text-[16px] md:text-[16px] sm:text-[16px] leading-[24px] text-white hover:bg-[#4b82e1] py-3"
                 onClick={() => handleAcknowledge(index)}>
                 Acknowledge
               </button>
