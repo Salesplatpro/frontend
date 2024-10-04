@@ -1,11 +1,12 @@
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -21,25 +22,20 @@ type SingleJobTableProps = {
   applications: SingleJobDetails[]
 }
 
-const StyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#d0d5dd',
-    color: '#101828',
-    fontWeight: 400,
-    fontSize: 16,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    fontWeight: 400,
-    padding: 12,
-  },
-}))
+const tableHeadStyle = {
+  color: '#101828',
+  backgroundColor: '#F8F8F8',
+  fontSize: '18px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
+}
 
-const StyledTableRow = styled(TableRow)(() => ({
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}))
+const tableCellStyle = {
+  color: '#101828',
+  fontSize: '16px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
+}
 
 const getStatusBadgeProps = (status: string) => {
   switch (status) {
@@ -81,49 +77,57 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
       <Table aria-label="Application pipeline data">
         <TableHead>
           <TableRow>
-            <StyledTableCell align={alignHeader}>Name</StyledTableCell>
-            <StyledTableCell align={alignHeader}>Stage</StyledTableCell>
+            <TableCell align={alignHeader} sx={tableHeadStyle}>
+              Name
+            </TableCell>
+            <TableCell align={alignHeader} sx={tableHeadStyle}>
+              Stage
+            </TableCell>
             <ResponsiveTableRenderer screenWidth={screenWidth} breakpoint={768}>
-              <StyledTableCell align={alignHeader}>Job Status</StyledTableCell>
-              <StyledTableCell align={alignHeader}>
+              <TableCell align={alignHeader} sx={tableHeadStyle}>
+                Job Status
+              </TableCell>
+              <TableCell align={alignHeader} sx={tableHeadStyle}>
                 Date Applied
-              </StyledTableCell>
+              </TableCell>
             </ResponsiveTableRenderer>
-            <StyledTableCell align={alignHeader}>Details</StyledTableCell>
+            <TableCell align={alignHeader} sx={tableHeadStyle}>
+              Details
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {applications?.length > 0 &&
             applications?.map((item, index) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell align={align}>
+              <TableRow key={index}>
+                <TableCell align={align} sx={tableCellStyle}>
                   {item.talent.firstName} {item.talent.lastName}
-                </StyledTableCell>
-                <StyledTableCell align={align}>
+                </TableCell>
+                <TableCell align={align} sx={tableCellStyle}>
                   {getStatusStage(item.status)}
-                </StyledTableCell>
+                </TableCell>
                 <ResponsiveTableRenderer
                   screenWidth={screenWidth}
                   breakpoint={768}>
-                  <StyledTableCell align={align}>
+                  <TableCell align={align} sx={tableCellStyle}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <StatusBadge
                         status={item.status}
                         {...getStatusBadgeProps(item.status)}
                       />
                     </div>
-                  </StyledTableCell>
-                  <StyledTableCell align={align}>
+                  </TableCell>
+                  <TableCell align={align} sx={tableCellStyle}>
                     {`${calculateDaysFromCreation(item.createdAt)} days ago`}
-                  </StyledTableCell>
+                  </TableCell>
                 </ResponsiveTableRenderer>
-                <StyledTableCell align={align}>
+                <TableCell align={align} sx={tableCellStyle}>
                   <Link
                     to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}>
                     <Button textType="small" title="View Applicantion" />
                   </Link>
-                </StyledTableCell>
-              </StyledTableRow>
+                </TableCell>
+              </TableRow>
             ))}
         </TableBody>
       </Table>
