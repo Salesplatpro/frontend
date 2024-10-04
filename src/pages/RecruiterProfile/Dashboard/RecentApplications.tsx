@@ -25,7 +25,7 @@ interface RecentApplicationsProps {
 const tableHeadStyle = {
   color: '#101828',
   backgroundColor: '#F8F8F8',
-  fontSize: '18px',
+  fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
