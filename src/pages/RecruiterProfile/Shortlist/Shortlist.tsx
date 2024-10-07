@@ -1,11 +1,12 @@
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -16,32 +17,27 @@ import { useScreenWidth } from '../../../hooks'
 import { useGetRecruiterShortlistQuery } from '../../../redux/api/recruiter'
 import { ResponsiveTableRenderer } from '../../../utils'
 
-const StyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#d0d5dd',
-    color: '#101828',
-    fontWeight: 400,
-    fontSize: 16,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    fontWeight: 400,
-    padding: 12,
-  },
-}))
+const tableHeadStyle = {
+  color: '#101828',
+  backgroundColor: '#F8F8F8',
+  fontSize: '18px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
+}
 
-const StyledTableRow = styled(TableRow)(() => ({
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}))
+const tableCellStyle = {
+  color: '#101828',
+  fontSize: '16px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
+}
 
 export const Shortlist = () => {
   const alignHeader = 'left'
   const screenWidth = useScreenWidth()
   const { data, isLoading } = useGetRecruiterShortlistQuery({})
 
-  console.log(data?.data.campaigns)
+  console.log(data?.data.scouts)
 
   return (
     <div className="flex flex-col space-y-12">
@@ -58,31 +54,39 @@ export const Shortlist = () => {
             <Table aria-label="Campaigns">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align={alignHeader}>Title</StyledTableCell>
-                  <StyledTableCell align={alignHeader}>
+                  <TableCell align={alignHeader} sx={tableHeadStyle}>
+                    Title
+                  </TableCell>
+                  <TableCell align={alignHeader} sx={tableHeadStyle}>
                     Talent Name
-                  </StyledTableCell>
+                  </TableCell>
                   <ResponsiveTableRenderer
                     screenWidth={screenWidth}
                     breakpoint={768}>
-                    <StyledTableCell align={alignHeader}>Rank</StyledTableCell>
+                    <TableCell align={alignHeader} sx={tableHeadStyle}>
+                      Rank
+                    </TableCell>
                   </ResponsiveTableRenderer>
-                  <StyledTableCell align="center">Details</StyledTableCell>
+                  <TableCell align="center" sx={tableHeadStyle}>
+                    Details
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {data?.data?.campaigns.length > 0 &&
                   data?.data?.campaigns.map((item: any, index: number) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell>{item.job?.role?.name}</StyledTableCell>
-                      <StyledTableCell>{item.talent}</StyledTableCell>
-                      <StyledTableCell>{item.rank}</StyledTableCell>
-                      <StyledTableCell>
+                    <TableRow key={index}>
+                      <TableCell sx={tableCellStyle}>
+                        {item.job?.role?.name}
+                      </TableCell>
+                      <TableCell sx={tableCellStyle}>{item.talent}</TableCell>
+                      <TableCell sx={tableCellStyle}>{item.rank}</TableCell>
+                      <TableCell sx={tableCellStyle}>
                         <Link to="">
                           <Button textType="small" title="Details" />
                         </Link>
-                      </StyledTableCell>
-                    </StyledTableRow>
+                      </TableCell>
+                    </TableRow>
                   ))}
               </TableBody>
             </Table>
@@ -92,31 +96,39 @@ export const Shortlist = () => {
             <Table aria-label="Application pipeline data">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align={alignHeader}>Title</StyledTableCell>
-                  <StyledTableCell align={alignHeader}>
+                  <TableCell align={alignHeader} sx={tableHeadStyle}>
+                    Title
+                  </TableCell>
+                  <TableCell align={alignHeader} sx={tableHeadStyle}>
                     Talent Name
-                  </StyledTableCell>
+                  </TableCell>
                   <ResponsiveTableRenderer
                     screenWidth={screenWidth}
                     breakpoint={768}>
-                    <StyledTableCell align={alignHeader}>Score</StyledTableCell>
+                    <TableCell align={alignHeader} sx={tableHeadStyle}>
+                      Score
+                    </TableCell>
                   </ResponsiveTableRenderer>
-                  <StyledTableCell align="center">Details</StyledTableCell>
+                  <TableCell align="center" sx={tableHeadStyle}>
+                    Details
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {data?.data?.scouts.length > 0 &&
                   data?.data?.scouts.map((item: any, index: number) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell>Title</StyledTableCell>
-                      <StyledTableCell>{item.cvName}</StyledTableCell>
-                      <StyledTableCell>{item.evaluationScore}%</StyledTableCell>
-                      <StyledTableCell>
+                    <TableRow key={index}>
+                      <TableCell sx={tableCellStyle}>no title</TableCell>
+                      <TableCell sx={tableCellStyle}>{item.cvName}</TableCell>
+                      <TableCell sx={tableCellStyle}>
+                        {item.evaluationScore}%
+                      </TableCell>
+                      <TableCell sx={tableCellStyle}>
                         <Link to="">
                           <Button textType="small" title="Details" />
                         </Link>
-                      </StyledTableCell>
-                    </StyledTableRow>
+                      </TableCell>
+                    </TableRow>
                   ))}
               </TableBody>
             </Table>

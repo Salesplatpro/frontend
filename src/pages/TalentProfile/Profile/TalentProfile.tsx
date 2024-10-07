@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
-
-import upload from '../../assets/Featured icon.png'
-import profilePics from '../../assets/profilePics.png'
-import AllRoles from '../../components/Roles/AllRoles'
+import upload from '../../../assets/Featured icon.png'
+import profilePics from '../../../assets/profilePics.png'
+import AllRoles from '../../../components/Roles/AllRoles'
 import {
   useTalentCreationMutation,
   useUpdateProfileMutation,
   useUploadCvMutation,
+<<<<<<< HEAD:src/pages/TalentProfile/TalentProfile.tsx
 } from '../../redux/api/talent'
 import { setUser } from '../../redux/features/authSlice/authSlice'
 import { RootState } from '../../redux/store/store'
@@ -32,6 +32,17 @@ interface TalentProfileProps {
   onSite: boolean
   hybrid: boolean
 }
+=======
+} from '../../../redux/api/talent'
+import { RootState } from '../../../redux/store/store'
+import ProgressBar from '../../../utils/ProgressBar'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import UploadCV from './UploadCV'
+import Worktype from '../../../components/Worktype'
+import { TalentProfileProps } from '../../../utils/types'
+import { handleProfileSubmit } from './TalentProfileOnSubmit'
+import { handleImageChange } from '../../../utils/HandleImageChange'
+>>>>>>> 289394bf9e88563a7a979eb27bbad2678730f5b6:src/pages/TalentProfile/Profile/TalentProfile.tsx
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
@@ -108,7 +119,11 @@ const TalentProfile = () => {
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
+    remote: userInfo.profile?.remote || false,
+    onSite: userInfo.profile?.onSite || false,
+    hybrid: userInfo.profile?.hybrid || false,
     cv: null,
+<<<<<<< HEAD:src/pages/TalentProfile/TalentProfile.tsx
     remote: userInfo.profile?.remote || false,
     onSite: userInfo.profile?.onSite || false,
     hybrid: userInfo.profile?.hybrid || false,
@@ -279,6 +294,8 @@ const TalentProfile = () => {
       }
       reader.readAsDataURL(file) // Read the file as a data URL
     }
+=======
+>>>>>>> 289394bf9e88563a7a979eb27bbad2678730f5b6:src/pages/TalentProfile/Profile/TalentProfile.tsx
   }
 
   return (
@@ -297,7 +314,6 @@ const TalentProfile = () => {
             size={80}
           />
         </div>
-
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
@@ -310,7 +326,7 @@ const TalentProfile = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handleImageChange}
+              onChange={(event) => handleImageChange(event, setProfileImage)} // Call handleImageChange on file selection
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-2"
@@ -345,7 +361,20 @@ const TalentProfile = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={!userInfo.profile ? validationSchema : null}
-            onSubmit={onSubmit}
+            onSubmit={(values, { setSubmitting }) =>
+              handleProfileSubmit(
+                values,
+                setSubmitting,
+                userInfo,
+                dispatch,
+                profileImage,
+                'defaultProfileImage',
+                initialValues,
+                talentCreation,
+                uploadCv,
+                updateProfile,
+              )
+            }
             enableReinitialize>
             {({ values, isSubmitting, setFieldValue }) => {
               useEffect(() => {
@@ -408,7 +437,11 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
+<<<<<<< HEAD:src/pages/TalentProfile/TalentProfile.tsx
                   <div className="flex justify-between mt-6 w-full">
+=======
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+>>>>>>> 289394bf9e88563a7a979eb27bbad2678730f5b6:src/pages/TalentProfile/Profile/TalentProfile.tsx
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="phoneNumber"
@@ -420,6 +453,7 @@ const TalentProfile = () => {
                         id="phoneNumber"
                         name="phoneNumber"
                         placeholder="08198675757"
+                        value={userInfo.phone}
                         readOnly={!isEditing} // Read-only if not editing
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
@@ -429,6 +463,7 @@ const TalentProfile = () => {
                         className="text-red-500 text-[14px]"
                       />
                     </div>
+<<<<<<< HEAD:src/pages/TalentProfile/TalentProfile.tsx
 
                     <div className="md:w-[48%]">
                       <label
@@ -448,48 +483,34 @@ const TalentProfile = () => {
                       />
                     </div>
                   </div>
+=======
+>>>>>>> 289394bf9e88563a7a979eb27bbad2678730f5b6:src/pages/TalentProfile/Profile/TalentProfile.tsx
 
-                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label
-                        htmlFor="github"
+                        htmlFor="workTypes"
                         className="text-[14px] text-[#344054]">
-                        Github
+                        Work Type
                       </label>
-                      <Field
-                        type="text"
-                        id="github"
-                        name="github"
-                        placeholder="Your Github Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                      />
-                      <ErrorMessage
-                        name="github"
-                        component="div"
-                        className="text-red-500 text-[14px]"
-                      />
-                    </div>
-                    <div className="md:w-[48%]">
-                      <label
-                        htmlFor="linkedin"
-                        className="text-[14px] text-[#344054]">
-                        LinkedIn
-                      </label>
-                      <Field
-                        type="text"
-                        id="linkedin"
-                        name="linkedin"
-                        placeholder="Your Linkedin Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                      />
-                      <ErrorMessage
-                        name="linkedin"
-                        component="div"
-                        className="text-red-500 text-[14px]"
+                      <Worktype
+                        options={[
+                          { value: 'remote', label: 'Remote' },
+                          { value: 'onSite', label: 'On Site' },
+                          { value: 'hybrid', label: 'Hybrid' },
+                        ]}
+                        initialSelected={{
+                          remote: values.remote,
+                          onSite: values.onSite,
+                          hybrid: values.hybrid,
+                        }}
+                        onSelectionChange={(selected) => {
+                          setFieldValue('remote', selected.remote)
+                          setFieldValue('onSite', selected.onSite)
+                          setFieldValue('hybrid', selected.hybrid)
+                        }}
                       />
                     </div>
                   </div>
-
                   <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label

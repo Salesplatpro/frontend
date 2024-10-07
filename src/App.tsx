@@ -25,13 +25,13 @@ import {
   Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
-// import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
+import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
@@ -42,10 +42,10 @@ import Chat from './pages/TalentProfile/Chat/Chat'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
 import Notification from './pages/TalentProfile/Notification/Notification'
+import TalentProfile from './pages/TalentProfile/Profile/TalentProfile'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
-import TalentProfile from './pages/TalentProfile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
@@ -134,7 +134,6 @@ const router = createBrowserRouter([
           {
             path: 'applicationPipeline/:jobId',
             element: <ProgressView />,
-            // element: <JobPipeline />,
           },
           {
             path: 'applicationPipeline/personalityTest/:jobId',
@@ -155,6 +154,10 @@ const router = createBrowserRouter([
           {
             path: 'dashboard',
             element: <Dashboard />,
+          },
+          {
+            path: 'dashboard/allapplications',
+            element: <AllApplications />,
           },
           {
             path: 'postjob',

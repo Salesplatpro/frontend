@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { getToken } from '../../../utils'
+import { url } from 'inspector'
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
@@ -32,6 +33,12 @@ export const recruiterApi = createApi({
           method: 'GET',
         }
       },
+    }),
+    fetchAllApplications: builder.query({
+      query: () => ({
+        url: `/recruiter/applications`,
+        method: 'GET',
+      }),
     }),
 
     aiConfig: builder.mutation({
@@ -103,12 +110,6 @@ export const recruiterApi = createApi({
         }
       },
     }),
-    fetchTalentProfile: builder.query({
-      query: ({ id }) => ({
-        url: `/user/profile/${id}`,
-        method: 'GET',
-      }),
-    }),
     uploadCVOnly: builder.mutation({
       query: (data) => ({
         url: `/scout/cv`,
@@ -139,12 +140,26 @@ export const recruiterApi = createApi({
         body: status,
       }),
     }),
+    sendTalentMessage: builder.mutation({
+      query: ({ data }) => ({
+        url: '/messages',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    getMessagesSentToTalent: builder.query({
+      query: ({ applicationId }) => ({
+        url: `messages?application=${applicationId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
 export const {
   useJobPostCreationMutation,
   useFetchDashboardQuery,
+  useFetchAllApplicationsQuery,
   useAiConfigMutation,
   usePatchAiConfigMutation,
   useFetchRecruiterJobPostQuery,
@@ -154,10 +169,11 @@ export const {
   useCvAndCoverLetterMutation,
   useCreateJDMutation,
   useSearchTalentDbQuery,
-  useFetchTalentProfileQuery,
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
   useGetCampaignNameQuery,
   useGetRecruiterShortlistQuery,
   usePatchApplicationStatusMutation,
+  useSendTalentMessageMutation,
+  useGetMessagesSentToTalentQuery,
 } = recruiterApi
