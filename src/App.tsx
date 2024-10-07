@@ -17,18 +17,20 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
+import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import {
   ApplicationProgress,
   MyJobPosts,
   ProcessCV,
   ProcessCvAndCoverLetter,
+  Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
-import BatchCVUpload from './pages/RecruiterProfile/Batching/BatchCVUpload'
+import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
-import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
+import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
@@ -41,7 +43,7 @@ import Job from './pages/TalentProfile/Job/Job'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
-import TalentProfile from './pages/TalentProfile/TalentProfile'
+import TalentProfile from './pages/TalentProfile/Profile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
@@ -120,7 +122,6 @@ const router = createBrowserRouter([
           {
             path: 'applicationPipeline/:jobId',
             element: <ProgressView />,
-            // element: <JobPipeline />,
           },
           {
             path: 'applicationPipeline/personalityTest/:jobId',
@@ -139,6 +140,14 @@ const router = createBrowserRouter([
         element: <RecruiterProfileSidebar />,
         children: [
           {
+            path: 'dashboard',
+            element: <Dashboard />,
+          },
+          {
+            path: 'dashboard/allapplications',
+            element: <AllApplications />,
+          },
+          {
             path: 'postjob',
             element: <PostJobTab />,
           },
@@ -155,7 +164,6 @@ const router = createBrowserRouter([
             path: 'scout/:id',
             element: <ChooseMethod />,
           },
-
           {
             path: 'scout/upload-cv-cover-letter/:id',
             element: <UploadCvAndCoverLetter />,
@@ -169,7 +177,7 @@ const router = createBrowserRouter([
             element: <SearchTalent />,
           },
           {
-            path: 'scout/search-results',
+            path: 'scout/search-results/:id',
             element: <SearchResult />,
           },
           {
@@ -195,6 +203,10 @@ const router = createBrowserRouter([
           {
             path: 'postjob/:jobId',
             element: <PostJobTab />,
+          },
+          {
+            path: 'shortlist',
+            element: <Shortlist />,
           },
         ],
       },

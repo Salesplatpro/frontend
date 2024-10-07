@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface CvCoverLetter {
-  cv: File
-  coverLetter: File
+  cv: File | null
+  coverLetter: File | null
 }
 
 interface FileResult {

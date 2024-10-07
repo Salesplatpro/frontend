@@ -6,9 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ChooseMethodCard } from '../../../components/Cards'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import styles from './chooseMethod.module.scss'
-import { CustomToolTip } from './CustomToolTip'
 
-const description = (
+export const description = (
   <div>
     <span>Click to upload</span> or drag and drop SVG,PNG, JPG or GIF (max
     800px, 400px)
@@ -42,7 +41,7 @@ export const ChooseMethod = () => {
       name: 'Search Talent DB',
       icon: <CiSearch size={20} />,
       description: <span>Search here</span>,
-      link: '/recruiterDashboard/scout/search-talent',
+      link: `/recruiterDashboard/scout/search-talent/${params.id}`,
       toolTip: false,
     },
   ]
@@ -50,7 +49,7 @@ export const ChooseMethod = () => {
   return (
     <div className={styles.topContainer}>
       <PageHeaderTitle
-        title="Choose Assessment method"
+        paramsId={params}
         description="Upload cv in batch for collective AI assesment"
       />
       <div className={styles.parent}>
@@ -59,7 +58,6 @@ export const ChooseMethod = () => {
             key={index}
             item={item}
             onClick={() => navigate(item.link)}
-            tooltip={item.toolTip}
           />
         ))}
       </div>

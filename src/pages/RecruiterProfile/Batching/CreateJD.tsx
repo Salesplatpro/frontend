@@ -16,9 +16,7 @@ type RoleType = {
 const CreateJD = () => {
   const navigate = useNavigate()
   const [fetchedRoles, setFetchedRoles] = useState<RoleType[]>([])
-  const [roleDescription, setRoleDescription] = useState('')
   const [error, setError] = useState<string | null>(null) // State for error
-
   const [createJD, { isLoading }] = useCreateJDMutation()
 
   useEffect(() => {
@@ -40,14 +38,6 @@ const CreateJD = () => {
   ) => {
     const selectedRoleId = e.target.value
     setFieldValue('role', selectedRoleId)
-
-    const selectedRole = fetchedRoles.find(
-      (role) => role._id === selectedRoleId,
-    )
-    if (selectedRole) {
-      setRoleDescription(selectedRole.description)
-      setFieldValue('description', selectedRole.description)
-    }
   }
 
   const handleSubmit = async (values: any) => {
@@ -128,10 +118,10 @@ const CreateJD = () => {
                 </label>
                 <Field
                   name="description"
-                  type="text"
-                  className="w-[320px] flex flex-col lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  as="textarea"
+                  className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
                   placeholder="Add Job description here"
-                  value={roleDescription}
+                  rows={4}
                 />
               </div>
 

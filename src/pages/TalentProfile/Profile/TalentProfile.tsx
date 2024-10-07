@@ -3,42 +3,25 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import * as Yup from 'yup'
-
-import upload from '../../assets/Featured icon.png'
-import profilePics from '../../assets/profilePics.png'
-import AllRoles from '../../components/Roles/AllRoles'
+import upload from '../../../assets/Featured icon.png'
+import profilePics from '../../../assets/profilePics.png'
+import AllRoles from '../../../components/Roles/AllRoles'
 import {
   useTalentCreationMutation,
   useUpdateProfileMutation,
   useUploadCvMutation,
-} from '../../redux/api/talent'
-import { setUser } from '../../redux/features/authSlice/authSlice'
-import { RootState } from '../../redux/store/store'
-import DropDown from '../Auth/DropDown'
-import ProgressBar from '../TalentProfile/ProgressBar'
-import { capitalizeEachWord } from './Profile Component/CapitalizeWord'
-import UploadCV from './Profile Component/UploadCV'
-
-interface TalentProfileProps {
-  bio?: string
-  role?: string[]
-  maxSalary?: string
-  minSalary?: string
-  experience?: string
-  cv?: File | null
-  cvUrl?: string
-  workType?: string // 'remote', 'onSite', or 'hybrid'
-  remote?: boolean // Add these lines
-  onSite?: boolean
-  hybrid?: boolean
-}
+} from '../../../redux/api/talent'
+import { RootState } from '../../../redux/store/store'
+import ProgressBar from '../../../utils/ProgressBar'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import UploadCV from './UploadCV'
+import Worktype from '../../../components/Worktype'
+import { TalentProfileProps } from '../../../utils/types'
+import { handleProfileSubmit } from './TalentProfileOnSubmit'
+import { handleImageChange } from '../../../utils/HandleImageChange'
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
-  workType: Yup.string().required('Please select a work type'),
-  remote: Yup.boolean().required(),
-  onSite: Yup.boolean().required(),
-  hybrid: Yup.boolean().required(),
   minSalary: Yup.number()
     .required('Minimum Salary is required')
     .positive('Minimum Salary must be positive'),
@@ -76,19 +59,6 @@ const calculateProgress = (values: TalentProfileProps): number => {
   return (filledFields.length / fields.length) * 100
 }
 
-const workTypeData = [
-  { value: 'onsite', label: 'OnSite' },
-  { value: 'remote', label: 'Remote' },
-  { value: 'hybrid', label: 'Hybrid' },
-]
-
-const experienceTypeData = [
-  { value: '', label: 'Select experience Level' },
-  { value: 'senior', label: 'Senior' },
-  { value: 'intermediate', label: 'Intermediate' },
-  { value: 'junior', label: 'Junior' },
-]
-
 const TalentProfile = () => {
   const [progress, setProgress] = useState(0)
   const [isEditing, setIsEditing] = useState(false) // New state for editing
@@ -109,190 +79,10 @@ const TalentProfile = () => {
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
+    remote: userInfo.profile?.remote || false,
+    onSite: userInfo.profile?.onSite || false,
+    hybrid: userInfo.profile?.hybrid || false,
     cv: null,
-    workType: userInfo.profile?.workType || '',
-    remote: userInfo.profile?.remote || false, // Set to boolean
-    onSite: userInfo.profile?.onSite || false, // Set to boolean
-    hybrid: userInfo.profile?.hybrid || false, // Set to boolean
-  }
-
-  const onSubmit = async (
-    values: TalentProfileProps,
-    { setSubmitting, setFieldValue }: FormikHelpers<TalentProfileProps>,
-  ) => {
-    try {
-      const isNewProfile = !userInfo.profile
-      const formData = new FormData()
-
-      // Initialize boolean values for work types
-      // const workTypeBooleans = {
-      //   remote: values.remote || false,
-      //   onSite: values.onSite || false,
-      //   hybrid: values.hybrid || false,
-      // }
-
-      // // Append work type booleans to formData
-      formData.append('remote', String(values.remote))
-      formData.append('onSite', String(values.onSite))
-      formData.append('hybrid', String(values.hybrid))
-
-      if (isNewProfile) {
-        formData.append('bio', values.bio || '')
-        formData.append('role', (values.role || []).join(','))
-        formData.append('minSalary', values.minSalary || '')
-        formData.append('maxSalary', values.maxSalary || '')
-        formData.append('experience', values.experience || '')
-        formData.append('workType', values.workType || '')
-
-        if (values.cv) {
-          formData.append('file', values.cv)
-        }
-        if (profileImage && profileImage !== profilePics) {
-          formData.append('profileImage', profileImage as string)
-        }
-
-        const submitCv = values.cv
-          ? await uploadCv(formData).unwrap()
-          : { data: { fileUrl: '' } }
-
-        const updatedFormValues = {
-          ...values,
-          cv: submitCv.data.fileUrl || '',
-        }
-
-        const response = await talentCreation(updatedFormValues).unwrap()
-
-        if (response.status) {
-          dispatch(
-            setUser({
-              user: response.data.user,
-              isLoggedIn: true,
-            }),
-          )
-          toast.success('Profile created successfully')
-        } else {
-          toast.error(
-            response.message || 'An error occurred while creating profile',
-          )
-        }
-      } else {
-        // update profile submission
-        const updatedFields: Partial<TalentProfileProps> = {}
-
-        if (values.bio !== initialValues.bio) {
-          updatedFields.bio = values.bio
-        }
-        if (values.role?.join(',') !== initialValues.role?.join(',')) {
-          updatedFields.role = values.role
-        }
-        if (values.minSalary !== initialValues.minSalary) {
-          updatedFields.minSalary = values.minSalary
-        }
-        if (values.maxSalary !== initialValues.maxSalary) {
-          updatedFields.maxSalary = values.maxSalary
-        }
-        if (values.experience !== initialValues.experience) {
-          updatedFields.experience = values.experience
-        }
-        if (values.cv && values.cv !== initialValues.cv) {
-          updatedFields.cv = values.cv
-        }
-
-        if (values.workType !== initialValues.workType) {
-          updatedFields.workType = values.workType
-        }
-
-        // Check and assign updated work type booleans
-        // if (values.remote !== initialValues.remote) {
-        //   updatedFields.remote = values.remote
-        // }
-        // if (values.onSite !== initialValues.onSite) {
-        //   updatedFields.onSite = values.onSite
-        // }
-        // if (values.hybrid !== initialValues.hybrid) {
-        //   updatedFields.hybrid = values.hybrid
-        // }
-
-        if (Object.keys(updatedFields).length === 0) {
-          toast.error('No changes detected')
-          setSubmitting(false)
-          return
-        }
-
-        // Append only the updated fields to formData
-        if (updatedFields.cv) {
-          formData.append('file', updatedFields.cv)
-        }
-        if (updatedFields.bio) {
-          formData.append('bio', updatedFields.bio)
-        }
-        if (updatedFields.role && updatedFields.role.length > 0) {
-          formData.append('role', updatedFields.role.join(','))
-        }
-        if (updatedFields.minSalary) {
-          formData.append('minSalary', updatedFields.minSalary)
-        }
-        if (updatedFields.maxSalary) {
-          formData.append('maxSalary', updatedFields.maxSalary)
-        }
-        if (updatedFields.experience) {
-          formData.append('experience', updatedFields.experience)
-        }
-
-        if (updatedFields.workType) {
-          formData.append('experience', updatedFields.workType)
-        }
-
-        // Append work type values to formData
-        // formData.append('remote', String(updatedFields.remote ?? false))
-        // formData.append('onSite', String(updatedFields.onSite ?? false))
-        // formData.append('hybrid', String(updatedFields.hybrid ?? false))
-
-        const updatedCv = updatedFields.cv
-          ? await uploadCv(formData).unwrap()
-          : { data: { fileUrl: '' } }
-
-        if (updatedCv.data.fileUrl) {
-          updatedFields.cv = updatedCv.data.fileUrl
-        }
-
-        const response = await updateProfile(updatedFields).unwrap()
-        // console.log('response', response.data.user)
-
-        if (response.status) {
-          dispatch(
-            setUser({
-              user: response.data.user,
-              isLoggedIn: true,
-            }),
-          )
-          localStorage.setItem('user', JSON.stringify(response.data.user))
-          toast.success('Profile updated successfully')
-        } else {
-          toast.error(
-            response.message || 'An error occurred while updating profile',
-          )
-        }
-      }
-    } catch (error: any) {
-      console.error('DisplayError submitting', error)
-      toast.error(
-        error.message || 'An error occurred while processing your request',
-      )
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setProfileImage(reader.result) // Set the selected image
-      }
-      reader.readAsDataURL(file) // Read the file as a data URL
-    }
   }
 
   return (
@@ -308,9 +98,9 @@ const TalentProfile = () => {
             textColor="#344054"
             pathColor="#3C6FD4"
             trailColor="#F4EBFF"
+            size={80}
           />
         </div>
-
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
@@ -323,7 +113,7 @@ const TalentProfile = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handleImageChange}
+              onChange={(event) => handleImageChange(event, setProfileImage)} // Call handleImageChange on file selection
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-2"
@@ -358,7 +148,20 @@ const TalentProfile = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={!userInfo.profile ? validationSchema : null}
-            onSubmit={onSubmit}
+            onSubmit={(values, { setSubmitting }) =>
+              handleProfileSubmit(
+                values,
+                setSubmitting,
+                userInfo,
+                dispatch,
+                profileImage,
+                'defaultProfileImage',
+                initialValues,
+                talentCreation,
+                uploadCv,
+                updateProfile,
+              )
+            }
             enableReinitialize>
             {({ values, isSubmitting, setFieldValue }) => {
               useEffect(() => {
@@ -421,7 +224,7 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="flex justify-between mt-6 w-full">
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="phoneNumber"
@@ -433,6 +236,7 @@ const TalentProfile = () => {
                         id="phoneNumber"
                         name="phoneNumber"
                         placeholder="08198675757"
+                        value={userInfo.phone}
                         readOnly={!isEditing} // Read-only if not editing
                         className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
                       />
@@ -445,64 +249,29 @@ const TalentProfile = () => {
 
                     <div className="md:w-[48%]">
                       <label
-                        htmlFor="work type"
+                        htmlFor="workTypes"
                         className="text-[14px] text-[#344054]">
                         Work Type
                       </label>
-                      <Field
-                        name="workType"
-                        component={DropDown}
-                        options={workTypeData}
-                      />
-                      <ErrorMessage
-                        name="work type"
-                        component="div"
-                        className="text-red-500 text-[14px]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
-                    <div className="md:w-[48%]">
-                      <label
-                        htmlFor="github"
-                        className="text-[14px] text-[#344054]">
-                        Github
-                      </label>
-                      <Field
-                        type="text"
-                        id="github"
-                        name="github"
-                        placeholder="Your Github Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                      />
-                      <ErrorMessage
-                        name="github"
-                        component="div"
-                        className="text-red-500 text-[14px]"
-                      />
-                    </div>
-                    <div className="md:w-[48%]">
-                      <label
-                        htmlFor="linkedin"
-                        className="text-[14px] text-[#344054]">
-                        LinkedIn
-                      </label>
-                      <Field
-                        type="text"
-                        id="linkedin"
-                        name="linkedin"
-                        placeholder="Your Linkedin Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
-                      />
-                      <ErrorMessage
-                        name="linkedin"
-                        component="div"
-                        className="text-red-500 text-[14px]"
+                      <Worktype
+                        options={[
+                          { value: 'remote', label: 'Remote' },
+                          { value: 'onSite', label: 'On Site' },
+                          { value: 'hybrid', label: 'Hybrid' },
+                        ]}
+                        initialSelected={{
+                          remote: values.remote,
+                          onSite: values.onSite,
+                          hybrid: values.hybrid,
+                        }}
+                        onSelectionChange={(selected) => {
+                          setFieldValue('remote', selected.remote)
+                          setFieldValue('onSite', selected.onSite)
+                          setFieldValue('hybrid', selected.hybrid)
+                        }}
                       />
                     </div>
                   </div>
-
                   <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
                       <label
@@ -529,7 +298,7 @@ const TalentProfile = () => {
                         htmlFor="experience">
                         Experience Level
                       </label>
-                      {/* <Field
+                      <Field
                         as="select"
                         id="experience"
                         name="experience"
@@ -538,14 +307,7 @@ const TalentProfile = () => {
                         <option value="senior">Senior</option>
                         <option value="intermediate">Intermediate</option>
                         <option value="junior">Junior</option>
-                      </Field> */}
-
-                      <Field
-                        name="experience"
-                        id="experience"
-                        component={DropDown}
-                        options={experienceTypeData}
-                      />
+                      </Field>
                       <ErrorMessage
                         name="experience"
                         component="div"
@@ -597,30 +359,28 @@ const TalentProfile = () => {
                     </div>
                   </div>
 
-                  <div className="lg:flex lg:justify-center lg:items-center lg:flex-row md:flex md:justify-start md:items-start md:flex-col">
-                    <div className="flex mt-6 w-full">
-                      {userInfo.profile?.cv ? (
-                        // If a CV is already uploaded, show the download link
-                        <div className="md:w-[48%] ">
-                          <label
-                            htmlFor="cv"
-                            className="text-[14px] text-[#344054]">
-                            Current CV
-                          </label>
-                          <div className="relative w-[100%]">
-                            <div>
-                              <a
-                                href={userInfo.profile.cv}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block text-[#4884DF] mt-2">
-                                {userInfo.profile?.cv.split('/').pop()}
-                              </a>
-                            </div>
+                  <div className="inline-block mt-6 w-full">
+                    {userInfo.profile?.cv ? (
+                      // If a CV is already uploaded, show the download link
+                      <div className="md:w-[48%] ">
+                        <label
+                          htmlFor="cv"
+                          className="text-[14px] text-[#344054]">
+                          Current CV
+                        </label>
+                        <div className="relative w-[100%]">
+                          <div>
+                            <a
+                              href={userInfo.profile.cv}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-[#4884DF] mt-2">
+                              {userInfo.profile?.cv.split('/').pop()}
+                            </a>
                           </div>
                         </div>
-                      ) : null}
-                    </div>
+                      </div>
+                    ) : null}
                   </div>
 
                   <div className="inline-block mt-6 w-full">

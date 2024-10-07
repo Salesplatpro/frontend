@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
+import Navbar from '../../components/Navbar'
 // import { SendRecruiterReg } from '../../api/api-communication'
 import { useRecruiterRegMutation } from '../../redux/api/apiSlice'
-import Navbar from '../../components/Navbar'
 
 interface FormErrors {
   email?: any

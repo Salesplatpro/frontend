@@ -1,17 +1,15 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
+import { FaPlus } from 'react-icons/fa6'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link, useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
-
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
-
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import { FaPlus } from 'react-icons/fa6'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),

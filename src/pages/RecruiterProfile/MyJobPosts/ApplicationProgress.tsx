@@ -1,60 +1,91 @@
-import React from 'react'
-import { CgInfo } from 'react-icons/cg'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
-import { IsProcessing } from '../../../components'
+import { OutlineButton, RecruiterButton } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchApplicantProgressQuery,
-  useFetchTalentProfileQuery,
+  usePatchApplicationStatusMutation,
 } from '../../../redux/api/recruiter'
-import styles from './applicationProgress.module.scss'
+import { EachProgressDetails } from './EachProgressDetails'
+import { getApplicationDetails } from './getApplicationDetails'
+import { Messaging } from './Messaging/Messaging'
+import { ProfileCard } from './ProfileCard'
+
+const iconSize = 32
+const iconColor = ' #4985df'
 
 export const ApplicationProgress = () => {
-  const navigate = useNavigate()
   const { applicationId } = useParams()
-  const iconSize = 32
-  const iconColor = ' #4985df'
+  const talentId = useFetchApplicantProgressQuery(applicationId ?? '')?.data
+    ?.data?.application?.talent?._id
+  const [loadingShortlist, setLoadingShortlist] = useState(false)
+  const [loadingReject, setLoadingReject] = useState(false)
+
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
+  const [patchApplicationStatus] = usePatchApplicationStatusMutation()
 
-  const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
-    id: data?.data?.application?.talent?._id,
-  })
+  const {
+    firstName,
+    lastName,
+    bio,
+    experience,
+    prescreeningScore,
+    cvSimilarityScore,
+    personalizedScore,
+    type,
+  } = getApplicationDetails(data)
 
   const progress = [
     {
       icon: <GoTasklist size={iconSize} color={iconColor} />,
       title: 'Pre-Assessment',
-      score: fetching ? (
-        <IsProcessing />
-      ) : (
-        result?.data?.user?.profile?.prescreeningScore ||
-        'No pre-assessment test'
-      ),
+      score: prescreeningScore,
     },
     {
       icon: <SiReaddotcv size={iconSize} color={iconColor} />,
       title: 'CV-Matching',
-      score:
-        data?.data?.application?.cvSimilarityScore || 'No cv-matching score',
+      score: cvSimilarityScore,
     },
     {
       icon: <TbEdit size={iconSize} color={iconColor} />,
       title: 'Personality Test',
-      score:
-        data?.data?.application?.personalizedScore || 'No personality test',
-    },
-    {
-      icon: <TbEdit size={iconSize} color={iconColor} />,
-      title: 'Personalized Test',
-      score: data?.data?.application?.mbtiType || 'No personalized test',
+      score: personalizedScore,
     },
   ]
+
+  const personality = {
+    icon: <TbEdit size={iconSize} color={iconColor} />,
+    title: 'Personalized Test',
+    score: type,
+  }
+
+  const handleStatusUpdate = async (status: 'rejected' | 'shortlisted') => {
+    const setLoading =
+      status === 'rejected' ? setLoadingReject : setLoadingShortlist
+    setLoading(true)
+
+    try {
+      const response = await patchApplicationStatus({
+        id: applicationId,
+        status: { status },
+      }).unwrap()
+
+      toast.success(
+        `Talent is ${response.data.application.status} successfully`,
+      )
+    } catch (error) {
+      console.error('Failed to update status:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (error) {
     return <div>Error loading job details</div>
@@ -65,44 +96,50 @@ export const ApplicationProgress = () => {
   }
 
   return (
-    <div>
-      <div className={styles.titleDesc}>
-        <div className={styles.title}>
-          {data?.data?.application?.talent.firstName}{' '}
-          {data?.data?.application?.talent.lastName}
+    <div className="m-auto max-w-[781px] space-y-5">
+      <ProfileCard
+        firstName={firstName}
+        lastName={lastName}
+        role={experience}
+        description={bio}
+      />
+      <div className="flex flex-col space-y-3">
+        {progress.map((item, index) => (
+          <EachProgressDetails
+            key={index}
+            title={item.title}
+            useScore
+            percentage={item.score}
+          />
+        ))}
+        <EachProgressDetails
+          title={personality.title}
+          percentage={personality.score}
+          personality={personality.score}
+        />
+      </div>
+      <div className="text-center">
+        rank: {data?.data?.application?.rank} of{' '}
+        {data?.data?.application?.job?.noOfApplicants} applicants
+      </div>
+      <div className="flex justify-center space-x-2">
+        <div className="w-1/3">
+          <OutlineButton
+            buttonTitle={loadingReject ? 'Rejecting...' : 'Reject'}
+            onClick={() => handleStatusUpdate('rejected')}
+            disabled={loadingReject}
+          />
         </div>
-        <div className={styles.desc}>
-          {' '}
-          View jobs posted by you and see number of applicants that have
-          responded.
+        <div className="w-1/3">
+          <RecruiterButton
+            buttonTitle={loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
+            onClick={() => handleStatusUpdate('shortlisted')}
+            disabled={loadingShortlist}
+          />
         </div>
       </div>
-      <div className={styles.container}>
-        <div className={styles.info}>
-          <CgInfo size={28} color="#ff9500" />
-          <div>Assessment</div>
-        </div>
-      </div>
-      {progress.map((item, index) => (
-        <div key={index} className={styles.progressContainer}>
-          <div className={styles.iconTitle}>
-            <div className={styles.icon}>{item.icon}</div>
-            <div className={styles.title}>{item.title}</div>
-          </div>
-          <div className={styles.score}>
-            {typeof item.score === 'number' ? (
-              <div>
-                {`${item.score}%`}
-                <span className={styles.scoreItem}>Match</span>
-              </div>
-            ) : (
-              <div className={styles.noMatch}>{item.score}</div>
-            )}
-          </div>
-        </div>
-      ))}
-      <div onClick={() => navigate(-1)} className={styles.button}>
-        Back to Homepage
+      <div>
+        <Messaging applicationId={applicationId} talentId={talentId} />
       </div>
     </div>
   )

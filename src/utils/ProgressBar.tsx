@@ -14,7 +14,8 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   percentage,
-  size = 80,
+  size,
+  // size = 80,
   textColor,
   pathColor,
   trailColor,
