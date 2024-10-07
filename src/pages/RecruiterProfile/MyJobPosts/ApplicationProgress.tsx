@@ -5,41 +5,71 @@ import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 
-import {
-  IsProcessing,
-  OutlineButton,
-  RecruiterButton,
-} from '../../../components'
+import { OutlineButton, RecruiterButton } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import {
   useFetchApplicantProgressQuery,
-  useFetchTalentProfileQuery,
   usePatchApplicationStatusMutation,
 } from '../../../redux/api/recruiter'
 import { EachProgressDetails } from './EachProgressDetails'
+import { getApplicationDetails } from './getApplicationDetails'
+import { Messaging } from './Messaging/Messaging'
 import { ProfileCard } from './ProfileCard'
+
+const iconSize = 32
+const iconColor = ' #4985df'
 
 export const ApplicationProgress = () => {
   const { applicationId } = useParams()
-  const iconSize = 32
-  const iconColor = ' #4985df'
+  const talentId = useFetchApplicantProgressQuery(applicationId ?? '')?.data
+    ?.data?.application?.talent?._id
+  const [loadingShortlist, setLoadingShortlist] = useState(false)
+  const [loadingReject, setLoadingReject] = useState(false)
+
   const { data, error, isLoading } = useFetchApplicantProgressQuery(
     applicationId ?? '',
   )
-  const [loadingShortlist, setLoadingShortlist] = useState(false)
-  const [loadingReject, setLoadingReject] = useState(false)
-  const { data: result, isLoading: fetching } = useFetchTalentProfileQuery({
-    id: data?.data?.application?.talent?._id,
-  })
-
   const [patchApplicationStatus] = usePatchApplicationStatusMutation()
 
+  const {
+    firstName,
+    lastName,
+    bio,
+    experience,
+    prescreeningScore,
+    cvSimilarityScore,
+    personalizedScore,
+    type,
+  } = getApplicationDetails(data)
+
+  const progress = [
+    {
+      icon: <GoTasklist size={iconSize} color={iconColor} />,
+      title: 'Pre-Assessment',
+      score: prescreeningScore,
+    },
+    {
+      icon: <SiReaddotcv size={iconSize} color={iconColor} />,
+      title: 'CV-Matching',
+      score: cvSimilarityScore,
+    },
+    {
+      icon: <TbEdit size={iconSize} color={iconColor} />,
+      title: 'Personality Test',
+      score: personalizedScore,
+    },
+  ]
+
+  const personality = {
+    icon: <TbEdit size={iconSize} color={iconColor} />,
+    title: 'Personalized Test',
+    score: type,
+  }
+
   const handleStatusUpdate = async (status: 'rejected' | 'shortlisted') => {
-    if (status === 'rejected') {
-      setLoadingReject(true)
-    } else {
-      setLoadingShortlist(true)
-    }
+    const setLoading =
+      status === 'rejected' ? setLoadingReject : setLoadingShortlist
+    setLoading(true)
 
     try {
       const response = await patchApplicationStatus({
@@ -47,50 +77,14 @@ export const ApplicationProgress = () => {
         status: { status },
       }).unwrap()
 
-      console.log(response)
       toast.success(
         `Talent is ${response.data.application.status} successfully`,
       )
     } catch (error) {
       console.error('Failed to update status:', error)
     } finally {
-      if (status === 'rejected') {
-        setLoadingReject(false)
-      } else {
-        setLoadingShortlist(false)
-      }
+      setLoading(false)
     }
-  }
-
-  const progress = [
-    {
-      icon: <GoTasklist size={iconSize} color={iconColor} />,
-      title: 'Pre-Assessment',
-      score: fetching ? (
-        <IsProcessing />
-      ) : (
-        result?.data?.user?.profile?.prescreeningScore ||
-        'No pre-assessment test'
-      ),
-    },
-    {
-      icon: <SiReaddotcv size={iconSize} color={iconColor} />,
-      title: 'CV-Matching',
-      score:
-        data?.data?.application?.cvSimilarityScore || 'No cv-matching score',
-    },
-    {
-      icon: <TbEdit size={iconSize} color={iconColor} />,
-      title: 'Personality Test',
-      score:
-        data?.data?.application?.personalizedScore || 'No personality test',
-    },
-  ]
-
-  const personality = {
-    icon: <TbEdit size={iconSize} color={iconColor} />,
-    title: 'Personalized Test',
-    score: data?.data?.application?.mbtiType || 'No personalized test',
   }
 
   if (error) {
@@ -104,10 +98,10 @@ export const ApplicationProgress = () => {
   return (
     <div className="m-auto max-w-[781px] space-y-5">
       <ProfileCard
-        firstName={result?.data?.user?.firstName}
-        lastName={result?.data?.user?.lastName}
-        role={result?.data?.user?.profile?.role[0]?.name}
-        description={result?.data?.user?.profile?.role[0]?.description}
+        firstName={firstName}
+        lastName={lastName}
+        role={experience}
+        description={bio}
       />
       <div className="flex flex-col space-y-3">
         {progress.map((item, index) => (
@@ -124,7 +118,6 @@ export const ApplicationProgress = () => {
           personality={personality.score}
         />
       </div>
-      <div className="flex justify-center"></div>
       <div className="text-center">
         rank: {data?.data?.application?.rank} of{' '}
         {data?.data?.application?.job?.noOfApplicants} applicants
@@ -144,6 +137,9 @@ export const ApplicationProgress = () => {
             disabled={loadingShortlist}
           />
         </div>
+      </div>
+      <div>
+        <Messaging applicationId={applicationId} talentId={talentId} />
       </div>
     </div>
   )

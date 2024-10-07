@@ -110,12 +110,6 @@ export const recruiterApi = createApi({
         }
       },
     }),
-    fetchTalentProfile: builder.query({
-      query: ({ id }) => ({
-        url: `/user/profile/${id}`,
-        method: 'GET',
-      }),
-    }),
     uploadCVOnly: builder.mutation({
       query: (data) => ({
         url: `/scout/cv`,
@@ -146,6 +140,19 @@ export const recruiterApi = createApi({
         body: status,
       }),
     }),
+    sendTalentMessage: builder.mutation({
+      query: ({ data }) => ({
+        url: '/messages',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    getMessagesSentToTalent: builder.query({
+      query: ({ applicationId }) => ({
+        url: `messages?application=${applicationId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -162,10 +169,11 @@ export const {
   useCvAndCoverLetterMutation,
   useCreateJDMutation,
   useSearchTalentDbQuery,
-  useFetchTalentProfileQuery,
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
   useGetCampaignNameQuery,
   useGetRecruiterShortlistQuery,
   usePatchApplicationStatusMutation,
+  useSendTalentMessageMutation,
+  useGetMessagesSentToTalentQuery,
 } = recruiterApi
