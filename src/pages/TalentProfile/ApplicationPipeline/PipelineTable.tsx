@@ -11,13 +11,13 @@ import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 
 import { Button, StatusBadge } from '../../../components'
+import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
 import {
   calculateDaysFromCreation,
   ResponsiveTableRenderer,
 } from '../../../utils'
-import Loading from '../../../components/Loading/Loading'
 import { AllJobTypes } from '../../../utils/types'
 // import { applications } from './ApplicationData'
 

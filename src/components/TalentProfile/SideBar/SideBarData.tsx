@@ -1,8 +1,11 @@
 import React from 'react'
+import { IoIosChatbubbles } from 'react-icons/io'
 import { IoBagOutline } from 'react-icons/io5'
 import { LuHome } from 'react-icons/lu'
 import { MdPersonOutline } from 'react-icons/md'
 import { MdOutlineAssessment } from 'react-icons/md'
+import { MdNotificationAdd } from 'react-icons/md'
+import { SiAzurepipelines } from 'react-icons/si'
 
 const ICON_SIZE = 24
 const COLOR = '#ffffff'
@@ -29,9 +32,21 @@ export const sidebarData = [
     icon: <IoBagOutline size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/job',
   },
+
+  {
+    name: 'Chat',
+    icon: <IoIosChatbubbles size={ICON_SIZE} color={COLOR} />,
+    link: '/talentDashboard/chat',
+  },
+
+  {
+    name: 'Notification',
+    icon: <MdNotificationAdd size={ICON_SIZE} color={COLOR} />,
+    link: '/talentDashboard/notification',
+  },
   {
     name: 'Applications pipeline',
-    icon: <IoBagOutline size={ICON_SIZE} color={COLOR} />,
+    icon: <SiAzurepipelines size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/applicationPipeline',
   },
 ]

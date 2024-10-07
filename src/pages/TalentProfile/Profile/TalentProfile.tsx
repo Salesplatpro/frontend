@@ -10,6 +10,29 @@ import {
   useTalentCreationMutation,
   useUpdateProfileMutation,
   useUploadCvMutation,
+<<<<<<< HEAD:src/pages/TalentProfile/TalentProfile.tsx
+} from '../../redux/api/talent'
+import { setUser } from '../../redux/features/authSlice/authSlice'
+import { RootState } from '../../redux/store/store'
+import DropDown from '../Auth/DropDown'
+import MultiSelectDropDownMenu from '../Auth/MultiSelectDropDownMenu'
+import ProgressBar from '../TalentProfile/ProgressBar'
+import { capitalizeEachWord } from './Profile Component/CapitalizeWord'
+import UploadCV from './Profile Component/UploadCV'
+
+interface TalentProfileProps {
+  bio?: string
+  role?: string[]
+  maxSalary?: string
+  minSalary?: string
+  experience?: string
+  cv?: File | null
+  // cvUrl?: string
+  remote: boolean
+  onSite: boolean
+  hybrid: boolean
+}
+=======
 } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
 import ProgressBar from '../../../utils/ProgressBar'
