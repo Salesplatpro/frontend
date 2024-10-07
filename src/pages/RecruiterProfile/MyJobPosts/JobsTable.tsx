@@ -1,11 +1,12 @@
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -19,25 +20,20 @@ type JobsTableType = {
   data: recruiterJobPostsTypes[]
 }
 
-const StyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#d0d5dd',
-    color: '#101828',
-    fontWeight: 400,
-    fontSize: 16,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    fontWeight: 400,
-    padding: 12,
-  },
-}))
+const tableHeadStyle = {
+  color: '#101828',
+  backgroundColor: '#F8F8F8',
+  fontSize: '18px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
+}
 
-const StyledTableRow = styled(TableRow)(() => ({
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}))
+const tableCellStyle = {
+  color: '#101828',
+  fontSize: '16px',
+  fontFamily: 'Raleway, sans-serif',
+  fontWeight: 600,
+}
 
 export const JobsTable = ({ data }: JobsTableType) => {
   const align = 'center'
@@ -47,32 +43,42 @@ export const JobsTable = ({ data }: JobsTableType) => {
       <Table aria-label="Application pipeline data">
         <TableHead>
           <TableRow>
-            <StyledTableCell align={align}>Job Title</StyledTableCell>
-            <StyledTableCell align={align}>Applicants</StyledTableCell>
-            <StyledTableCell align={align}>Date Creation</StyledTableCell>
-            <StyledTableCell align={align}>Details</StyledTableCell>
+            <TableCell align={align} sx={tableHeadStyle}>
+              Job Title
+            </TableCell>
+            <TableCell align={align} sx={tableHeadStyle}>
+              Applicants
+            </TableCell>
+            <TableCell align={align} sx={tableHeadStyle}>
+              Date Creation
+            </TableCell>
+            <TableCell align={align} sx={tableHeadStyle}>
+              Details
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data?.map((job, index) => (
-            <StyledTableRow key={index}>
-              <StyledTableCell component="th" align={align}>
+            <TableRow key={index}>
+              <TableCell component="th" align={align} sx={tableCellStyle}>
                 {job.role.name}
-              </StyledTableCell>
-              <StyledTableCell align={align}>
+              </TableCell>
+              <TableCell align={align} sx={tableCellStyle}>
                 {job.noOfApplicants}
-              </StyledTableCell>
-              <StyledTableCell align={align}>{`${calculateDaysFromCreation(
+              </TableCell>
+              <TableCell
+                align={align}
+                sx={tableCellStyle}>{`${calculateDaysFromCreation(
                 job.createdAt,
-              )} days ago`}</StyledTableCell>
-              <StyledTableCell align={align}>
+              )} days ago`}</TableCell>
+              <TableCell align={align} sx={tableCellStyle}>
                 <Link
                   to={`/recruiterDashboard/singleJobPost/${job._id}`}
                   state={{ jobName: job.role.name, postedAt: job.createdAt }}>
                   <Button title="View Application" />
                 </Link>
-              </StyledTableCell>
-            </StyledTableRow>
+              </TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>
