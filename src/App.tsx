@@ -17,7 +17,6 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
-import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import {
   ApplicationProgress,
   MyJobPosts,
@@ -26,24 +25,27 @@ import {
   Shortlist,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
-import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
+import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
+import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
+import Chat from './pages/TalentProfile/Chat/ChatList'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
+import Notification from './pages/TalentProfile/Notification/NotificationList'
+import TalentProfile from './pages/TalentProfile/Profile/TalentProfile'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
-import TalentProfile from './pages/TalentProfile/Profile/TalentProfile'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
@@ -106,6 +108,16 @@ const router = createBrowserRouter([
           {
             path: 'job',
             element: <Job />,
+          },
+
+          {
+            path: 'Chat',
+            element: <Chat />,
+          },
+
+          {
+            path: 'Notification',
+            element: <Notification />,
           },
           {
             path: 'job/:jobId',

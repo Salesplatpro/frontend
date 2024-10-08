@@ -1,5 +1,6 @@
 import { FieldProps } from 'formik'
 import React, { useEffect, useState } from 'react'
+import { IoIosArrowDown } from 'react-icons/io'
 
 interface Option {
   value: string
@@ -48,8 +49,9 @@ const DropDown: React.FC<SelectUserType> = ({ label, options, field }) => {
           className="w-full px-4 py-2 text-left text-gray-600 bg-white border rounded-lg focus:outline-none"
           onClick={toggleDropdown}>
           {selectedOption || 'Choose an option'}
+
           <span className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            &#x25BC;
+            <IoIosArrowDown size={18} color="black" />
           </span>
         </button>
         {isOpen && (

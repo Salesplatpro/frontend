@@ -148,6 +148,25 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
+    getMessages: builder.query({
+      query: () => ({
+        url: `/messages`,
+        method: 'GET',
+      }),
+    }),
+    patchMessage: builder.mutation({
+      query: ({ messageId, body }) => ({
+        url: `/messages/${messageId}`,
+        method: 'PATCH',
+        body,
+      }),
+    }),
+    getNotifications: builder.query({
+      query: () => ({
+        url: `/notifications`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -170,4 +189,7 @@ export const {
   usePostPersonalityTestMutation,
   useAllJobApplicationsQuery,
   useGetRoleQuery,
+  useGetMessagesQuery,
+  usePatchMessageMutation,
+  useGetNotificationsQuery,
 } = talentApi
