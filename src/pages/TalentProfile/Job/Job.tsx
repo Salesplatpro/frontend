@@ -17,7 +17,7 @@ import { SingleJob } from './SingleJob'
 const defaultFilterValues: JobFiltersTypes = {
   role: '',
   experienceLevel: '',
-  remote: '', // Ensure this is valid per JobFiltersTypes
+  remote: '',
   location: {
     city: { name: '', geoId: null },
     state: { name: '', geoId: null },
@@ -89,11 +89,7 @@ const Job = () => {
     }
   }, [filteredData, filteredError, filters.role])
 
-  // if (isLoading || isFiltering) return <Loading />
-  // if (isFiltering) return <Loading />
-
   const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
-    // setJobs([])
     setFilters(filterValues)
     setShowFilter(false)
   }

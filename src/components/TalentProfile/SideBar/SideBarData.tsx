@@ -1,11 +1,11 @@
 import React from 'react'
-import { IoIosChatbubbles } from 'react-icons/io'
+import { BsChatDots } from 'react-icons/bs'
 import { IoBagOutline } from 'react-icons/io5'
 import { LuHome } from 'react-icons/lu'
 import { MdPersonOutline } from 'react-icons/md'
 import { MdOutlineAssessment } from 'react-icons/md'
-import { MdNotificationAdd } from 'react-icons/md'
-import { SiAzurepipelines } from 'react-icons/si'
+import { BiMessageDetail } from 'react-icons/bi'
+import { RiFlowChart } from "react-icons/ri";
 
 const ICON_SIZE = 24
 const COLOR = '#ffffff'
@@ -35,18 +35,18 @@ export const sidebarData = [
 
   {
     name: 'Chat',
-    icon: <IoIosChatbubbles size={ICON_SIZE} color={COLOR} />,
+    icon: <BsChatDots size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/chat',
   },
 
   {
     name: 'Notification',
-    icon: <MdNotificationAdd size={ICON_SIZE} color={COLOR} />,
+    icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/notification',
   },
   {
     name: 'Applications pipeline',
-    icon: <SiAzurepipelines size={ICON_SIZE} color={COLOR} />,
+    icon: <RiFlowChart size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/applicationPipeline',
   },
 ]

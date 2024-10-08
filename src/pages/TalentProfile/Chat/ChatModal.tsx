@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 
-// import CheckMark from '../../../assets/CheckMark.png'
-
 type ModalProps = {
   onClose: () => void
-  name: string
+  onConfirm: () => void
+  actionType: 'acknowledge' | 'reject'
 }
 
-const ChatModal: React.FC<ModalProps> = ({ onClose, name }) => {
+const ChatModal: React.FC<ModalProps> = ({
+  onClose,
+  onConfirm,
+  actionType,
+}) => {
   const [isVisible, setIsVisible] = useState(true)
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -25,7 +28,12 @@ const ChatModal: React.FC<ModalProps> = ({ onClose, name }) => {
 
   const handleClose = () => {
     setIsVisible(false)
-    setTimeout(onClose, 800) // Trigger the onClose callback after animation delay
+    setTimeout(onClose, 800)
+  }
+
+  const handleConfirm = () => {
+    onConfirm()
+    handleClose()
   }
 
   useEffect(() => {
@@ -41,6 +49,13 @@ const ChatModal: React.FC<ModalProps> = ({ onClose, name }) => {
       document.body.style.overflowY = ''
     }
   }, [])
+
+  const modalTitle =
+    actionType === 'acknowledge' ? 'Acknowledge Message' : 'Reject Message'
+  const modalMessage =
+    actionType === 'acknowledge'
+      ? 'By acknowledging this message, you agree to take actions as stated.'
+      : 'Are you sure you want to reject this message? This action cannot be undone.'
 
   return (
     <div
@@ -59,26 +74,22 @@ const ChatModal: React.FC<ModalProps> = ({ onClose, name }) => {
           isVisible ? 'scale-up-center' : ''
         }`}
         role="document">
-        {/* <img src={CheckMark} alt="checklist" /> */}
         <h2
           id="modal-title"
           className="text-[18px] lg:text-[28px] md:text-[25px] sm:text-[20px] font-bold font-raleway">
-          Acknowledge Message
+          {modalTitle}
         </h2>
-        <p className="text-center px-10 py-3">
-          By acknowledging this message, you agree to take actions and follow
-          the instructions stated in the message
-        </p>
+        <p className="text-center px-10 py-3">{modalMessage}</p>
         <button
-          className="close-modal px-14 lg:px-24 md:px-24 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[14px] lg:text-[20px] md:text-[18px] bg-[#3C6FD4] hover:bg-[#4985df]"
-          onClick={handleClose} // Close the modal without redirecting
-          aria-label="Close modal">
-          Acknowledge
+          className="px-14 lg:px-24 md:px-24 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[14px] lg:text-[20px] md:text-[18px] bg-[#3C6FD4] hover:bg-[#4985df]"
+          onClick={handleConfirm}
+          aria-label="Confirm action">
+          {actionType === 'acknowledge' ? 'Acknowledge' : 'Reject'}
         </button>
 
         <button
-          className="close-modal px-32 py-2 rounded-lg font-raleway font-medium text-center text-[17px] lg:text-[20px] md:text-[18px] text-[#3C6FD4] hover:cursor-pointer"
-          onClick={handleClose} // Close the modal without redirecting
+          className="px-32 py-2 rounded-lg font-raleway font-medium text-center text-[17px] lg:text-[20px] md:text-[18px] text-[#3C6FD4] hover:cursor-pointer"
+          onClick={handleClose}
           aria-label="Close modal">
           Cancel
         </button>
