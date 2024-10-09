@@ -49,7 +49,7 @@ const SignIn = () => {
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(true)
   const [modalName, setModalName] = useState('')
   const [loading, setLoading] = useState(false)
 
