@@ -9,11 +9,12 @@ export interface LocationProps {
   geoId?: number | null | string
   isCountry?: boolean
   onChange: (geoId: number) => void
+  height?: string
 }
 
 export interface LocationValues {
-  name: string
-  geoId: number | null
+  name?: string
+  geoId?: number | null
 }
 
 export interface FormValues {
