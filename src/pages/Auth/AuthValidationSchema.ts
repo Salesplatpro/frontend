@@ -11,9 +11,6 @@ const passwordValidation = () =>
   Yup.string()
     .min(6, 'Password must be be at least 6 characters')
     .required('Password is required')
-    .test('uppercase', 'Password must contain uppercase', (value) =>
-      /[A-Z]/.test(value),
-    )
     .test('number', 'Password must have a number', (value) => /\d/.test(value))
     .test(
       'Special character',
