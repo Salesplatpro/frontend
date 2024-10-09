@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
 import { Alert } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+
 import Loading from '../../../components/Loading/Loading'
-import { ChatItem } from './ChatItem'
-import ChatModal from './ChatModal'
 import {
   useGetMessagesQuery,
   usePatchMessageMutation,
 } from '../../../redux/api/talent'
 import { truncateText } from '../../../utils/truncateTexts'
+import { ChatItem } from './ChatItem'
+import ChatModal from './ChatModal'
 
 interface Sender {
   firstName: string
