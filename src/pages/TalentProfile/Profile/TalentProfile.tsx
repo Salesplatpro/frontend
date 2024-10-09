@@ -19,34 +19,49 @@ import Worktype from '../../../components/Worktype'
 import { TalentProfileProps } from '../../../utils/types'
 import { handleProfileSubmit } from './TalentProfileOnSubmit'
 import { handleImageChange } from '../../../utils/HandleImageChange'
+import Location from '../../../components/global/Location'
 
 const validationSchema = Yup.object({
-  bio: Yup.string().required('Bio is required'),
-  minSalary: Yup.number()
-    .required('Minimum Salary is required')
-    .positive('Minimum Salary must be positive'),
-  maxSalary: Yup.number()
-    .required('Maximum Salary is required')
-    .positive('Maximum Salary must be positive'),
-  experience: Yup.string().required('Experience level is required'),
-  cv: Yup.mixed()
-    .required('A file is required')
-    .test(
-      'fileSize',
-      'File size is too large',
-      (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
-    )
-    .test(
-      'fileType',
-      'Unsupported file format',
-      (value) =>
-        value &&
-        [
-          'application/pdf',
-          'application/msword',
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ].includes((value as File).type),
-    ),
+  // bio: Yup.string().required('Bio is required'),
+  // location: Yup.object({
+  //   country: Yup.object({
+  //     name: Yup.string().required('Country is required'),
+  //     geoId: Yup.number().required('Country ID is required'),
+  //   }),
+  //   state: Yup.object({
+  //     name: Yup.string().required('State is required'),
+  //     geoId: Yup.number().required('State ID is required'),
+  //   }),
+  //   city: Yup.object({
+  //     name: Yup.string().required('City is required'),
+  //     geoId: Yup.number().required('City ID is required'),
+  //   }),
+  // }),
+  // minSalary: Yup.number()
+  //   .required('Minimum Salary is required')
+  //   .positive('Minimum Salary must be positive'),
+  // maxSalary: Yup.number()
+  //   .required('Maximum Salary is required')
+  //   .positive('Maximum Salary must be positive'),
+  // experience: Yup.string().required('Experience level is required'),
+  // cv: Yup.mixed()
+  //   .required('A file is required')
+  //   .test(
+  //     'fileSize',
+  //     'File size is too large',
+  //     (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
+  //   )
+  //   .test(
+  //     'fileType',
+  //     'Unsupported file format',
+  //     (value) =>
+  //       value &&
+  //       [
+  //         'application/pdf',
+  //         'application/msword',
+  //         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  //       ].includes((value as File).type),
+  //   ),
 })
 
 const calculateProgress = (values: TalentProfileProps): number => {
@@ -76,6 +91,17 @@ const TalentProfile = () => {
   const initialValues: TalentProfileProps = {
     bio: userInfo.profile?.bio || '',
     role: userInfo.profile?.role.map((r: any) => r._id) || [],
+    location: {
+      country: {
+        name: userInfo.profile?.location?.country?.name || '',
+        geoId: null,
+      },
+      state: {
+        name: userInfo.profile?.location?.state?.name || '',
+        geoId: null,
+      },
+      city: { name: userInfo.profile?.location?.city.name || '', geoId: null },
+    },
     maxSalary: userInfo.profile?.maxSalary || '',
     minSalary: userInfo.profile?.minSalary || '',
     experience: userInfo.profile?.experience || '',
@@ -101,7 +127,7 @@ const TalentProfile = () => {
             size={80}
           />
         </div>
-        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-2">
+        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
               src={profileImage as string}
@@ -116,7 +142,7 @@ const TalentProfile = () => {
               onChange={(event) => handleImageChange(event, setProfileImage)} // Call handleImageChange on file selection
             />
             <button
-              className="text-[10px] text-[#4884DF] cursor-pointer mt-2"
+              className="text-[10px] text-[#4884DF] cursor-pointer mt-1"
               onClick={() => document.getElementById('profileImage')?.click()}>
               Change Image
             </button>
@@ -132,25 +158,32 @@ const TalentProfile = () => {
               <button
                 className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]"
                 onClick={() => setIsEditing(true)}>
-                Edit Profile
+                {userInfo.profile ? 'Edit Profile' : 'Create Profile'}
               </button>
             </div>
             <hr className="my-2" />
-            <p className="text-[14px] text-[#667085]">
+            {/* <p className="text-[14px] text-[#667085]">
               Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus
               id scelerisque est ultricies ultricies. Duis est sit sed leo nisl,
               blandit elit
-            </p>
+            </p> */}
           </div>
         </div>
 
-        <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-2 w-[100%]">
+        <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-1 w-[100%]">
           <Formik
             initialValues={initialValues}
             validationSchema={!userInfo.profile ? validationSchema : null}
             onSubmit={(values, { setSubmitting }) =>
               handleProfileSubmit(
-                values,
+                {
+                  ...values,
+                  location: {
+                    country: values.location.country.name,
+                    state: values.location.state.name,
+                    city: values.location.city.name,
+                  },
+                },
                 setSubmitting,
                 userInfo,
                 dispatch,
@@ -171,16 +204,18 @@ const TalentProfile = () => {
               return (
                 <Form>
                   <div>
-                    <label htmlFor="bio" className="text-[16px] text-[#344054]">
+                    <label
+                      htmlFor="bio"
+                      className="text-[14px] text-[#344054] font-medium">
                       Bio
                     </label>
                     <Field
-                      type="text"
+                      as="textarea"
                       id="bio"
                       name="bio"
                       readOnly={!isEditing}
                       placeholder="Tell us about yourself"
-                      className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-2"
+                      className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1"
                     />
                     <ErrorMessage
                       name="bio"
@@ -189,11 +224,11 @@ const TalentProfile = () => {
                     />
                   </div>
 
-                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-16">
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-12">
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="names"
-                        className="text-[14px] text-[#344054]">
+                        className="text-[14px] text-[#344054] font-medium">
                         Name
                       </label>
                       <Field
@@ -203,7 +238,7 @@ const TalentProfile = () => {
                         placeholder="Williamson Paints"
                         readOnly // Make it read-only
                         value={`${userInfo.firstName} ${userInfo.lastName}`}
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
                       />
                     </div>
                     <div className="md:w-[48%]">
@@ -212,7 +247,7 @@ const TalentProfile = () => {
                         className="text-[14px] text-[#344054]">
                         Role
                       </label>
-                      <div className="border border-gray-300 p-2 rounded-lg h-[44px] mt-2">
+                      <div className="border border-gray-300 p-2 rounded-lg h-[44px] mt-1">
                         <AllRoles
                           name="role"
                           value={values.role}
@@ -228,7 +263,7 @@ const TalentProfile = () => {
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="phoneNumber"
-                        className="text-[14px] text-[#344054]">
+                        className="text-[14px] text-[#344054] font-medium">
                         Phone number
                       </label>
                       <Field
@@ -238,7 +273,7 @@ const TalentProfile = () => {
                         placeholder="08198675757"
                         value={userInfo.phone}
                         readOnly={!isEditing} // Read-only if not editing
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
                       />
                       <ErrorMessage
                         name="phoneNumber"
@@ -250,7 +285,7 @@ const TalentProfile = () => {
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="workTypes"
-                        className="text-[14px] text-[#344054]">
+                        className="text-[14px] text-[#344054] font-medium">
                         Work Type
                       </label>
                       <Worktype
@@ -274,27 +309,52 @@ const TalentProfile = () => {
                   </div>
                   <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
                     <div className="md:w-[48%]">
-                      <label
-                        htmlFor="portfolio"
-                        className="text-[14px] text-[#344054]">
-                        Portfolio
-                      </label>
-                      <Field
-                        type="text"
-                        id="portfolio"
-                        name="portfolio"
-                        placeholder="Your portfolio Link"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                      <Location
+                        locationTitle="Country"
+                        geoId={null}
+                        isCountry={true}
+                        onChange={(geoId) => {
+                          setFieldValue('location.country.geoId', geoId)
+                          setFieldValue('location.state', {
+                            name: '',
+                            geoId: null,
+                          })
+                          setFieldValue('location.city', {
+                            name: '',
+                            geoId: null,
+                          })
+                        }}
                       />
-                      <ErrorMessage
-                        name="portfolio"
-                        component="div"
-                        className="text-red-500 text-[14px]"
+                    </div>
+                    <div className="md:w-[48%]">
+                      <Location
+                        locationTitle="State"
+                        geoId={values.location.country.geoId}
+                        isCountry={false}
+                        onChange={(geoId) => {
+                          setFieldValue('location.state.geoId', geoId)
+                          setFieldValue('location.city', {
+                            name: '',
+                            geoId: null,
+                          })
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex md:flex-row flex-col w-[100%] justify-between mt-6">
+                    <div className="md:w-[48%]">
+                      <Location
+                        locationTitle="City"
+                        geoId={values.location.state.geoId}
+                        isCountry={false}
+                        onChange={(geoId) => {
+                          setFieldValue('location.city.geoId', geoId)
+                        }}
                       />
                     </div>
                     <div className="md:w-[48%]">
                       <label
-                        className="text-[14px] text-[#344054]"
+                        className="text-[14px] text-[#344054] font-medium"
                         htmlFor="experience">
                         Experience Level
                       </label>
@@ -302,7 +362,7 @@ const TalentProfile = () => {
                         as="select"
                         id="experience"
                         name="experience"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2">
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1">
                         <option value="">Select experience Level</option>
                         <option value="senior">Senior</option>
                         <option value="intermediate">Intermediate</option>
@@ -320,7 +380,7 @@ const TalentProfile = () => {
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="minSalary"
-                        className="text-[14px] text-[#344054]">
+                        className="text-[14px] text-[#344054] font-medium">
                         Min Salary
                       </label>
                       <Field
@@ -329,7 +389,7 @@ const TalentProfile = () => {
                         name="minSalary"
                         readOnly={!isEditing} // Read-only if not editing
                         placeholder="Your minSalary"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
                       />
                       <ErrorMessage
                         name="minSalary"
@@ -340,7 +400,7 @@ const TalentProfile = () => {
                     <div className="md:w-[48%]">
                       <label
                         htmlFor="maxSalary"
-                        className="text-[14px] text-[#344054]">
+                        className="text-[14px] text-[#344054] font-medium">
                         Max Salary
                       </label>
                       <Field
@@ -349,7 +409,7 @@ const TalentProfile = () => {
                         name="maxSalary"
                         readOnly={!isEditing} // Read-only if not editing
                         placeholder="Your Max Salary"
-                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-2"
+                        className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
                       />
                       <ErrorMessage
                         name="maxSalary"
@@ -365,7 +425,7 @@ const TalentProfile = () => {
                       <div className="md:w-[48%] ">
                         <label
                           htmlFor="cv"
-                          className="text-[14px] text-[#344054]">
+                          className="text-[14px] text-[#344054] font-medium">
                           Current CV
                         </label>
                         <div className="relative w-[100%]">
@@ -374,7 +434,7 @@ const TalentProfile = () => {
                               href={userInfo.profile.cv}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="block text-[#4884DF] mt-2">
+                              className="block text-[#4884DF] mt-1">
                               {userInfo.profile?.cv.split('/').pop()}
                             </a>
                           </div>

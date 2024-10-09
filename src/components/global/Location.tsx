@@ -15,6 +15,7 @@ const Location: React.FC<LocationProps> = ({
   geoId,
   isCountry,
   onChange,
+  height,
 }) => {
   const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
@@ -71,7 +72,7 @@ const Location: React.FC<LocationProps> = ({
   return (
     <div className="">
       <label
-        className="font-bold text-[14px] text-[#434144]"
+        className="font-medium text-[14px] text-[#344054]"
         htmlFor={locationTitle}>
         {locationTitle}
       </label>
@@ -79,7 +80,9 @@ const Location: React.FC<LocationProps> = ({
         id={locationTitle}
         name={locationTitle.toLowerCase()}
         onChange={handleChange}
-        className="border border-[#D0D5DD] p-4 rounded-lg w-full">
+        className={`border border-[#D0D5DD] px-2 mt-1 rounded-lg w-full font-raleway ${
+          height ? `h-[${height}]` : `h-[44px]`
+        }`}>
         <option value="">Select a {locationTitle.toLowerCase()}...</option>
         {options.map((option) => (
           <option key={option.geoId} value={option.geoId}>

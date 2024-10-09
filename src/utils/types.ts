@@ -21,9 +21,18 @@ export interface FormTalentLogin {
   password?: any
 }
 
+export interface LocationValues {
+  name: string
+  geoId?: number | null
+}
 export interface TalentProfileProps {
   bio?: string
   role?: string[]
+  location: {
+    country: LocationValues
+    state: LocationValues
+    city: LocationValues
+  }
   maxSalary?: string
   minSalary?: string
   experience?: string
