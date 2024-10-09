@@ -39,17 +39,17 @@ const validationSchema = Yup.object({
   responsibilities: Yup.array().of(
     Yup.string()
       .required('Responsibility is required')
-      .max(100, 'Responsibility cannot be longer than 100 characters'),
+      .max(150, 'Responsibility cannot be longer than 150 characters'),
   ),
   skills: Yup.array().of(
     Yup.string()
       .required('Skill is required')
-      .max(100, 'Skill cannot be longer than 100 characters'),
+      .max(150, 'Skill cannot be longer than 150 characters'),
   ),
   goals: Yup.array().of(
     Yup.string()
       .required('Goal is required')
-      .max(100, 'Goal cannot be longer than 100 characters'),
+      .max(150, 'Goal cannot be longer than 150 characters'),
   ),
 })
 
@@ -159,6 +159,7 @@ const PostJob: React.FC = () => {
                 <Location
                   locationTitle="Country"
                   geoId={null}
+                  height="54px"
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
@@ -171,6 +172,7 @@ const PostJob: React.FC = () => {
                 <Location
                   locationTitle="State"
                   geoId={values.location.country.geoId}
+                  height="54px"
                   isCountry={false}
                   onChange={(geoId) => {
                     setFieldValue('location.state.geoId', geoId)
@@ -182,6 +184,8 @@ const PostJob: React.FC = () => {
                 <Location
                   locationTitle="City"
                   geoId={values.location.state.geoId}
+                  height="54px"
+
                   isCountry={false}
                   onChange={(geoId) => {
                     setFieldValue('location.city.geoId', geoId)

@@ -132,7 +132,7 @@ const ProgressView: React.FC = () => {
         </div>
 
         <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-[#4b4b4b] pt-4">
-          Error loading job progress data
+          You have to take the prescreening test before you can apply for a job
         </h2>
       </div>
     )
