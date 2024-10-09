@@ -18,7 +18,7 @@ import UploadCV from './UploadCV'
 import Worktype from '../../../components/Worktype'
 import { TalentProfileProps } from '../../../utils/types'
 import { handleProfileSubmit } from './TalentProfileOnSubmit'
-import { handleImageChange } from '../../../utils/HandleImageChange'
+// import { handleImageChange } from '../../../utils/HandleImageChange'
 
 const validationSchema = Yup.object({
   bio: Yup.string().required('Bio is required'),
@@ -113,7 +113,7 @@ const TalentProfile = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(event) => handleImageChange(event, setProfileImage)} // Call handleImageChange on file selection
+              // onChange={(event) => handleImageChange(event, setProfileImage)} 
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-2"
