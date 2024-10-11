@@ -185,7 +185,6 @@ const PostJob: React.FC = () => {
                   locationTitle="City"
                   geoId={values.location.state.geoId}
                   height="54px"
-
                   isCountry={false}
                   onChange={(geoId) => {
                     setFieldValue('location.city.geoId', geoId)

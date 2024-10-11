@@ -29,9 +29,12 @@ export interface TalentProfileProps {
   bio?: string
   role?: string[]
   location: {
-    country: LocationValues
-    state: LocationValues
-    city: LocationValues
+    country: any
+    state: any
+    city: any
+    // country: LocationValues
+    // state: LocationValues
+    // city: LocationValues
   }
   maxSalary?: string
   minSalary?: string
