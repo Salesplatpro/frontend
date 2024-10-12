@@ -1,132 +1,38 @@
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import * as Yup from 'yup'
 import upload from '../../../assets/Featured icon.png'
-import profilePics from '../../../assets/profilePics.png'
 import AllRoles from '../../../components/Roles/AllRoles'
-import {
-  useFetchProfileQuery,
-  useTalentCreationMutation,
-  useUpdateProfileMutation,
-  useUploadCvMutation,
-} from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
-import ProgressBar from '../../../utils/ProgressBar'
-import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import UploadCV from './UploadCV'
 import Worktype from '../../../components/Worktype'
-import { TalentProfileProps } from '../../../utils/types'
-import { handleProfileSubmit } from './TalentProfileOnSubmit'
 // import { handleImageChange } from '../../../utils/HandleImageChange'
 import Location from '../../../components/global/Location'
-import TalentProfileHeader from './TalentProfileHeader'
+import TalentProfileHeader from './ProfileHeader'
 import Loading from '../../../components/Loading/Loading'
-
-const validationSchema = Yup.object({
-  // bio: Yup.string().required('Bio is required'),
-  // location: Yup.object({
-  //   country: Yup.object({
-  //     name: Yup.string().required('Country is required'),
-  //     geoId: Yup.number().required('Country ID is required'),
-  //   }),
-  //   state: Yup.object({
-  //     name: Yup.string().required('State is required'),
-  //     geoId: Yup.number().required('State ID is required'),
-  //   }),
-  //   city: Yup.object({
-  //     name: Yup.string().required('City is required'),
-  //     geoId: Yup.number().required('City ID is required'),
-  //   }),
-  // }),
-  // minSalary: Yup.number()
-  //   .required('Minimum Salary is required')
-  //   .positive('Minimum Salary must be positive'),
-  // maxSalary: Yup.number()
-  //   .required('Maximum Salary is required')
-  //   .positive('Maximum Salary must be positive'),
-  // experience: Yup.string().required('Experience level is required'),
-  // cv: Yup.mixed()
-  //   .required('A file is required')
-  //   .test(
-  //     'fileSize',
-  //     'File size is too large',
-  //     (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
-  //   )
-  //   .test(
-  //     'fileType',
-  //     'Unsupported file format',
-  //     (value) =>
-  //       value &&
-  //       [
-  //         'application/pdf',
-  //         'application/msword',
-  //         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  //       ].includes((value as File).type),
-  //   ),
-})
-
-const calculateProgress = (values: TalentProfileProps): number => {
-  const fields = ['bio', 'role', 'maxSalary', 'minSalary', 'experience', 'cv']
-  const filledFields = fields.filter(
-    (field) =>
-      values[field as keyof TalentProfileProps] !== undefined &&
-      values[field as keyof TalentProfileProps] !== '',
-  )
-  return (filledFields.length / fields.length) * 100
-}
+import { validationSchema } from './ProileValidationSchema'
+import useProfile from './useProfileHook'
+import { calculateProgress } from '../../../utils/calculateProgress'
+import { Alert } from '@mui/material'
 
 const TalentProfile = () => {
-  const [progress, setProgress] = useState(0)
-  const [talentCreation] = useTalentCreationMutation()
-  const [uploadCv] = useUploadCvMutation()
-  const [updateProfile] = useUpdateProfileMutation()
-  const dispatch = useDispatch()
-  const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
-    profilePics,
-  )
-  const [cvFileName, setCvFileName] = useState<string | null>(null)
-
   const {
-    data: userProfile,
-    error,
-    isLoading,
-    refetch,
-  } = useFetchProfileQuery({})
-  const userInfo = userProfile?.data?.user
+    userInfo,
+    profileImage,
+    // setProfileImage,
+    cvFileName,
+    setCvFileName,
+    handleProfileSubmit,
+    userProfileLoading,
+    userProfileError,
+    // refetchProfile,
+    initialValues,
+  } = useProfile()
 
-  if (isLoading) return <Loading />
+  const [progress, setProgress] = useState(0)
 
-  if (error) {
-    return <div>Error fetching user profile Info</div>
-  }
+  if (userProfileLoading) return <Loading />
 
-  const refetchProfile = () => {
-    refetch()
-  }
-
-  const initialValues: TalentProfileProps = {
-    bio: userInfo?.profile?.bio || '',
-    role: userInfo?.profile?.role?.map((r: any) => r._id) || [],
-    location: {
-      country: {
-        name: userInfo?.profile?.location?.country || '',
-        geoId: null,
-      },
-      state: {
-        name: userInfo?.profile?.location?.state || '',
-        geoId: null,
-      },
-      city: { name: userInfo?.profile?.location?.city || '', geoId: null },
-    },
-    maxSalary: userInfo?.profile?.maxSalary || '',
-    minSalary: userInfo?.profile?.minSalary || '',
-    experience: userInfo?.profile?.experience || '',
-    remote: userInfo?.profile?.remote || false,
-    onSite: userInfo?.profile?.onSite || false,
-    hybrid: userInfo?.profile?.hybrid || false,
-    cv: null,
+  if (userProfileError) {
+    return <Alert severity="error">Error fetching user profile Info</Alert>
   }
 
   return (
@@ -138,33 +44,11 @@ const TalentProfile = () => {
           progress={progress}
         />
       </div>
-      <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-1 w-[100%]">
+      <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-6 w-[100%]">
         <Formik
           initialValues={initialValues}
           validationSchema={!userInfo?.profile ? validationSchema : null}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log('form value', values)
-            handleProfileSubmit(
-              {
-                ...values,
-                location: {
-                  country: values.location.country.name,
-                  state: values.location.state.name,
-                  city: values.location.city.name,
-                },
-              },
-              setSubmitting,
-              userInfo,
-              dispatch,
-              profileImage,
-              'defaultProfileImage',
-              initialValues,
-              talentCreation,
-              uploadCv,
-              updateProfile,
-              refetchProfile,
-            )
-          }}
+          onSubmit={handleProfileSubmit}
           enableReinitialize>
           {({ values, isSubmitting, setFieldValue }) => {
             useEffect(() => {
@@ -205,7 +89,7 @@ const TalentProfile = () => {
                       id="names"
                       name="names"
                       placeholder="Williamson Paints"
-                      readOnly // Make it read-only
+                      readOnly
                       value={`${userInfo?.firstName} ${userInfo?.lastName}`}
                       className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
                     />
@@ -284,14 +168,14 @@ const TalentProfile = () => {
                       selectedName={values.location.country.name}
                       onChange={(geoId) => {
                         setFieldValue('location.country.geoId', geoId)
-                        setFieldValue('location.state', {
-                          name: '',
-                          geoId: null,
-                        })
-                        setFieldValue('location.city', {
-                          name: '',
-                          geoId: null,
-                        })
+                        // setFieldValue('location.state', {
+                        //   name: '',
+                        //   geoId: null,
+                        // })
+                        // setFieldValue('location.city', {
+                        //   name: '',
+                        //   geoId: null,
+                        // })
                       }}
                     />
                   </div>
@@ -303,10 +187,10 @@ const TalentProfile = () => {
                       selectedName={values.location.state.name}
                       onChange={(geoId) => {
                         setFieldValue('location.state.geoId', geoId)
-                        setFieldValue('location.city', {
-                          name: '',
-                          geoId: null,
-                        })
+                        // setFieldValue('location.city', {
+                        //   name: '',
+                        //   geoId: null,
+                        // })
                       }}
                     />
                   </div>

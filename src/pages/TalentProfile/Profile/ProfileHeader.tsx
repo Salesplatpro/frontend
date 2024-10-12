@@ -2,7 +2,17 @@ import React from 'react'
 import ProgressBar from '../../../utils/ProgressBar'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 
-const TalentProfileHeader = ({ userInfo, profileImage, progress }) => {
+interface TalentHeaderType {
+  userInfo: any
+  profileImage: string | ArrayBuffer | null
+  progress: any
+}
+
+const TalentProfileHeader: React.FC<TalentHeaderType> = ({
+  userInfo,
+  profileImage,
+  progress,
+}) => {
   return (
     <div>
       <div className="w-full">
@@ -33,7 +43,7 @@ const TalentProfileHeader = ({ userInfo, profileImage, progress }) => {
               type="file"
               accept="image/*"
               className="hidden"
-              // onChange={(event) => handleImageChange(event, setProfileImage)}
+            // onChange={(event) => handleImageChange(event, setProfileImage)}
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-1"

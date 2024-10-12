@@ -106,7 +106,7 @@ const Location: React.FC<LocationProps> = ({
         id={locationTitle}
         name={locationTitle?.toLowerCase()}
         onChange={handleChange}
-        value={selectedValue || ''} // Ensure value is bound to selectedValue
+        value={selectedValue || ''}
         className={`border border-[#D0D5DD] px-2 mt-1 rounded-lg w-full font-raleway ${
           height ? `h-[${height}]` : 'h-[44px]'
         }`}>

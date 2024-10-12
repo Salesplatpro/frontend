@@ -1,4 +1,4 @@
-// // Submit and update Talent Profile
+// Submit and update Talent Profile
 
 import { FormikHelpers } from 'formik'
 import { setUser } from '../../../redux/features/authSlice/authSlice'
@@ -16,7 +16,7 @@ export const handleProfileSubmit = async (
   talentCreation: any,
   uploadCv: any,
   updateProfile: any,
-  refetchProfile: any,
+  refetch: any,
 ) => {
   try {
     const isNewProfile = !userInfo?.profile
@@ -50,22 +50,18 @@ export const handleProfileSubmit = async (
         ...values,
         cv: submitCv.data.fileUrl || '',
       }
-      console.log(updatedFormValues)
       const response = await talentCreation(updatedFormValues).unwrap()
 
       if (response.status) {
         dispatch(setUser({ user: response.data.user, isLoggedIn: true }))
         toast.success('Profile created successfully')
-        refetchProfile()
+        refetch()
       } else {
         toast.error(
           response.message || 'An error occurred while creating profile',
         )
       }
     } else {
-      console.log('edit location', initialValues.location.country.name)
-      console.log('changed location', values.location.country)
-
       const updatedFields: Partial<TalentProfileProps> = {}
       // Check for changes in location values
       const locationChanged =
@@ -129,21 +125,22 @@ export const handleProfileSubmit = async (
       const response = await updateProfile(updatedFields).unwrap()
 
       if (response.status) {
-        const updatedUser = { ...userInfo, profile: response.data.user }
-        dispatch(setUser({ user: updatedUser, isLoggedIn: true }))
         toast.success('Profile updated successfully')
-        refetchProfile()
+        refetch()
       } else {
-        toast.error(
-          response.message || 'An error occurred while updating profile',
-        )
+        const errorMessage =
+          response?.data?.message ||
+          'An error occurred while processing your request'
+        toast.error(errorMessage)
       }
     }
   } catch (error: any) {
-    console.error('Error submitting profile', error)
-    toast.error(
-      error.message || 'An error occurred while processing your request',
-    )
+    const errorMessage =
+      error?.data?.message ||
+      error.message ||
+      'An error occurred while processing your request'
+
+    toast.error(errorMessage)
   } finally {
     setSubmitting(false)
   }
