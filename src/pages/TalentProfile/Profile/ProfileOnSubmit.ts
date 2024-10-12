@@ -16,9 +16,10 @@ export const handleProfileSubmit = async (
   talentCreation: any,
   uploadCv: any,
   updateProfile: any,
+  refetch: any,
 ) => {
   try {
-    const isNewProfile = !userInfo.profile
+    const isNewProfile = !userInfo?.profile
     const formData = new FormData()
 
     if (isNewProfile) {
@@ -30,6 +31,9 @@ export const handleProfileSubmit = async (
       formData.append('remote', values.remote ? 'true' : 'false')
       formData.append('onSite', values.onSite ? 'true' : 'false')
       formData.append('hybrid', values.hybrid ? 'true' : 'false')
+      formData.append('country', values.location.country.name || '')
+      formData.append('state', values.location.state.name || '')
+      formData.append('city', values.location.city.name || '')
 
       if (values.cv) {
         formData.append('file', values.cv)
@@ -46,20 +50,36 @@ export const handleProfileSubmit = async (
         ...values,
         cv: submitCv.data.fileUrl || '',
       }
-
       const response = await talentCreation(updatedFormValues).unwrap()
 
       if (response.status) {
         dispatch(setUser({ user: response.data.user, isLoggedIn: true }))
         toast.success('Profile created successfully')
+        refetch()
       } else {
         toast.error(
           response.message || 'An error occurred while creating profile',
         )
       }
     } else {
-      // Updating existing profile
       const updatedFields: Partial<TalentProfileProps> = {}
+      // Check for changes in location values
+      const locationChanged =
+        values.location.country !== initialValues.location.country.name ||
+        values.location.state !== initialValues.location.state.name ||
+        values.location.city !== initialValues.location.city.name
+
+      if (locationChanged) {
+        formData.append('country', values.location.country || '')
+        formData.append('state', values.location.state || '')
+        formData.append('city', values.location.city || '')
+
+        updatedFields.location = {
+          country: values.location.country,
+          state: values.location.state,
+          city: values.location.city,
+        }
+      }
 
       updatedFields.remote = values.remote
       updatedFields.onSite = values.onSite
@@ -83,7 +103,6 @@ export const handleProfileSubmit = async (
       if (values.cv && values.cv !== initialValues.cv) {
         updatedFields.cv = values.cv
       }
-
       if (Object.keys(updatedFields).length === 0) {
         toast.error('No changes detected')
         setSubmitting(false)
@@ -94,24 +113,6 @@ export const handleProfileSubmit = async (
       if (updatedFields.cv) {
         formData.append('file', updatedFields.cv)
       }
-      if (updatedFields.bio) {
-        formData.append('bio', updatedFields.bio)
-      }
-      if (updatedFields.role && updatedFields.role.length > 0) {
-        formData.append('role', updatedFields.role.join(','))
-      }
-      if (updatedFields.minSalary) {
-        formData.append('minSalary', updatedFields.minSalary)
-      }
-      if (updatedFields.maxSalary) {
-        formData.append('maxSalary', updatedFields.maxSalary)
-      }
-      if (updatedFields.experience) {
-        formData.append('experience', updatedFields.experience)
-      }
-      formData.append('remote', updatedFields.remote ? 'true' : 'false')
-      formData.append('onSite', updatedFields.onSite ? 'true' : 'false')
-      formData.append('hybrid', updatedFields.hybrid ? 'true' : 'false')
 
       const updatedCv = updatedFields.cv
         ? await uploadCv(formData).unwrap()
@@ -124,20 +125,22 @@ export const handleProfileSubmit = async (
       const response = await updateProfile(updatedFields).unwrap()
 
       if (response.status) {
-        const updatedUser = { ...userInfo, profile: response.data.user }
-        dispatch(setUser({ user: updatedUser, isLoggedIn: true }))
         toast.success('Profile updated successfully')
+        refetch()
       } else {
-        toast.error(
-          response.message || 'An error occurred while updating profile',
-        )
+        const errorMessage =
+          response?.data?.message ||
+          'An error occurred while processing your request'
+        toast.error(errorMessage)
       }
     }
   } catch (error: any) {
-    console.error('Error submitting profile', error)
-    toast.error(
-      error.message || 'An error occurred while processing your request',
-    )
+    const errorMessage =
+      error?.data?.message ||
+      error.message ||
+      'An error occurred while processing your request'
+
+    toast.error(errorMessage)
   } finally {
     setSubmitting(false)
   }

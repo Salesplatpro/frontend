@@ -34,7 +34,7 @@ export const talentApi = createApi({
     // fetch profile data
     fetchProfile: builder.query({
       query: () => ({
-        url: `/user/profile`,
+        url: `/user/me`,
         method: 'GET',
       }),
       providesTags: ['Talent'],
