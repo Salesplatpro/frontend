@@ -41,7 +41,7 @@ const Worktype: React.FC<WorktypeProps> = ({
       <div
         className="w-full p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1 cursor-pointer flex justify-between items-center"
         onClick={toggleDropdown}>
-        <span className="font-medium">
+        <span className="font-medium text-sm font-raleway">
           {/* Display selected work types */}
           {Object.keys(selectedValues)
             .filter((key) => selectedValues[key])
