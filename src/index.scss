@@ -55,6 +55,9 @@ $deep-gray: #525c68;
         text-transform: capitalize;
         text-decoration: none;
       }
+      a:hover {
+        color: $primary-f-white;
+      }
     }
 
     a.logo-li {
@@ -67,6 +70,10 @@ $deep-gray: #525c68;
       max-height: 49px;
     }
   }
+}
+
+.navbar .activeTab {
+  color: white;
 }
 
 .nav-font {
@@ -86,6 +93,9 @@ $deep-gray: #525c68;
       text-decoration: none;
       color: $primary-blue;
     }
+    a:hover {
+      color: $primary-f-white;
+    }
   }
 
   .apply {
@@ -94,11 +104,15 @@ $deep-gray: #525c68;
 
     a {
       text-decoration: none;
-      color: $primary-blue;
+      color: $primary-f-white;
     }
 
     border: 2px solid $primary-blue;
     color: $primary-blue;
+  }
+
+  .apply:hover {
+    background-color: $primary-blue;
   }
 
   .hire {

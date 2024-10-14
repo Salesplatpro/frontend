@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.hoverEffect {
+  @apply hover:text-white ease-in duration-200 cursor-pointer;
+}
+
+.activeTab {
+  @apply text-white;
+}
+
 .w-full {
   width: 100vw;
 }
