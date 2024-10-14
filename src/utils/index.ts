@@ -1,5 +1,6 @@
 export * from './authUtils'
 export * from './calculateDaysFromCreation'
+export * from './capitalizeFirstWord'
 export * from './convertFileSize'
 export * from './recruiterJobPostsTypes'
 export * from './ResponsiveTableRenderer'
