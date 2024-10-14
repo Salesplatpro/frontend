@@ -63,16 +63,8 @@ const SignIn = () => {
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
     } catch (err: any) {
-      console.error('DisplayError signing up:', err)
-
-      dispatch(
-        signupFailure(
-          err.response?.data?.message || 'An error occurred while signing up',
-        ),
-      )
-      toast.error(
-        err.response?.data?.message || 'An error occurred while signing up',
-      )
+      dispatch(signupFailure(err.data?.message))
+      toast.error(err.data?.message || 'An error occurred while signing up')
     } finally {
       setLoading(false)
     }
