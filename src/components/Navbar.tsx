@@ -99,9 +99,9 @@ const Navbar = () => {
                   size={27}
                   color="#fff"
                   onClick={() => setToggleBtn(false)} // Close the menu
-                  className="absolute top-8 right-8 z-30"
+                  className="absolute top-8 right-8 z-30 flip-2-ver-right-fwd"
                 />
-                <div className="bg-[#101828] transition-all duration-300 ease-in-out h-[100vh] absolute inset-0 z-20 opacity-100">
+                <div className="bg-[#101828] h-[100vh] absolute inset-0 z-20 scale-up-tr">
                   <ul className="flex flex-col items-center justify-center h-full text-white space-y-8 capitalize">
                     <li className="font-semibold text-lg text-[#4985df] capitalize decoration-0 leading-[18px] font-raleway hover:text-white">
                       <Link
@@ -206,6 +206,7 @@ const Navbar = () => {
                 size={27}
                 color="#fff"
                 onClick={() => setToggleBtn(true)} // Open the menu
+                className="flip-2-ver-right-fwd"
               />
             )}
           </div>
