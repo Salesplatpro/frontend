@@ -12,5 +12,6 @@ export const getApplicationDetails = (data: any) => {
     cvSimilarityScore: application.cvSimilarityScore || 'No cv-matching score',
     personalizedScore: application.personalizedScore || 'No personality test',
     type: application.mbtiType || 'No personalized test',
+    jodStatus: application.status || '',
   }
 }
