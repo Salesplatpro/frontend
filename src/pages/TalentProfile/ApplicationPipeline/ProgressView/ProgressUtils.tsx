@@ -3,7 +3,6 @@ import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import { Progress, Application } from '../../utils/type'
 
-// progress array
 export const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
     prescreening: { icon: pretestIcon, title: 'Pre-Assessment' },
