@@ -168,14 +168,14 @@ const TalentProfile = () => {
                       selectedName={values.location.country.name}
                       onChange={(geoId) => {
                         setFieldValue('location.country.geoId', geoId)
-                        // setFieldValue('location.state', {
-                        //   name: '',
-                        //   geoId: null,
-                        // })
-                        // setFieldValue('location.city', {
-                        //   name: '',
-                        //   geoId: null,
-                        // })
+                        setFieldValue('location.state', {
+                          name: '',
+                          geoId: null,
+                        })
+                        setFieldValue('location.city', {
+                          name: '',
+                          geoId: null,
+                        })
                       }}
                     />
                   </div>
@@ -187,10 +187,10 @@ const TalentProfile = () => {
                       selectedName={values.location.state.name}
                       onChange={(geoId) => {
                         setFieldValue('location.state.geoId', geoId)
-                        // setFieldValue('location.city', {
-                        //   name: '',
-                        //   geoId: null,
-                        // })
+                        setFieldValue('location.city', {
+                          name: '',
+                          geoId: null,
+                        })
                       }}
                     />
                   </div>

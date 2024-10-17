@@ -20,9 +20,14 @@ const Location: React.FC<LocationProps> = ({
   const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
   const [selectedValue, setSelectedValue] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true)
+      setFetchError(null)
+
       try {
         let res
         if (isCountry) {
@@ -50,14 +55,18 @@ const Location: React.FC<LocationProps> = ({
           setOptions([])
         }
       } catch (err) {
-        console.error(
-          `Error fetching ${isCountry ? 'countries' : 'states/cities'}:`,
-          err,
+        setFetchError(
+          `Error fetching ${isCountry ? 'countries' : 'states/cities'}`,
         )
+        console.error(err)
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    fetchData()
+    if (geoId || isCountry) {
+      fetchData()
+    }
   }, [geoId, isCountry])
 
   // After options are set, check if the selectedName exists and matches
@@ -71,7 +80,7 @@ const Location: React.FC<LocationProps> = ({
       })
 
       if (matchedOption) {
-        setSelectedValue(matchedOption.geoId.toString()) // Set the initial selected value
+        setSelectedValue(matchedOption.geoId.toString())
         setFieldValue(`location.${locationTitle?.toLowerCase()}`, {
           name: matchedOption.name,
           geoId: matchedOption.geoId,
@@ -89,9 +98,9 @@ const Location: React.FC<LocationProps> = ({
         name: isCountry ? selectedOption.countryName : selectedOption.name,
         geoId: selectedOption.geoId,
       }
-      setSelectedValue(selectedOption.geoId.toString()) // Update the selected value
+      setSelectedValue(selectedOption.geoId.toString())
       setFieldValue(`location.${locationTitle?.toLowerCase()}`, value)
-      onChange(value.geoId)
+      onChange(value.geoId) // Notify parent component of the geoId change
     }
   }
 
@@ -102,21 +111,30 @@ const Location: React.FC<LocationProps> = ({
         htmlFor={locationTitle}>
         {locationTitle}
       </label>
-      <select
-        id={locationTitle}
-        name={locationTitle?.toLowerCase()}
-        onChange={handleChange}
-        value={selectedValue || ''}
-        className={`border border-[#D0D5DD] px-2 mt-1 rounded-lg w-full font-raleway ${
-          height ? `h-[${height}]` : 'h-[44px]'
-        }`}>
-        <option value="">Select a {locationTitle?.toLowerCase()}...</option>
-        {options.map((option) => (
-          <option key={option.geoId} value={option.geoId}>
-            {option.name}
-          </option>
-        ))}
-      </select>
+
+      {isLoading ? (
+        <div className="text-sm text-gray-500 mt-2">
+          Loading {locationTitle}...
+        </div>
+      ) : fetchError ? (
+        <div className="text-sm text-red-500 mt-2">{fetchError}</div>
+      ) : (
+        <select
+          id={locationTitle}
+          name={locationTitle?.toLowerCase()}
+          onChange={handleChange}
+          value={selectedValue || ''}
+          className={`border border-[#D0D5DD] px-2 mt-1 rounded-lg w-full font-raleway ${
+            height ? `h-[${height}]` : 'h-[44px]'
+          }`}>
+          <option value="">Select a {locationTitle?.toLowerCase()}...</option>
+          {options.map((option) => (
+            <option key={option.geoId} value={option.geoId}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      )}
     </div>
   )
 }
