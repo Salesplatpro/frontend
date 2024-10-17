@@ -70,7 +70,7 @@ const Login: React.FC = () => {
             navigate('/')
         }
       } catch (err: any) {
-        dispatch(loginFailure(err.data?.message || 'Failed to login'))
+        dispatch(loginFailure(err.data?.message))
         toast.error(err.data?.message || 'An error occurred while logging in')
       } finally {
         setSubmitting(false)
