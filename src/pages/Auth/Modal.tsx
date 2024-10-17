@@ -62,16 +62,22 @@ const Modal: React.FC<ModalProps> = ({ onClose, name }) => {
           isVisible ? 'scale-up-center' : ''
         }`}
         role="document">
-        <img src={CheckMark} alt="checklist" />
-        <h2 id="modal-title" className="text-[28px] font-bold font-raleway">
+        <img
+          src={CheckMark}
+          alt="checklist"
+          className="lg:w-[150px] md:w-[100px]"
+        />
+        <h2
+          id="modal-title"
+          className="text-[20px] lg:text-[28px] md:text-[26px] sm:text-[24px] font-bold font-raleway">
           Welcome onboard {name}
         </h2>
-        <p className="text-center px-10 py-3">
+        <p className="text-center px-10 py-2 lg:py-3 text-[#667085] text-[15px] lg:text-[18px] md:text-[16px] font-raleway lg:leading-[28px] md:leading-[25px] sm:leading-[23px] leading-[21px]">
           SupportPro provides you with every opportunity to land your dream Job
           with corporate organizations.
         </p>
         <button
-          className="close-modal px-24 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[20px] bg-[#3C6FD4] hover:bg-[#4985df]"
+          className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df]"
           onClick={handleClose}
           aria-label="Close modal">
           Go to Login

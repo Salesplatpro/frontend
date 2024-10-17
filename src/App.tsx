@@ -79,7 +79,7 @@ const router = createBrowserRouter([
 
   {
     path: 'recruiterRegister',
-    element: <RecruiterRegister />,
+    element: <SignIn />,
   },
   {
     path: 'customerstories',
