@@ -5,14 +5,12 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
-import * as Yup from 'yup'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import Navbar from '../../components/Navbar'
-// import { SendRecruiterReg, SendTalentReg } from '../../api/api-communication'
 import {
   useRecruiterRegMutation,
   useTalentRegMutation,
@@ -22,26 +20,11 @@ import {
   signupStart,
   signupSuccess,
 } from '../../redux/features/authSlice/authSlice'
+import { SignUpSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import DropDown from './DropDown'
 import Loading from './Loading'
 import Modal from './Modal'
-
-const SignUpSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('Password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
-    .required('Confirm Password is required'),
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
-  phone: Yup.string().required('Phone Number is required'),
-  userType: Yup.string()
-    .oneOf(['talent', 'recruiter'], 'User type is required')
-    .required('User type is required'),
-})
 
 const SignIn = () => {
   const [SendTalentReg] = useTalentRegMutation()
@@ -55,7 +38,7 @@ const SignIn = () => {
 
   const handleSubmit = async (values: any) => {
     dispatch(signupStart())
-    setLoading(true) // Set loading to true when submission starts
+    setLoading(true)
 
     try {
       // eslint-disable-next-line no-unused-vars
@@ -70,7 +53,6 @@ const SignIn = () => {
         throw new Error('Invalid user type')
       }
 
-      // Dispatch success action and handle the response
       dispatch(
         signupSuccess({
           user: response.data.user,
@@ -81,19 +63,10 @@ const SignIn = () => {
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
     } catch (err: any) {
-      console.error('DisplayError signing up:', err)
-
-      // Handle error response
-      dispatch(
-        signupFailure(
-          err.response?.data?.message || 'An error occurred while signing up',
-        ),
-      )
-      toast.error(
-        err.response?.data?.message || 'An error occurred while signing up',
-      )
+      dispatch(signupFailure(err.data?.message))
+      toast.error(err.data?.message || 'An error occurred while signing up')
     } finally {
-      setLoading(false) // Set loading to false when submission is complete
+      setLoading(false)
     }
   }
 
@@ -175,20 +148,19 @@ const SignIn = () => {
                     component="p"
                     className="text-red-500 text-sm"
                   />
-                  <div className="flex my-2">
+                  <div className="flex flex-col my-2 space-y-1">
                     <Field
                       name="userType"
-                      component={DropDown}
                       label="Register as :"
+                      component={DropDown}
                       options={userTypeData}
                     />
+                    <ErrorMessage
+                      name="userType"
+                      component="p"
+                      className="text-red-500 text-sm"
+                    />
                   </div>
-
-                  <ErrorMessage
-                    name="userType"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
                   <Field
                     title="Phone Number"
                     label="Phone Number"
@@ -214,19 +186,17 @@ const SignIn = () => {
                       type={showPassword ? 'text' : 'password'}
                     />
 
+                    <ErrorMessage
+                      name="password"
+                      component="p"
+                      className="text-red-500 text-sm"
+                    />
                     <button
                       type="button"
                       className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
                       onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
-
-                    {values.password && values.password.length < 8 && (
-                      <p className="text-red-500 font-raleway text-sm font-normal leading-[21.38px]">
-                        Password must be at least 8 characters (containing
-                        uppercase, number, special characters)
-                      </p>
-                    )}
                   </div>
 
                   <div className="relative">
@@ -234,10 +204,15 @@ const SignIn = () => {
                       title="Confirm Password"
                       label="confirmPassword"
                       name="confirmPassword"
-                      as={TextInput} // Add padding to the right to make space for the icon
+                      as={TextInput}
                       isPassword={!showConfirmPassword}
                       placeholder="Confirm your password"
-                      className="pr-10" // Add padding to the right to make space for the icon
+                      className="pr-10"
+                    />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="p"
+                      className="text-red-500 text-sm"
                     />
                     <button
                       type="button"
@@ -247,19 +222,6 @@ const SignIn = () => {
                       }>
                       {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
-
-                    {values.confirmPassword &&
-                      values.confirmPassword !== values.password && (
-                        <p className="text-red-500 text-sm">
-                          Passwords do not match
-                        </p>
-                      )}
-                    {values.confirmPassword &&
-                      values.confirmPassword === values.password && (
-                        <p className="text-green-500 text-sm">
-                          Passwords match
-                        </p>
-                      )}
                   </div>
                   <div className="remember-me">
                     <CheckBox name="remember" label="Remember me" />
@@ -313,7 +275,6 @@ const SignIn = () => {
         </div>
       </div>
 
-      {/* Modal Component */}
       {isModalOpen && <Modal onClose={closeModal} name={modalName} />}
     </div>
   )
