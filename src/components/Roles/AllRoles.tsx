@@ -11,7 +11,7 @@ interface RoleTypes {
 }
 
 const AllRoles = ({ value, onChange, name }: RoleTypes) => {
-  const { data } = useGetRoleQuery(undefined)
+  const { data } = useGetRoleQuery({})
 
   return (
     <div className="w-full">
@@ -19,6 +19,7 @@ const AllRoles = ({ value, onChange, name }: RoleTypes) => {
         <Field
           as="select"
           id="role"
+          multiple={false}
           className="w-full rounded outline-none focus:none"
           name={name}
           value={value}

@@ -1,21 +1,27 @@
 import './JobFilter.scss'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
+import { useScreenWidth } from '../../../hooks'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
 interface JobFiltersProps {
   onFilterSubmit: (filterValues: JobFiltersTypes) => void
+  showFilter: boolean
+  setShowFilter: Dispatch<SetStateAction<boolean>>
 }
 
-export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
-  // const [selectItemToggle, setSelectItemToggle] = useState(false)
-
+export const JobFilter: React.FC<JobFiltersProps> = ({
+  onFilterSubmit,
+  showFilter,
+  setShowFilter,
+}) => {
+  const screenWidth = useScreenWidth()
   const initialValues: JobFiltersTypes = {
-    role: [],
+    role: '',
     experienceLevel: '',
     remote: '',
     location: {
@@ -29,6 +35,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
     values: JobFiltersTypes,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
+    setSubmitting(true)
     onFilterSubmit(values)
     setSubmitting(false)
   }
@@ -43,7 +50,10 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
               <button
                 type="button"
                 className="clear"
-                onClick={() => setFieldValue('role', '')}>
+                onClick={() => {
+                  setFieldValue('role', '') // Set role back to empty string
+                  screenWidth < 768 && setShowFilter(!showFilter)
+                }}>
                 Clear/Close
               </button>
             </div>
@@ -58,7 +68,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({ onFilterSubmit }) => {
                   <AllRoles
                     name="role"
                     value={values.role}
-                    onChange={(e) => setFieldValue('role', e.target.value)}
+                    onChange={(e) => setFieldValue('role', e.target.value)} // Ensure single value is set
                   />
                 </div>
               </div>

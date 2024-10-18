@@ -40,7 +40,10 @@ export const ApplicationProgress = () => {
     cvSimilarityScore,
     personalizedScore,
     type,
+    jodStatus,
   } = getApplicationDetails(data)
+
+  console.log(data)
 
   const progress = [
     {
@@ -102,6 +105,7 @@ export const ApplicationProgress = () => {
         lastName={lastName}
         role={experience}
         description={bio}
+        jobStatus={jodStatus}
       />
       <div className="flex flex-col space-y-3">
         {progress.map((item, index) => (
@@ -127,14 +131,14 @@ export const ApplicationProgress = () => {
           <OutlineButton
             buttonTitle={loadingReject ? 'Rejecting...' : 'Reject'}
             onClick={() => handleStatusUpdate('rejected')}
-            disabled={loadingReject}
+            disabled={jodStatus === 'rejected' && true}
           />
         </div>
         <div className="w-1/3">
           <RecruiterButton
             buttonTitle={loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
             onClick={() => handleStatusUpdate('shortlisted')}
-            disabled={loadingShortlist}
+            disabled={jodStatus === 'shortlisted' && true}
           />
         </div>
       </div>

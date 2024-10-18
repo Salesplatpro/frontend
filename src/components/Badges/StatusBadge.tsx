@@ -2,8 +2,8 @@ import React from 'react'
 
 type StatusBadgeProps = {
   status: string
-  backgroundColor: string
-  color: string
+  backgroundColor?: string
+  color?: string
 }
 
 export const StatusBadge = ({

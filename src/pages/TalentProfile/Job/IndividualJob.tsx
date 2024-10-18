@@ -8,6 +8,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import Loading from '../../../components/Loading/Loading'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
+import { capitalizeFirstWord } from '../../../utils'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 
 const shareOptions = [
   {
@@ -64,7 +66,8 @@ const IndividualJob = () => {
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
         <h2 className="font-bold md:text-3xl text-xl">
-          {jobProfile?.role && jobProfile?.role?.name} at {jobProfile?.title}
+          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)} at{' '}
+          {jobProfile?.title}
         </h2>
         <div className="flex space-x-5 items-center mt-3">
           {shareOptions.map((option, i) => (
@@ -91,49 +94,43 @@ const IndividualJob = () => {
               <h5 className="text-[#101828] text-lg text-start font-semibold">
                 Your Responsibilities
               </h5>
-              <p className="">
-                {jobProfile?.responsibilities && (
-                  <ul className="list-disc ml-5 pl-0">
-                    {jobProfile?.responsibilities.map((item, i) => (
-                      <li key={i} className="text-[#667085] text-base">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </p>
+              {jobProfile?.responsibilities && (
+                <ul className="list-disc ml-5 pl-0">
+                  {jobProfile?.responsibilities.map((item, i) => (
+                    <li key={i} className="text-[#667085] text-base">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
                 Your Skills
               </h5>
-              <p className="">
-                {jobProfile?.skills && (
-                  <ul className="list-disc ml-5 pl-0">
-                    {jobProfile?.skills.map((item, i) => (
-                      <li key={i} className="text-[#667085] text-base">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </p>
+              {jobProfile?.skills && (
+                <ul className="list-disc ml-5 pl-0">
+                  {jobProfile?.skills.map((item, i) => (
+                    <li key={i} className="text-[#667085] text-base">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
                 Your Goals
               </h5>
-              <p className="">
-                {jobProfile?.goals && (
-                  <ul className="list-disc ml-5 pl-0">
-                    {jobProfile?.goals.map((item, i) => (
-                      <li key={i} className="text-[#667085] text-base">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </p>
+              {jobProfile?.goals && (
+                <ul className="list-disc ml-5 pl-0">
+                  {jobProfile?.goals.map((item, i) => (
+                    <li key={i} className="text-[#667085] text-base">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
               <button className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
@@ -162,8 +159,11 @@ const IndividualJob = () => {
                   Location
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
-                  {jobProfile?.location && jobProfile?.location?.country}{' '}
-                  {jobProfile?.location?.city && jobProfile?.location?.city}
+                  {jobProfile?.location &&
+                    capitalizeFirstWord(jobProfile?.location?.country)}{' '}
+                  {''}
+                  {jobProfile?.location?.city &&
+                    capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>
               </div>
               <div className="mt-4">
@@ -171,7 +171,7 @@ const IndividualJob = () => {
                   Experience Level
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
-                  {jobProfile?.experienceLevel}
+                  {capitalizeFirstWord(jobProfile?.experienceLevel)}
                 </h5>
               </div>
             </div>

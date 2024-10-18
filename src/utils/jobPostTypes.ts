@@ -53,7 +53,7 @@ export interface configProps {
 }
 
 export interface JobFiltersTypes {
-  role?: string[]
+  role?: string
   experienceLevel?: string
   remote?: ''
   location?: {

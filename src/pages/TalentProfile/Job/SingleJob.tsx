@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
+import { capitalizeFirstWord } from '../../../utils'
 import { JobDetails } from './JobDetails'
 
 export type SingleJobProps = {
@@ -45,25 +46,25 @@ export const SingleJob = ({
     <div className="singlejob-container">
       <PiBuildingOfficeBold size={36} />
       <div className="title-container">
-        <div className="jobtitle">
-          <div className="title">{jobTitle}</div>
+        <Link to={`/talentDashboard/job/${jobId}`} className="jobTitle">
+          <div className="title">{capitalizeFirstWord(jobTitle)}</div>
           <span className="category">
             <GoDotFill color="#2e90fa" />
-            {jobCategory}
+            {capitalizeFirstWord(jobCategory)}
           </span>
-        </div>
+        </Link>
         <div className="description">{jobDescription}</div>
         <div className="details-container">
           <div className="jobdetails">
             <JobDetails
-              location={jobCountry || 'Unknown Location'}
+              location={capitalizeFirstWord(jobCountry || '')}
               type={jobRemote}
-              level={jobExperience || 'Unknown Experience level'}
-              salary={jobSalary || 'Unknown Job salary'}
+              level={capitalizeFirstWord(jobExperience) || ''}
+              salary={jobSalary || ''}
             />
           </div>
           <Link to={`/talentDashboard/job/${jobId}`}>
-            <Button title="Apply Now" />
+            <Button title="Apply Now" textType="normal" />
           </Link>
         </div>
       </div>
