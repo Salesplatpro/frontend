@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-
-import profilePics from '../../../assets/profilePics.png'
 import {
   useFetchProfileQuery,
   useTalentCreationMutation,
@@ -10,6 +8,7 @@ import {
 } from '../../../redux/api/talent'
 import { TalentProfileProps } from '../../../utils/types'
 import { handleProfileSubmit } from './ProfileOnSubmit'
+import profilePics from '../../../assets/profilePics.png'
 
 const useProfile = () => {
   const dispatch = useDispatch()
@@ -31,7 +30,7 @@ const useProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo?.profile?.bio || '',
-    role: userInfo?.profile?.role[0]?._id || '',
+    role: userInfo?.profile?.role?.map((r: any) => r._id) || [],
     location: {
       country: {
         name: userInfo?.profile?.location?.country || '',
