@@ -50,21 +50,12 @@
 .normal {
   font-size: 14px;
 
-  @media (max-width: 768px) {
-    font-size: 10px;
-  }
 }
 
 .big {
   font-size: 16px;
-  @media (max-width: 768px) {
-    font-size: 12px;
-  }
 }
 
 .small {
   font-size: 12px;
-  @media (max-width: 768px) {
-    font-size: 10px;
-  }
 }
