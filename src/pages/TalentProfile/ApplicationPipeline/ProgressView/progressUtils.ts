@@ -3,7 +3,7 @@ import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import { Progress, Application } from '../../utils/type'
 
-export const getProgresses = (application: Application): Progress[] => {
+const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
     prescreening: { icon: pretestIcon, title: 'Pre-Assessment' },
     cv_similarity: { icon: cvmatchIcon, title: 'CV-Matching' },
@@ -40,7 +40,6 @@ export const getProgresses = (application: Application): Progress[] => {
   return progresses
 }
 
-// Get status color
 export const getStatusColor = (status: string): string => {
   switch (status) {
     case 'completed':
@@ -53,3 +52,5 @@ export const getStatusColor = (status: string): string => {
       return '#E7EDF7'
   }
 }
+
+export default getProgresses

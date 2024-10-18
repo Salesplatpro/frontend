@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
