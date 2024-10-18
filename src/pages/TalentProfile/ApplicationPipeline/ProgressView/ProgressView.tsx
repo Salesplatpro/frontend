@@ -1,19 +1,56 @@
 import React, { useEffect, useState } from 'react'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-
 import Loading from '../../../../components/Loading/Loading'
 import {
   useJobPipelineQuery,
   useLazyCvMatchQuery,
 } from '../../../../redux/api/talent'
 import ProgressHeader from './ProgressHeader'
-import { Application } from '../../utils/type'
 import { ErrorResponse } from '../../utils/type'
 import ProgressItem from './ProgressItem'
-import { getProgresses } from './progressUtils'
 import ProgressError from './ProgressError'
+import pretestIcon from '../../../../assets/pretestIcon.webp'
+import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
+import personalizedIcon from '../../../../assets/personalizedIcon.webp'
+import { Progress, Application } from '../../utils/type'
+
+const getProgresses = (application: Application): Progress[] => {
+  const stagesMapping = {
+    prescreening: { icon: pretestIcon, title: 'Pre-Assessment' },
+    cv_similarity: { icon: cvmatchIcon, title: 'CV-Matching' },
+    personalized: { icon: personalizedIcon, title: 'Personalized Test' },
+    personality: { icon: personalizedIcon, title: 'Personality Test' },
+  }
+
+  const progresses: Progress[] = []
+  const stages = Object.keys(
+    application.stages,
+  ) as (keyof typeof stagesMapping)[]
+  let currentStage = application.currentStage
+  let currentStageFound = false
+
+  stages.forEach((stage) => {
+    if (stagesMapping[stage]) {
+      let status
+      if (stage === currentStage) {
+        status = 'current'
+        currentStageFound = true
+      } else if (!currentStageFound) {
+        status = 'completed'
+      } else {
+        status = 'awaiting'
+      }
+      progresses.push({
+        icon: stagesMapping[stage].icon,
+        title: stagesMapping[stage].title,
+        status: status,
+      })
+    }
+  })
+
+  return progresses
+}
 
 const ProgressView: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>()
