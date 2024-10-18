@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { Progress, Application } from './types'
 import connectorIcon from '../../../../assets/connectorIcon.webp'
 import unconnectorIcon from '../../../../assets/unconnectorIcon.webp'
-import { getStatusColor } from './progressUtils'
 
 interface Props {
   progress: Progress
@@ -13,6 +12,19 @@ interface Props {
 
 const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
   const navigate = useNavigate()
+
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case 'completed':
+        return '#34C759'
+      case 'current':
+        return '#3C6FD4'
+      case 'awaiting':
+        return '#FF3B30'
+      default:
+        return '#E7EDF7'
+    }
+  }
 
   const handleNavigate = () => {
     switch (progress.title) {

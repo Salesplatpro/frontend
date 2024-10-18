@@ -3,7 +3,6 @@ import ProgressBar from '../../../../utils/ProgressBar'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 import { Application } from '../../utils/type'
 
-
 interface HeaderProps {
   progressPercentage: number
   jobProgress: Application
