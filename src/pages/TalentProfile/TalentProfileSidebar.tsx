@@ -14,7 +14,6 @@ import { LoggedInUserBadge } from '../LoggedInUserBadge'
 const TalentProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const user = useSelector((state: RootState) => state.auth.user)
-  console.log(user)
 
   return (
     <div className="dashboard">

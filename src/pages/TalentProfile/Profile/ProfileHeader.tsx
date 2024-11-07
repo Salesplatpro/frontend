@@ -1,6 +1,10 @@
 import React from 'react'
-import ProgressBar from '../../../utils/ProgressBar'
+import { useSelector } from 'react-redux'
+
+import { RootState } from '../../../redux/store/store'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import { getDefaultIcon } from '../../../utils/getDefaultIcon'
+import ProgressBar from '../../../utils/ProgressBar'
 
 interface TalentHeaderType {
   userInfo: any
@@ -13,6 +17,8 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
   profileImage,
   progress,
 }) => {
+  const user = useSelector((state: RootState) => state.auth.user)
+
   return (
     <div>
       <div className="w-full">
@@ -34,7 +40,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
-              src={profileImage as string}
+              src={getDefaultIcon({ id: user?.id, size: 50 })}
               alt="Profile"
               className="w-24 h-24 object-cover rounded-full"
             />
@@ -43,7 +49,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
               type="file"
               accept="image/*"
               className="hidden"
-            // onChange={(event) => handleImageChange(event, setProfileImage)}
+              // onChange={(event) => handleImageChange(event, setProfileImage)}
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-1"

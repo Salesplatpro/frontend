@@ -7,9 +7,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import employer from '../../assets/employer.png'
 import { logout } from '../../redux/features/authSlice/authSlice'
 import { RootState } from '../../redux/store/store'
+import { getDefaultIcon } from '../../utils/getDefaultIcon'
 
 export const LoggedInUserBadge = () => {
   const [visible, setVisible] = useState<boolean>(false)
@@ -27,7 +27,7 @@ export const LoggedInUserBadge = () => {
           </div>
           <div className="employerType">{user.email}</div>
         </div>
-        <img src={employer} alt="employer" />
+        <img src={getDefaultIcon({ id: user.id, size: 40 })} alt="employer" />
       </div>
       {visible ? (
         <IoIosArrowUp size={20} onClick={() => setVisible(!visible)} />
@@ -39,7 +39,7 @@ export const LoggedInUserBadge = () => {
           <div
             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             onClick={() => {
-              dispatch(logout)
+              dispatch(logout())
               navigate('/')
             }}>
             Logout
