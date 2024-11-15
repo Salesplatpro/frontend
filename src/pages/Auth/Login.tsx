@@ -54,7 +54,11 @@ const Login: React.FC = () => {
             token: response.data.token,
           }),
         )
-        toast.success('Logged in successfully')
+        toast.success('Logged in successfully', {
+          style: {
+            backgroundColor: '#fff',
+          },
+        })
         const userRole = response.data.user?.userRole
         switch (userRole) {
           case 'recruiter':
@@ -71,7 +75,12 @@ const Login: React.FC = () => {
         }
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
-        toast.error(err.data?.message || 'An error occurred while logging in')
+        toast.error(err.data?.message || 'An error occurred while logging in', {
+          style: {
+            backgroundColor: '#fff',
+            color: '#000',
+          },
+        })
       } finally {
         setSubmitting(false)
         setLoading(false)
