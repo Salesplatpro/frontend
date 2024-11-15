@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 
 import { AnalyzedPercentage } from '../../pages/RecruiterProfile'
 import { RootState } from '../../redux/store/store'
-import { convertFileSize } from '../../utils'
+import { capitalizeFirstWord, convertFileSize } from '../../utils'
 import { Uploader } from '../Loading'
 import styles from './DocumentUploaderCard.module.scss'
 import { FileDesign } from './FileDesign'
@@ -42,14 +42,14 @@ export const DocumentUploaderCard2 = ({
             <div className={styles.file}>
               <FileDesign icon={<FaRegFile size={20} />} />
               <div className={styles.text}>
-                <div>{cv?.name}</div>
+                <div>{capitalizeFirstWord(cv?.name)}</div>
                 <div>{convertFileSize(cv?.size)}</div>
               </div>
             </div>
             <div className={styles.file}>
               <FileDesign icon={<FaRegFile size={20} />} />
               <div className={styles.text}>
-                <div>{coverLetter?.name}</div>
+                <div>{capitalizeFirstWord(coverLetter?.name)}</div>
                 <div>{convertFileSize(coverLetter?.size)}</div>
               </div>
             </div>

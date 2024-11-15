@@ -19,6 +19,7 @@ import {
   saveFileResult,
 } from '../../../../redux/features/filesSlice/fileSlice'
 import { RootState } from '../../../../redux/store/store'
+import { capitalizeFirstWord } from '../../../../utils'
 import styles from './ProcessCV.module.scss'
 
 export const details = {
@@ -135,7 +136,7 @@ export const ProcessCV = () => {
           <DocumentUploaderCard
             key={index}
             index={index}
-            fileName={file.name}
+            fileName={capitalizeFirstWord(file.name)}
             fileSize={file.size}
             result={getResultEvaluationScore(index)}
             onDelete={() => dispatch(removeFile(index))}
