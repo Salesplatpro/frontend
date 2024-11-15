@@ -3,13 +3,14 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import * as Yup from 'yup'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
-import { FormValues, LocationValues } from '../../../utils/jobPostTypes'
+import { FormValues } from '../../../utils/jobPostTypes'
+import TextField from '../../../components/Form/TextField'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),
@@ -55,12 +56,10 @@ const validationSchema = Yup.object({
 
 const PostJob: React.FC = () => {
   const [jobId, setJobId] = useState(null)
-  // const { aiConfigId } = useParams()
   const [jobPostCreation] = useJobPostCreationMutation()
 
   const initialValues: FormValues = {
     description: '',
-    // aiConfig: aiConfigId,
     role: '',
     minSalary: '',
     maxSalary: '',
@@ -95,17 +94,15 @@ const PostJob: React.FC = () => {
       if (data.status) {
         toast.success('Job Post Created successfully')
         setJobId(data?.data._id)
-        console.log(data?.data._id)
       } else {
         toast.error(data.message)
       }
     } catch (error) {
       toast.error('Failed to create job post')
     }
-    console.log(submissionValues)
-    console.log('submissionValues')
     setSubmitting(false)
   }
+
   return (
     <div className="p-4 w-full">
       <div className="w-[60%] mx-auto">
@@ -136,25 +133,12 @@ const PostJob: React.FC = () => {
                   ) : null}
                 </div>
               </div>
-              <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144]"
-                  htmlFor="description">
-                  Description
-                </label>
-                <Field
-                  type="text"
-                  id="description"
-                  name="description"
-                  placeholder="Add Job description"
-                  className="block border border-[#D0D5DD] p-4 rounded-lg w-full"
-                />
-                <ErrorMessage
-                  name="description"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div>
+              <TextField
+                label="description"
+                name="description"
+                placeholder="Add Job description"
+                type="text"
+              />
               <div className="mb-4">
                 <Location
                   locationTitle="Country"
@@ -191,43 +175,18 @@ const PostJob: React.FC = () => {
                   }}
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  className="block font-bold text-[14px] text-[#434144]"
-                  htmlFor="minSalary">
-                  Min Salary
-                </label>
-                <Field
-                  type="text"
-                  id="minSalary"
-                  name="minSalary"
-                  className="border border-[#D0D5DD] p-4 rounded-lg w-full"
-                />
-                <ErrorMessage
-                  name="minSalary"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="block font-bold text-[14px] text-[#434144]"
-                  htmlFor="maxSalary">
-                  Max Salary
-                </label>
-                <Field
-                  type="text"
-                  id="maxSalary"
-                  name="maxSalary"
-                  placeholder="100000"
-                  className="border border-[#D0D5DD] p-4 rounded-lg w-full"
-                />
-                <ErrorMessage
-                  name="maxSalary"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div>
+              <TextField
+                label="minSalary"
+                name="minSalary"
+                placeholder="Min Salary"
+                type="text"
+              />
+              <TextField
+                label="maxSalary"
+                name="maxSalary"
+                placeholder="Max Salary"
+                type="text"
+              />
               <div className="mb-4">
                 <label
                   className="block font-bold text-[14px] text-[#434144]"
@@ -250,25 +209,12 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  className="block font-bold text-[14px] text-[#434144]"
-                  htmlFor="address">
-                  Address
-                </label>
-                <Field
-                  type="text"
-                  id="address"
-                  name="address"
-                  placeholder="address"
-                  className="border border-[#D0D5DD] p-4 rounded-lg w-full"
-                />
-                <ErrorMessage
-                  name="address"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div>
+              <TextField
+                label="address"
+                name="address"
+                placeholder="Address"
+                type="text"
+              />
               <div className="mb-4">
                 <label
                   className="font-bold text-[14px] text-[#434144] block"
@@ -290,6 +236,7 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
+              {/* Responsibility */}
               <div className="mb-4">
                 <label
                   className="font-bold text-[14px] text-[#434144] block"
@@ -331,6 +278,7 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
+              {/* skills */}
               <div className="mb-4">
                 <label
                   className="font-bold text-[14px] text-[#434144] block"
@@ -372,6 +320,7 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
+              {/* Goals */}
               <div className="mb-4">
                 <label
                   className="font-bold text-[14px] text-[#434144] block"

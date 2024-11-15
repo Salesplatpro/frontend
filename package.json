@@ -21,6 +21,7 @@
     "formik": "^2.4.6",
     "framer-motion": "^3.10.6",
     "geonames.js": "^3.0.6",
+    "jdenticon": "^3.3.0",
     "lottie-react": "^2.4.0",
     "postcss-import": "^16.0.1",
     "query-string": "^9.1.0",

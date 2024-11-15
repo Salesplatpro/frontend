@@ -2,7 +2,15 @@ import * as Yup from 'yup'
 
 const emailValidation = () => Yup.string().required('Email is required')
 
-const passwordValidation = () => Yup.string().required('Password is required')
+const passwordValidation = () =>
+  Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/[0-9]/, 'Password must contain at least one number')
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      'Password must contain at least one special character',
+    )
 
 export const loginSchema = Yup.object().shape({
   email: emailValidation(),

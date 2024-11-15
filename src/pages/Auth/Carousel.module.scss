@@ -5,7 +5,7 @@
 .text {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 27px;
   padding: 0px 50px;
   position: absolute;
   bottom: 40px;
@@ -30,14 +30,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(80,125,193, 0.6);
+  opacity: 80%;
+  background-color: #4985df;
 }
 
 .description {
-  width: 70%;
+  width: 60%;
   font-weight: 600;
   font-size: 24px;
-  line-height: 70px;
+  font-family: 'raleway', sans-serif;
+  line-height: 40px;
   color: #fff;
 }
 
@@ -45,6 +47,7 @@
   @extend .description;
   font-size: 20px;
   line-height: 28px;
+  font-family: 'raleway', sans-serif;
 }
 
 .footer {
