@@ -1,3 +1,4 @@
+import { Alert } from '@mui/material'
 import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -12,7 +13,6 @@ import {
 } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
 import { Question } from '../../../utils/types'
-import { Alert } from '@mui/material'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)
@@ -26,6 +26,11 @@ const TalentAssessment = () => {
     roleId: string
     answers: { [key: string]: string }
   }>({ roleId: roleId || '', answers: {} })
+
+  // Track whether all questions have been answered
+  const allAnswered =
+    questions.length > 0 &&
+    Object.keys(formData.answers).length === questions.length
 
   useEffect(() => {
     if (data) {
@@ -123,7 +128,12 @@ const TalentAssessment = () => {
               ))}
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                disabled={!allAnswered} // Disable until all questions are answered
+                className={`px-4 py-2 rounded font-raleway text-normal font-medium ${
+                  allAnswered
+                    ? 'bg-blue-500 text-white hover:bg-blue-700'
+                    : 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                }`}>
                 Submit
               </button>
             </ul>
