@@ -1,5 +1,3 @@
-import './Roles.scss'
-
 import { Field } from 'formik'
 import React from 'react'
 
@@ -7,21 +5,22 @@ import { useGetRoleQuery } from '../../redux/api/talent'
 import { Role } from '../../utils/types'
 
 interface RoleTypes {
-  value: string
+  value: any
   name: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 const AllRoles = ({ value, onChange, name }: RoleTypes) => {
-  const { data } = useGetRoleQuery(undefined)
+  const { data } = useGetRoleQuery({})
 
   return (
-    <div className="roles-container">
-      <div className="input bg-transparent">
+    <div className="w-full">
+      <div className="relative">
         <Field
           as="select"
           id="role"
-          className="bg-transparent"
+          multiple={false}
+          className="w-full rounded outline-none focus:none"
           name={name}
           value={value}
           onChange={onChange}>

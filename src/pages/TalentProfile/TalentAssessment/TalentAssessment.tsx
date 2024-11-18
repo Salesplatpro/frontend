@@ -12,6 +12,7 @@ import {
 } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
 import { Question } from '../../../utils/types'
+import { Alert } from '@mui/material'
 
 const TalentAssessment = () => {
   const user = useSelector((state: RootState) => state.auth)
@@ -37,11 +38,7 @@ const TalentAssessment = () => {
   }, [data, error])
 
   if (!roleId) {
-    return (
-      <div>
-        <h2>Please complete your profile creation</h2>
-      </div>
-    )
+    return <Alert severity="info">Please complete your profile creation</Alert>
   }
 
   if (user.user.profile.prescreeningScore && !canRetakeAssessment) {

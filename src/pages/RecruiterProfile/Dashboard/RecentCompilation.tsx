@@ -103,7 +103,7 @@ const RecentCompilation = () => {
               </div>
             ))
           ) : (
-            <p>No compilations available for this Job</p>
+            <p>No compilations available</p>
           )}
         </div>
       )}

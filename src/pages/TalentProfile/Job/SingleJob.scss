@@ -10,7 +10,7 @@
 
 .singlejob-container {
   background: #f8f8f8;
-  padding: 24px 16px 24px 24px;
+  padding: 24px 16px;
   border-radius: 10px;
   align-items: flex-start;
   @extend .shared;
@@ -18,7 +18,8 @@
   box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
 
   @media (max-width: 768px) {
-    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -28,10 +29,15 @@
   gap: 8px;
 }
 
-.jobtitle {
+.jobTitle {
   @extend .shared;
+  justify-content: space-between;
   font-weight: normal;
   gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .title {
@@ -41,6 +47,7 @@
 
 .category {
   @extend .shared;
+  width: max-content;
   gap: 6px;
   font-size: 14px;
   font-weight: 600;
@@ -57,7 +64,11 @@
 .details-container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 .jobdetails {

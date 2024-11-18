@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 
-import { Button } from '../../../components'
+import { Button, DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
@@ -71,7 +71,6 @@ const Job = () => {
   useEffect(() => {
     if (data && !filters.role) {
       setJobs(data.data)
-      console.log(data.data)
     }
     if (error) {
       toast.error('DisplayError fetching jobs')
@@ -91,7 +90,6 @@ const Job = () => {
 
   const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
     setFilters(filterValues)
-    setShowFilter(false)
   }
 
   return (
@@ -110,7 +108,11 @@ const Job = () => {
             />
           </div>
         ) : (
-          <JobFilter onFilterSubmit={handleFilterSubmit} />
+          <JobFilter
+            showFilter={showFilter}
+            setShowFilter={setShowFilter}
+            onFilterSubmit={handleFilterSubmit}
+          />
         )}
         <div className="job-listing-container">
           <div className="sorting">
@@ -123,22 +125,27 @@ const Job = () => {
             </div>
           </div>
           <div className="job-listing">
-            {(isLoading || isFiltering) && <Loading />}
-            {jobs.map((job, index) => (
-              <SingleJob
-                key={index}
-                jobId={job?._id}
-                jobTitle={job.role?.name}
-                jobCategory={job?.experienceLevel}
-                jobDescription={job?.description}
-                jobRemote={job?.remote}
-                jobCountry={job?.location?.country}
-                jobExperience={job?.experienceLevel}
-                jobSalary={job?.maxSalary}
-                isFiltering={isFiltering}
-                isLoading={isLoading}
-              />
-            ))}
+            {isLoading || isFiltering ? (
+              <Loading />
+            ) : jobs.length > 0 ? (
+              jobs.map((job, index) => (
+                <SingleJob
+                  key={index}
+                  jobId={job?._id}
+                  jobTitle={job.role?.name}
+                  jobCategory={job?.experienceLevel}
+                  jobDescription={job?.description}
+                  jobRemote={job?.remote}
+                  jobCountry={job?.location?.country}
+                  jobExperience={job?.experienceLevel}
+                  jobSalary={job?.maxSalary}
+                  isFiltering={isFiltering}
+                  isLoading={isLoading}
+                />
+              ))
+            ) : (
+              <DisplayError message="No job found" />
+            )}
           </div>
         </div>
       </div>

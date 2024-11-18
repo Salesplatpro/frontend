@@ -6,14 +6,16 @@ export interface LocationOption {
 
 export interface LocationProps {
   locationTitle?: string
-  geoId?: number | null | string
+  geoId?: number | null
+  selectedName?: string
   isCountry?: boolean
   onChange: (geoId: number) => void
+  height?: string
 }
 
 export interface LocationValues {
-  name: string
-  geoId: number | null
+  name?: string
+  geoId?: number | null
 }
 
 export interface FormValues {
@@ -51,7 +53,7 @@ export interface configProps {
 }
 
 export interface JobFiltersTypes {
-  role?: string[]
+  role?: string
   experienceLevel?: string
   remote?: ''
   location?: {

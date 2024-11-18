@@ -2,13 +2,16 @@ import { capitalize } from '@mui/material'
 import React from 'react'
 
 import profile from '../../../assets/profile.jpeg'
+import { StatusBadge } from '../../../components'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import { getStatusBadge } from '../getJobStatus'
 
 type ProfileCardProps = {
   firstName: string
   lastName: string
   role: string
   description: string
+  jobStatus: string
 }
 
 export const ProfileCard = ({
@@ -16,6 +19,7 @@ export const ProfileCard = ({
   lastName,
   role,
   description,
+  jobStatus,
 }: ProfileCardProps) => {
   return (
     <div>
@@ -30,6 +34,7 @@ export const ProfileCard = ({
             </div>
             <div>{capitalizeEachWord(role)}</div>
             <div className="font-extralight">5 years</div>
+            <StatusBadge status={jobStatus} {...getStatusBadge(jobStatus)} />
           </div>
         </div>
         <div className="w-[260px]">{description}</div>

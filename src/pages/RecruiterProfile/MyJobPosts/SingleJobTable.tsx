@@ -17,6 +17,7 @@ import {
   ResponsiveTableRenderer,
   SingleJobDetails,
 } from '../../../utils'
+import { getStatusBadge } from '../getJobStatus'
 
 type SingleJobTableProps = {
   applications: SingleJobDetails[]
@@ -35,21 +36,6 @@ const tableCellStyle = {
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
-}
-
-const getStatusBadgeProps = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return { backgroundColor: '#fff4e2', color: '#fbb241' }
-    case 'not-proceeding':
-      return { backgroundColor: '#fff0ef', color: '#ff6f6d' }
-    case 'retake_assessment':
-      return { backgroundColor: '#f1f6fe', color: '#5d93e3' }
-    case 'shortlisted':
-      return { backgroundColor: '#edfeee', color: '#7cc88f' }
-    default:
-      return { backgroundColor: '#edfeee', color: '#76c8bc' }
-  }
 }
 
 const getStatusStage = (status: string) => {
@@ -113,7 +99,7 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <StatusBadge
                         status={item.status}
-                        {...getStatusBadgeProps(item.status)}
+                        {...getStatusBadge(item.status)}
                       />
                     </div>
                   </TableCell>

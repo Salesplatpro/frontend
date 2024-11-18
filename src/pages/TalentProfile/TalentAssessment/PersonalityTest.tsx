@@ -4,13 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import Loading from '../../../components/Loading/Loading'
 import {
-  // useGeneratePersonalizedTestQuery,
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
-  // usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
-
-// Type definitions
 interface FormData {
   jobId: string
   answers: { [key: string]: string }
@@ -20,12 +16,6 @@ interface Question {
   _id: string
   question: string
 }
-
-// interface PersonalityData {
-//   data: {
-//     questions: Question[]
-//   }
-// }
 
 interface PostAnswerResponse {
   status: boolean

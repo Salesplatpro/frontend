@@ -116,6 +116,11 @@ const ChatList = () => {
 
   if (messagesLoading) return <Loading />
   if (messagesError) return <Alert severity="error">Error Fetching Data</Alert>
+  if (allMessages.length === 0) {
+    return (
+      <Alert severity="info">You do not have any Message at the moment</Alert>
+    )
+  }
 
   return (
     <div className="md:w-[90%] my-12 md:mx-auto mx-8 space-y-7">

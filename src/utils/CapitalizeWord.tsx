@@ -1,4 +1,4 @@
-export const capitalizeEachWord = (string: string) => {
+export const capitalizeEachWord = (string?: string) => {
   if (!string) return ''
   return string
     .split(' ')
