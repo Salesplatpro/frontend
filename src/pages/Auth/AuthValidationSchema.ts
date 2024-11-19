@@ -38,8 +38,10 @@ export const SignUpSchema = Yup.object().shape({
 
   phone: Yup.string()
     .required('Phone Number is required')
-    .test('valid-phone', 'Invalid phone number format', (value) =>
-      /^[0-9]{10,15}$/.test(value || ''),
+    .test(
+      'valid-phone',
+      'Invalid phone number format. Must start with "+234" and be followed by 10 digits.',
+      (value) => /^\+234\d{10}$/.test(value || ''),
     ),
 
   userType: Yup.string()

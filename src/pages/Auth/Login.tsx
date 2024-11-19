@@ -56,6 +56,7 @@ const Login: React.FC = () => {
         )
         toast.success('Logged in successfully', {
           style: {
+            color: '#000',
             backgroundColor: '#fff',
           },
         })
