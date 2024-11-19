@@ -15,8 +15,8 @@ const tabs = [
     id: '2',
     tab: 'aiconfig',
 
-    title: 'Ai config',
-    description: 'Select your preferred Ai config',
+    title: 'AI config',
+    description: 'Select AI config',
   },
 ]
 
@@ -49,7 +49,7 @@ const PostJobTab = () => {
         </h2>
         Input information needed to land a role with your organization
         <p className="text-[#101828] text-[20px] font-medium"></p>
-        <div className="mt-8 flex flex-row space-x-10 items-center justify-center">
+        <div className="mt-8 flex flex-row md:space-x-10 space-x-4 items-center justify-center">
           {tabs.map((tab, i) => {
             const isDisabled = tab.tab === 'aiconfig' && !jobId
             return (
@@ -59,7 +59,7 @@ const PostJobTab = () => {
                   activeTab === tab.tab
                     ? 'border-[#006BFF] border-t-4 text-[#006BFF]'
                     : 'border-t-4 text-[##344054]'
-                } min-w-[232px] py-2 text-[14px] ${
+                } md:min-w-[232px] w-[232px] md:py-2 py-1 text-[14px] ${
                   isDisabled ? 'cursor-not-allowed opacity-50' : ''
                 }`}>
                 <button

@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { FieldArray, Form, Formik, Field } from 'formik'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAiConfigMutation } from '../../../../redux/api/recruiter'
 import TextField from '../../../../components/Form/TextField'
 import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
@@ -14,6 +14,7 @@ import toast from 'react-hot-toast'
 const AiConfig = () => {
   const { jobId } = useParams()
   const [aiConfig] = useAiConfigMutation()
+  const navigate = useNavigate()
   const { generatedQuestions, generateQuestion, resetQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
 
@@ -71,15 +72,11 @@ const AiConfig = () => {
       }),
 
     personalityEvaluation: Yup.string().required('Required'),
-    uploadedQuestions: Yup.array().of(
-      Yup.string().required('Question is required'),
-    ),
 
     recruiterGuide: Yup.string().required('Required'),
   })
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
-    console.log('happy')
     const cleanedValues = { ...values }
 
     if (values.prescreeningAssessment === 'false') {
@@ -100,6 +97,7 @@ const AiConfig = () => {
       const response = await aiConfig(cleanedValues).unwrap()
       if ('data' in response && response.data) {
         toast.success(response.data?.message || 'Submitted successfully')
+        navigate('/recruiterDashboard/myjobposts')
       }
     } catch (error: any) {
       const errorMessage =
@@ -114,7 +112,7 @@ const AiConfig = () => {
   }
 
   return (
-    <div className="p-8 md:w-[70%] w-[90%] mx-auto">
+    <div className="md:px-4 py-4 md:w-[70%] w-[100%] mx-auto">
       <h2 className="text-[#101828] text-[32px] mt-4 font-bold">AI Configs</h2>
       <p className="text-[#667085] text-[16px] mb-6 font-light">
         Select your configurations
@@ -131,8 +129,8 @@ const AiConfig = () => {
               name="prescreeningAssessment"
               label="Enable Pre-assessment:"
               options={[
-                { value: 'true', label: 'True' },
-                { value: 'false', label: 'False' },
+                { value: 'true', label: 'Yes' },
+                { value: 'false', label: 'No' },
               ]}
             />
             {values.prescreeningAssessment === 'true' && (
@@ -148,8 +146,8 @@ const AiConfig = () => {
               name="cvSimilarity"
               label="Enable CV Similarity:"
               options={[
-                { value: 'true', label: 'True' },
-                { value: 'false', label: 'False' },
+                { value: 'true', label: 'Yes' },
+                { value: 'false', label: 'No' },
               ]}
             />
             {values.cvSimilarity === 'true' && (
@@ -173,8 +171,8 @@ const AiConfig = () => {
               name="personalizedAssessment"
               label="Enable Personalized Assessment:"
               options={[
-                { value: 'true', label: 'True' },
-                { value: 'false', label: 'False' },
+                { value: 'true', label: 'Yes' },
+                { value: 'false', label: 'No' },
               ]}
             />
             {values.personalizedAssessment === 'true' && (
@@ -190,8 +188,8 @@ const AiConfig = () => {
               name="personalityEvaluation"
               label="Enable Personality Evaluation:"
               options={[
-                { value: 'true', label: 'True' },
-                { value: 'false', label: 'False' },
+                { value: 'true', label: 'Yes' },
+                { value: 'false', label: 'No' },
               ]}
             />
 

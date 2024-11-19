@@ -104,8 +104,8 @@ const PostJob: React.FC = () => {
   }
 
   return (
-    <div className="p-4 w-full">
-      <div className="w-[60%] mx-auto">
+    <div className="md:px-4 py-4 w-full">
+      <div className="md:w-[70%] mx-auto w-full">
         <h2 className="text-[#101828] text-[32px] mt-6 font-bold">
           Job details
         </h2>
@@ -144,6 +144,7 @@ const PostJob: React.FC = () => {
                   locationTitle="Country"
                   geoId={null}
                   height="54px"
+                  bold="bold"
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
@@ -157,6 +158,7 @@ const PostJob: React.FC = () => {
                   locationTitle="State"
                   geoId={values.location.country.geoId}
                   height="54px"
+                  bold="bold"
                   isCountry={false}
                   onChange={(geoId) => {
                     setFieldValue('location.state.geoId', geoId)
@@ -169,6 +171,7 @@ const PostJob: React.FC = () => {
                   locationTitle="City"
                   geoId={values.location.state.geoId}
                   height="54px"
+                  bold="bold"
                   isCountry={false}
                   onChange={(geoId) => {
                     setFieldValue('location.city.geoId', geoId)
@@ -210,7 +213,7 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <TextField
-                label="address"
+                label="Address"
                 name="address"
                 placeholder="Address"
                 type="text"
@@ -227,8 +230,8 @@ const PostJob: React.FC = () => {
                   name="remote"
                   className="border border-[#D0D5DD] p-5 rounded-lg w-full">
                   <option value="">Select Remote Option</option>
-                  <option value="true">True</option>
-                  <option value="false">False</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
                 </Field>
                 <ErrorMessage
                   name="remote"
@@ -249,13 +252,13 @@ const PostJob: React.FC = () => {
                       {values.responsibilities.map((responsibility, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center relative">
+                          className="flex mb-2 items-center space-x-0">
                           <Field
                             name={`responsibilities.${index}`}
                             className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                           />
                           <div
-                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded-lg absolute right-2"
+                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded-lg"
                             onClick={() => remove(index)}>
                             <RiDeleteBin6Line />
                           </div>
@@ -291,13 +294,13 @@ const PostJob: React.FC = () => {
                       {values.skills.map((skill, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center relative">
+                          className="flex mb-2 items-center space-x-0">
                           <Field
                             name={`skills.${index}`}
                             className="border border-[#D0D5DD] p-4 rounded-lg w-full"
                           />
                           <div
-                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded-lg absolute right-2"
+                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded-lg"
                             onClick={() => remove(index)}>
                             <RiDeleteBin6Line />
                           </div>
@@ -333,13 +336,13 @@ const PostJob: React.FC = () => {
                       {values.goals.map((goal, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center relative">
+                          className="flex mb-2 items-center space-x-0">
                           <Field
                             name={`goals.${index}`}
                             className="border border-[#D0D5DD] p-4 rounded w-full"
                           />
                           <div
-                            className="p-2 text-[18px] text-[#667085] cursor-pointer rounded absolute right-2"
+                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
                             onClick={() => remove(index)}>
                             <RiDeleteBin6Line />
                           </div>
