@@ -1,15 +1,16 @@
+import { Field, FieldArray, Form, Formik } from 'formik'
 import React from 'react'
-import * as Yup from 'yup'
-import { FieldArray, Form, Formik, Field } from 'formik'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useAiConfigMutation } from '../../../../redux/api/recruiter'
-import TextField from '../../../../components/Form/TextField'
-import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
-import QuestionGenerator from './QuestionGenerator'
-import useGeneratedQuestion from './useGeneratedQuestion'
+import toast from 'react-hot-toast'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import toast from 'react-hot-toast'
+import { useNavigate, useParams } from 'react-router-dom'
+import * as Yup from 'yup'
+
+import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
+import TextField from '../../../../components/Form/TextField'
+import { useAiConfigMutation } from '../../../../redux/api/recruiter'
+import QuestionGenerator from './QuestionGenerator'
+import useGeneratedQuestion from './useGeneratedQuestion'
 
 const AiConfig = () => {
   const { jobId } = useParams()

@@ -1,7 +1,8 @@
-import React from 'react'
 import Lottie from 'lottie-react'
+import React from 'react'
+
 import animationData from '../../../../assets/Animation2.json'
-import { ErrorResponse } from './types'
+import { ErrorResponse } from '../../utils/type'
 
 interface Props {
   error: any

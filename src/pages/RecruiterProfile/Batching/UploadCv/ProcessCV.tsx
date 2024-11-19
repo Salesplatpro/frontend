@@ -9,10 +9,7 @@ import {
   DocumentUploaderCard,
 } from '../../../../components/Cards'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import {
-  useGetCampaignNameQuery,
-  useUploadCVOnlyMutation,
-} from '../../../../redux/api/recruiter'
+import { useUploadCVOnlyMutation } from '../../../../redux/api/recruiter'
 import {
   addFiles,
   removeFile,

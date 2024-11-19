@@ -74,7 +74,7 @@ const getStatusBadgeProps = (status: string) => {
 }
 
 export const PipelineTable = () => {
-  const { data, error, isLoading } = useAllJobApplicationsQuery({})
+  const { data, isLoading } = useAllJobApplicationsQuery({})
   const [allJobs, setAllJobs] = React.useState<AllJobTypes[]>([])
   const align = 'left'
   const screenWidth = useScreenWidth()
