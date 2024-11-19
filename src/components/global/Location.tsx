@@ -16,6 +16,7 @@ const Location: React.FC<LocationProps> = ({
   isCountry,
   onChange,
   height,
+  bold,
 }) => {
   const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
@@ -107,7 +108,9 @@ const Location: React.FC<LocationProps> = ({
   return (
     <div className="">
       <label
-        className="font-medium text-[14px] text-[#344054]"
+        className={`text-[14px] text-[#344054] ${
+          bold ? 'font-bold' : 'font-medium'
+        }`}
         htmlFor={locationTitle}>
         {locationTitle}
       </label>
