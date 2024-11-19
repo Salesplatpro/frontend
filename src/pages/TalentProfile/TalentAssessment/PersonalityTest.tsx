@@ -43,6 +43,11 @@ const PersonalityTest: React.FC = () => {
     isLoading: personalityLoading,
   } = usePersonalityTestQuery(jobId)
 
+  // Check if all questions are answered
+  const allAnswered =
+    personalityData.length > 0 &&
+    Object.keys(formData.answers).length === personalityData.length
+
   useEffect(() => {
     if (personalityData) {
       const questions = personalityData.data
@@ -120,7 +125,12 @@ const PersonalityTest: React.FC = () => {
             ))}
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+              disabled={!allAnswered} // Disable until all questions are answered
+              className={`px-4 py-2 rounded font-raleway text-normal font-medium ${
+                allAnswered
+                  ? 'bg-blue-500 text-white hover:bg-blue-700'
+                  : 'bg-gray-400 text-gray-700 cursor-not-allowed'
+              }`}>
               Submit
             </button>
           </ul>
