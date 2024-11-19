@@ -34,7 +34,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
             textColor="#344054"
             pathColor="#3C6FD4"
             trailColor="#F4EBFF"
-            size={80}
+            size={70}
           />
         </div>
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">

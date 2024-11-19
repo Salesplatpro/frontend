@@ -44,18 +44,14 @@ const PersonalityTest: React.FC = () => {
   } = usePersonalityTestQuery(jobId)
 
   // Check if all questions are answered
-  const allAnswered =
-    personalityData.length > 0 &&
-    Object.keys(formData.answers).length === personalityData.length
+  const personalityAnswered =
+    personalityData?.data?.length > 0 &&
+    Object.keys(formData.answers).length === personalityData?.data?.length
 
   useEffect(() => {
-    if (personalityData) {
-      const questions = personalityData.data
-      if (questions) {
-        setPersonalityQuestions(questions)
-      }
-    }
-    if (personalityError) {
+    if (personalityData?.data) {
+      setPersonalityQuestions(personalityData.data)
+    } else if (personalityError) {
       toast.error('Error loading personality test data')
       console.error(personalityError)
     }
@@ -116,7 +112,7 @@ const PersonalityTest: React.FC = () => {
                 </div>
                 <textarea
                   className="w-full bg-white border border-[#D0D5DD] rounded-lg h-[93px] p-3 mt-4"
-                  placeholder="Answer here"
+                  placeholder="Type your answer here ..."
                   name={`answer-${question._id}`}
                   onChange={(e) => handleChange(e, question._id)}
                   required
@@ -125,9 +121,9 @@ const PersonalityTest: React.FC = () => {
             ))}
             <button
               type="submit"
-              disabled={!allAnswered} // Disable until all questions are answered
+              disabled={!personalityAnswered} // Disable until all questions are answered
               className={`px-4 py-2 rounded font-raleway text-normal font-medium ${
-                allAnswered
+                personalityAnswered
                   ? 'bg-blue-500 text-white hover:bg-blue-700'
                   : 'bg-gray-400 text-gray-700 cursor-not-allowed'
               }`}>
