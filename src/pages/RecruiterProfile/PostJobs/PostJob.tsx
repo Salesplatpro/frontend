@@ -6,11 +6,11 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import * as Yup from 'yup'
 
+import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { FormValues } from '../../../utils/jobPostTypes'
-import TextField from '../../../components/Form/TextField'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),

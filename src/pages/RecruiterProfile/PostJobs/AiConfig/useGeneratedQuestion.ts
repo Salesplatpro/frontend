@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useGenJpPersonalityMutation } from '../../../../redux/api/recruiter'
 import toast from 'react-hot-toast'
+
+import { useGenJpPersonalityMutation } from '../../../../redux/api/recruiter'
 
 type GeneratedQuestion = {
   [key: string]: {
