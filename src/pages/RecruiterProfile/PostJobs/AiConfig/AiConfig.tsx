@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { FieldArray, Form, Formik, Field } from 'formik'
-import { redirect, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAiConfigMutation } from '../../../../redux/api/recruiter'
 import TextField from '../../../../components/Form/TextField'
 import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
