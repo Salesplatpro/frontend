@@ -60,7 +60,11 @@ export const JobsTable = ({ data }: JobsTableType) => {
         <TableBody>
           {data?.map((job, index) => (
             <TableRow key={index}>
-              <TableCell component="th" align={align} sx={tableCellStyle}>
+              <TableCell
+                component="th"
+                align={align}
+                sx={tableCellStyle}
+                className="capitalize">
                 {job.role.name}
               </TableCell>
               <TableCell align={align} sx={tableCellStyle}>
