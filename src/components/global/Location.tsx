@@ -12,6 +12,7 @@ const geonames = new Geonames({
 
 const Location: React.FC<LocationProps> = ({
   locationTitle,
+  locationLabel,
   geoId,
   selectedName,
   isCountry,
@@ -113,7 +114,7 @@ const Location: React.FC<LocationProps> = ({
           bold ? 'font-bold' : 'font-medium'
         }`}
         htmlFor={locationTitle}>
-        {locationTitle}
+        {locationLabel}
       </label>
 
       {isLoading ? (
