@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import profilePics from '../../../assets/profilePics.png'
 import {
@@ -13,6 +14,7 @@ import { handleProfileSubmit } from './ProfileOnSubmit'
 
 const useProfile = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
     profilePics,
   )
@@ -78,6 +80,7 @@ const useProfile = () => {
         uploadCv,
         updateProfile,
         refetch,
+        navigate,
       ),
     userProfileLoading,
     userProfileError,
