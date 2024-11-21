@@ -1,8 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Progress, Application } from './types'
+
 import connectorIcon from '../../../../assets/connectorIcon.webp'
 import unconnectorIcon from '../../../../assets/unconnectorIcon.webp'
+import { Application, Progress } from '../../utils/type'
 
 interface Props {
   progress: Progress

@@ -136,17 +136,17 @@ const Introduction = () => {
             <p>Share this post</p>
           </div>
           <div className="social-icons">
-            <a href="#" className="sm link">
+            <a href="/" className="sm link">
               <BsLink45Deg className="social" />
               <p>Copy link</p>
             </a>
-            <a href="#" className="sm sub-sm">
+            <a href="/" className="sm sub-sm">
               <FaTwitter className="social" />
             </a>
-            <a href="#" className="sm sub-sm">
+            <a href="/" className="sm sub-sm">
               <FaFacebook className="social" />
             </a>
-            <a href="#" className="sm sub-sm">
+            <a href="/" className="sm sub-sm">
               <FaLinkedin className="social" />
             </a>
           </div>

@@ -167,6 +167,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <Location
                       locationTitle="Country"
+                      locationLabel="Country"
                       geoId={null}
                       isCountry={true}
                       selectedName={values.location.country.name}
@@ -186,6 +187,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <Location
                       locationTitle="State"
+                      locationLabel="States/Province"
                       geoId={values.location.country.geoId}
                       isCountry={false}
                       selectedName={values.location.state.name}
@@ -203,6 +205,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <Location
                       locationTitle="City"
+                      locationLabel="Region"
                       geoId={values.location.state.geoId}
                       isCountry={false}
                       selectedName={values.location.city.name}

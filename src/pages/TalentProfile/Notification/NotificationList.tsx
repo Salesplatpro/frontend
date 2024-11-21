@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
 import { Alert } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+
 import Loading from '../../../components/Loading/Loading'
 import { useGetNotificationsQuery } from '../../../redux/api/talent'
-import { NotificationItem } from './NotificationItem'
 import { truncateText } from '../../../utils/truncateTexts'
+import { NotificationItem } from './NotificationItem'
 
 interface Sender {
   firstName: string

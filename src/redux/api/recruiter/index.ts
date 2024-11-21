@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { url } from 'inspector'
 
 import { getToken } from '../../../utils'
 

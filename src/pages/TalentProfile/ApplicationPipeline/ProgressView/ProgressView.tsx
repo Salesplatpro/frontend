@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+
+import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
+import personalizedIcon from '../../../../assets/personalizedIcon.webp'
+import pretestIcon from '../../../../assets/pretestIcon.webp'
 import Loading from '../../../../components/Loading/Loading'
 import {
   useJobPipelineQuery,
   useLazyCvMatchQuery,
 } from '../../../../redux/api/talent'
-import ProgressHeader from './ProgressHeader'
 import { ErrorResponse } from '../../utils/type'
-import ProgressItem from './ProgressItem'
+import { Application, Progress } from '../../utils/type'
 import ProgressError from './ProgressError'
-import pretestIcon from '../../../../assets/pretestIcon.webp'
-import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
-import personalizedIcon from '../../../../assets/personalizedIcon.webp'
-import { Progress, Application } from '../../utils/type'
+import ProgressHeader from './ProgressHeader'
+import ProgressItem from './ProgressItem'
 
 const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {

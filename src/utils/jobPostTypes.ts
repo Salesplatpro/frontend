@@ -6,11 +6,13 @@ export interface LocationOption {
 
 export interface LocationProps {
   locationTitle?: string
-  geoId?: number | null
+  locationLabel: string
+  geoId?: any
   selectedName?: string
   isCountry?: boolean
   onChange: (geoId: number) => void
   height?: string
+  bold?: string
 }
 
 export interface LocationValues {
