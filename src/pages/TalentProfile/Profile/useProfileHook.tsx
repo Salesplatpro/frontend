@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+
+import profilePics from '../../../assets/profilePics.png'
 import {
   useFetchProfileQuery,
   useTalentCreationMutation,
   useUpdateProfileMutation,
+  useUpdateProfilePicsMutation,
   useUploadCvMutation,
 } from '../../../redux/api/talent'
 import { TalentProfileProps } from '../../../utils/types'
 import { handleProfileSubmit } from './ProfileOnSubmit'
-import profilePics from '../../../assets/profilePics.png'
 
 const useProfile = () => {
   const dispatch = useDispatch()
@@ -19,6 +21,7 @@ const useProfile = () => {
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
   const [updateProfile] = useUpdateProfileMutation()
+  const [updateProfilePics] = useUpdateProfilePicsMutation()
 
   const {
     data: userProfile,
@@ -27,6 +30,18 @@ const useProfile = () => {
     refetch,
   } = useFetchProfileQuery({})
   const userInfo = userProfile?.data?.user
+
+  const handleProfileImageUpload = async (imageFile: File) => {
+    const formData = new FormData()
+    formData.append('profilePic', imageFile) // Replace 'profilePic' with your API's expected field name
+
+    try {
+      const response = await updateProfilePics(formData).unwrap()
+      setProfileImage(response.data?.profilePic || profilePics)
+    } catch (error) {
+      console.error('Error updating profile picture:', error)
+    }
+  }
 
   const initialValues: TalentProfileProps = {
     bio: userInfo?.profile?.bio || '',
@@ -78,6 +93,7 @@ const useProfile = () => {
         updateProfile,
         refetch,
       ),
+    handleProfileImageUpload,
     userProfileLoading,
     userProfileError,
     refetchProfile: refetch,

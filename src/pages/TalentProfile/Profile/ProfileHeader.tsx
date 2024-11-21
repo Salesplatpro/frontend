@@ -9,15 +9,29 @@ import ProgressBar from '../../../utils/ProgressBar'
 interface TalentHeaderType {
   userInfo: any
   profileImage: string | ArrayBuffer | null
+  setProfileImage?: (value: string | ArrayBuffer) => void
+  handleProfileImageUpload: (file: File) => Promise<void>
   progress: any
 }
 
 const TalentProfileHeader: React.FC<TalentHeaderType> = ({
   userInfo,
   profileImage,
+  setProfileImage,
+  handleProfileImageUpload,
   progress,
 }) => {
   const user = useSelector((state: RootState) => state.auth.user)
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      if (setProfileImage) {
+        setProfileImage(URL.createObjectURL(file)) // Preview the new image
+      }
+      handleProfileImageUpload(file) // Upload the image
+    }
+  }
 
   return (
     <div>
@@ -40,7 +54,10 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
-              src={getDefaultIcon({ id: user?.id, size: 50 })}
+              src={
+                (profileImage as string) ||
+                getDefaultIcon({ id: user?.id, size: 50 })
+              }
               alt="Profile"
               className="w-24 h-24 object-cover rounded-full"
             />
@@ -49,7 +66,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
               type="file"
               accept="image/*"
               className="hidden"
-              // onChange={(event) => handleImageChange(event, setProfileImage)}
+              onChange={handleImageChange}
             />
             <button
               className="text-[10px] text-[#4884DF] cursor-pointer mt-1"
@@ -83,3 +100,35 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
 }
 
 export default TalentProfileHeader
+
+// const handleImageChange = (
+//   event: React.ChangeEvent<HTMLInputElement>,
+//   setProfileImage: ((value: string | ArrayBuffer) => void) | undefined,
+// ) => {
+//   const file = event.target.files?.[0] // Get the first selected file
+//   if (!file) {
+//     return // Exit if no file is selected
+//   }
+
+//   // Validate file type
+//   const validTypes = ['image/jpeg', 'image/png', 'image/jpg']
+//   if (!validTypes.includes(file.type)) {
+//     alert('Please upload a valid image file (JPEG, PNG).')
+//     return
+//   }
+
+//   // Validate file size (e.g., max 2MB)
+//   const maxSize = 2 * 1024 * 1024 // 2MB
+//   if (file.size > maxSize) {
+//     alert('File size exceeds 2MB. Please upload a smaller image.')
+//     return
+//   }
+
+//   // Preview the image using FileReader
+//   const reader = new FileReader()
+//   reader.onload = () => {
+//     const result = reader.result as string // Get the image as a base64 string
+//     setProfileImage?.(result) // Update the profile image state
+//   }
+//   reader.readAsDataURL(file) // Read the file as a Data URL
+// }

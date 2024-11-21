@@ -18,13 +18,14 @@ const TalentProfile = () => {
   const {
     userInfo,
     profileImage,
-    // setProfileImage,
+    setProfileImage,
     cvFileName,
     setCvFileName,
     handleProfileSubmit,
     userProfileLoading,
     userProfileError,
     // refetchProfile,
+    handleProfileImageUpload,
     initialValues,
   } = useProfile()
 
@@ -42,7 +43,9 @@ const TalentProfile = () => {
         <TalentProfileHeader
           userInfo={userInfo}
           profileImage={profileImage}
+          setProfileImage={setProfileImage}
           progress={progress}
+          handleProfileImageUpload={handleProfileImageUpload}
         />
       </div>
       <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-6 w-[100%]">
