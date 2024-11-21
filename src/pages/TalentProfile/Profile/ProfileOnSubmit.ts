@@ -1,8 +1,9 @@
 // Submit and update Talent Profile
 
 import { FormikHelpers } from 'formik'
-import { setUser } from '../../../redux/features/authSlice/authSlice'
 import { toast } from 'react-hot-toast'
+
+import { setUser } from '../../../redux/features/authSlice/authSlice'
 import { TalentProfileProps } from '../../../utils/types'
 
 export const handleProfileSubmit = async (

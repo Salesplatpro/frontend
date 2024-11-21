@@ -11,6 +11,7 @@ export interface LocationProps {
   isCountry?: boolean
   onChange: (geoId: number) => void
   height?: string
+  bold?: string
 }
 
 export interface LocationValues {

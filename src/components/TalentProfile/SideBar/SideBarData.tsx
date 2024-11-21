@@ -1,11 +1,11 @@
 import React from 'react'
+import { BiMessageDetail } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
 import { IoBagOutline } from 'react-icons/io5'
 import { LuHome } from 'react-icons/lu'
 import { MdPersonOutline } from 'react-icons/md'
 import { MdOutlineAssessment } from 'react-icons/md'
-import { BiMessageDetail } from 'react-icons/bi'
-import { RiFlowChart } from "react-icons/ri";
+import { RiFlowChart } from 'react-icons/ri'
 
 const ICON_SIZE = 24
 const COLOR = '#ffffff'

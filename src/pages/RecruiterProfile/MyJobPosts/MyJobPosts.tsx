@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button, DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
@@ -8,6 +9,7 @@ import styles from './MyJobPosts.module.scss'
 
 export const MyJobPosts = () => {
   const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
+  const navigate = useNavigate()
 
   if (isLoading) {
     return <Loading />
@@ -30,7 +32,11 @@ export const MyJobPosts = () => {
           </div>
         </div>
         <div style={{ width: '16%' }}>
-          <Button title="Create New" textType="normal" />
+          <Button
+            title="Create New"
+            textType="normal"
+            onClick={() => navigate('/recruiterDashboard/postjob')}
+          />
         </div>
       </div>
       <div>

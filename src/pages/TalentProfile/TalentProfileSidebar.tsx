@@ -3,17 +3,17 @@ import './TalentProfileSidebar.scss'
 import React, { useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 
 import { SideBar } from '../../components'
 import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
-import { RootState } from '../../redux/store/store'
+// import { RootState } from '../../redux/store/store'
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
 const TalentProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const user = useSelector((state: RootState) => state.auth.user)
+  // const user = useSelector((state: RootState) => state.auth.user)
 
   return (
     <div className="dashboard">

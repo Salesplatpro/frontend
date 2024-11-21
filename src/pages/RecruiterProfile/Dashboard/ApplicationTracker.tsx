@@ -1,8 +1,6 @@
 import React from 'react'
-import { AnalyzedPercentage } from '../Batching'
-import ProgressBar from '../../../utils/ProgressBar'
-import Loading from '../../../components/Loading/Loading'
 
+import ProgressBar from '../../../utils/ProgressBar'
 interface StatsType {
   infoData: any
 }

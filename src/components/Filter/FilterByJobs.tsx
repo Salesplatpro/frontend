@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { IoFilterOutline } from 'react-icons/io5'
+
 import { useFetchRecruiterJobPostQuery } from '../../redux/api/recruiter'
 
 interface FilterByJobsProps {

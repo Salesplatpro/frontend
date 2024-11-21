@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, ChangeEvent } from 'react'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 
 interface WorkTypeOption {

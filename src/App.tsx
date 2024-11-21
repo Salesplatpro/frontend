@@ -15,7 +15,7 @@ import Solutions from './components/Solutions'
 import Home from './Home'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
-import RecruiterRegister from './pages/Auth/RecruiterRegister'
+// import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
 import {
   ApplicationProgress,

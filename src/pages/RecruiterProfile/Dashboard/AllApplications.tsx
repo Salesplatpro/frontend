@@ -1,18 +1,19 @@
-import React from 'react'
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
 } from '@mui/material'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { DisplayError } from '../../../components'
+import Loading from '../../../components/Loading/Loading'
 import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
 import { calculateDaysFromCreation } from '../../../utils'
-import Loading from '../../../components/Loading/Loading'
-import { Button, DisplayError } from '../../../components'
-import { useNavigate } from 'react-router-dom'
 
 interface ApplicationRow {
   applicantName: string
