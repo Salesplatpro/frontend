@@ -18,6 +18,7 @@ export const handleProfileSubmit = async (
   uploadCv: any,
   updateProfile: any,
   refetch: any,
+  navigate: any,
 ) => {
   try {
     const isNewProfile = !userInfo?.profile
@@ -57,6 +58,7 @@ export const handleProfileSubmit = async (
         dispatch(setUser({ user: response.data.user, isLoggedIn: true }))
         toast.success('Profile created successfully')
         refetch()
+        navigate('/talentDashboard/job')
       } else {
         toast.error(
           response.message || 'An error occurred while creating profile',
@@ -128,6 +130,7 @@ export const handleProfileSubmit = async (
       if (response.status) {
         toast.success('Profile updated successfully')
         refetch()
+        navigate('/talentDashboard/job')
       } else {
         const errorMessage =
           response?.data?.message ||

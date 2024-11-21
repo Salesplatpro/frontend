@@ -93,6 +93,7 @@ const SearchTalent = () => {
               <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
                 <Location
                   locationTitle="Country"
+                  locationLabel="Country"
                   geoId={values.location.country.geoId}
                   isCountry={true}
                   onChange={(geoId) => {
@@ -105,6 +106,7 @@ const SearchTalent = () => {
               <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
                 <Location
                   locationTitle="State"
+                  locationLabel="State/Province"
                   geoId={values.location.country.geoId}
                   isCountry={false}
                   onChange={(geoId) => {
@@ -116,6 +118,7 @@ const SearchTalent = () => {
               <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
                 <Location
                   locationTitle="City"
+                  locationLabel="Region"
                   geoId={values.location.state.geoId}
                   isCountry={false}
                   onChange={(geoId) => {
