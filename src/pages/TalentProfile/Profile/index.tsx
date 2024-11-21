@@ -1,17 +1,18 @@
+import { Alert } from '@mui/material'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
+
 import upload from '../../../assets/Featured icon.png'
-import AllRoles from '../../../components/Roles/AllRoles'
-import UploadCV from './UploadCV'
-import Worktype from '../../../components/Worktype'
 // import { handleImageChange } from '../../../utils/HandleImageChange'
 import Location from '../../../components/global/Location'
-import TalentProfileHeader from './ProfileHeader'
 import Loading from '../../../components/Loading/Loading'
-import { validationSchema } from './ProileValidationSchema'
-import useProfile from './useProfileHook'
+import AllRoles from '../../../components/Roles/AllRoles'
+import Worktype from '../../../components/Worktype'
 import { calculateProgress } from '../../../utils/calculateProgress'
-import { Alert } from '@mui/material'
+import TalentProfileHeader from './ProfileHeader'
+import { validationSchema } from './ProileValidationSchema'
+import UploadCV from './UploadCV'
+import useProfile from './useProfileHook'
 
 const TalentProfile = () => {
   const {

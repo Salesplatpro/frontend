@@ -17,9 +17,7 @@ const UploadCV: React.FC<UploadCVProps> = ({ cvFileName, upload }) => {
         <span className="text-[#001127] font-raleway font-semibold space-y-2">
           Click to upload{' '}
           <span className="text-gray-500 font-normal">or drag and drop</span>
-          <p className="text-gray-500 font-light">
-            SVG, PNG, JPG or GIF (max. 800x400px)
-          </p>
+          <p className="text-gray-500 font-light">DOC, PDF</p>
         </span>
       )}
     </button>
