@@ -225,7 +225,6 @@ const SignIn = () => {
                   </div>
                   <div className="remember-me">
                     <CheckBox name="remember" label="Remember me" />
-                    <div className="forgot-password">Forgot password ?</div>
                   </div>
                   <div className="flex justify-center items-center flex-col">
                     {loading ? (
