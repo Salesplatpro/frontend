@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { getToken } from '../../utils/authUtils'
+import { baseUrl } from '../../utils/baseConfig'
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://supportpro-backend.onrender.com/v1',
+    baseUrl,
     prepareHeaders: (headers) => {
       const token = getToken()
       if (token) {
