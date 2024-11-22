@@ -13,7 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
 import Home from './Home'
-import { MainLayout } from './pages'
+import { MainLayout, Resources } from './pages'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 // import RecruiterRegister from './pages/Auth/RecruiterRegister'
@@ -67,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: 'solution',
         element: <Solutions />,
+      },
+      {
+        path: 'resources',
+        element: <Resources />,
       },
       {
         path: 'customerstories',
