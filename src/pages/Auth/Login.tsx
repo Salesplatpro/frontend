@@ -19,6 +19,7 @@ import {
 } from '../../redux/features/authSlice/authSlice'
 import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
+import ForgotPasswordModal from './ForgotPasswordModal'
 import Loading from './Loading'
 
 interface LoginFormValues {
@@ -36,6 +37,9 @@ const Login: React.FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  // const [modalName, setModalName] = useState('')
 
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
@@ -96,6 +100,14 @@ const Login: React.FC = () => {
     formik.setFieldTouched(name, true)
   }
 
+  const handleForgot = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div>
       <Navbar />
@@ -141,7 +153,9 @@ const Login: React.FC = () => {
 
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />
-                <div className="forgot-password">Forgot password?</div>
+                <div className="forgot-password" onClick={handleForgot}>
+                  Forgot password?
+                </div>
               </div>
               <div className="flex justify-center items-center flex-col">
                 {loading ? (
@@ -189,6 +203,7 @@ const Login: React.FC = () => {
           <Carousel />
         </div>
       </div>
+      {isModalOpen && <ForgotPasswordModal onClose={closeModal} email={''} />}
     </div>
   )
 }
