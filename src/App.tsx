@@ -3,7 +3,7 @@ import './index.scss'
 import './index.css'
 
 // eslint-disable-next-line no-unused-vars
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
 import Home from './Home'
+import { MainLayout } from './pages'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 // import RecruiterRegister from './pages/Auth/RecruiterRegister'
@@ -23,6 +24,7 @@ import {
   ProcessCV,
   ProcessCvAndCoverLetter,
   Shortlist,
+  UploadCvAndCoverLetter,
   UploadCVOnly,
 } from './pages/RecruiterProfile'
 import Batching from './pages/RecruiterProfile/Batching/Batching'
@@ -30,7 +32,6 @@ import { ChooseMethod } from './pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from './pages/RecruiterProfile/Batching/CreateJD'
 import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
-import { UploadCvAndCoverLetter } from './pages/RecruiterProfile/Batching/UploadCvAndCoverLetter'
 import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
@@ -53,41 +54,47 @@ import { getToken } from './utils'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
-  },
-  {
-    path: 'explore',
-    element: <Explore />,
-  },
-  {
-    path: 'solution',
-    element: <Solutions />,
-  },
-  {
-    path: 'customerstories',
-    element: <CustomerStories />,
-  },
-  {
-    path: 'login',
-    element: <TalentLogin />,
-  },
+    element: <MainLayout />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: 'explore',
+        element: <Explore />,
+      },
+      {
+        path: 'solution',
+        element: <Solutions />,
+      },
+      {
+        path: 'customerstories',
+        element: <CustomerStories />,
+      },
+      {
+        path: 'login',
+        element: <TalentLogin />,
+      },
 
-  {
-    path: 'talentRegister',
-    element: <SignIn />,
-  },
+      {
+        path: 'talentRegister',
+        element: <SignIn />,
+      },
 
-  {
-    path: 'recruiterRegister',
-    element: <SignIn />,
-  },
-  {
-    path: 'customerstories',
-    element: <CustomerStories />,
-  },
-  {
-    path: 'job',
-    element: <SingleJob />,
+      {
+        path: 'recruiterRegister',
+        element: <SignIn />,
+      },
+      {
+        path: 'customerstories',
+        element: <CustomerStories />,
+      },
+      {
+        path: 'job',
+        element: <SingleJob />,
+      },
+    ],
   },
   {
     path: '/talentDashboard',
