@@ -34,10 +34,11 @@ export const SingleJobPost = () => {
         <div>Back</div>
       </div>
       <div className={styles.topContainer}>
-        <div className={styles.title}>
+        <div className={`${styles.title} capitalize font-bold`}>
           {jobName}
           <span className={styles.applicants}>
-            {data?.data?.applications.length || 0} applicants
+            {data?.data?.applications.length || 0}{' '}
+            {data?.data?.applications.length > 1 ? 'applicants' : 'applicant'}
           </span>
         </div>
         <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>

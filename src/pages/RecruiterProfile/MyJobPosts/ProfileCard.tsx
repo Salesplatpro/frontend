@@ -1,4 +1,3 @@
-import { capitalize } from '@mui/material'
 import React from 'react'
 
 import profile from '../../../assets/profile.jpeg'

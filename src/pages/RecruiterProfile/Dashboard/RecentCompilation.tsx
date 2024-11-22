@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import FilterByJobs from '../../../components/Filter/FilterByJobs'
-import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
-import Loading from '../../../components/Loading/Loading'
-import profilePics from '../../../assets/profilePics2.webp'
 import { Alert } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+
+import profilePics from '../../../assets/profilePics2.webp'
+import FilterByJobs from '../../../components/Filter/FilterByJobs'
+import Loading from '../../../components/Loading/Loading'
+import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
 
 interface CompilationTypes {
   applicantName: string

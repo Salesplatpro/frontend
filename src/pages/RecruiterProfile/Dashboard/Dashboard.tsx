@@ -1,12 +1,11 @@
-import React from 'react'
 import { Alert } from '@mui/material'
+import React from 'react'
 
+import Loading from '../../../components/Loading/Loading'
+import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
 import ApplicationTracker from './ApplicationTracker'
 import RecentApplications from './RecentApplications'
 import RecentCompilation from './RecentCompilation'
-import Loading from '../../../components/Loading/Loading'
-
-import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
 
 const Dashboard = () => {
   const {

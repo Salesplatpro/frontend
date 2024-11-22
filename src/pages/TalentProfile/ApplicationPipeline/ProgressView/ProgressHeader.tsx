@@ -1,6 +1,7 @@
 import React from 'react'
-import ProgressBar from '../../../../utils/ProgressBar'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
+
+import ProgressBar from '../../../../utils/ProgressBar'
 import { Application } from '../../utils/type'
 
 interface HeaderProps {
