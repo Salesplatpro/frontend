@@ -1,9 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { IoArrowBackOutline } from 'react-icons/io5'
 
 import CheckMark from '../../assets/CheckMark.png'
 import logo from '../../assets/logo.png'
-// import Loading from './Loading'
 
 interface ForgotPasswordProps {
   handleClose: () => void
@@ -78,19 +77,23 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
         <>
           <img className="logo pb-2" src={logo} alt="company" />
           <div>
-            <div className="create-account">Forgot password</div>
-            <div className="details">Please enter your details</div>
+            <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+              Forgot password
+            </div>
+            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-[#667085] text-center pt-3">
+              Please enter your details
+            </div>
           </div>
           <div className="py-3">
             <form
-              className="space-y-2"
+              className="flex justify-start items-start flex-col space-y-2 "
               onSubmit={(e) => {
                 e.preventDefault()
                 handleResetPassword()
               }}>
               <label
                 htmlFor="email"
-                className="text-lg text-[#344054] leading-[22px] font-raleway font-medium">
+                className="text-[14px] text-[#344054] leading-[22px] font-raleway font-medium">
                 Email
               </label>
               <input
@@ -100,14 +103,16 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-[370px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
                 style={{
                   boxShadow: '0px 1.07px 2.14px 0px rgba(16, 24, 40, 0.05)',
                 }}
               />
 
               {error && (
-                <div className="text-red-500 text-sm mt-2">{error}</div>
+                <div className="text-red-500 text-sm mt-2 font-raleway">
+                  {error}
+                </div>
               )}
             </form>
           </div>
@@ -138,8 +143,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               alt="checklist"
               className="w-[100px] lg:w-[150px] md:w-[100px]"
             />
-            <div className="create-account">Reset Password</div>
-            <div className="text-[#667085] font-raleway font-normal text-[18px] text-center leading-[22px] w-[460px] py-2">
+            <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+              Reset Password
+            </div>
+            <div className="text-[#667085] font-raleway font-normal text-[16px] leading-[18px] lg:text-[18px] w-[330px] lg:w-[460px] md:w-[440px] sm:w-[360px] text-center lg:leading-[22px] py-2">
               Link to reset your password has been sent to the email registered
               to this account {email}
             </div>
@@ -167,31 +174,37 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
 
       {currentScreen === 'newPassword' && (
         <>
-          <img className="logo pb-2" src={logo} alt="company" />
+          <img className="logo pb-2 " src={logo} alt="company" />
           <div>
-            <div className="create-account">Forgot password</div>
-            <div className="details">Please enter your details</div>
+            <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+              Forgot password
+            </div>
+            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-[#667085] text-center pt-3">
+              Please enter your details
+            </div>
           </div>
 
           <form
-            className=" mt-4 py-3 space-y-2"
+            className="flex justify-center items-start flex-col mt-2 py-3 space-y-2 mx-12"
             onSubmit={(e) => {
               e.preventDefault()
               handleSetNewPassword()
             }}>
-            <label
-              htmlFor="password"
-              className="text-[14px] pt-10 text-[#344054] leading-[22px] font-raleway font-medium">
-              New Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-[370px] h-[48px] rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
-            />
+            <div className="pt-1 space-y-2">
+              <label
+                htmlFor="password"
+                className="text-[14px] pt-10 text-[#344054] leading-[22px] font-raleway font-medium">
+                New Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="New Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+              />
+            </div>
 
             <div className="pt-1 space-y-2">
               <label
@@ -205,14 +218,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-[370px] h-[48px] rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
               />
             </div>
 
             {error ? (
               <div className="text-red-500 text-sm">{error}</div>
             ) : (
-              <p className="font-raleway font-normal texet-[13px] text-[#667085] leading-[22px]">
+              <p className="font-raleway font-normal text-[13px] text-[#667085] leading-[22px]">
                 Must be at least 8 charaters.
               </p>
             )}

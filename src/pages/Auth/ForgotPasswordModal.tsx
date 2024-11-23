@@ -11,7 +11,6 @@ type ForgotPasswordModalProps = {
 
 const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
   onClose,
-  email,
 }) => {
   const [isVisible, setIsVisible] = useState(true)
   const navigate = useNavigate()
@@ -62,7 +61,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
         aria-hidden="true"></div>
 
       <div
-        className={`modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center flex-col rounded-lg bg-gray-100 px-32 py-28 max-w-[600px] min-w-[300px] ${
+        className={`modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center flex-col rounded-lg bg-gray-100 max-w-[600px] min-w-[300px] px-4 py-14 lg:px-32 lg:py-24 md:px-28 md:py-20 sm:px-24 sm:py-20 ${
           isVisible ? 'scale-up-center' : ''
         }`}
         role="document">
