@@ -11,7 +11,6 @@ export const handleProfileSubmit = async (
   setSubmitting: FormikHelpers<TalentProfileProps>['setSubmitting'],
   userInfo: any,
   dispatch: any,
-  profileImage: string | ArrayBuffer | null,
   profilePics: string,
   initialValues: TalentProfileProps,
   talentCreation: any,
@@ -39,9 +38,6 @@ export const handleProfileSubmit = async (
 
       if (values.cv) {
         formData.append('file', values.cv)
-      }
-      if (profileImage && profileImage !== profilePics) {
-        formData.append('profileImage', profileImage as string)
       }
 
       const submitCv = values.cv
