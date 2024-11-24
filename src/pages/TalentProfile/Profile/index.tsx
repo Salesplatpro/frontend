@@ -17,15 +17,13 @@ import useProfile from './useProfileHook'
 const TalentProfile = () => {
   const {
     userInfo,
-    profileImage,
-    setProfileImage,
+    uploadPic,
+    updateProfilePics,
     cvFileName,
     setCvFileName,
     handleProfileSubmit,
     userProfileLoading,
     userProfileError,
-    // refetchProfile,
-    handleProfileImageUpload,
     initialValues,
   } = useProfile()
 
@@ -42,10 +40,9 @@ const TalentProfile = () => {
       <div>
         <TalentProfileHeader
           userInfo={userInfo}
-          profileImage={profileImage}
-          setProfileImage={setProfileImage}
+          uploadPic={uploadPic}
+          updateProfilePics={updateProfilePics}
           progress={progress}
-          handleProfileImageUpload={handleProfileImageUpload}
         />
       </div>
       <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-6 w-[100%]">

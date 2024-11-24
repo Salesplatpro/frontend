@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import profilePics from '../../../assets/profilePics.png'
 import {
   useFetchProfileQuery,
   useTalentCreationMutation,
@@ -16,14 +15,12 @@ import { handleProfileSubmit } from './ProfileOnSubmit'
 const useProfile = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
-    profilePics,
-  )
   const [cvFileName, setCvFileName] = useState<string | null>(null)
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
   const [updateProfile] = useUpdateProfileMutation()
   const [updateProfilePics] = useUpdateProfilePicsMutation()
+  const [uploadPic] = useUploadCvMutation()
 
   const {
     data: userProfile,
@@ -32,18 +29,6 @@ const useProfile = () => {
     refetch,
   } = useFetchProfileQuery({})
   const userInfo = userProfile?.data?.user
-
-  const handleProfileImageUpload = async (imageFile: File) => {
-    const formData = new FormData()
-    formData.append('profilePic', imageFile) // Replace 'profilePic' with your API's expected field name
-
-    try {
-      const response = await updateProfilePics(formData).unwrap()
-      setProfileImage(response.data?.profilePic || profilePics)
-    } catch (error) {
-      console.error('Error updating profile picture:', error)
-    }
-  }
 
   const initialValues: TalentProfileProps = {
     bio: userInfo?.profile?.bio || '',
@@ -70,8 +55,10 @@ const useProfile = () => {
 
   return {
     userInfo,
-    profileImage,
-    setProfileImage,
+    // profileImage,
+    // setProfileImage,
+    uploadPic,
+    updateProfilePics,
     cvFileName,
     setCvFileName,
     handleProfileSubmit: (values: any, setSubmitting: any) =>
@@ -87,7 +74,6 @@ const useProfile = () => {
         setSubmitting,
         userInfo,
         dispatch,
-        profileImage,
         'defaultProfileImage',
         initialValues,
         talentCreation,
@@ -96,7 +82,6 @@ const useProfile = () => {
         refetch,
         navigate,
       ),
-    handleProfileImageUpload,
     userProfileLoading,
     userProfileError,
     refetchProfile: refetch,
