@@ -142,6 +142,7 @@ const PostJob: React.FC = () => {
               <div className="mb-4">
                 <Location
                   locationTitle="Country"
+                  locationLabel="Country"
                   geoId={null}
                   height="54px"
                   bold="bold"
@@ -156,6 +157,7 @@ const PostJob: React.FC = () => {
               <div className="mb-4">
                 <Location
                   locationTitle="State"
+                  locationLabel="States/Province"
                   geoId={values.location.country.geoId}
                   height="54px"
                   bold="bold"
@@ -169,6 +171,7 @@ const PostJob: React.FC = () => {
               <div className="mb-4">
                 <Location
                   locationTitle="City"
+                  locationLabel="Region"
                   geoId={values.location.state.geoId}
                   height="54px"
                   bold="bold"

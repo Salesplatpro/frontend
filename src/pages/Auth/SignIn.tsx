@@ -10,7 +10,6 @@ import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
-import Navbar from '../../components/Navbar'
 import {
   useRecruiterRegMutation,
   useTalentRegMutation,
@@ -82,7 +81,6 @@ const SignIn = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="talentReg">
         <div className="apply-job">
           <div className="job-hero">
@@ -225,7 +223,6 @@ const SignIn = () => {
                   </div>
                   <div className="remember-me">
                     <CheckBox name="remember" label="Remember me" />
-                    <div className="forgot-password">Forgot password ?</div>
                   </div>
                   <div className="flex justify-center items-center flex-col">
                     {loading ? (

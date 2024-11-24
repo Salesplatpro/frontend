@@ -48,7 +48,7 @@ const Navbar = () => {
 
               <li>
                 <Link
-                  to="#"
+                  to="/resources"
                   className={activeTab === '/resources' ? 'activeTab' : ''}>
                   resources
                 </Link>

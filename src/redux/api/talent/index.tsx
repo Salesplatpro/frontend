@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-// import { url } from 'inspector'
 import { getToken } from '../../../utils/authUtils'
+import { baseUrl } from '../../../utils/baseConfig'
 
 export const talentApi = createApi({
   reducerPath: 'talentApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://supportpro-backend.onrender.com/v1',
+    baseUrl,
     prepareHeaders: (headers) => {
       const token = getToken()
       if (token) {
@@ -39,6 +39,16 @@ export const talentApi = createApi({
       }),
       providesTags: ['Talent'],
     }),
+
+    updateProfilePics: builder.mutation({
+      query: (data) => ({
+        url: `/user/me`, // Use the correct endpoint if it's different
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Talent'], // Invalidate the cache to refresh profile data
+    }),
+
     updateProfile: builder.mutation({
       query: (data) => ({
         url: '/user/profile', // Assumes that the base URL is set up correctly in your API service
@@ -175,6 +185,7 @@ export const {
   useUploadCvMutation,
   useFetchProfileQuery, // This is correct
   useUpdateProfileMutation, // Add this if needed
+  useUpdateProfilePicsMutation,
   useFetchPretestQuery,
   usePostPretestMutation,
   useFetchJobQuery,

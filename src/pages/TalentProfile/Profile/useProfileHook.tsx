@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
-import profilePics from '../../../assets/profilePics.png'
 import {
   useFetchProfileQuery,
   useTalentCreationMutation,
   useUpdateProfileMutation,
+  useUpdateProfilePicsMutation,
   useUploadCvMutation,
 } from '../../../redux/api/talent'
 import { TalentProfileProps } from '../../../utils/types'
@@ -13,13 +14,13 @@ import { handleProfileSubmit } from './ProfileOnSubmit'
 
 const useProfile = () => {
   const dispatch = useDispatch()
-  const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
-    profilePics,
-  )
+  const navigate = useNavigate()
   const [cvFileName, setCvFileName] = useState<string | null>(null)
   const [talentCreation] = useTalentCreationMutation()
   const [uploadCv] = useUploadCvMutation()
   const [updateProfile] = useUpdateProfileMutation()
+  const [updateProfilePics] = useUpdateProfilePicsMutation()
+  const [uploadPic] = useUploadCvMutation()
 
   const {
     data: userProfile,
@@ -54,8 +55,10 @@ const useProfile = () => {
 
   return {
     userInfo,
-    profileImage,
-    setProfileImage,
+    // profileImage,
+    // setProfileImage,
+    uploadPic,
+    updateProfilePics,
     cvFileName,
     setCvFileName,
     handleProfileSubmit: (values: any, setSubmitting: any) =>
@@ -71,13 +74,13 @@ const useProfile = () => {
         setSubmitting,
         userInfo,
         dispatch,
-        profileImage,
         'defaultProfileImage',
         initialValues,
         talentCreation,
         uploadCv,
         updateProfile,
         refetch,
+        navigate,
       ),
     userProfileLoading,
     userProfileError,

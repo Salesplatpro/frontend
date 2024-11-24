@@ -10,7 +10,6 @@ import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
-import Navbar from '../../components/Navbar'
 import { useUserLoginMutation } from '../../redux/api/apiSlice'
 import {
   loginFailure,
@@ -99,7 +98,6 @@ const Login: React.FC = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="talentReg">
         <div className="apply-job">
           <div className="job-hero">
