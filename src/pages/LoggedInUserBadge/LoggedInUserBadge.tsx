@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   IoIosArrowDown,
   IoIosArrowUp,
@@ -7,41 +7,101 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
+import { useFetchProfileQuery } from '../../redux/api/talent'
 import { logout } from '../../redux/features/authSlice/authSlice'
 import { RootState } from '../../redux/store/store'
 import { getDefaultIcon } from '../../utils/getDefaultIcon'
 
-export const LoggedInUserBadge = () => {
-  const [visible, setVisible] = useState<boolean>(false)
-  const user = useSelector((state: RootState) => state.auth.user)
+export const LoggedInUserBadge: React.FC = () => {
+  const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const user = useSelector((state: RootState) => state.auth.user)
+  const { data: userProfile, isLoading, error } = useFetchProfileQuery({})
+  const userInfo = userProfile?.data?.user
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsDropdownVisible((prev) => !prev)
+  }
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownVisible(false)
+      }
+    }
+
+    if (isDropdownVisible) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDropdownVisible])
+
+  // Handle logout
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/')
+  }
+
   return (
-    <div className="employer">
-      <IoMdNotificationsOutline size={24} />
-      <div className="employerDetails">
-        <div>
-          <div className="employerName">
-            {user.firstName} {user.lastName}
+    <div className="relative flex items-center space-x-4">
+      <IoMdNotificationsOutline size={24} className="cursor-pointer" />
+
+      {isLoading ? (
+        <div className="flex items-center space-x-2">
+          <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+          <div className="space-y-1">
+            <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
           </div>
-          <div className="employerType">{user.email}</div>
         </div>
-        <img src={getDefaultIcon({ id: user.id, size: 40 })} alt="employer" />
-      </div>
-      {visible ? (
-        <IoIosArrowUp size={20} onClick={() => setVisible(!visible)} />
+      ) : error ? (
+        <div className="text-red-500 text-sm">Error loading profile</div>
       ) : (
-        <IoIosArrowDown size={20} onClick={() => setVisible(!visible)} />
+        <div className="flex items-center space-x-2">
+          <div>
+            <div className="font-semibold">{`${userInfo?.firstName || ''} ${
+              userInfo?.lastName || ''
+            }`}</div>
+            <div className="text-sm text-gray-500">{userInfo?.email || ''}</div>
+          </div>
+          <img
+            src={userInfo?.picture || getDefaultIcon({ id: user.id, size: 40 })}
+            alt="Profile"
+            className="w-10 h-10 object-cover rounded-full"
+          />
+        </div>
       )}
-      {visible && (
-        <div className="absolute right-6 mt-32 w-64 text-center bg-white shadow-lg rounded-md overflow-hidden z-10">
+
+      {/* Dropdown Toggle */}
+      {!isLoading && !error && (
+        <div onClick={toggleDropdown} className="cursor-pointer">
+          {isDropdownVisible ? (
+            <IoIosArrowUp size={20} />
+          ) : (
+            <IoIosArrowDown size={20} />
+          )}
+        </div>
+      )}
+
+      {/* Dropdown Menu */}
+      {isDropdownVisible && !isLoading && !error && (
+        <div
+          ref={dropdownRef}
+          className="absolute right-0 mt-12 w-48 bg-white shadow-lg rounded-md z-10">
           <div
-            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-            onClick={() => {
-              dispatch(logout())
-              navigate('/')
-            }}>
+            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800"
+            onClick={handleLogout}>
             Logout
           </div>
         </div>
