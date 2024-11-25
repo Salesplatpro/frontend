@@ -2,9 +2,10 @@ import '../form.scss'
 
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
@@ -38,7 +39,6 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  // const [modalName, setModalName] = useState('')
 
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
@@ -58,10 +58,15 @@ const Login: React.FC = () => {
           }),
         )
         toast.success('Logged in successfully', {
-          style: {
-            color: '#000',
-            backgroundColor: '#fff',
-          },
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
         })
         const userRole = response.data.user?.userRole
         switch (userRole) {
@@ -80,10 +85,15 @@ const Login: React.FC = () => {
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
         toast.error(err.data?.message || 'An error occurred while logging in', {
-          style: {
-            backgroundColor: '#fff',
-            color: '#000',
-          },
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
         })
       } finally {
         setSubmitting(false)

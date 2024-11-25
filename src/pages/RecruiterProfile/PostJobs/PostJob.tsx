@@ -1,9 +1,9 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import TextField from '../../../components/Form/TextField'
@@ -92,7 +92,17 @@ const PostJob: React.FC = () => {
       const data = await jobPostCreation(submissionValues).unwrap()
       console.log(data)
       if (data.status) {
-        toast.success('Job Post Created successfully')
+        toast.success('Job Post Created successfully', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         setJobId(data?.data._id)
       } else {
         toast.error(data.message)

@@ -1,7 +1,7 @@
 // Submit and update Talent Profile
 
 import { FormikHelpers } from 'formik'
-import { toast } from 'react-hot-toast'
+import { Bounce, toast } from 'react-toastify'
 
 import { setUser } from '../../../redux/features/authSlice/authSlice'
 import { TalentProfileProps } from '../../../utils/types'
@@ -56,7 +56,17 @@ export const handleProfileSubmit = async (
 
       if (response.status) {
         dispatch(setUser({ user: response.data.user, isLoggedIn: true }))
-        toast.success('Profile created successfully')
+        toast.success('Profile created successfully', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         refetch()
         navigate('/talentDashboard/job')
       } else {
@@ -107,7 +117,17 @@ export const handleProfileSubmit = async (
         updatedFields.cv = values.cv
       }
       if (Object.keys(updatedFields).length === 0) {
-        toast.error('No changes detected')
+        toast.error('No changes detected', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         setSubmitting(false)
         return
       }
@@ -128,14 +148,34 @@ export const handleProfileSubmit = async (
       const response = await updateProfile(updatedFields).unwrap()
 
       if (response.status) {
-        toast.success('Profile updated successfully')
+        toast.success('Profile updated successfully', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         refetch()
         navigate('/talentDashboard/job')
       } else {
         const errorMessage =
           response?.data?.message ||
           'An error occurred while processing your request'
-        toast.error(errorMessage)
+        toast.error(errorMessage, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       }
     }
   } catch (error: any) {
@@ -144,7 +184,17 @@ export const handleProfileSubmit = async (
       error.message ||
       'An error occurred while processing your request'
 
-    toast.error(errorMessage)
+    toast.error(errorMessage, {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    })
   } finally {
     setSubmitting(false)
   }

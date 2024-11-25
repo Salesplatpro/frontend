@@ -1,8 +1,8 @@
 import { Alert } from '@mui/material'
 import { Field, Form, Formik } from 'formik'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 
 import { getRole } from '../../../api/api-communication'
 import { useCreateJDMutation } from '../../../redux/api/recruiter'
@@ -44,7 +44,17 @@ const CreateJD = () => {
     console.log(values)
     try {
       const result = await createJD(values).unwrap()
-      toast.success(result.message)
+      toast.success(result.message, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
       navigate(`/recruiterDashboard/scout/${result.data._id}`)
     } catch (error: any) {
       console.error('Error creating Job Description:', error.data.message)

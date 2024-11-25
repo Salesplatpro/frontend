@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import {
@@ -60,7 +60,17 @@ const PersonalizedTest: React.FC = () => {
       }
     }
     if (personalizedError) {
-      toast.error('DisplayError loading personalized test data')
+      toast.error('DisplayError loading personalized test data', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
       console.error(personalizedError)
     }
   }, [personalizedData, personalizedError])
@@ -87,13 +97,43 @@ const PersonalizedTest: React.FC = () => {
         formData,
       ).unwrap()) as PostAnswerResponse
       if (response.status) {
-        toast.success(`${response.message} ${response.data.scorePercent}%`)
+        toast.success(`${response.message} ${response.data.scorePercent}%`, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       } else {
-        toast.error(response.message || 'DisplayError submitting question')
+        toast.error(response.message || 'DisplayError submitting question', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
-      toast.error('Error submitting quiz')
+      toast.error('Error submitting quiz', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
   }
 

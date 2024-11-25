@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 // eslint-disable-next-line no-unused-vars
 import { FaCopy, FaFacebook, FaTwitter } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { IoIosLink } from 'react-icons/io'
 import { Link, useParams } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
@@ -55,7 +55,17 @@ const IndividualJob = () => {
       console.log(data.data)
     }
     if (error) {
-      toast.error('DisplayError loading job post')
+      toast.error('DisplayError loading job post', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
   }, [data, error])
 

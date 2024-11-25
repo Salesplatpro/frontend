@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
 import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 
 import { OutlineButton, RecruiterButton } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
@@ -82,6 +82,17 @@ export const ApplicationProgress = () => {
 
       toast.success(
         `Talent is ${response.data.application.status} successfully`,
+        {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        },
       )
     } catch (error) {
       console.error('Failed to update status:', error)
