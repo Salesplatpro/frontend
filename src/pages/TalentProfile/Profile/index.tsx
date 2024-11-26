@@ -49,13 +49,10 @@ const TalentProfile = () => {
       <div>
         <TalentProfileHeader
           userInfo={userInfo}
-
           profileImage={profileImage}
           setProfileImage={setProfileImage}
-
           uploadPic={uploadPic}
           updateProfilePics={updateProfilePics}
-
           progress={progress}
           handleProfileImageUpload={handleProfileImageUpload}
         />
@@ -84,7 +81,7 @@ const TalentProfile = () => {
                     id="bio"
                     name="bio"
                     placeholder="Tell us about yourself"
-                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1"
+                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-3"
                   />
                   <ErrorMessage
                     name="bio"

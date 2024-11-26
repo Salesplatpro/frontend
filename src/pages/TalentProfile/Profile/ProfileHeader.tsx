@@ -3,45 +3,41 @@ import { useSelector } from 'react-redux'
 
 import { RootState } from '../../../redux/store/store'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+// import { getDefaultIcon } from '../../../utils/getDefaultIcon'
 import ProgressBar from '../../../utils/ProgressBar'
 import ProfilePic from './ProfilePic'
 
 interface TalentHeaderType {
   userInfo: any
-
   profileImage: string | ArrayBuffer | null
   setProfileImage?: (value: string | ArrayBuffer) => void
   handleProfileImageUpload: (file: File) => Promise<void>
-
   uploadPic: any
   updateProfilePics: any
-
   progress: any
 }
 
 const TalentProfileHeader: React.FC<TalentHeaderType> = ({
   userInfo,
-
-  profileImage,
-  setProfileImage,
-  handleProfileImageUpload,
-
   uploadPic,
   updateProfilePics,
-
   progress,
+
+  // profileImage,
+  // setProfileImage,
+  // handleProfileImageUpload,
 }) => {
   const user = useSelector((state: RootState) => state.auth.user)
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      if (setProfileImage) {
-        setProfileImage(URL.createObjectURL(file)) // Preview the new image
-      }
-      handleProfileImageUpload(file) // Upload the image
-    }
-  }
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0]
+  //   if (file) {
+  //     if (setProfileImage) {
+  //       setProfileImage(URL.createObjectURL(file)) // Preview the new image
+  //     }
+  //     handleProfileImageUpload(file) // Upload the image
+  //   }
+  // }
 
   return (
     <div>
@@ -62,30 +58,6 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
           />
         </div>
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
-
-          <div className="flex justify-center items-center flex-col space-y-2">
-            <img
-              src={
-                (profileImage as string) ||
-                getDefaultIcon({ id: user?.id, size: 50 })
-              }
-              alt="Profile"
-              className="w-24 h-24 object-cover rounded-full"
-            />
-            <input
-              id="profileImage"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-            <button
-              className="text-[10px] text-[#4884DF] cursor-pointer mt-1"
-              onClick={() => document.getElementById('profileImage')?.click()}>
-              Change Image
-            </button>
-          </div>
-
           <ProfilePic
             uploadPic={uploadPic}
             updateProfilePics={updateProfilePics}
