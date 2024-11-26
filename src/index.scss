@@ -561,6 +561,7 @@ $deep-gray: #525c68;
     padding: 64px 0px 48px 0px;
     display: flex;
     flex-direction: column;
+
     gap: 64px;
     width: fit-content;
     margin: 0 auto;
@@ -574,7 +575,7 @@ $deep-gray: #525c68;
     .logo {
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 22px;
       max-width: 320px;
 
       img {
@@ -591,74 +592,74 @@ $deep-gray: #525c68;
         color: $gray-light;
       }
     }
+  }
 
-    .links {
+  .links {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+
+    > div {
+      max-width: 153px;
+      width: 153px;
       display: flex;
-      flex-direction: row;
-      gap: 32px;
+      flex-direction: column;
+      gap: 16px;
 
-      > div {
-        max-width: 153px;
-        width: 153px;
+      div {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
 
-        div {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-
-          a {
-            font-weight: 600;
-            font-size: 16px;
-            line-height: 24px;
-            font-family: $primary-font-family;
-            color: $gray-light;
-            text-decoration: none;
-            list-style: none;
-            cursor: pointer;
-          }
+        a {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 24px;
+          font-family: $primary-font-family;
+          color: $gray-light;
+          text-decoration: none;
+          list-style: none;
+          cursor: pointer;
         }
-      }
-
-      h6 {
-        font-family: $inter-f;
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 20px;
-        color: $gray-f-light;
       }
     }
 
-    .cob {
-      padding: 0 32px;
-      padding-top: 32px;
-      border-top: 1px solid #475467;
+    h6 {
+      font-family: $inter-f;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      color: $gray-f-light;
+    }
+  }
+
+  .cob {
+    padding: 0 32px;
+    padding-top: 32px;
+    border-top: 1px solid #475467;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    p {
+      font-family: $inter-f;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      color: $gray-f-light;
+    }
+
+    .socials {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      gap: 24px;
+      justify-content: center;
+      align-items: center;
 
-      p {
-        font-family: $inter-f;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 24px;
-        color: $gray-f-light;
-      }
-
-      .socials {
-        display: flex;
-        flex-direction: row;
-        gap: 24px;
-        justify-content: center;
-        align-items: center;
-
-        a {
-          img {
-            width: 24px;
-            max-width: 24px;
-          }
+      a {
+        img {
+          width: 24px;
+          max-width: 24px;
         }
       }
     }
