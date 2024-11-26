@@ -3,22 +3,32 @@ import { useSelector } from 'react-redux'
 
 import { RootState } from '../../../redux/store/store'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
-import { getDefaultIcon } from '../../../utils/getDefaultIcon'
 import ProgressBar from '../../../utils/ProgressBar'
+import ProfilePic from './ProfilePic'
 
 interface TalentHeaderType {
   userInfo: any
+
   profileImage: string | ArrayBuffer | null
   setProfileImage?: (value: string | ArrayBuffer) => void
   handleProfileImageUpload: (file: File) => Promise<void>
+
+  uploadPic: any
+  updateProfilePics: any
+
   progress: any
 }
 
 const TalentProfileHeader: React.FC<TalentHeaderType> = ({
   userInfo,
+
   profileImage,
   setProfileImage,
   handleProfileImageUpload,
+
+  uploadPic,
+  updateProfilePics,
+
   progress,
 }) => {
   const user = useSelector((state: RootState) => state.auth.user)
@@ -52,6 +62,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
           />
         </div>
         <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
+
           <div className="flex justify-center items-center flex-col space-y-2">
             <img
               src={
@@ -74,6 +85,14 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
               Change Image
             </button>
           </div>
+
+          <ProfilePic
+            uploadPic={uploadPic}
+            updateProfilePics={updateProfilePics}
+            user={user}
+            userInfo={userInfo}
+          />
+
           <div className="w-full">
             <div className="flex justify-between w-full">
               <div className="text-[#101828]">
@@ -87,11 +106,11 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
               </button>
             </div>
             <hr className="my-2" />
-            <p className="text-[14px] text-[#667085]">
+            {/* <p className="text-[14px] text-[#667085]">
               Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus
               id scelerisque est ultricies ultricies. Duis est sit sed leo nisl,
               blandit elit
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
