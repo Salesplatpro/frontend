@@ -23,7 +23,6 @@ const useProfile = () => {
 
   const [uploadPic] = useUploadCvMutation()
 
-
   const {
     data: userProfile,
     error: userProfileError,

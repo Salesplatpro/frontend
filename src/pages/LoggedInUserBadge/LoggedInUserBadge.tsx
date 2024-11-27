@@ -98,7 +98,7 @@ export const LoggedInUserBadge: React.FC = () => {
       {isDropdownVisible && !isLoading && !error && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 mt-12 w-48 bg-white shadow-lg rounded-md z-10">
+          className="absolute right-0 mt-36 w-48 bg-white shadow-lg rounded-md z-10">
           <div
             className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-gray-800"
             onClick={handleLogout}>
