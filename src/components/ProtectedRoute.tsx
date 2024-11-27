@@ -12,6 +12,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const user = useSelector((state: RootState) => state.auth)
   const userRole = user.user.userRole
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
     console.log(userRole)
@@ -33,7 +34,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
     }
   }, [user, allowedRoles])
 
-  if (!user.isLoggedIn) {
+  if (!token) {
     return <Navigate to="/login" />
   }
 

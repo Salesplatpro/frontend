@@ -50,7 +50,7 @@ export const LoggedInUserBadge: React.FC = () => {
   // Handle logout
   const handleLogout = () => {
     dispatch(logout())
-    navigate('/')
+    navigate('/login')
   }
 
   return (
