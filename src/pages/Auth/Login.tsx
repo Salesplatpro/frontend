@@ -57,7 +57,6 @@ const Login: React.FC = () => {
             token: response.data.token,
           }),
         )
-
         toast.success('Logged in successfully', {
           position: 'top-right',
           autoClose: 5000,

@@ -17,8 +17,10 @@ import useProfile from './useProfileHook'
 const TalentProfile = () => {
   const {
     userInfo,
+
     profileImage,
     setProfileImage,
+
     uploadPic,
     updateProfilePics,
 
