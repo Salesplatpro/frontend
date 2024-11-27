@@ -1,9 +1,9 @@
 import './Job.scss'
 
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { useSelector } from 'react-redux'
+import { Bounce, toast } from 'react-toastify'
 
 import { Button, DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
@@ -84,7 +84,17 @@ const Job = () => {
       console.log(filteredData.data)
     }
     if (filteredError) {
-      toast.error('DisplayError fetching filtered jobs')
+      toast.error('DisplayError fetching filtered jobs', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
   }, [filteredData, filteredError, filters.role])
 

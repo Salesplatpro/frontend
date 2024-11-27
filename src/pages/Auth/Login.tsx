@@ -2,9 +2,10 @@ import '../form.scss'
 
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Bounce, toast } from 'react-toastify'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
@@ -18,6 +19,7 @@ import {
 } from '../../redux/features/authSlice/authSlice'
 import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
+import ForgotPasswordModal from './ForgotPasswordModal'
 import Loading from './Loading'
 
 interface LoginFormValues {
@@ -35,6 +37,8 @@ const Login: React.FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
@@ -54,10 +58,15 @@ const Login: React.FC = () => {
           }),
         )
         toast.success('Logged in successfully', {
-          style: {
-            color: '#000',
-            backgroundColor: '#fff',
-          },
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
         })
         const userRole = response.data.user?.userRole
         switch (userRole) {
@@ -76,10 +85,15 @@ const Login: React.FC = () => {
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
         toast.error(err.data?.message || 'An error occurred while logging in', {
-          style: {
-            backgroundColor: '#fff',
-            color: '#000',
-          },
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
         })
       } finally {
         setSubmitting(false)
@@ -94,6 +108,14 @@ const Login: React.FC = () => {
     const { name, value } = e.target
     formik.setFieldValue(name, value)
     formik.setFieldTouched(name, true)
+  }
+
+  const handleForgot = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -140,7 +162,9 @@ const Login: React.FC = () => {
 
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />
-                <div className="forgot-password">Forgot password?</div>
+                <div className="forgot-password" onClick={handleForgot}>
+                  Forgot password?
+                </div>
               </div>
               <div className="flex justify-center items-center flex-col">
                 {loading ? (
@@ -188,6 +212,7 @@ const Login: React.FC = () => {
           <Carousel />
         </div>
       </div>
+      {isModalOpen && <ForgotPasswordModal onClose={closeModal} email={''} />}
     </div>
   )
 }

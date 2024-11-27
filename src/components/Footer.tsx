@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
       <div className="footer">
         <div className="main-contain">
           <div className="quick-link">
-            <div className="logo">
+            <div className="logo mb-14 lg:mb-64 ">
               <img src={logo} alt="Company Logo" />
               <p>
                 Design amazing digital experiences that create more happiness in

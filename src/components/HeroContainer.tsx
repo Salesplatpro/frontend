@@ -17,10 +17,13 @@ const HeroContainer = () => {
                 SupportPro&#39;s Comprehensive Platform.
               </p>
 
-              <button>start Hiring</button>
+              <button>
+                <a href="/recruiterRegister">start Hiring</a>
+              </button>
 
               <div className="outer-text">
-                Looking for jobs instead? &nbsp; <a href="/">Apply for jobs</a>
+                Looking for jobs instead? &nbsp;{' '}
+                <a href="/talentRegister">Apply for jobs</a>
               </div>
             </div>
           </div>

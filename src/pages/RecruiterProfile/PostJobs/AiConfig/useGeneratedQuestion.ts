@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import toast from 'react-hot-toast'
+import { Bounce, toast } from 'react-toastify'
 
 import { useGenJpPersonalityMutation } from '../../../../redux/api/recruiter'
 
@@ -27,7 +27,17 @@ const useGeneratedQuestion = (jobId: string | undefined) => {
       }))
     } catch (error) {
       console.error(`Error generating ${pair} question:`, error)
-      toast.error(`Error generating ${pair} question`)
+      toast.error(`Error generating ${pair} question`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     } finally {
       setLoadingPairs((prevState) => ({ ...prevState, [pair]: false }))
     }

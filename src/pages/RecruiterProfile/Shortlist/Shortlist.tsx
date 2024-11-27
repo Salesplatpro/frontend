@@ -10,7 +10,7 @@ import {
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Button } from '../../../components'
+import { Button } from '../../../components/Button'
 import Loading from '../../../components/Loading/Loading'
 import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import { useScreenWidth } from '../../../hooks'

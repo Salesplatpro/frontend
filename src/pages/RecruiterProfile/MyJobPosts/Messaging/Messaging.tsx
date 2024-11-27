@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
+import { Bounce, toast } from 'react-toastify'
 
 import { OutlineButton, RecruiterButton } from '../../../../components'
 import {
@@ -35,7 +35,17 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
 
   const handleSendMessage = async () => {
     if (!sendMessage.content.trim()) {
-      toast.error('DisplayMessage can not be empty')
+      toast.error('DisplayMessage can not be empty', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
       return
     }
     try {
@@ -44,7 +54,17 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
       }).unwrap()
 
       setSendMessage((prevState) => ({ ...prevState, content: '' }))
-      toast.success('Message sent successfully')
+      toast.success('Message sent successfully', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     } catch (error) {
       console.error('Error sending message:', error)
     }

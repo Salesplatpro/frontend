@@ -6,7 +6,7 @@ import { IoMdMenu } from 'react-icons/io'
 // import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 
-import { SideBar } from '../../components'
+import { SideBar } from '../../components/sidebar'
 import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
 // import { RootState } from '../../redux/store/store'
 import { LoggedInUserBadge } from '../LoggedInUserBadge'

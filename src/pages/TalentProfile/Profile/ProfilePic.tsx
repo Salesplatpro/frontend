@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+import { Bounce, toast } from 'react-toastify'
 
 import { getDefaultIcon } from '../../../utils/getDefaultIcon'
 
@@ -54,10 +54,31 @@ const ProfilePic: React.FC<ProfilePicType> = ({
         }).unwrap()
 
         if (updateResponse.status) {
-          toast.success('Picture Uploaded Successfully')
+          toast.success('Picture Uploaded Successfully', {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          })
         } else {
           toast.error(
             updateResponse.message || 'Failed to upload profile picture',
+            {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            },
           )
         }
       } else {
@@ -65,7 +86,17 @@ const ProfilePic: React.FC<ProfilePicType> = ({
       }
     } catch (error) {
       console.error('Error uploading or updating profile picture:', error)
-      toast.error('An error occurred. Please try again.')
+      toast.error('An error occurred. Please try again.', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
   }
 

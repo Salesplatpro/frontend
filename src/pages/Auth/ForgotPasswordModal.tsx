@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import CheckMark from '../../assets/CheckMark.png'
+// import CheckMark from '../../assets/CheckMark.png'
+import ForgotPassword from './ForgotPassword'
 
-type ModalProps = {
+type ForgotPasswordModalProps = {
   onClose: () => void
-  name: string
+  email: string
 }
 
-const Modal: React.FC<ModalProps> = ({ onClose, name }) => {
+const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
+  onClose,
+}) => {
   const [isVisible, setIsVisible] = useState(true)
   const navigate = useNavigate()
 
@@ -58,19 +61,30 @@ const Modal: React.FC<ModalProps> = ({ onClose, name }) => {
         aria-hidden="true"></div>
 
       <div
-        className={`modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center flex-col rounded-lg bg-gray-100 p-7 max-w-[600px] min-w-[300px] ${
+        className={`modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center flex-col rounded-lg bg-gray-100 max-w-[600px] min-w-[300px] px-4 py-14 lg:px-32 lg:py-24 md:px-28 md:py-20 sm:px-24 sm:py-20 ${
           isVisible ? 'scale-up-center' : ''
         }`}
         role="document">
-        <img
+        <ForgotPassword handleClose={handleClose} />
+      </div>
+    </div>
+  )
+}
+
+export default ForgotPasswordModal
+
+{
+  /*
+    <img
           src={CheckMark}
           alt="checklist"
           className="w-[100px] lg:w-[150px] md:w-[100px]"
         />
-        <h2
+  
+  <h2
           id="modal-title"
           className="text-[20px] text-center leading-8 lg:text-[28px] md:text-[26px] sm:text-[24px] font-bold font-raleway">
-          Welcome onboard {name}
+          Welcome onboard {email}
         </h2>
         <p className="text-center px-7 py-2 lg:py-3 text-[#667085] text-[15px] lg:text-[18px] md:text-[16px] font-raleway lg:leading-[28px] md:leading-[25px] sm:leading-[23px] leading-[21px]">
           SupportPro provides you with every opportunity to land your dream Job
@@ -81,10 +95,5 @@ const Modal: React.FC<ModalProps> = ({ onClose, name }) => {
           onClick={handleClose}
           aria-label="Close modal">
           Go to Login
-        </button>
-      </div>
-    </div>
-  )
+        </button> */
 }
-
-export default Modal
