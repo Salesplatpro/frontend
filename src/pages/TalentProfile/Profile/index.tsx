@@ -79,7 +79,7 @@ const TalentProfile = () => {
                     id="bio"
                     name="bio"
                     placeholder="Tell us about yourself"
-                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-3"
+                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-4"
                   />
                   <ErrorMessage
                     name="bio"
