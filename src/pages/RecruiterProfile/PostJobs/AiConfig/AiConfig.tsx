@@ -3,7 +3,7 @@ import React from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
@@ -99,14 +99,14 @@ const AiConfig = () => {
       if ('data' in response && response.data) {
         toast.success(response.data?.message || 'Submitted successfully', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: 'light',
-          transition: Bounce,
+          transition: Slide,
         })
         navigate('/recruiterDashboard/myjobposts')
       }
@@ -118,7 +118,7 @@ const AiConfig = () => {
 
       toast.error(errorMessage, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

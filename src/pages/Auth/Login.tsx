@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 // import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
@@ -60,14 +60,14 @@ const Login: React.FC = () => {
 
         toast.success('Logged in successfully', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: 'light',
-          transition: Bounce,
+          transition: Slide,
         })
         const userRole = response.data.user?.userRole
         switch (userRole) {
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
         dispatch(loginFailure(err.data?.message))
         toast.error(err.data?.message || 'An error occurred while logging in', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

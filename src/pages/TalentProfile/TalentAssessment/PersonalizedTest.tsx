@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import {
@@ -62,7 +62,7 @@ const PersonalizedTest: React.FC = () => {
     if (personalizedError) {
       toast.error('DisplayError loading personalized test data', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -99,19 +99,19 @@ const PersonalizedTest: React.FC = () => {
       if (response.status) {
         toast.success(`${response.message} ${response.data.scorePercent}%`, {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: 'light',
-          transition: Bounce,
+          transition: Slide,
         })
       } else {
         toast.error(response.message || 'DisplayError submitting question', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -125,7 +125,7 @@ const PersonalizedTest: React.FC = () => {
     } catch (error) {
       toast.error('Error submitting quiz', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

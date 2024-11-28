@@ -3,7 +3,7 @@ import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import animationData from '../../../assets/Animation - check.json'
 import Loading from '../../../components/Loading/Loading'
@@ -40,7 +40,7 @@ const TalentAssessment = () => {
     if (error) {
       toast.error('DisplayError fetching questions', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -98,20 +98,20 @@ const TalentAssessment = () => {
       if (response.status) {
         toast.success(`${response.message}`, {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: 'light',
-          transition: Bounce,
+          transition: Slide,
         })
         // toast.success(`${response.message} ${response.data.scorePercent}`)
       } else {
         toast.error(response.message || 'DisplayError submitting question', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -125,7 +125,7 @@ const TalentAssessment = () => {
       console.log(error)
       toast.error('DisplayError submitting quiz', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

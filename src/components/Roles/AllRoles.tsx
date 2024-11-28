@@ -20,7 +20,7 @@ const AllRoles = ({ value, onChange, name }: RoleTypes) => {
           as="select"
           id="role"
           multiple={false}
-          className="w-full rounded outline-none focus:none"
+          className="w-full capitalize rounded outline-none focus:none"
           name={name}
           value={value}
           onChange={onChange}>

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 
 interface WorkTypeOption {
@@ -24,7 +24,7 @@ const Worktype: React.FC<WorktypeProps> = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen)
+    setDropdownOpen((prev) => !prev)
   }
 
   const handleCheckboxChange = (optionValue: string, isChecked: boolean) => {
@@ -36,13 +36,29 @@ const Worktype: React.FC<WorktypeProps> = ({
     onSelectionChange(updatedValues)
   }
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setDropdownOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
     <div className="relative w-[100%]">
       <div
         className="w-full p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1 cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}>
+        onClick={toggleDropdown}
+        ref={dropdownRef}>
         <span className="font-medium text-sm font-raleway">
-          {/* Display selected work types */}
           {Object.keys(selectedValues)
             .filter((key) => selectedValues[key])
             .map((key) => options.find((option) => option.value === key)?.label)
@@ -55,11 +71,8 @@ const Worktype: React.FC<WorktypeProps> = ({
         />
       </div>
 
-      {/* Dropdown options */}
       {dropdownOpen && (
-        <div
-          ref={dropdownRef}
-          className="absolute w-full mt-1 bg-white border border-[#D0D5DD] rounded-lg z-10 max-h-[150px] overflow-auto">
+        <div className="absolute w-full mt-1 bg-white border border-[#D0D5DD] rounded-lg z-10 max-h-[150px] overflow-auto">
           {options.map((option) => (
             <label
               key={option.value}

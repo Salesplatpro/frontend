@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
@@ -90,14 +90,14 @@ const ProgressView: React.FC = () => {
     if (cvMatchData) {
       toast.success('CV Match completed.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
         theme: 'light',
-        transition: Bounce,
+        transition: Slide,
       })
       refetch()
     }
@@ -112,7 +112,7 @@ const ProgressView: React.FC = () => {
       (error?.data as ErrorResponse)?.message || defaultMessage
     toast.error(errorMessage, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
