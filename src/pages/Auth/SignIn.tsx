@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 // import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
@@ -61,14 +61,14 @@ const SignIn = () => {
       )
       toast.success('Signed up successfully', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
         theme: 'light',
-        transition: Bounce,
+        transition: Slide,
       })
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
@@ -76,7 +76,7 @@ const SignIn = () => {
       dispatch(signupFailure(err.data?.message))
       toast.error(err.data?.message || 'An error occurred while signing up', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

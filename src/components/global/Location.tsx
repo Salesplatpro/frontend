@@ -3,6 +3,7 @@ import Geonames from 'geonames.js'
 import React, { useEffect, useState } from 'react'
 
 import { LocationOption, LocationProps } from '../../utils/jobPostTypes'
+import { FiChevronDown } from 'react-icons/fi'
 
 const geonames = new Geonames({
   username: 'timmydee',
@@ -124,21 +125,26 @@ const Location: React.FC<LocationProps> = ({
       ) : fetchError ? (
         <div className="text-sm text-red-500 mt-2">{fetchError}</div>
       ) : (
-        <select
-          id={locationTitle}
-          name={locationTitle?.toLowerCase()}
-          onChange={handleChange}
-          value={selectedValue || ''}
-          className={`border border-[#D0D5DD] px-2 mt-1 rounded-lg w-full font-raleway ${
-            height ? `h-[${height}]` : 'h-[44px]'
-          }`}>
-          <option value="">Select a {locationTitle?.toLowerCase()}...</option>
-          {options.map((option) => (
-            <option key={option.geoId} value={option.geoId}>
-              {option.name}
-            </option>
-          ))}
-        </select>
+        <div className="relative w-full mt-1">
+          <select
+            id={locationTitle}
+            name={locationTitle?.toLowerCase()}
+            onChange={handleChange}
+            value={selectedValue || ''}
+            className={`appearance-none border border-[#D0D5DD] px-2 rounded-lg w-full font-raleway ${
+              height ? `h-[${height}]` : 'h-[44px]'
+            } pr-8`}>
+            <option value="">Select a {locationTitle?.toLowerCase()}...</option>
+            {options.map((option) => (
+              <option key={option.geoId} value={option.geoId}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <FiChevronDown className="text-gray-500" />
+          </div>
+        </div>
       )}
     </div>
   )

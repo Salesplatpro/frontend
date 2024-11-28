@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import TextField from '../../../components/Form/TextField'
@@ -94,7 +94,20 @@ const PostJob: React.FC = () => {
       if (data.status) {
         toast.success('Job Post Created successfully', {
           position: 'top-right',
-          autoClose: 5000,
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
+        setJobId(data?.data._id)
+      } else {
+        toast.error(data.message, {
+          position: 'top-right',
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -103,12 +116,19 @@ const PostJob: React.FC = () => {
           theme: 'light',
           transition: Bounce,
         })
-        setJobId(data?.data._id)
-      } else {
-        toast.error(data.message)
       }
     } catch (error) {
-      toast.error('Failed to create job post')
+      toast.error('Failed to create job post', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
     setSubmitting(false)
   }

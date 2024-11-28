@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import { getDefaultIcon } from '../../../utils/getDefaultIcon'
 
@@ -24,11 +24,31 @@ const ProfilePic: React.FC<ProfilePicType> = ({
     const file = event.target.files?.[0]
     if (file) {
       if (!file.type.startsWith('image/')) {
-        toast.error('Only Image files are allowed')
+        toast.error('Only Image files are allowed', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         return
       }
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('file size exceed the 5mb limit')
+        toast.error('file size exceed the 5mb limit', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       }
       if (setProfileImage) {
         setProfileImage(URL.createObjectURL(file))
@@ -56,21 +76,21 @@ const ProfilePic: React.FC<ProfilePicType> = ({
         if (updateResponse.status) {
           toast.success('Picture Uploaded Successfully', {
             position: 'top-right',
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
             theme: 'light',
-            transition: Bounce,
+            transition: Slide,
           })
         } else {
           toast.error(
             updateResponse.message || 'Failed to upload profile picture',
             {
               position: 'top-right',
-              autoClose: 5000,
+              autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -88,7 +108,7 @@ const ProfilePic: React.FC<ProfilePicType> = ({
       console.error('Error uploading or updating profile picture:', error)
       toast.error('An error occurred. Please try again.', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -111,7 +131,7 @@ const ProfilePic: React.FC<ProfilePicType> = ({
         <img
           src={profileImageSrc}
           alt="Profile"
-          className="w-24 h-24 object-cover rounded-full border-1 border-gray-300 shadow-md"
+          className="w-[100px] h-20 rounded-full lg:w-[100px] lg:h-20 object-cover lg:rounded-full border-1 border-gray-300 shadow-md"
         />
         <input
           id="profileImage"
@@ -121,7 +141,7 @@ const ProfilePic: React.FC<ProfilePicType> = ({
           onChange={handleImageChange}
         />
         <button
-          className="text-[10px] text-[#4884DF] cursor-pointer mt-1"
+          className="text-[10px] font-raleway font-medium lg:text-[12px] text-[#4884DF] cursor-pointer mt-1"
           onClick={() => document.getElementById('profileImage')?.click()}>
           Change Image
         </button>

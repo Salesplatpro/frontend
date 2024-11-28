@@ -1,8 +1,8 @@
 import '../form.scss'
 
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import Navbar from '../../components/Navbar'
 // import { SendRecruiterReg } from '../../api/api-communication'
@@ -47,14 +47,44 @@ const RecruiterRegister: React.FC = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         await SendRecruiterReg(formValues).unwrap()
-        toast.success('Registered successfully')
+        toast.success('Registered successfully', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
         navigate('/login')
       } catch (err) {
-        toast.error('An error occurred while registering')
+        toast.error('An error occurred while registering', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       }
     } else {
       setErrors(validationErrors)
-      toast.error('DisplayError registering recruiter details , check your ')
+      toast.error('DisplayError registering recruiter details , check your ', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
   }
 

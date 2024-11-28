@@ -8,7 +8,8 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+// eslint-disable-next-line no-unused-vars
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import { Button, StatusBadge } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
@@ -85,14 +86,14 @@ export const PipelineTable = () => {
       console.log('data')
       toast.success(data?.message, {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
         theme: 'light',
-        transition: Bounce,
+        transition: Slide,
       })
       setAllJobs(data.data.applications)
     }
