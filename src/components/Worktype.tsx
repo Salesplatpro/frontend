@@ -53,11 +53,10 @@ const Worktype: React.FC<WorktypeProps> = ({
   }, [])
 
   return (
-    <div className="relative w-[100%]">
+    <div className="relative w-[100%]" ref={dropdownRef}>
       <div
         className="w-full p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1 cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}
-        ref={dropdownRef}>
+        onClick={toggleDropdown}>
         <span className="font-medium text-sm font-raleway">
           {Object.keys(selectedValues)
             .filter((key) => selectedValues[key])
@@ -83,6 +82,7 @@ const Worktype: React.FC<WorktypeProps> = ({
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleCheckboxChange(option.value, e.target.checked)
                 }
+                className="mr-2"
               />
               {option.label}
             </label>
