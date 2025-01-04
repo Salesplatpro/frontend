@@ -111,13 +111,13 @@ const TalentProfile = () => {
                       className="text-[14px] text-[#344054]">
                       Role
                     </label>
-                    <div className="border border-gray-300 p-2 rounded-lg h-[44px] mt-1">
+                    <div className=" border-gray-300 h-[44px] mt-1">
                       <AllRoles
                         name="role"
                         value={values.role}
-                        onChange={(e) =>
-                          setFieldValue('role', [e.target.value])
-                        }
+                        onChange={(value: any) => {
+                          setFieldValue('role', value) // Update Formik state
+                        }}
                       />
                     </div>
                   </div>

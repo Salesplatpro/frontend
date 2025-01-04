@@ -32,6 +32,7 @@ const useProfile = () => {
 
   const initialValues: TalentProfileProps = {
     bio: userInfo?.profile?.bio || '',
+    // role: userInfo?.profile?.role?._id || '',
     role: userInfo?.profile?.role?.map((r: any) => r._id) || [],
     location: {
       country: {
@@ -70,6 +71,7 @@ const useProfile = () => {
             state: values.location.state.name,
             city: values.location.city.name,
           },
+          // role: values.role, // Single role (_id)
         },
         setSubmitting,
         userInfo,
