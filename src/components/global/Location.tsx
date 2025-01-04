@@ -1,7 +1,6 @@
 import { useFormikContext } from 'formik'
 import Geonames from 'geonames.js'
 import React, { useEffect, useState } from 'react'
-import { FiChevronDown } from 'react-icons/fi'
 import Select from 'react-select'
 
 import { LocationOption, LocationProps } from '../../utils/jobPostTypes'
