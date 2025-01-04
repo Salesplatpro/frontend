@@ -1,9 +1,10 @@
 import { useFormikContext } from 'formik'
 import Geonames from 'geonames.js'
 import React, { useEffect, useState } from 'react'
+import { FiChevronDown } from 'react-icons/fi'
+import Select from 'react-select'
 
 import { LocationOption, LocationProps } from '../../utils/jobPostTypes'
-import { FiChevronDown } from 'react-icons/fi'
 
 const geonames = new Geonames({
   username: 'timmydee',
@@ -93,9 +94,9 @@ const Location: React.FC<LocationProps> = ({
     }
   }, [options, selectedName, setFieldValue, locationTitle])
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (newValue: any) => {
     const selectedOption = options.find(
-      (option) => option.geoId === parseInt(e.target.value, 10),
+      (option) => option.geoId === parseInt(newValue.value, 10),
     )
     if (selectedOption) {
       const value = {
@@ -106,6 +107,25 @@ const Location: React.FC<LocationProps> = ({
       setFieldValue(`location.${locationTitle?.toLowerCase()}`, value)
       onChange(value.geoId) // Notify parent component of the geoId change
     }
+  }
+
+  const selectOptions = options.map((option) => ({
+    value: option.geoId.toString(),
+    label: option.name,
+  }))
+
+  const customStyles = {
+    control: (base: any) => ({
+      ...base,
+      borderColor: '#D0D5DD',
+      height: height ? `${height}` : '44px',
+      fontFamily: 'Raleway',
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: '#333333', // Custom search text color
+      fontSize: '16px',
+    }),
   }
 
   return (
@@ -126,24 +146,19 @@ const Location: React.FC<LocationProps> = ({
         <div className="text-sm text-red-500 mt-2">{fetchError}</div>
       ) : (
         <div className="relative w-full mt-1">
-          <select
+          <Select
             id={locationTitle}
             name={locationTitle?.toLowerCase()}
             onChange={handleChange}
-            value={selectedValue || ''}
-            className={`appearance-none border border-[#D0D5DD] px-2 rounded-lg w-full font-raleway ${
-              height ? `h-[${height}]` : 'h-[44px]'
-            } pr-8`}>
-            <option value="">Select a {locationTitle?.toLowerCase()}...</option>
-            {options.map((option) => (
-              <option key={option.geoId} value={option.geoId}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-            <FiChevronDown className="text-gray-500" />
-          </div>
+            value={
+              selectOptions.find((option) => option.value === selectedValue) ||
+              ''
+            }
+            styles={customStyles}
+            options={selectOptions}
+            placeholder={`Select a ${locationTitle?.toLowerCase()}...`}
+            isSearchable={true}
+          />
         </div>
       )}
     </div>
