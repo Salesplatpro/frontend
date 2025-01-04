@@ -64,7 +64,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 <label className="block mb-2 font-bold" htmlFor="role">
                   Role
                 </label>
-                <div className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full">
+                <div className="mt-2 rounded shadow-lg w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
