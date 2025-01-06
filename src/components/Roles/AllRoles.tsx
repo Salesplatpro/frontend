@@ -21,8 +21,8 @@ const AllRoles = ({ value, onChange, name }: RoleTypes) => {
     })) || []
 
   // Debugging: check values and role options
-  console.log('Formik role value:', value)
-  console.log('Role options:', roleOptions)
+  // console.log('Formik role value:', value)
+  // console.log('Role options:', roleOptions)
 
   // Handle change in the select dropdown
   const handleChange = (selectedOption: { value: any; label: string }) => {

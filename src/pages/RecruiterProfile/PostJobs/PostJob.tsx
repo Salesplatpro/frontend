@@ -152,11 +152,13 @@ const PostJob: React.FC = () => {
                 <h5 className="font-bold text-[14px] text-[#434144]">
                   Select Role
                 </h5>
-                <div className="border border-[#D0D5DD] py-4 pl-4 rounded-lg w-full">
+                <div className="py-2 pl-0 rounded-lg w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
-                    onChange={(e) => setFieldValue('role', e.target.value)}
+                    onChange={(value: any) => {
+                      setFieldValue('role', value) // Update Formik state
+                    }}
                   />
                   {errors.role && touched.role ? (
                     <div className="text-red-500 text-sm">{errors.role}</div>
