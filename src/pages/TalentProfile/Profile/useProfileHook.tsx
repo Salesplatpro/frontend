@@ -55,8 +55,6 @@ const useProfile = () => {
 
   return {
     userInfo,
-    // profileImage,
-    // setProfileImage,
     uploadPic,
     updateProfilePics,
     cvFileName,

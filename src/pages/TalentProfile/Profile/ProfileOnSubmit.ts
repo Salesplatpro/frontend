@@ -25,7 +25,10 @@ export const handleProfileSubmit = async (
 
     if (isNewProfile) {
       formData.append('bio', values.bio || '')
-      formData.append('role', (values.role || []).join(','))
+      // Ensure `role` is an array
+      const role = Array.isArray(values.role) ? values.role : [values.role]
+      formData.append('role', JSON.stringify(role))
+
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
@@ -108,9 +111,20 @@ export const handleProfileSubmit = async (
       if (values.bio !== initialValues.bio) {
         updatedFields.bio = values.bio
       }
-      if (values.role?.join(',') !== initialValues.role?.join(',')) {
-        updatedFields.role = values.role
+
+      if (JSON.stringify(values.role) !== JSON.stringify(initialValues.role)) {
+        // Ensure role is always an array of strings and filter out any undefined or invalid values
+        updatedFields.role = Array.isArray(values.role)
+          ? values.role.filter(
+              (role): role is string =>
+                typeof role === 'string' && role !== undefined,
+            )
+          : [values.role].filter(
+              (role): role is string =>
+                typeof role === 'string' && role !== undefined,
+            )
       }
+
       if (values.minSalary !== initialValues.minSalary) {
         updatedFields.minSalary = values.minSalary
       }

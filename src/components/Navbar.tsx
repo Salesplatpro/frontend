@@ -126,7 +126,7 @@ const Navbar = () => {
                     </li>
                     <li className="font-semibold text-lg text-[#4985df] capitalize decoration-0 leading-[18px] font-raleway hover:text-white">
                       <Link
-                        to="#"
+                        to="/resources"
                         className={
                           activeTab === '/resources' ? 'activeTab' : ''
                         }

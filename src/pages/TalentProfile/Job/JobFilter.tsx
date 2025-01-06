@@ -64,11 +64,13 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 <label className="block mb-2 font-bold" htmlFor="role">
                   Role
                 </label>
-                <div className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full">
+                <div className="mt-2 rounded shadow-lg w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
-                    onChange={(e) => setFieldValue('role', e.target.value)} // Ensure single value is set
+                    onChange={(value: any) => {
+                      setFieldValue('role', value) // Update Formik state
+                    }}
                   />
                 </div>
               </div>
@@ -128,6 +130,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.state', { name: '', geoId: null })
                   setFieldValue('location.city', { name: '', geoId: null })
                 }}
+                locationLabel={''}
               />
               <div className="line" />
 
@@ -139,6 +142,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.state.geoId', geoId)
                   setFieldValue('location.city', { name: '', geoId: null })
                 }}
+                locationLabel={''}
               />
               <div className="line" />
 
@@ -149,6 +153,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 onChange={(geoId) => {
                   setFieldValue('location.city.geoId', geoId)
                 }}
+                locationLabel={''}
               />
               <div className="line" />
               <div className="btn">
