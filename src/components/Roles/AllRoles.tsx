@@ -1,4 +1,3 @@
-// import { Field } from 'formik'
 import React from 'react'
 import Select from 'react-select'
 
@@ -19,10 +18,6 @@ const AllRoles = ({ value, onChange, name }: RoleTypes) => {
       value: role._id,
       label: role.name,
     })) || []
-
-  // Debugging: check values and role options
-  // console.log('Formik role value:', value)
-  // console.log('Role options:', roleOptions)
 
   // Handle change in the select dropdown
   const handleChange = (selectedOption: { value: any; label: string }) => {
