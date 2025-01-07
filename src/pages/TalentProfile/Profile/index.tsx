@@ -8,6 +8,7 @@ import Location from '../../../components/global/Location'
 import Loading from '../../../components/Loading/Loading'
 import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
+import { experienceLevel } from '../../../utils'
 import { calculateProgress } from '../../../utils/calculateProgress'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
@@ -233,9 +234,11 @@ const TalentProfile = () => {
                       name="experience"
                       className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1">
                       <option value="">Select experience Level</option>
-                      <option value="senior">Senior</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="junior">Junior</option>
+                      {Object.values(experienceLevel).map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
                     </Field>
                     <ErrorMessage
                       name="experience"
@@ -367,7 +370,7 @@ const TalentProfile = () => {
                           : 'Update Profile'
                         : isSubmitting
                         ? 'Submitting...'
-                        : 'Create Profile'}
+                        : 'Save'}
                     </button>
                   </>
                 </div>

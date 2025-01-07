@@ -10,6 +10,7 @@ import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
+import { experienceLevel } from '../../../utils'
 import { FormValues } from '../../../utils/jobPostTypes'
 
 const validationSchema = Yup.object({
@@ -237,9 +238,11 @@ const PostJob: React.FC = () => {
                   name="experienceLevel"
                   className="border border-[#D0D5DD] p-5 rounded-lg w-full">
                   <option value="">Select experience Level</option>
-                  <option value="senior">Senior</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="junior">Junior</option>
+                  {Object.values(experienceLevel).map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Field>
                 <ErrorMessage
                   name="experienceLevel"
