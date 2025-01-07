@@ -7,9 +7,9 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Bounce, Slide, toast } from 'react-toastify'
 
-import google from '../../assets/google.png'
+// import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
-import Salesplat from '../../assets/salesplat.png'
+// import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import { useUserLoginMutation } from '../../redux/api/apiSlice'
 import {
@@ -182,7 +182,7 @@ const Login: React.FC = () => {
                   Don&apos;t have an account ?{' '}
                   <a href="/talentRegister">Sign up</a>
                 </div>
-                <div className=" w-[93%] space-y-4 py-4">
+                {/* <div className=" w-[93%] space-y-4 py-4">
                   <button className="w-[100%] rounded-lg border flex justify-center items-center hover:bg-[#f7f7f7]">
                     <img
                       src={google}
@@ -204,7 +204,7 @@ const Login: React.FC = () => {
                       Continue with Salesplat
                     </p>
                   </button>
-                </div>
+                </div> */}
               </div>
             </form>
           </div>
