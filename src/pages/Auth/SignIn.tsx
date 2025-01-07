@@ -9,7 +9,7 @@ import { Bounce, Slide, toast } from 'react-toastify'
 
 import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
-import Salesplat from '../../assets/salesplat.png'
+// import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import {
   useRecruiterRegMutation,
@@ -259,7 +259,7 @@ const SignIn = () => {
                     <div className="already py-2">
                       Already have an account? <a href="/login">Log In</a>
                     </div>
-                    <div className=" w-[93%] space-y-4 py-4">
+                    {/* <div className=" w-[93%] space-y-4 py-4">
                       <button className="w-[100%] rounded-lg border flex justify-center items-center hover:bg-[#f7f7f7]">
                         <img
                           src={google}
@@ -281,7 +281,7 @@ const SignIn = () => {
                           Continue with Salesplat
                         </p>
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </Form>
               )}
