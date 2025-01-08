@@ -122,7 +122,7 @@ const Login: React.FC = () => {
   return (
     <div>
       <div className="talentReg">
-        <div className="apply-job">
+        <div className="apply-job mb-60">
           <div className="job-hero">
             <img className="logo" src={logo} alt="company" />
             <div>
