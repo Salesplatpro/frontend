@@ -8,9 +8,10 @@ interface RoleTypes {
   value: any
   name: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  customHeight: string
 }
 
-const AllRoles = ({ value, onChange, name }: RoleTypes) => {
+const AllRoles = ({ value, onChange, name, customHeight }: RoleTypes) => {
   const { data } = useGetRoleQuery({})
 
   const roleOptions =
@@ -24,9 +25,24 @@ const AllRoles = ({ value, onChange, name }: RoleTypes) => {
     onChange(selectedOption.value)
   }
 
+  const customStyles = {
+    control: (base: any) => ({
+      ...base,
+      borderRadius: '6px',
+      borderColor: '#D0D5DD',
+      height: customHeight || '42px',
+      fontFamily: 'Raleway',
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: '#333333',
+      fontSize: '16px',
+    }),
+  }
+
   return (
     <div className="w-full">
-      <div className="relative">
+      <div className="relative ">
         <Select
           id="role"
           className="w-full capitalize rounded"
@@ -38,6 +54,7 @@ const AllRoles = ({ value, onChange, name }: RoleTypes) => {
           placeholder="select a role...."
           onChange={handleChange}
           options={roleOptions}
+          styles={customStyles}
         />
       </div>
     </div>

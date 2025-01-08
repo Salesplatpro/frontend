@@ -19,6 +19,7 @@ const Location: React.FC<LocationProps> = ({
   isCountry,
   onChange,
   height,
+  customHeight,
   bold,
 }) => {
   const { setFieldValue } = useFormikContext()
@@ -117,7 +118,7 @@ const Location: React.FC<LocationProps> = ({
     control: (base: any) => ({
       ...base,
       borderColor: '#D0D5DD',
-      height: height ? `${height}` : '44px',
+      height: customHeight || '44px',
       fontFamily: 'Raleway',
     }),
     input: (base: any) => ({
