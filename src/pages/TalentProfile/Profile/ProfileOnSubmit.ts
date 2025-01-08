@@ -11,7 +11,6 @@ export const handleProfileSubmit = async (
   setSubmitting: FormikHelpers<TalentProfileProps>['setSubmitting'],
   userInfo: any,
   dispatch: any,
-  profilePics: string,
   initialValues: TalentProfileProps,
   talentCreation: any,
   uploadCv: any,
@@ -25,10 +24,6 @@ export const handleProfileSubmit = async (
 
     if (isNewProfile) {
       formData.append('bio', values.bio || '')
-      // Ensure `role` is an array
-      const role = Array.isArray(values.role) ? values.role : [values.role]
-      formData.append('role', JSON.stringify(role))
-
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
@@ -49,6 +44,7 @@ export const handleProfileSubmit = async (
 
       const updatedFormValues = {
         ...values,
+        role: Array.isArray(values.role) ? values.role : [values.role],
         cv: submitCv.data.fileUrl || '',
       }
       const response = await talentCreation(updatedFormValues).unwrap()
@@ -113,16 +109,9 @@ export const handleProfileSubmit = async (
       }
 
       if (JSON.stringify(values.role) !== JSON.stringify(initialValues.role)) {
-        // Ensure role is always an array of strings and filter out any undefined or invalid values
         updatedFields.role = Array.isArray(values.role)
-          ? values.role.filter(
-              (role): role is string =>
-                typeof role === 'string' && role !== undefined,
-            )
-          : [values.role].filter(
-              (role): role is string =>
-                typeof role === 'string' && role !== undefined,
-            )
+          ? values.role.filter((role): role is any => typeof role === 'string')
+          : [values.role]
       }
 
       if (values.minSalary !== initialValues.minSalary) {
@@ -153,7 +142,6 @@ export const handleProfileSubmit = async (
         return
       }
 
-      // Append only the updated fields to formData
       if (updatedFields.cv) {
         formData.append('file', updatedFields.cv)
       }
