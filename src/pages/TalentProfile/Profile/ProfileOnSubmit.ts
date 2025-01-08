@@ -25,9 +25,16 @@ export const handleProfileSubmit = async (
 
     if (isNewProfile) {
       formData.append('bio', values.bio || '')
-      // Ensure `role` is an array
-      const role = Array.isArray(values.role) ? values.role : [values.role]
-      formData.append('role', JSON.stringify(role))
+
+      // const roleArray = Array.isArray(values.role) ? values.role : [values.role]
+      // formData.append('role', JSON.stringify(roleArray))
+
+      const roles = Array.isArray(values.role) ? values.role : [values.role]
+      roles.forEach((role) => {
+        if (role) {
+          formData.append('role', role)
+        }
+      })
 
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')

@@ -119,6 +119,7 @@ const TalentProfile = () => {
                         onChange={(value: any) => {
                           setFieldValue('role', value) // Update Formik state
                         }}
+                        customHeight=""
                       />
                     </div>
                   </div>
@@ -179,6 +180,7 @@ const TalentProfile = () => {
                       geoId={null}
                       isCountry={true}
                       selectedName={values.location.country.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.country.geoId', geoId)
                         setFieldValue('location.state', {
@@ -199,6 +201,7 @@ const TalentProfile = () => {
                       geoId={values.location.country.geoId}
                       isCountry={false}
                       selectedName={values.location.state.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.state.geoId', geoId)
                         setFieldValue('location.city', {
@@ -217,6 +220,7 @@ const TalentProfile = () => {
                       geoId={values.location.state.geoId}
                       isCountry={false}
                       selectedName={values.location.city.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.city.geoId', geoId)
                       }}
