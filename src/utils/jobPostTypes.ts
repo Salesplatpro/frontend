@@ -12,6 +12,7 @@ export interface LocationProps {
   isCountry?: boolean
   onChange: (geoId: number) => void
   height?: string
+  customHeight: string
   bold?: string
 }
 
