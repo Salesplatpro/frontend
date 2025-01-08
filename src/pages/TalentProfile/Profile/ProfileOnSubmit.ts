@@ -11,6 +11,7 @@ export const handleProfileSubmit = async (
   setSubmitting: FormikHelpers<TalentProfileProps>['setSubmitting'],
   userInfo: any,
   dispatch: any,
+  profilePics: string,
   initialValues: TalentProfileProps,
   talentCreation: any,
   uploadCv: any,
