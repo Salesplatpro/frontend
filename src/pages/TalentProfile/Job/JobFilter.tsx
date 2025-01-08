@@ -71,6 +71,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                     onChange={(value: any) => {
                       setFieldValue('role', value) // Update Formik state
                     }}
+                    customHeight=""
                   />
                 </div>
               </div>
@@ -131,6 +132,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.city', { name: '', geoId: null })
                 }}
                 locationLabel={''}
+                customHeight=""
               />
               <div className="line" />
 
@@ -143,6 +145,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.city', { name: '', geoId: null })
                 }}
                 locationLabel={''}
+                customHeight=""
               />
               <div className="line" />
 
@@ -154,6 +157,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.city.geoId', geoId)
                 }}
                 locationLabel={''}
+                customHeight=""
               />
               <div className="line" />
               <div className="btn">
