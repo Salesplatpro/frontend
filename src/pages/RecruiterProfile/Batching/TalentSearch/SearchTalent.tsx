@@ -5,6 +5,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Location from '../../../../components/global/Location'
 import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 import AllRoles from '../../../../components/Roles/AllRoles'
+import { experienceLevel } from '../../../../utils'
 
 const SearchTalent = () => {
   const navigate = useNavigate()
@@ -140,9 +141,11 @@ const SearchTalent = () => {
                   required
                   className="w-full p-2 border border-gray-300 rounded-lg py-4">
                   <option value="">Select Experience Level</option>
-                  <option value="senior">Senior</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="junior">Junior</option>
+                  {Object.values(experienceLevel).map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Field>
               </div>
               <button
