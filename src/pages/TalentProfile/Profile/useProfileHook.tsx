@@ -53,8 +53,6 @@ const useProfile = () => {
     cv: null,
   }
 
-  console.log('userInfo.profile.role:', userInfo?.profile?.role)
-
   return {
     userInfo,
     uploadPic,

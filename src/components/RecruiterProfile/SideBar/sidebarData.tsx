@@ -36,12 +36,12 @@ export const sidebarData = [
   {
     name: 'Notification',
     icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
-    count: 12,
+    count: '',
   },
   {
     name: 'Chat',
     icon: <BsChatDots size={ICON_SIZE} color={COLOR} />,
-    count: 10,
+    count: '',
   },
   {
     name: 'Profile',
