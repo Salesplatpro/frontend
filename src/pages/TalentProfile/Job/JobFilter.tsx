@@ -6,6 +6,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useScreenWidth } from '../../../hooks'
+import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
 interface JobFiltersProps {
@@ -89,9 +90,11 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   name="experienceLevel"
                   className="w-full p-2 border border-gray-300 rounded">
                   <option value="">Select Experience Level</option>
-                  <option value="senior">Senior</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="junior">Junior</option>
+                  {Object.values(experienceLevel).map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Field>
                 {/* <ErrorMessage
                   name="experienceLevel"

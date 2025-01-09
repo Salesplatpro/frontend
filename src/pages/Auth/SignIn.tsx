@@ -7,7 +7,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { Bounce, Slide, toast } from 'react-toastify'
 
-import logo from '../../assets/logo.png'
+// import google from '../../assets/google.png'
 // import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import {
