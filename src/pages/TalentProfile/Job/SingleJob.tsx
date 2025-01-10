@@ -5,7 +5,7 @@ import { GoDotFill } from 'react-icons/go'
 import { PiBuildingOfficeBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
-import { Button } from '../../../components'
+import { Button } from '../../../components/Button/Button'
 import Loading from '../../../components/Loading/Loading'
 import { capitalizeFirstWord } from '../../../utils'
 import { JobDetails } from './JobDetails'

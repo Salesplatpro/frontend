@@ -3,11 +3,15 @@ import { useSelector } from 'react-redux'
 
 import { RootState } from '../../../redux/store/store'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+// import { getDefaultIcon } from '../../../utils/getDefaultIcon'
 import ProgressBar from '../../../utils/ProgressBar'
 import ProfilePic from './ProfilePic'
 
 interface TalentHeaderType {
   userInfo: any
+  profileImage: string | ArrayBuffer | null
+  setProfileImage?: (value: string | ArrayBuffer) => void
+  handleProfileImageUpload: (file: File) => Promise<void>
   uploadPic: any
   updateProfilePics: any
   progress: any
@@ -18,8 +22,22 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
   uploadPic,
   updateProfilePics,
   progress,
+
+  // profileImage,
+  // setProfileImage,
+  // handleProfileImageUpload,
 }) => {
   const user = useSelector((state: RootState) => state.auth.user)
+
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0]
+  //   if (file) {
+  //     if (setProfileImage) {
+  //       setProfileImage(URL.createObjectURL(file)) // Preview the new image
+  //     }
+  //     handleProfileImageUpload(file) // Upload the image
+  //   }
+  // }
 
   return (
     <div>
@@ -46,6 +64,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
             user={user}
             userInfo={userInfo}
           />
+
           <div className="w-full">
             <div className="flex justify-between w-full">
               <div className="text-[#101828]">
@@ -72,3 +91,35 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
 }
 
 export default TalentProfileHeader
+
+// const handleImageChange = (
+//   event: React.ChangeEvent<HTMLInputElement>,
+//   setProfileImage: ((value: string | ArrayBuffer) => void) | undefined,
+// ) => {
+//   const file = event.target.files?.[0] // Get the first selected file
+//   if (!file) {
+//     return // Exit if no file is selected
+//   }
+
+//   // Validate file type
+//   const validTypes = ['image/jpeg', 'image/png', 'image/jpg']
+//   if (!validTypes.includes(file.type)) {
+//     alert('Please upload a valid image file (JPEG, PNG).')
+//     return
+//   }
+
+//   // Validate file size (e.g., max 2MB)
+//   const maxSize = 2 * 1024 * 1024 // 2MB
+//   if (file.size > maxSize) {
+//     alert('File size exceeds 2MB. Please upload a smaller image.')
+//     return
+//   }
+
+//   // Preview the image using FileReader
+//   const reader = new FileReader()
+//   reader.onload = () => {
+//     const result = reader.result as string // Get the image as a base64 string
+//     setProfileImage?.(result) // Update the profile image state
+//   }
+//   reader.readAsDataURL(file) // Read the file as a Data URL
+// }

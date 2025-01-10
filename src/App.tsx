@@ -1,11 +1,14 @@
 import './App.css'
 import './index.scss'
 import './index.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Slide, ToastContainer } from 'react-toastify'
 
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
@@ -259,9 +262,33 @@ function App() {
     }
   }, [dispatch])
   return (
-    <div className="app" data-testid="app-page">
-      <RouterProvider router={router} />
-    </div>
+    <Fragment>
+      <div className="app" data-testid="app-page">
+        <RouterProvider router={router} />
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Slide}
+        toastStyle={{
+          width: useMediaQuery({ maxWidth: 640 }) ? '80%' : '320px', // Full width on mobile, fixed width on larger screens
+          maxWidth: '320px',
+          top: useMediaQuery({ maxWidth: 640 }) ? '5rem' : '3rem', // Increased top spacing for mobile
+          left: useMediaQuery({ maxWidth: 640 }) ? '50%' : undefined, // Center horizontally on mobile
+          transform: useMediaQuery({ maxWidth: 640 })
+            ? 'translateX(-50%)'
+            : undefined, // Adjust for centering
+        }}
+      />
+    </Fragment>
   )
 }
 

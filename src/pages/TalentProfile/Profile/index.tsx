@@ -8,6 +8,7 @@ import Location from '../../../components/global/Location'
 import Loading from '../../../components/Loading/Loading'
 import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
+import { experienceLevel } from '../../../utils'
 import { calculateProgress } from '../../../utils/calculateProgress'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
@@ -17,13 +18,20 @@ import useProfile from './useProfileHook'
 const TalentProfile = () => {
   const {
     userInfo,
+    profileImage,
+    setProfileImage,
     uploadPic,
     updateProfilePics,
+
     cvFileName,
     setCvFileName,
     handleProfileSubmit,
     userProfileLoading,
     userProfileError,
+
+    // refetchProfile,
+    handleProfileImageUpload,
+
     initialValues,
   } = useProfile()
 
@@ -40,9 +48,12 @@ const TalentProfile = () => {
       <div>
         <TalentProfileHeader
           userInfo={userInfo}
+          profileImage={profileImage}
+          setProfileImage={setProfileImage}
           uploadPic={uploadPic}
           updateProfilePics={updateProfilePics}
           progress={progress}
+          handleProfileImageUpload={handleProfileImageUpload}
         />
       </div>
       <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-6 w-[100%]">
@@ -69,7 +80,7 @@ const TalentProfile = () => {
                     id="bio"
                     name="bio"
                     placeholder="Tell us about yourself"
-                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1"
+                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-4"
                   />
                   <ErrorMessage
                     name="bio"
@@ -101,13 +112,14 @@ const TalentProfile = () => {
                       className="text-[14px] text-[#344054]">
                       Role
                     </label>
-                    <div className="border border-gray-300 p-2 rounded-lg h-[44px] mt-1">
+                    <div className=" border-gray-300 h-[44px] mt-1">
                       <AllRoles
                         name="role"
                         value={values.role}
-                        onChange={(e) =>
-                          setFieldValue('role', [e.target.value])
-                        }
+                        onChange={(value: any) => {
+                          setFieldValue('role', value) // Update Formik state
+                        }}
+                        customHeight=""
                       />
                     </div>
                   </div>
@@ -168,6 +180,7 @@ const TalentProfile = () => {
                       geoId={null}
                       isCountry={true}
                       selectedName={values.location.country.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.country.geoId', geoId)
                         setFieldValue('location.state', {
@@ -188,6 +201,7 @@ const TalentProfile = () => {
                       geoId={values.location.country.geoId}
                       isCountry={false}
                       selectedName={values.location.state.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.state.geoId', geoId)
                         setFieldValue('location.city', {
@@ -206,6 +220,7 @@ const TalentProfile = () => {
                       geoId={values.location.state.geoId}
                       isCountry={false}
                       selectedName={values.location.city.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.city.geoId', geoId)
                       }}
@@ -223,9 +238,11 @@ const TalentProfile = () => {
                       name="experience"
                       className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1">
                       <option value="">Select experience Level</option>
-                      <option value="senior">Senior</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="junior">Junior</option>
+                      {Object.values(experienceLevel).map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
                     </Field>
                     <ErrorMessage
                       name="experience"
@@ -357,7 +374,7 @@ const TalentProfile = () => {
                           : 'Update Profile'
                         : isSubmitting
                         ? 'Submitting...'
-                        : 'Create Profile'}
+                        : 'Save'}
                     </button>
                   </>
                 </div>

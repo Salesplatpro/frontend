@@ -6,6 +6,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useScreenWidth } from '../../../hooks'
+import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
 interface JobFiltersProps {
@@ -64,11 +65,14 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 <label className="block mb-2 font-bold" htmlFor="role">
                   Role
                 </label>
-                <div className="border border-gray-300 p-2 mt-2 rounded shadow-lg w-full">
+                <div className="mt-2 rounded shadow-lg w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
-                    onChange={(e) => setFieldValue('role', e.target.value)} // Ensure single value is set
+                    onChange={(value: any) => {
+                      setFieldValue('role', value) // Update Formik state
+                    }}
+                    customHeight=""
                   />
                 </div>
               </div>
@@ -86,9 +90,11 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   name="experienceLevel"
                   className="w-full p-2 border border-gray-300 rounded">
                   <option value="">Select Experience Level</option>
-                  <option value="senior">Senior</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="junior">Junior</option>
+                  {Object.values(experienceLevel).map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Field>
                 {/* <ErrorMessage
                   name="experienceLevel"
@@ -128,6 +134,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.state', { name: '', geoId: null })
                   setFieldValue('location.city', { name: '', geoId: null })
                 }}
+                locationLabel={''}
+                customHeight=""
               />
               <div className="line" />
 
@@ -139,6 +147,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('location.state.geoId', geoId)
                   setFieldValue('location.city', { name: '', geoId: null })
                 }}
+                locationLabel={''}
+                customHeight=""
               />
               <div className="line" />
 
@@ -149,6 +159,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 onChange={(geoId) => {
                   setFieldValue('location.city.geoId', geoId)
                 }}
+                locationLabel={''}
+                customHeight=""
               />
               <div className="line" />
               <div className="btn">

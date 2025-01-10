@@ -1,6 +1,7 @@
 import { useFormikContext } from 'formik'
 import Geonames from 'geonames.js'
 import React, { useEffect, useState } from 'react'
+import Select from 'react-select'
 
 import { LocationOption, LocationProps } from '../../utils/jobPostTypes'
 
@@ -18,13 +19,20 @@ const Location: React.FC<LocationProps> = ({
   isCountry,
   onChange,
   height,
+  customHeight,
   bold,
 }) => {
-  const { setFieldValue } = useFormikContext()
+  const { setFieldValue, errors } = useFormikContext<{
+    location: Record<string, { name: string }>
+  }>()
   const [options, setOptions] = useState<LocationOption[]>([])
   const [selectedValue, setSelectedValue] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
+
+  // Error handling: Retrieve error message from errors object
+  const locationFieldError =
+    errors?.location?.[locationTitle?.toLowerCase() || '']?.name
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,9 +100,9 @@ const Location: React.FC<LocationProps> = ({
     }
   }, [options, selectedName, setFieldValue, locationTitle])
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (newValue: any) => {
     const selectedOption = options.find(
-      (option) => option.geoId === parseInt(e.target.value, 10),
+      (option) => option.geoId === parseInt(newValue.value, 10),
     )
     if (selectedOption) {
       const value = {
@@ -105,6 +113,25 @@ const Location: React.FC<LocationProps> = ({
       setFieldValue(`location.${locationTitle?.toLowerCase()}`, value)
       onChange(value.geoId) // Notify parent component of the geoId change
     }
+  }
+
+  const selectOptions = options.map((option) => ({
+    value: option.geoId.toString(),
+    label: option.name,
+  }))
+
+  const customStyles = {
+    control: (base: any) => ({
+      ...base,
+      borderColor: '#D0D5DD',
+      height: customHeight || '44px',
+      fontFamily: 'Raleway',
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: '#333333', // Custom search text color
+      fontSize: '16px',
+    }),
   }
 
   return (
@@ -124,21 +151,24 @@ const Location: React.FC<LocationProps> = ({
       ) : fetchError ? (
         <div className="text-sm text-red-500 mt-2">{fetchError}</div>
       ) : (
-        <select
-          id={locationTitle}
-          name={locationTitle?.toLowerCase()}
-          onChange={handleChange}
-          value={selectedValue || ''}
-          className={`border border-[#D0D5DD] px-2 mt-1 rounded-lg w-full font-raleway ${
-            height ? `h-[${height}]` : 'h-[44px]'
-          }`}>
-          <option value="">Select a {locationTitle?.toLowerCase()}...</option>
-          {options.map((option) => (
-            <option key={option.geoId} value={option.geoId}>
-              {option.name}
-            </option>
-          ))}
-        </select>
+        <div className="relative w-full mt-1">
+          <Select
+            id={locationTitle}
+            name={locationTitle?.toLowerCase()}
+            onChange={handleChange}
+            value={
+              selectOptions.find((option) => option.value === selectedValue) ||
+              ''
+            }
+            styles={customStyles}
+            options={selectOptions}
+            placeholder={`Select a ${locationTitle?.toLowerCase()}...`}
+            isSearchable={true}
+          />
+        </div>
+      )}
+      {locationFieldError && (
+        <p className="text-red-500 text-[16px] mt-1">{locationFieldError}</p>
       )}
     </div>
   )

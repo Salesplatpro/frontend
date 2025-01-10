@@ -1,9 +1,9 @@
 import { Field, FieldArray, Form, Formik } from 'formik'
 import React from 'react'
-import toast from 'react-hot-toast'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Bounce, Slide, toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
@@ -97,7 +97,17 @@ const AiConfig = () => {
     try {
       const response = await aiConfig(cleanedValues).unwrap()
       if ('data' in response && response.data) {
-        toast.success(response.data?.message || 'Submitted successfully')
+        toast.success(response.data?.message || 'Submitted successfully', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
         navigate('/recruiterDashboard/myjobposts')
       }
     } catch (error: any) {
@@ -106,7 +116,17 @@ const AiConfig = () => {
         error.message ||
         'An error occurred while processing your request'
 
-      toast.error(errorMessage)
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     } finally {
       setSubmitting(false)
     }

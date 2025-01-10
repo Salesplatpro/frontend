@@ -1,5 +1,5 @@
-import { Field } from 'formik'
 import React from 'react'
+import Select from 'react-select'
 
 import { useGetRoleQuery } from '../../redux/api/talent'
 import { Role } from '../../utils/types'
@@ -8,29 +8,54 @@ interface RoleTypes {
   value: any
   name: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  customHeight: string
 }
 
-const AllRoles = ({ value, onChange, name }: RoleTypes) => {
+const AllRoles = ({ value, onChange, name, customHeight }: RoleTypes) => {
   const { data } = useGetRoleQuery({})
+
+  const roleOptions =
+    data?.data.map((role: Role) => ({
+      value: role._id,
+      label: role.name,
+    })) || []
+
+  // Handle change in the select dropdown
+  const handleChange = (selectedOption: { value: any; label: string }) => {
+    onChange(selectedOption.value)
+  }
+
+  const customStyles = {
+    control: (base: any) => ({
+      ...base,
+      borderRadius: '6px',
+      borderColor: '#D0D5DD',
+      height: customHeight || '42px',
+      fontFamily: 'Raleway',
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: '#333333',
+      fontSize: '16px',
+    }),
+  }
 
   return (
     <div className="w-full">
-      <div className="relative">
-        <Field
-          as="select"
+      <div className="relative ">
+        <Select
           id="role"
-          multiple={false}
-          className="w-full rounded outline-none focus:none"
+          className="w-full capitalize rounded"
           name={name}
-          value={value}
-          onChange={onChange}>
-          <option value="">Select a Role ......</option>
-          {data?.data.map((role: Role) => (
-            <option key={role._id} value={role._id}>
-              {role.name}
-            </option>
-          ))}
-        </Field>
+          value={roleOptions.find(
+            (option: { value: any; label: string }) =>
+              option.value === value[0],
+          )}
+          placeholder="select a role...."
+          onChange={handleChange}
+          options={roleOptions}
+          styles={customStyles}
+        />
       </div>
     </div>
   )

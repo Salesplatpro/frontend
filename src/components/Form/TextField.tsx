@@ -23,7 +23,7 @@ const TextField = ({
       id={name}
       name={name}
       placeholder={placeholder}
-      className="block border border-[#D0D5DD] p-4 rounded w-full"
+      className="block border border-[#D0D5DD] p-4 rounded w-full mt-1"
     />
     <ErrorMessage name={name} component="div" className="text-red-500" />
   </div>

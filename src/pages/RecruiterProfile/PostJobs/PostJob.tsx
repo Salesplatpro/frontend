@@ -1,15 +1,17 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+// import { FaChevronDown } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
+import { Bounce, Slide, toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
+import { experienceLevel } from '../../../utils'
 import { FormValues } from '../../../utils/jobPostTypes'
 
 const validationSchema = Yup.object({
@@ -92,13 +94,43 @@ const PostJob: React.FC = () => {
       const data = await jobPostCreation(submissionValues).unwrap()
       console.log(data)
       if (data.status) {
-        toast.success('Job Post Created successfully')
+        toast.success('Job Post Created successfully', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
         setJobId(data?.data._id)
       } else {
-        toast.error(data.message)
+        toast.error(data.message, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       }
     } catch (error) {
-      toast.error('Failed to create job post')
+      toast.error('Failed to create job post', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
     setSubmitting(false)
   }
@@ -122,11 +154,15 @@ const PostJob: React.FC = () => {
                 <h5 className="font-bold text-[14px] text-[#434144]">
                   Select Role
                 </h5>
-                <div className="border border-[#D0D5DD] py-4 pl-4 rounded-lg w-full">
+                <div className="py-2 pl-0 rounded-lg w-full">
                   <AllRoles
                     name="role"
                     value={values.role}
-                    onChange={(e) => setFieldValue('role', e.target.value)}
+                    onChange={(value: any) => {
+                      setFieldValue('role', value)
+                      // Update Formik state
+                    }}
+                    customHeight="60px"
                   />
                   {errors.role && touched.role ? (
                     <div className="text-red-500 text-sm">{errors.role}</div>
@@ -134,8 +170,8 @@ const PostJob: React.FC = () => {
                 </div>
               </div>
               <TextField
-                label="description"
-                name="description"
+                label="Description"
+                name="Description"
                 placeholder="Add Job description"
                 type="text"
               />
@@ -152,6 +188,7 @@ const PostJob: React.FC = () => {
                     setFieldValue('location.state', { name: '', geoId: null })
                     setFieldValue('location.city', { name: '', geoId: null })
                   }}
+                  customHeight="60px"
                 />
               </div>
               <div className="mb-4">
@@ -166,6 +203,7 @@ const PostJob: React.FC = () => {
                     setFieldValue('location.state.geoId', geoId)
                     setFieldValue('location.city', { name: '', geoId: null })
                   }}
+                  customHeight="60px"
                 />
               </div>
               <div className="mb-4">
@@ -179,16 +217,17 @@ const PostJob: React.FC = () => {
                   onChange={(geoId) => {
                     setFieldValue('location.city.geoId', geoId)
                   }}
+                  customHeight="60px"
                 />
               </div>
               <TextField
-                label="minSalary"
+                label="Minimum Salary"
                 name="minSalary"
                 placeholder="Min Salary"
                 type="text"
               />
               <TextField
-                label="maxSalary"
+                label="Maximum Salary"
                 name="maxSalary"
                 placeholder="Max Salary"
                 type="text"
@@ -203,14 +242,17 @@ const PostJob: React.FC = () => {
                   as="select"
                   id="experienceLevel"
                   name="experienceLevel"
-                  className="border border-[#D0D5DD] p-5 rounded-lg w-full">
+                  className="border border-[#D0D5DD] p-5 rounded-lg w-full mt-1">
                   <option value="">Select experience Level</option>
-                  <option value="senior">Senior</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="junior">Junior</option>
+                  {Object.values(experienceLevel).map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
                 </Field>
+
                 <ErrorMessage
-                  name="experienceLevel"
+                  name="Experience Level"
                   component="div"
                   className="text-red-500"
                 />

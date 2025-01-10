@@ -2,13 +2,13 @@ import '../form.scss'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
+import { Bounce, Slide, toast } from 'react-toastify'
 
-import google from '../../assets/google.png'
+// import google from '../../assets/google.png'
+// import Salesplat from '../../assets/salesplat.png'
 import logo from '../../assets/logo.png'
-import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import {
   useRecruiterRegMutation,
@@ -58,12 +58,32 @@ const SignIn = () => {
           token: response.data.token,
         }),
       )
-      toast.success('Signed up successfully')
+      toast.success('Signed up successfully', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Slide,
+      })
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
     } catch (err: any) {
       dispatch(signupFailure(err.data?.message))
-      toast.error(err.data?.message || 'An error occurred while signing up')
+      toast.error(err.data?.message || 'An error occurred while signing up', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     } finally {
       setLoading(false)
     }
@@ -238,7 +258,7 @@ const SignIn = () => {
                     <div className="already py-2">
                       Already have an account? <a href="/login">Log In</a>
                     </div>
-                    <div className=" w-[93%] space-y-4 py-4">
+                    {/* <div className=" w-[93%] space-y-4 py-4">
                       <button className="w-[100%] rounded-lg border flex justify-center items-center hover:bg-[#f7f7f7]">
                         <img
                           src={google}
@@ -260,7 +280,7 @@ const SignIn = () => {
                           Continue with Salesplat
                         </p>
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </Form>
               )}

@@ -1,2 +1,2 @@
+export * from '../components/Resources'
 export * from './MainLayout'
-export * from './Resources'

@@ -2,13 +2,14 @@ import '../form.scss'
 
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Bounce, Slide, toast } from 'react-toastify'
 
-import google from '../../assets/google.png'
+// import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
-import Salesplat from '../../assets/salesplat.png'
+// import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
 import { useUserLoginMutation } from '../../redux/api/apiSlice'
 import {
@@ -18,6 +19,7 @@ import {
 } from '../../redux/features/authSlice/authSlice'
 import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
+import ForgotPasswordModal from './ForgotPasswordModal'
 import Loading from './Loading'
 
 interface LoginFormValues {
@@ -36,6 +38,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
     validationSchema: loginSchema,
@@ -53,11 +57,17 @@ const Login: React.FC = () => {
             token: response.data.token,
           }),
         )
+
         toast.success('Logged in successfully', {
-          style: {
-            color: '#000',
-            backgroundColor: '#fff',
-          },
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
         })
         const userRole = response.data.user?.userRole
         switch (userRole) {
@@ -76,10 +86,15 @@ const Login: React.FC = () => {
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
         toast.error(err.data?.message || 'An error occurred while logging in', {
-          style: {
-            backgroundColor: '#fff',
-            color: '#000',
-          },
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
         })
       } finally {
         setSubmitting(false)
@@ -96,10 +111,18 @@ const Login: React.FC = () => {
     formik.setFieldTouched(name, true)
   }
 
+  const handleForgot = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div>
       <div className="talentReg">
-        <div className="apply-job">
+        <div className="apply-job lg:mb-60">
           <div className="job-hero">
             <img className="logo" src={logo} alt="company" />
             <div>
@@ -140,7 +163,9 @@ const Login: React.FC = () => {
 
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />
-                <div className="forgot-password">Forgot password?</div>
+                <div className="forgot-password" onClick={handleForgot}>
+                  Forgot password?
+                </div>
               </div>
               <div className="flex justify-center items-center flex-col">
                 {loading ? (
@@ -157,7 +182,7 @@ const Login: React.FC = () => {
                   Don&apos;t have an account ?{' '}
                   <a href="/talentRegister">Sign up</a>
                 </div>
-                <div className=" w-[93%] space-y-4 py-4">
+                {/* <div className=" w-[93%] space-y-4 py-4">
                   <button className="w-[100%] rounded-lg border flex justify-center items-center hover:bg-[#f7f7f7]">
                     <img
                       src={google}
@@ -179,7 +204,7 @@ const Login: React.FC = () => {
                       Continue with Salesplat
                     </p>
                   </button>
-                </div>
+                </div> */}
               </div>
             </form>
           </div>
@@ -188,6 +213,7 @@ const Login: React.FC = () => {
           <Carousel />
         </div>
       </div>
+      {isModalOpen && <ForgotPasswordModal onClose={closeModal} email={''} />}
     </div>
   )
 }

@@ -1,7 +1,7 @@
 // Submit and update Talent Profile
 
 import { FormikHelpers } from 'formik'
-import { toast } from 'react-hot-toast'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import { setUser } from '../../../redux/features/authSlice/authSlice'
 import { TalentProfileProps } from '../../../utils/types'
@@ -25,7 +25,7 @@ export const handleProfileSubmit = async (
 
     if (isNewProfile) {
       formData.append('bio', values.bio || '')
-      formData.append('role', (values.role || []).join(','))
+
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')
@@ -46,18 +46,40 @@ export const handleProfileSubmit = async (
 
       const updatedFormValues = {
         ...values,
+        role: Array.isArray(values.role) ? values.role : [values.role],
         cv: submitCv.data.fileUrl || '',
       }
       const response = await talentCreation(updatedFormValues).unwrap()
 
       if (response.status) {
         dispatch(setUser({ user: response.data.user, isLoggedIn: true }))
-        toast.success('Profile created successfully')
+        toast.success('Profile created successfully', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
         refetch()
         navigate('/talentDashboard/job')
       } else {
         toast.error(
           response.message || 'An error occurred while creating profile',
+          {
+            position: 'top-right',
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          },
         )
       }
     } else {
@@ -87,9 +109,13 @@ export const handleProfileSubmit = async (
       if (values.bio !== initialValues.bio) {
         updatedFields.bio = values.bio
       }
-      if (values.role?.join(',') !== initialValues.role?.join(',')) {
-        updatedFields.role = values.role
+
+      if (JSON.stringify(values.role) !== JSON.stringify(initialValues.role)) {
+        updatedFields.role = Array.isArray(values.role)
+          ? values.role.filter((role): role is any => typeof role === 'string')
+          : [values.role]
       }
+
       if (values.minSalary !== initialValues.minSalary) {
         updatedFields.minSalary = values.minSalary
       }
@@ -103,12 +129,21 @@ export const handleProfileSubmit = async (
         updatedFields.cv = values.cv
       }
       if (Object.keys(updatedFields).length === 0) {
-        toast.error('No changes detected')
+        toast.error('No changes detected', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         setSubmitting(false)
         return
       }
 
-      // Append only the updated fields to formData
       if (updatedFields.cv) {
         formData.append('file', updatedFields.cv)
       }
@@ -124,14 +159,34 @@ export const handleProfileSubmit = async (
       const response = await updateProfile(updatedFields).unwrap()
 
       if (response.status) {
-        toast.success('Profile updated successfully')
+        toast.success('Profile updated successfully', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
         refetch()
         navigate('/talentDashboard/job')
       } else {
         const errorMessage =
           response?.data?.message ||
           'An error occurred while processing your request'
-        toast.error(errorMessage)
+        toast.error(errorMessage, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       }
     }
   } catch (error: any) {
@@ -140,7 +195,17 @@ export const handleProfileSubmit = async (
       error.message ||
       'An error occurred while processing your request'
 
-    toast.error(errorMessage)
+    toast.error(errorMessage, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    })
   } finally {
     setSubmitting(false)
   }
