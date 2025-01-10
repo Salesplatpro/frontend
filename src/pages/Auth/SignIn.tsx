@@ -2,7 +2,6 @@ import '../form.scss'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-// import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { Bounce, Slide, toast } from 'react-toastify'

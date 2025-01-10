@@ -25,6 +25,7 @@ export const handleProfileSubmit = async (
 
     if (isNewProfile) {
       formData.append('bio', values.bio || '')
+
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')

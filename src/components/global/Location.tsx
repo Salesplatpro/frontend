@@ -22,11 +22,17 @@ const Location: React.FC<LocationProps> = ({
   customHeight,
   bold,
 }) => {
-  const { setFieldValue } = useFormikContext()
+  const { setFieldValue, errors } = useFormikContext<{
+    location: Record<string, { name: string }>
+  }>()
   const [options, setOptions] = useState<LocationOption[]>([])
   const [selectedValue, setSelectedValue] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
+
+  // Error handling: Retrieve error message from errors object
+  const locationFieldError =
+    errors?.location?.[locationTitle?.toLowerCase() || '']?.name
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,6 +166,9 @@ const Location: React.FC<LocationProps> = ({
             isSearchable={true}
           />
         </div>
+      )}
+      {locationFieldError && (
+        <p className="text-red-500 text-[16px] mt-1">{locationFieldError}</p>
       )}
     </div>
   )
