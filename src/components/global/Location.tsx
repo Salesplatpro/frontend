@@ -19,20 +19,13 @@ const Location: React.FC<LocationProps> = ({
   isCountry,
   onChange,
   height,
-  customHeight,
   bold,
 }) => {
-  const { setFieldValue, errors } = useFormikContext<{
-    location: Record<string, { name: string }>
-  }>()
+  const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
   const [selectedValue, setSelectedValue] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [fetchError, setFetchError] = useState<string | null>(null)
-
-  // Error handling: Retrieve error message from errors object
-  const locationFieldError =
-    errors?.location?.[locationTitle?.toLowerCase() || '']?.name
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,7 +117,7 @@ const Location: React.FC<LocationProps> = ({
     control: (base: any) => ({
       ...base,
       borderColor: '#D0D5DD',
-      height: customHeight || '44px',
+      height: height ? `${height}` : '44px',
       fontFamily: 'Raleway',
     }),
     input: (base: any) => ({
@@ -166,9 +159,6 @@ const Location: React.FC<LocationProps> = ({
             isSearchable={true}
           />
         </div>
-      )}
-      {locationFieldError && (
-        <p className="text-red-500 text-[16px] mt-1">{locationFieldError}</p>
       )}
     </div>
   )
