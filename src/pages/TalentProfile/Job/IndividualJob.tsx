@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
-import { FaCopy, FaFacebook, FaTwitter } from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
 import { IoIosLink } from 'react-icons/io'
+import { LuShare } from 'react-icons/lu'
 import { Link, useParams } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce, Slide, toast } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import ShareJobModal from './ShareJobModal'
 
 const shareOptions = [
   {
-    icon: <FaFacebook />,
+    icon: <LuShare />,
     text: 'Share',
+    action: 'share',
+    link: '',
   },
-  {
-    icon: <FaXTwitter />,
-    text: 'Tweet',
-  },
+
   {
     icon: <IoIosLink />,
     text: 'Copy',
+    action: 'copy',
+    link: window.location.href,
   },
 ]
 
@@ -48,6 +49,17 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
+  const [shareLinks, setShareLinks] = useState<{
+    facebook: string
+    twitter: string
+    linkedin: string
+  }>({
+    facebook: '',
+    twitter: '',
+    linkedin: '',
+  })
 
   useEffect(() => {
     if (data) {
@@ -71,6 +83,67 @@ const IndividualJob = () => {
 
   if (isLoading) return <Loading />
 
+  const copyToClipBoard = () => {
+    const link = window.location.href
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success('Copied!', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Slide,
+        })
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
+      })
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleAction = (option: { action: string; link: string }) => {
+    const link = window.location.href
+    const TwittershareUrl = `https://twitter.com/share?url=${encodeURIComponent(
+      link,
+    )}`
+
+    const FacebookshareUrl = `https://facebook.com/share?url=${encodeURIComponent(
+      link,
+    )}`
+
+    const LinkedInshareUrl = `https://linkedin.com/share?url=${encodeURIComponent(
+      link,
+    )}`
+    if (option.action === 'copy') {
+      copyToClipBoard()
+    } else if (option.action === 'share') {
+      setShareLinks({
+        facebook: FacebookshareUrl,
+        twitter: TwittershareUrl,
+        linkedin: LinkedInshareUrl,
+      })
+      setIsModalOpen(true)
+    }
+  }
+
   return (
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
@@ -82,6 +155,7 @@ const IndividualJob = () => {
           {shareOptions.map((option, i) => (
             <div
               key={i}
+              onClick={() => handleAction(option)}
               className="flex cursor-pointer items-center justify-center space-x-2 border border-[#E7E7E9] w-[89px] h-[40px] rounded-lg">
               {option.icon}
               <span>{option.text}</span>
@@ -188,6 +262,9 @@ const IndividualJob = () => {
         </div>
       </div>
       {/* ))} */}
+      {isModalOpen && (
+        <ShareJobModal onClose={closeModal} shareLinks={shareLinks} />
+      )}
     </div>
   )
 }
