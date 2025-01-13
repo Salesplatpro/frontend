@@ -1,4 +1,5 @@
 export * from './CheckBox'
+export * from './PhoneNumberField'
 export * from './SearchBox'
 export * from './SelectItem'
 export * from './TextInput'

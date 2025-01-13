@@ -36,14 +36,7 @@ export const SignUpSchema = Yup.object().shape({
       /^[a-zA-Z]+$/.test(value || ''),
     ),
 
-  phone: Yup.string()
-    .required('Phone Number is required')
-    .test(
-      'valid-phone',
-      'Invalid phone number format. Must start with "+234" and be followed by 10 digits.',
-      (value) => /^\+234\d{10}$/.test(value || ''),
-    ),
-
+  phone: Yup.string().required('Phone Number is required'),
   userType: Yup.string()
     .oneOf(['talent', 'recruiter'], 'Invalid user type')
     .required('User type is required'),
