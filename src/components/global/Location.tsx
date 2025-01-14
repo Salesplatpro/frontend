@@ -136,6 +136,7 @@ const Location: React.FC<LocationProps> = ({
         }`}
         htmlFor={locationTitle}>
         {locationLabel}
+        <span className="text-red-500">*</span>
       </label>
 
       {isLoading ? (

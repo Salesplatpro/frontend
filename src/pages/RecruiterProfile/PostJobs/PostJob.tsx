@@ -171,9 +171,9 @@ const PostJob: React.FC = () => {
               </div>
               <TextField
                 label="Description"
-                name="Description"
+                name="description"
                 placeholder="Add Job description"
-                type="text"
+                type="textarea"
               />
               <div className="mb-4">
                 <Location
