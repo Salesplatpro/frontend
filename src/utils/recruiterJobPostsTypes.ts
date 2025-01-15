@@ -66,3 +66,25 @@ export type SingleJobDetails = {
   updatedAt: string
   cvSimilarityScore: number
 }
+
+export interface JobProfileProps {
+  role?: {
+    name: string
+  }
+  title?: string
+  description?: string
+  postedBy?: {
+    firstName?: string
+    lastName?: string
+  }
+  responsibilities?: string[]
+  skills?: string[]
+  goals?: string[]
+  remote?: boolean
+  location?: {
+    country: string
+    city?: string
+    state?: string
+  }
+  experienceLevel?: string
+}

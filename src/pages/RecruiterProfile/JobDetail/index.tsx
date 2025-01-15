@@ -5,28 +5,10 @@ import { Link, useParams } from 'react-router-dom'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
-import { capitalizeFirstWord } from '../../../utils'
+import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
-import ShareJobModal from './ShareJobModal'
-
-interface JobProfileProps {
-  role?: {
-    name: string
-  }
-  title?: string
-  description?: string
-  responsibilities?: string[]
-  skills?: string[]
-  goals?: string[]
-  remote?: boolean
-  location?: {
-    country: string
-    city?: string
-    state?: string
-  }
-  experienceLevel?: string
-}
+import ShareJobModal from '../../TalentProfile/Job/ShareJobModal'
 
 const IndividualJob = () => {
   const { jobId } = useParams()
@@ -84,15 +66,14 @@ const IndividualJob = () => {
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
         <h2 className="font-bold md:text-3xl text-xl">
-          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)} at{' '}
-          {jobProfile?.title}
+          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
         <div className="flex space-x-5 items-center mt-3">
           <ShareOptions handleShare={handleShare} jobId={jobId!} />
         </div>
 
-        <div className="flex md:flex-row flex-col justify-between items-start md:w-[90%] w-full mx-auto md:mt-10 mt-6">
-          <div className="md:w-[60%] w-full text-start">
+        <div className="flex md:flex-row flex-col justify-between items-start md:space-x-10 w-full mx-auto md:mt-10 mt-6">
+          <div className="text-start">
             <div className="">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
                 Your role at{jobProfile?.title}
@@ -143,11 +124,11 @@ const IndividualJob = () => {
                 </ul>
               )}
             </div>
-            <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
-              <button className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
-                Apply for this position
-              </button>
-            </Link>
+            {/* <Link to={`/talentDashboard/applicationPipeline/${jobId}`}> */}
+            <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+              Edit
+            </button>
+            {/* </Link> */}
           </div>
 
           <div className="md:w-[30%] w-full mt-7 md:mt-0">
@@ -155,7 +136,7 @@ const IndividualJob = () => {
               <button
                 type="submit"
                 className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
-                Apply
+                Edit
               </button>
               <div className="mt-4">
                 <p className="text-[#667085] text-sm text-start font-medium">
@@ -189,6 +170,7 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
+      {/* ))} */}
       {isModalOpen && (
         <ShareJobModal onClose={closeModal} shareLinks={shareLinks} />
       )}

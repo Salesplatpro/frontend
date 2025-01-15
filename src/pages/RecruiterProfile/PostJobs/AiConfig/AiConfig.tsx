@@ -108,7 +108,8 @@ const AiConfig = () => {
           theme: 'light',
           transition: Slide,
         })
-        navigate('/recruiterDashboard/myjobposts')
+        navigate(`/recruiterDashboard/jobdetail/${jobId}`)
+        // navigate('/recruiterDashboard/myjobposts')
       }
     } catch (error: any) {
       const errorMessage =
