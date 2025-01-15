@@ -3,7 +3,7 @@ import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import animationData from '../../../assets/Animation - check.json'
 import Loading from '../../../components/Loading/Loading'
@@ -12,6 +12,7 @@ import {
   usePostPretestMutation,
 } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
+import { notify } from '../../../utils/toastNotifications'
 import { Question } from '../../../utils/types'
 
 const TalentAssessment = () => {
@@ -38,15 +39,8 @@ const TalentAssessment = () => {
       console.log(data.data)
     }
     if (error) {
-      toast.error('DisplayError fetching questions', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'DisplayError fetching questions', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
@@ -96,42 +90,26 @@ const TalentAssessment = () => {
       const response = await postAnswer(formData).unwrap()
       console.log(formData)
       if (response.status) {
-        toast.success(`${response.message}`, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+        notify('success', `${response.message}`, {
+          autoClose: 5000,
         })
+
         // toast.success(`${response.message} ${response.data.scorePercent}`)
       } else {
-        toast.error(response.message || 'DisplayError submitting question', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        notify(
+          'error',
+          response.message || 'DisplayError submitting question',
+          {
+            autoClose: 5000,
+            transition: Bounce,
+          },
+        )
       }
     } catch (error) {
       console.log(error)
-      toast.error('DisplayError submitting quiz', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+
+      notify('error', 'DisplayError submitting quiz', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }

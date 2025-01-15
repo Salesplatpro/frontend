@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 // import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 // import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
@@ -20,6 +20,7 @@ import {
   signupStart,
   signupSuccess,
 } from '../../redux/features/authSlice/authSlice'
+import { notify } from '../../utils/toastNotifications'
 import { SignUpSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import DropDown from './DropDown'
@@ -59,32 +60,19 @@ const SignIn = () => {
           token: response.data.token,
         }),
       )
-      toast.success('Signed up successfully', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Slide,
+      notify('success', `Signed up successfully`, {
+        autoClose: 5000,
       })
+
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
     } catch (err: any) {
       dispatch(signupFailure(err.data?.message))
-      toast.error(err.data?.message || 'An error occurred while signing up', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      notify(
+        'error',
+        err.data?.message || 'An error occurred while signing up',
+        { autoClose: 5000, transition: Bounce },
+      )
     } finally {
       setLoading(false)
     }

@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 // import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 // import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
@@ -17,6 +17,7 @@ import {
   loginStart,
   loginSuccess,
 } from '../../redux/features/authSlice/authSlice'
+import { notify } from '../../utils/toastNotifications'
 import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import ForgotPasswordModal from './ForgotPasswordModal'
@@ -58,17 +59,10 @@ const Login: React.FC = () => {
           }),
         )
 
-        toast.success('Logged in successfully', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+        notify('success', `Logged in successfully`, {
+          autoClose: 5000,
         })
+
         const userRole = response.data.user?.userRole
         switch (userRole) {
           case 'recruiter':
@@ -85,17 +79,12 @@ const Login: React.FC = () => {
         }
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
-        toast.error(err.data?.message || 'An error occurred while logging in', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+
+        notify(
+          'error',
+          err.data?.message || 'An error occurred while logging in',
+          { autoClose: 5000, transition: Bounce },
+        )
       } finally {
         setSubmitting(false)
         setLoading(false)

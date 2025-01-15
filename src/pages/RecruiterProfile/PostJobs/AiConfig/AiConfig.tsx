@@ -3,12 +3,13 @@ import React from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 import * as Yup from 'yup'
 
 import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
 import TextField from '../../../../components/Form/TextField'
 import { useAiConfigMutation } from '../../../../redux/api/recruiter'
+import { notify } from '../../../../utils/toastNotifications'
 import QuestionGenerator from './QuestionGenerator'
 import useGeneratedQuestion from './useGeneratedQuestion'
 
@@ -97,17 +98,10 @@ const AiConfig = () => {
     try {
       const response = await aiConfig(cleanedValues).unwrap()
       if ('data' in response && response.data) {
-        toast.success(response.data?.message || 'Submitted successfully', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+        notify('success', response.data?.message || 'Submitted successfully', {
+          autoClose: 5000,
         })
+
         navigate('/recruiterDashboard/myjobposts')
       }
     } catch (error: any) {
@@ -116,15 +110,8 @@ const AiConfig = () => {
         error.message ||
         'An error occurred while processing your request'
 
-      toast.error(errorMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', errorMessage, {
+        autoClose: 5000,
         transition: Bounce,
       })
     } finally {

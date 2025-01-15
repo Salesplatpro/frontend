@@ -4,12 +4,13 @@ import { FaCopy, FaFacebook, FaTwitter } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
 import { IoIosLink } from 'react-icons/io'
 import { Link, useParams } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import { notify } from '../../../utils/toastNotifications'
 
 const shareOptions = [
   {
@@ -55,15 +56,8 @@ const IndividualJob = () => {
       console.log(data.data)
     }
     if (error) {
-      toast.error('DisplayError loading job post', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'DisplayError loading job post', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }

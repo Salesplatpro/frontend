@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import { RootState } from '../redux/store/store'
+import { notify } from '../utils/toastNotifications'
 
 interface ProtectedRouteProps {
   allowedRoles: string[]
@@ -17,19 +18,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   useEffect(() => {
     console.log(userRole)
     if (user.isLoggedIn && user.user && !allowedRoles.includes(userRole)) {
-      toast.error(
+      notify(
+        'error',
         `You don't have access to this page as a ${user.user.userRole}`,
-        {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        },
+        { autoClose: 5000, transition: Bounce },
       )
     }
   }, [user, allowedRoles])
