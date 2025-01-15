@@ -84,7 +84,7 @@ const ShareJobModal: React.FC<ModalProps> = ({ onClose, shareLinks }) => {
       aria-labelledby="modal-title"
       aria-modal="true">
       <div
-        className="overlay w-full h-full fixed top-0 lg:left-[295px] md:left-0 right-0 bottom-0 bg-[rgba(49,49,49,0.8)]"
+        className="overlay w-full h-full fixed top-0 md:left-0 right-0 bottom-0 bg-[rgba(49,49,49,0.8)]"
         onClick={handleOverlayClick}
         role="presentation"
         aria-hidden="true"></div>

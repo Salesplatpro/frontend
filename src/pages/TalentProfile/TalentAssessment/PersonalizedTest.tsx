@@ -1,12 +1,13 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import {
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
+import { notify } from '../../../utils/toastNotifications'
 
 // Type definitions
 interface FormData {
@@ -60,17 +61,11 @@ const PersonalizedTest: React.FC = () => {
       }
     }
     if (personalizedError) {
-      toast.error('DisplayError loading personalized test data', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'DisplayError loading personalized test data', {
+        autoClose: 5000,
         transition: Bounce,
       })
+
       console.error(personalizedError)
     }
   }, [personalizedData, personalizedError])
@@ -97,41 +92,27 @@ const PersonalizedTest: React.FC = () => {
         formData,
       ).unwrap()) as PostAnswerResponse
       if (response.status) {
-        toast.success(`${response.message} ${response.data.scorePercent}%`, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
-        })
+        notify(
+          'success',
+          `${response.message} ${response.data.scorePercent}%`,
+          {
+            autoClose: 5000,
+          },
+        )
       } else {
-        toast.error(response.message || 'DisplayError submitting question', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        notify(
+          'error',
+          response.message || 'DisplayError submitting question',
+          {
+            autoClose: 5000,
+            transition: Bounce,
+          },
+        )
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
-      toast.error('Error submitting quiz', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'Error submitting quiz', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }

@@ -21,6 +21,7 @@ import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 // import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
+import PostedJob from './pages/Home/Jobs/PostedJob'
 import {
   ApplicationProgress,
   MyJobPosts,
@@ -37,6 +38,7 @@ import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchR
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
+import JobDetail from './pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
@@ -100,6 +102,10 @@ const router = createBrowserRouter([
       {
         path: 'job',
         element: <SingleJob />,
+      },
+      {
+        path: 'job/postedjob/:jobId',
+        element: <PostedJob />,
       },
     ],
   },
@@ -229,6 +235,10 @@ const router = createBrowserRouter([
           {
             path: 'postjob/:jobId',
             element: <PostJobTab />,
+          },
+          {
+            path: 'jobdetail/:jobId',
+            element: <JobDetail />,
           },
           {
             path: 'shortlist',

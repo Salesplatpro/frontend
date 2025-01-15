@@ -2,11 +2,12 @@ import '../form.scss'
 
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import Navbar from '../../components/Navbar'
 // import { SendRecruiterReg } from '../../api/api-communication'
 import { useRecruiterRegMutation } from '../../redux/api/apiSlice'
+import { notify } from '../../utils/toastNotifications'
 
 interface FormErrors {
   email?: any
@@ -47,42 +48,23 @@ const RecruiterRegister: React.FC = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         await SendRecruiterReg(formValues).unwrap()
-        toast.success('Registered successfully', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+
+        notify('success', `Registered successfully`, {
+          autoClose: 5000,
         })
+
         navigate('/login')
       } catch (err) {
-        toast.error('An error occurred while registering', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
+        notify('error', `An error occurred while registering`, {
+          autoClose: 5000,
           transition: Bounce,
         })
       }
     } else {
       setErrors(validationErrors)
-      toast.error('DisplayError registering recruiter details , check your ', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+
+      notify('error', `DisplayError registering recruiter details`, {
+        autoClose: 5000,
         transition: Bounce,
       })
     }

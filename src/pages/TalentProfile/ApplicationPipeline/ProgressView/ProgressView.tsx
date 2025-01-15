@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
@@ -10,6 +10,7 @@ import {
   useJobPipelineQuery,
   useLazyCvMatchQuery,
 } from '../../../../redux/api/talent'
+import { notify } from '../../../../utils/toastNotifications'
 import { ErrorResponse } from '../../utils/type'
 import { Application, Progress } from '../../utils/type'
 import ProgressError from './ProgressError'
@@ -88,17 +89,10 @@ const ProgressView: React.FC = () => {
 
   useEffect(() => {
     if (cvMatchData) {
-      toast.success('CV Match completed.', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Slide,
+      notify('success', 'CV Match completed.', {
+        autoClose: 5000,
       })
+
       refetch()
     }
 
@@ -110,17 +104,12 @@ const ProgressView: React.FC = () => {
   const handleError = (error: any, defaultMessage: string) => {
     const errorMessage =
       (error?.data as ErrorResponse)?.message || defaultMessage
-    toast.error(errorMessage, {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
+
+    notify('error', errorMessage, {
+      autoClose: 5000,
       transition: Bounce,
     })
+
     console.error('Error:', error)
   }
 

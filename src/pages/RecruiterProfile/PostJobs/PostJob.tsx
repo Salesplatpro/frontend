@@ -1,10 +1,9 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-// import { FaChevronDown } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 import * as Yup from 'yup'
 
 import TextField from '../../../components/Form/TextField'
@@ -13,6 +12,7 @@ import AllRoles from '../../../components/Roles/AllRoles'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { experienceLevel } from '../../../utils'
 import { FormValues } from '../../../utils/jobPostTypes'
+import { notify } from '../../../utils/toastNotifications'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),
@@ -94,41 +94,20 @@ const PostJob: React.FC = () => {
       const data = await jobPostCreation(submissionValues).unwrap()
       console.log(data)
       if (data.status) {
-        toast.success('Job Post Created successfully', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+        notify('success', `Job Post Created successfully`, {
+          autoClose: 5000,
         })
+
         setJobId(data?.data._id)
       } else {
-        toast.error(data.message, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
+        notify('error', data.message, {
+          autoClose: 5000,
           transition: Bounce,
         })
       }
     } catch (error) {
-      toast.error('Failed to create job post', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'Failed to create job post', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
@@ -171,9 +150,9 @@ const PostJob: React.FC = () => {
               </div>
               <TextField
                 label="Description"
-                name="Description"
+                name="description"
                 placeholder="Add Job description"
-                type="text"
+                type="textarea"
               />
               <div className="mb-4">
                 <Location
