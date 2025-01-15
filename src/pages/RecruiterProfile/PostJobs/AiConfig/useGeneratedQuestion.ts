@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import { useGenJpPersonalityMutation } from '../../../../redux/api/recruiter'
+import { notify } from '../../../../utils/toastNotifications'
 
 type GeneratedQuestion = {
   [key: string]: {
@@ -27,15 +28,9 @@ const useGeneratedQuestion = (jobId: string | undefined) => {
       }))
     } catch (error) {
       console.error(`Error generating ${pair} question:`, error)
-      toast.error(`Error generating ${pair} question`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+
+      notify('error', `Error generating ${pair} question`, {
+        autoClose: 5000,
         transition: Bounce,
       })
     } finally {
