@@ -2,10 +2,10 @@ import { Alert } from '@mui/material'
 import { Field, Form, Formik } from 'formik'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Slide, toast } from 'react-toastify'
 
 import { getRole } from '../../../api/api-communication'
 import { useCreateJDMutation } from '../../../redux/api/recruiter'
+import { notify } from '../../../utils/toastNotifications'
 
 type RoleType = {
   _id: string
@@ -44,17 +44,11 @@ const CreateJD = () => {
     console.log(values)
     try {
       const result = await createJD(values).unwrap()
-      toast.success(result.message, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Slide,
+
+      notify('success', result.message, {
+        autoClose: 5000,
       })
+
       navigate(`/recruiterDashboard/scout/${result.data._id}`)
     } catch (error: any) {
       console.error('Error creating Job Description:', error.data.message)

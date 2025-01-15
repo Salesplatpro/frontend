@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { Link, useParams } from 'react-router-dom'
+import { Bounce } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
@@ -51,7 +52,10 @@ const IndividualJob = () => {
       console.log(data.data)
     }
     if (error) {
-      notify('error', 'DisplayError loading job post')
+      notify('error', 'DisplayError loading job post', {
+        autoClose: 5000,
+        transition: Bounce,
+      })
     }
   }, [data, error])
 

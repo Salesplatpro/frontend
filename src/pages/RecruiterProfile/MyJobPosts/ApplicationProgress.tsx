@@ -3,7 +3,6 @@ import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
-import { Slide, toast } from 'react-toastify'
 
 import { OutlineButton, RecruiterButton } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
@@ -11,6 +10,7 @@ import {
   useFetchApplicantProgressQuery,
   usePatchApplicationStatusMutation,
 } from '../../../redux/api/recruiter'
+import { notify } from '../../../utils/toastNotifications'
 import { EachProgressDetails } from './EachProgressDetails'
 import { getApplicationDetails } from './getApplicationDetails'
 import { Messaging } from './Messaging/Messaging'
@@ -80,18 +80,11 @@ export const ApplicationProgress = () => {
         status: { status },
       }).unwrap()
 
-      toast.success(
+      notify(
+        'success',
         `Talent is ${response.data.application.status} successfully`,
         {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+          autoClose: 5000,
         },
       )
     } catch (error) {

@@ -3,7 +3,7 @@ import './Job.scss'
 import React, { useEffect, useState } from 'react'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { useSelector } from 'react-redux'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import { Button, DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
@@ -11,6 +11,7 @@ import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
+import { notify } from '../../../utils/toastNotifications'
 import { JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
 
@@ -73,15 +74,8 @@ const Job = () => {
       setJobs(data.data)
     }
     if (error) {
-      toast.error('DisplayError fetching jobs', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', `DisplayError fetching jobs`, {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
@@ -94,15 +88,8 @@ const Job = () => {
       console.log(filteredData.data)
     }
     if (filteredError) {
-      toast.error('DisplayError fetching filtered jobs', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'DisplayError fetching filtered jobs', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
