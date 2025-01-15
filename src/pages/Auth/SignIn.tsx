@@ -2,15 +2,14 @@ import '../form.scss'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-// import toast from 'react-hot-toast'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { Bounce } from 'react-toastify'
 
 // import google from '../../assets/google.png'
-import logo from '../../assets/logo.png'
 // import Salesplat from '../../assets/salesplat.png'
-import { CheckBox, TextInput } from '../../components'
+import logo from '../../assets/logo.png'
+import { CheckBox, PhoneNumberField, TextInput } from '../../components'
 import {
   useRecruiterRegMutation,
   useTalentRegMutation,
@@ -168,20 +167,7 @@ const SignIn = () => {
                       className="text-red-500 text-sm"
                     />
                   </div>
-                  <Field
-                    title="Phone Number"
-                    label="Phone Number"
-                    name="phone"
-                    as={TextInput}
-                    type="number"
-                    placeholder="Enter Phone Number"
-                  />
-                  <ErrorMessage
-                    name="phone"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
-
+                  <PhoneNumberField />
                   <div className="relative">
                     <Field
                       title="Password"

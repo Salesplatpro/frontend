@@ -101,8 +101,8 @@ const AiConfig = () => {
         notify('success', response.data?.message || 'Submitted successfully', {
           autoClose: 5000,
         })
-
-        navigate('/recruiterDashboard/myjobposts')
+        navigate(`/recruiterDashboard/jobdetail/${jobId}`)
+        // navigate('/recruiterDashboard/myjobposts')
       }
     } catch (error: any) {
       const errorMessage =

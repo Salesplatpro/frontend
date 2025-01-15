@@ -11,6 +11,7 @@ export const handleProfileSubmit = async (
   setSubmitting: FormikHelpers<TalentProfileProps>['setSubmitting'],
   userInfo: any,
   dispatch: any,
+  profilePics: string,
   initialValues: TalentProfileProps,
   talentCreation: any,
   uploadCv: any,
@@ -24,6 +25,7 @@ export const handleProfileSubmit = async (
 
     if (isNewProfile) {
       formData.append('bio', values.bio || '')
+
       formData.append('minSalary', values.minSalary || '')
       formData.append('maxSalary', values.maxSalary || '')
       formData.append('experience', values.experience || '')

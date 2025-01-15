@@ -8,23 +8,28 @@ type TextFieldProps = {
   type?: string
 }
 
-const TextField = ({
-  label,
-  name,
-  placeholder,
-  type = 'text',
-}: TextFieldProps) => (
+const TextField = ({ label, name, placeholder, type }: TextFieldProps) => (
   <div className="mb-4">
     <label htmlFor={name} className="font-bold text-[14px] text-[#434144]">
       {label}
     </label>
-    <Field
-      type={type}
-      id={name}
-      name={name}
-      placeholder={placeholder}
-      className="block border border-[#D0D5DD] p-4 rounded w-full"
-    />
+    {type === 'textarea' ? (
+      <Field
+        as="textarea"
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        className="border border-[#D0D5DD] p-4 rounded-lg w-full"
+      />
+    ) : (
+      <Field
+        type={type}
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        className="block border border-[#D0D5DD] p-4 rounded w-full mt-1"
+      />
+    )}
     <ErrorMessage name={name} component="div" className="text-red-500" />
   </div>
 )

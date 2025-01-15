@@ -138,8 +138,10 @@ const PostJob: React.FC = () => {
                     name="role"
                     value={values.role}
                     onChange={(value: any) => {
-                      setFieldValue('role', value) // Update Formik state
+                      setFieldValue('role', value)
+                      // Update Formik state
                     }}
+                    customHeight="60px"
                   />
                   {errors.role && touched.role ? (
                     <div className="text-red-500 text-sm">{errors.role}</div>
@@ -147,10 +149,10 @@ const PostJob: React.FC = () => {
                 </div>
               </div>
               <TextField
-                label="description"
+                label="Description"
                 name="description"
                 placeholder="Add Job description"
-                type="text"
+                type="textarea"
               />
               <div className="mb-4">
                 <Location
@@ -165,6 +167,7 @@ const PostJob: React.FC = () => {
                     setFieldValue('location.state', { name: '', geoId: null })
                     setFieldValue('location.city', { name: '', geoId: null })
                   }}
+                  customHeight="60px"
                 />
               </div>
               <div className="mb-4">
@@ -179,6 +182,7 @@ const PostJob: React.FC = () => {
                     setFieldValue('location.state.geoId', geoId)
                     setFieldValue('location.city', { name: '', geoId: null })
                   }}
+                  customHeight="60px"
                 />
               </div>
               <div className="mb-4">
@@ -192,16 +196,17 @@ const PostJob: React.FC = () => {
                   onChange={(geoId) => {
                     setFieldValue('location.city.geoId', geoId)
                   }}
+                  customHeight="60px"
                 />
               </div>
               <TextField
-                label="minSalary"
+                label="Minimum Salary"
                 name="minSalary"
                 placeholder="Min Salary"
                 type="text"
               />
               <TextField
-                label="maxSalary"
+                label="Maximum Salary"
                 name="maxSalary"
                 placeholder="Max Salary"
                 type="text"
@@ -216,7 +221,7 @@ const PostJob: React.FC = () => {
                   as="select"
                   id="experienceLevel"
                   name="experienceLevel"
-                  className="border border-[#D0D5DD] p-5 rounded-lg w-full">
+                  className="border border-[#D0D5DD] p-5 rounded-lg w-full mt-1">
                   <option value="">Select experience Level</option>
                   {Object.values(experienceLevel).map((value) => (
                     <option key={value} value={value}>
@@ -224,8 +229,9 @@ const PostJob: React.FC = () => {
                     </option>
                   ))}
                 </Field>
+
                 <ErrorMessage
-                  name="experienceLevel"
+                  name="Experience Level"
                   component="div"
                   className="text-red-500"
                 />
