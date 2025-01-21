@@ -44,9 +44,9 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
         <div
           key={i}
           onClick={option.action}
-          className="flex cursor-pointer items-center justify-center space-x-2 border border-[#E7E7E9] w-[72px] h-[34px] rounded-lg hover:bg-[#5c8beb]">
+          className="flex cursor-pointer items-center justify-center space-x-2 border border-[#E7E7E9] w-[72px] h-[34px] rounded-lg hover:bg-[#5c8beb] hover:text-white">
           {option.icon}
-          <span className="font-medium">{option.text}</span>
+          <span className="font-medium hover:text-white">{option.text}</span>
         </div>
       ))}
     </div>
