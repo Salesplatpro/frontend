@@ -21,7 +21,7 @@ export const PhoneNumberField = () => {
           <PhoneInput
             {...field}
             country={'ng'}
-            value={values.phone || ''}
+            value={values.phone}
             onChange={(phone) => setFieldValue('phone', phone)}
             inputProps={{
               name: 'phone',
