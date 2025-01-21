@@ -66,12 +66,10 @@ const SignIn = () => {
       setModalName(`${values.lastName}`)
       setIsModalOpen(true)
     } catch (err: any) {
-      dispatch(signupFailure(err.data?.message))
-      notify(
-        'error',
-        err.data?.message || 'An error occurred while signing up',
-        { autoClose: 5000, transition: Bounce },
-      )
+      const errorMessage =
+        err?.data?.message || 'An error occurred while signing up'
+      dispatch(signupFailure(errorMessage))
+      notify('error', errorMessage, { autoClose: 5000, transition: Bounce })
     } finally {
       setLoading(false)
     }
