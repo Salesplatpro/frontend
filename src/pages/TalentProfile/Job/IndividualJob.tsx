@@ -69,10 +69,12 @@ const IndividualJob = () => {
     const TwittershareUrl = `https://twitter.com/share?url=${encodeURIComponent(
       link,
     )}`
-    const FacebookshareUrl = `https://facebook.com/share?url=${encodeURIComponent(
+
+    const FacebookshareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       link,
     )}`
-    const LinkedInshareUrl = `https://linkedin.com/share?url=${encodeURIComponent(
+
+    const LinkedInshareUrl = `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
       link,
     )}`
 
