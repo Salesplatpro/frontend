@@ -1,20 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
-import { getToken } from '../../../utils/authUtils'
-import { baseUrl } from '../../../utils/baseConfig'
+import { customBaseQuery } from '../../../utils/customBaseQuery'
 
 export const talentApi = createApi({
   reducerPath: 'talentApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers) => {
-      const token = getToken()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
+  baseQuery: customBaseQuery,
   tagTypes: ['Talent'],
   endpoints: (builder) => ({
     talentCreation: builder.mutation({
@@ -42,21 +32,19 @@ export const talentApi = createApi({
 
     updateProfilePics: builder.mutation({
       query: (data) => ({
-        url: `/user/me`, // Use the correct endpoint if it's different
+        url: `/user/me`,
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: ['Talent'], // Invalidate the cache to refresh profile data
+      invalidatesTags: ['Talent'],
     }),
 
     updateProfile: builder.mutation({
       query: (data) => ({
-        url: '/user/profile', // Assumes that the base URL is set up correctly in your API service
+        url: '/user/profile',
         method: 'PATCH',
         body: data,
       }),
-      // Invalidates the 'Talent' cache, so other parts of the app can refetch updated data
-      // invalidatesTags: ['Talent'],
     }),
 
     fetchPretest: builder.query({
@@ -183,8 +171,8 @@ export const talentApi = createApi({
 export const {
   useTalentCreationMutation,
   useUploadCvMutation,
-  useFetchProfileQuery, // This is correct
-  useUpdateProfileMutation, // Add this if needed
+  useFetchProfileQuery,
+  useUpdateProfileMutation,
   useUpdateProfilePicsMutation,
   useFetchPretestQuery,
   usePostPretestMutation,
