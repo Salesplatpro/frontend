@@ -1,20 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
-import { getToken } from '../../../utils'
-import { baseUrl } from '../../../utils/baseConfig'
+import { customBaseQuery } from '../../../utils/customBaseQuery'
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers) => {
-      const token = getToken()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
+  baseQuery: customBaseQuery,
   tagTypes: ['Recruiter'],
   endpoints: (builder) => ({
     jobPostCreation: builder.mutation({
