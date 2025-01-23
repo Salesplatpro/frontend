@@ -4,8 +4,6 @@ import { ErrorMessage, Field, useFormikContext } from 'formik'
 import React from 'react'
 import PhoneInput from 'react-phone-input-2'
 
-//import { TextInput } from './TextInput'
-
 interface FormValues {
   phone: string
 }
@@ -17,9 +15,8 @@ export const PhoneNumberField = () => {
     <div className="flex flex-col my-3 space-y-1">
       <label htmlFor="phone">Phone number</label>
       <Field name="phone">
-        {({ field }: any) => (
+        {() => (
           <PhoneInput
-            {...field}
             country={'ng'}
             value={values.phone}
             onChange={(phone) => setFieldValue('phone', phone)}
