@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  <span style="font-size: 24px; font-weight: bold;">AuxHR</span>
+  <span style="font-size: 24px font-weight: bold">AuxHR</span>
   <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="AuxHR Logo" width="40" height="40"/>
 </p>
 
