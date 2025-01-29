@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
   </div>
 
-<h3 align="center">AuxHR  <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" /> </h3>
+<h3 align="center">AuxHR  <img src="/Salesplat.png" alt="auxhr" /> </h3>
 
 </div>
 
@@ -41,15 +41,50 @@ AuxHr is an AI-driven platform designed to streamline the recruitment process by
 
 ## AI-Powered Assessments
 
-🔹 AI: CV Assessment – Analyzes resumes to extract key skills and qualifications.
-🔹 AI: Pre-Screening Assessment – Filters out unqualified candidates before they reach recruiters.
-🔹 AI: Personalized Assessment – Evaluates candidates based on job-specific criteria.
-🔹 AI: Personality Assessment – Assesses soft skills and cultural fit.
+🔹 AI: CV Assessment – Analyzes resumes to extract key skills and qualifications.<br/>
+🔹 AI: Pre-Screening Assessment – Filters out unqualified candidates before they reach recruiters.<br/>
+🔹 AI: Personalized Assessment – Evaluates candidates based on job-specific criteria.<br/>
+🔹 AI: Personality Assessment – Assesses soft skills and cultural fit.<br/>
 🔹 AI: Assessment Grading – Scores candidates based on their performance in various tests.
 
 ## Recruiter Features
 
-🔹 Recruiter Job Post Creation – Allows companies to list job openings with AI-driven recommendations.
+🔹 Recruiter Job Post Creation – Allows companies to list job openings with AI-driven recommendations.<br/>
 🔹 Recruiter Shortlisting – Automatically ranks and shortlists candidates based on their compatibility score.
 
 With AuxHr, companies can enhance their hiring efficiency, reduce bias, and connect with the right talent faster than ever. 🚀
+
+## <a name="quick-start">🤸 Quick Start</a>
+
+Follow these steps to set up the project locally on your machine.
+
+**Prerequisites**
+
+Make sure you have the following installed on your machine:
+
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/en)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
+
+**Cloning the Repository**
+
+```bash
+git clone https://github.com/adrianhajdin/xora.git
+cd xora
+```
+
+**Installation**
+
+Install the project dependencies using npm:
+
+```bash
+npm install
+```
+
+**Running the Project**
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
