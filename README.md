@@ -1,6 +1,6 @@
 <p align="center">
+  <h2>AuxHR</h2>
   <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="AuxHR Logo" width="20" height="20"/>
-  <b>AuxHR</b>
 </p>
 
   <div align="center">
