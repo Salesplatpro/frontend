@@ -32,12 +32,12 @@ AuxHr is an AI-driven platform designed to streamline the recruitment process by
 
 ## <a name="features">🔋 Features of AuxHr</a>
 
-✅ Automated Talent Assessment – Uses AI to evaluate candidate profiles based on job requirements.
-✅ Compatibility Scoring – Assigns a match score to each talent, helping recruiters focus on the best candidates.
-✅ Effortless Profile Scanning – Eliminates the need for recruiters to manually review resumes.
-✅ Scalability – Enables companies to process high volumes of applicants seamlessly.
-✅ Scout & Recruit – Recruiters can post job openings and scout for talent efficiently.
-✅ Talent Registration & Profile Creation – Simplifies the onboarding process for job seekers.
+✅ Automated Talent Assessment – Uses AI to evaluate candidate profiles based on job requirements.<br/>
+✅ Compatibility Scoring – Assigns a match score to each talent, helping recruiters focus on the best candidates.<br/>
+✅ Effortless Profile Scanning – Eliminates the need for recruiters to manually review resumes.<br/>
+✅ Scalability – Enables companies to process high volumes of applicants seamlessly.<br/>
+✅ Scout & Recruit – Recruiters can post job openings and scout for talent efficiently.<br/>
+✅ Talent Registration & Profile Creation – Simplifies the onboarding process for job seekers.<br/>
 
 ## AI-Powered Assessments
 
