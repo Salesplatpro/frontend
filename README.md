@@ -1,7 +1,9 @@
-  <div align="center">
-  <h3>AuxHR</h3>
-  <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="auxhr" /> 
-  </div>
+<div align="center">
+  <span style="display: flex; align-items: center; gap: 10px;">
+    <h3>AuxHR</h3>
+    <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="AuxHR Logo" width="40" height="40" />
+  </span>
+</div>
 
   <div align="center">
     <img src="https://img.shields.io/badge/-React_JS-black?style=for-the-badge&logoColor=white&logo=react&color=61DAFB" alt="react.js" />
