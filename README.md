@@ -1,7 +1,12 @@
-<div align="center">
-  <h2>AuxHR</h2>
+<p align="center">
+  <b>AuxHR</b>
   <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="AuxHR Logo" width="20" height="20"/>
-</div>
+</p>
+
+<p align="center">
+  <span style="font-size: 24px; font-weight: bold;">AuxHR</span>
+  <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="AuxHR Logo" width="40" height="40"/>
+</p>
 
   <div align="center">
     <img src="https://img.shields.io/badge/-React_JS-black?style=for-the-badge&logoColor=white&logo=react&color=61DAFB" alt="react.js" />
