@@ -28,6 +28,7 @@ export const talentApi = createApi({
         method: 'GET',
       }),
       providesTags: ['Talent'],
+      keepUnusedDataFor: 0,
     }),
 
     updateProfilePics: builder.mutation({
