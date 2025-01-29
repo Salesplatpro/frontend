@@ -1,5 +1,5 @@
   <div align="center">
-  <h3 align="center">AuxHR</h3>
+  <h3>AuxHR</h3>
   <img src="https://github.com/Salesplatpro/frontend/blob/Paul/public/Salesplat.png" alt="auxhr" /> 
   </div>
 
