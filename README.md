@@ -2664,3 +2664,6 @@ select.custom-select {
 
 Assets used in the project can be
 found [here](https://github.com/Salesplatpro/frontend/tree/development/src/assets)
+
+<br />
+<br />
