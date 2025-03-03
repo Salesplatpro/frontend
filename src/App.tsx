@@ -56,221 +56,70 @@ import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
 
+const publicRoutes = [
+  { path: '/', element: <Home /> },
+  { path: 'explore', element: <Explore /> },
+  { path: 'solution', element: <Solutions /> },
+  { path: 'resources', element: <Resources /> },
+  { path: 'customerstories', element: <CustomerStories /> },
+  { path: 'login', element: <TalentLogin /> },
+  { path: 'talentRegister', element: <SignIn /> },
+  { path: 'recruiterRegister', element: <SignIn /> },
+  { path: 'job', element: <SingleJob /> },
+  { path: 'job/postedjob/:jobId', element: <PostedJob /> },
+];
+
+const talentRoutes = [
+  { path: 'talentProfile', element: <TalentProfile /> },
+  { path: 'talentQuiz', element: <TalentAssessment /> },
+  { path: 'job', element: <Job /> },
+  { path: 'chat', element: <Chat /> },
+  { path: 'notification', element: <Notification /> },
+  { path: 'job/:jobId', element: <IndividualJob /> },
+  { path: 'applicationPipeline', element: <ApplicationPipeline /> },
+  { path: 'applicationPipeline/personalizedTest/:jobId/:talentId', element: <PersonalizedTest /> },
+  { path: 'applicationPipeline/:jobId', element: <ProgressView /> },
+  { path: 'applicationPipeline/personalityTest/:jobId', element: <PersonalityTest /> },
+];
+
+const recruiterRoutes = [
+  { path: 'dashboard', element: <Dashboard /> },
+  { path: 'dashboard/allapplications', element: <AllApplications /> },
+  { path: 'postjob', element: <PostJobTab /> },
+  { path: 'myJobPosts', element: <MyJobPosts /> },
+  { path: 'scout', element: <Batching /> },
+  { path: 'scout/:id', element: <ChooseMethod /> },
+  { path: 'scout/upload-cv-cover-letter/:id', element: <UploadCvAndCoverLetter /> },
+  { path: 'scout/process-cv-cover-letter/:id', element: <ProcessCvAndCoverLetter /> },
+  { path: 'scout/search-talent/:id', element: <SearchTalent /> },
+  { path: 'scout/search-results/:id', element: <SearchResult /> },
+  { path: 'scout/create-jd', element: <CreateJD /> },
+  { path: 'scout/upload-cv/:id', element: <UploadCVOnly /> },
+  { path: 'scout/process-cv/:id', element: <ProcessCV /> },
+  { path: 'singleJobPost/:jobId', element: <SingleJobPost /> },
+  { path: 'singleJobPost/:jobId/:applicationId', element: <ApplicationProgress /> },
+  { path: 'jobdetail/:jobId', element: <JobDetail /> },
+  { path: 'shortlist', element: <Shortlist /> },
+];
+
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <MainLayout />,
-    children: [
-      {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: 'explore',
-        element: <Explore />,
-      },
-      {
-        path: 'solution',
-        element: <Solutions />,
-      },
-      {
-        path: 'resources',
-        element: <Resources />,
-      },
-      {
-        path: 'customerstories',
-        element: <CustomerStories />,
-      },
-      {
-        path: 'login',
-        element: <TalentLogin />,
-      },
-
-      {
-        path: 'talentRegister',
-        element: <SignIn />,
-      },
-
-      {
-        path: 'recruiterRegister',
-        element: <SignIn />,
-      },
-      {
-        path: 'customerstories',
-        element: <CustomerStories />,
-      },
-      {
-        path: 'job',
-        element: <SingleJob />,
-      },
-      {
-        path: 'job/postedjob/:jobId',
-        element: <PostedJob />,
-      },
-    ],
-  },
-  {
-    path: '/talentDashboard',
-    element: <ProtectedRoute allowedRoles={['talent']} />,
-    children: [
-      {
-        path: '',
-        element: <TalentProfileSidebar />,
-        children: [
-          {
-            path: 'talentProfile',
-            element: <TalentProfile />,
-          },
-          {
-            path: 'talentQuiz',
-            element: <TalentAssessment />,
-          },
-          {
-            path: 'job',
-            element: <Job />,
-          },
-
-          {
-            path: 'Chat',
-            element: <Chat />,
-          },
-
-          {
-            path: 'Notification',
-            element: <Notification />,
-          },
-          {
-            path: 'job/:jobId',
-            element: <IndividualJob />,
-          },
-          {
-            path: 'applicationPipeline',
-            element: <ApplicationPipeline />,
-          },
-          {
-            path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
-            element: <PersonalizedTest />,
-          },
-          {
-            path: 'applicationPipeline/:jobId',
-            element: <ProgressView />,
-          },
-          {
-            path: 'applicationPipeline/personalityTest/:jobId',
-            element: <PersonalityTest />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: '/recruiterDashboard',
-    element: <ProtectedRoute allowedRoles={['recruiter']} />,
-    children: [
-      {
-        path: '',
-        element: <RecruiterProfileSidebar />,
-        children: [
-          {
-            path: 'dashboard',
-            element: <Dashboard />,
-          },
-          {
-            path: 'dashboard/allapplications',
-            element: <AllApplications />,
-          },
-          {
-            path: 'postjob',
-            element: <PostJobTab />,
-          },
-          {
-            path: 'myJobPosts',
-            element: <MyJobPosts />,
-          },
-
-          {
-            path: 'scout',
-            element: <Batching />,
-          },
-          {
-            path: 'scout/:id',
-            element: <ChooseMethod />,
-          },
-          {
-            path: 'scout/upload-cv-cover-letter/:id',
-            element: <UploadCvAndCoverLetter />,
-          },
-          {
-            path: 'scout/process-cv-cover-letter/:id',
-            element: <ProcessCvAndCoverLetter />,
-          },
-          {
-            path: 'scout/search-talent/:id',
-            element: <SearchTalent />,
-          },
-          {
-            path: 'scout/search-results/:id',
-            element: <SearchResult />,
-          },
-          {
-            path: 'scout/create-jd',
-            element: <CreateJD />,
-          },
-          {
-            path: 'scout/upload-cv/:id',
-            element: <UploadCVOnly />,
-          },
-          {
-            path: 'scout/process-cv/:id',
-            element: <ProcessCV />,
-          },
-          {
-            path: 'singleJobPost/:jobId',
-            element: <SingleJobPost />,
-          },
-          {
-            path: 'singleJobPost/:jobId/:applicationId',
-            element: <ApplicationProgress />,
-          },
-          {
-            path: 'postjob/:jobId',
-            element: <PostJobTab />,
-          },
-          {
-            path: 'jobdetail/:jobId',
-            element: <JobDetail />,
-          },
-          {
-            path: 'shortlist',
-            element: <Shortlist />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: '/adminDashboard',
-    element: <AdminProfileSidebar />,
-    children: [
-      {
-        path: 'viewcandidates',
-        // element: <ViewTalents />,
-      },
-    ],
-  },
-])
+  { path: '/', element: <MainLayout />, children: publicRoutes },
+  { path: '/talentDashboard', element: <ProtectedRoute allowedRoles={['talent']} />, children: [{ path: '', element: <TalentProfileSidebar />, children: talentRoutes }] },
+  { path: '/recruiterDashboard', element: <ProtectedRoute allowedRoles={['recruiter']} />, children: [{ path: '', element: <RecruiterProfileSidebar />, children: recruiterRoutes }] },
+  { path: '/adminDashboard', element: <AdminProfileSidebar />, children: [{ path: 'viewcandidates' }] },
+]);
 
 function App() {
-  // const [count, setCount] = useState(0)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = getToken()
-    const user = JSON.parse(localStorage.getItem('user') || 'null')
+    const token = getToken();
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
     if (token && user) {
-      dispatch(setUser({ user }))
+      dispatch(setUser({ user }));
     }
-  }, [dispatch])
+  }, [dispatch]);
+
   return (
     <Fragment>
       <div className="app" data-testid="app-page">
@@ -288,18 +137,11 @@ function App() {
         pauseOnHover
         theme="light"
         transition={Slide}
-        toastStyle={{
-          width: useMediaQuery({ maxWidth: 640 }) ? '80%' : '320px', // Full width on mobile, fixed width on larger screens
-          maxWidth: '320px',
-          top: useMediaQuery({ maxWidth: 640 }) ? '5rem' : '3rem', // Increased top spacing for mobile
-          left: useMediaQuery({ maxWidth: 640 }) ? '50%' : undefined, // Center horizontally on mobile
-          transform: useMediaQuery({ maxWidth: 640 })
-            ? 'translateX(-50%)'
-            : undefined, // Adjust for centering
-        }}
+        toastStyle={{ width: useMediaQuery({ maxWidth: 640 }) ? '80%' : '320px' }}
       />
     </Fragment>
-  )
+  );
 }
 
-export default App
+export default App;
+

@@ -29,9 +29,9 @@ const Navbar = () => {
   }, [location.pathname])
 
   return (
-    <React.Fragment>
-      <div className="navi">
-        <div className="wrapper nav-navigate">
+    <React.Fragment >
+      <div className="navi" data-testId="navbar">
+        <div className="wrapper nav-navigate" >
           <nav className="navbar">
             <ul>
               <Link to="/" className="logo-li">

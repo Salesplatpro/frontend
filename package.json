@@ -7,7 +7,8 @@
     "serve": "vite preview",
     "type-check": "tsc",
     "test": "vitest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
@@ -48,6 +49,7 @@
     "@typescript-eslint/parser": "^5.16.0",
     "@vitejs/plugin-react": "^1.2.0",
     "autoprefixer": "^10.4.19",
+    "cypress": "^14.1.0",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",

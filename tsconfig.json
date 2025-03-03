@@ -17,6 +17,7 @@
     "types": ["vite"]
   },
   "include": [
+    "cypress",
     "./src",
     "../postcss.config.js",
     "declaration.d.ts",
