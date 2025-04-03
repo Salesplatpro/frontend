@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { useFetchProfileQuery } from '../../redux/api/talent'
+import { talentApi, useFetchProfileQuery } from '../../redux/api/talent'
 import { logout } from '../../redux/features/authSlice/authSlice'
 import { RootState } from '../../redux/store/store'
 import { getDefaultIcon } from '../../utils/getDefaultIcon'
@@ -50,6 +50,7 @@ export const LoggedInUserBadge: React.FC = () => {
   // Handle logout
   const handleLogout = () => {
     dispatch(logout())
+    dispatch(talentApi.util.resetApiState())
     navigate('/login')
   }
 
