@@ -10,9 +10,10 @@ import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
-import { experienceLevel } from '../../../utils'
 import { FormValues } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
+import ExperienceLevelSelect from './ExperienceLevelSelect'
+import WorkModeSelect from './WorkModeSelect'
 
 const validationSchema = Yup.object({
   description: Yup.string().required('Description is required'),
@@ -149,11 +150,20 @@ const PostJob: React.FC = () => {
                 </div>
               </div>
               <TextField
-                label="Description"
-                name="description"
-                placeholder="Add Job description"
+                label="Job Brief"
+                name="jobBrief"
+                placeholder="Add Job Brief (300 words max)"
+                type="textarea"
+                MAX_WORDS={600}
+              />
+
+              <TextField
+                label="Requirement"
+                name="requirement"
+                placeholder="Role requirements"
                 type="textarea"
               />
+
               <div className="mb-4">
                 <Location
                   locationTitle="Country"
@@ -173,7 +183,7 @@ const PostJob: React.FC = () => {
               <div className="mb-4">
                 <Location
                   locationTitle="State"
-                  locationLabel="States/Province"
+                  locationLabel="State"
                   geoId={values.location.country.geoId}
                   height="54px"
                   bold="bold"
@@ -188,7 +198,7 @@ const PostJob: React.FC = () => {
               <div className="mb-4">
                 <Location
                   locationTitle="City"
-                  locationLabel="Region"
+                  locationLabel="Region/City (Optional)"
                   geoId={values.location.state.geoId}
                   height="54px"
                   bold="bold"
@@ -211,24 +221,55 @@ const PostJob: React.FC = () => {
                 placeholder="Max Salary"
                 type="text"
               />
+
+              <div className="mb-4">
+                <label
+                  className="font-bold text-[14px] text-[#434144] block"
+                  htmlFor="workMode">
+                  Work Mode
+                </label>
+
+                <Field
+                  name="Work Mode"
+                  render={({ field, form }: { field: any; form: any }) => (
+                    <WorkModeSelect
+                      value={field.value}
+                      onChange={(value) =>
+                        form.setFieldValue(field.name, value)
+                      } // Set value to Formik field
+                      customHeight="60px"
+                    />
+                  )}
+                />
+
+                <ErrorMessage
+                  name="Work Mode"
+                  component="div"
+                  className="text-red-500"
+                />
+              </div>
+
               <div className="mb-4">
                 <label
                   className="block font-bold text-[14px] text-[#434144]"
                   htmlFor="experienceLevel">
                   Experience Level
                 </label>
+
                 <Field
-                  as="select"
-                  id="experienceLevel"
-                  name="experienceLevel"
-                  className="border border-[#D0D5DD] p-5 rounded-lg w-full mt-1">
-                  <option value="">Select experience Level</option>
-                  {Object.values(experienceLevel).map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </Field>
+                  name="Work Mode"
+                  render={({ field, form }: { field: any; form: any }) => (
+                    <ExperienceLevelSelect
+                      value={field.value}
+                      onChange={(value) =>
+                        form.setFieldValue(field.name, value)
+                      } // Set value to Formik field
+                      // options={options} // Pass the options
+                      customHeight="60px"
+                      options={[]}
+                    />
+                  )}
+                />
 
                 <ErrorMessage
                   name="Experience Level"
@@ -236,34 +277,7 @@ const PostJob: React.FC = () => {
                   className="text-red-500"
                 />
               </div>
-              <TextField
-                label="Address"
-                name="address"
-                placeholder="Address"
-                type="text"
-              />
-              <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="remote">
-                  Remote
-                </label>
-                <Field
-                  as="select"
-                  id="remote"
-                  name="remote"
-                  className="border border-[#D0D5DD] p-5 rounded-lg w-full">
-                  <option value="">Select Remote Option</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </Field>
-                <ErrorMessage
-                  name="remote"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div>
-              {/* Responsibility */}
+              {/* Responsibility
               <div className="mb-4">
                 <label
                   className="font-bold text-[14px] text-[#434144] block"
@@ -304,7 +318,7 @@ const PostJob: React.FC = () => {
                   component="div"
                   className="text-red-500"
                 />
-              </div>
+              </div> */}
               {/* skills */}
               <div className="mb-4">
                 <label
