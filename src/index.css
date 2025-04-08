@@ -8,6 +8,12 @@
   @apply hover:text-white ease-in duration-200 cursor-pointer;
 }
 
+.tooltip-wrap {
+  white-space: normal !important; /* Allows the text to wrap */
+  word-wrap: break-word; /* Breaks long words to the next line */
+  max-width: 200px; /* Optional: Set a maximum width for the tooltip */
+}
+
 .flip-2-ver-right-fwd {
   -webkit-animation: flip-2-ver-right-fwd 0.5s
     cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
