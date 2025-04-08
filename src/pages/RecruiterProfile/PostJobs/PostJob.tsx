@@ -8,22 +8,24 @@ import * as Yup from 'yup'
 
 import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
-import AllRoles from '../../../components/Roles/AllRoles'
+import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { FormValues } from '../../../utils/jobPostTypes'
+import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
 import { notify } from '../../../utils/toastNotifications'
 import ExperienceLevelSelect from './ExperienceLevelSelect'
 import WorkModeSelect from './WorkModeSelect'
 
 const validationSchema = Yup.object({
-  description: Yup.string().required('Description is required'),
+  jobBrief: Yup.string().required('Job Brief is required'),
   minSalary: Yup.number()
     .required('Minimum Salary is required')
     .positive('Minimum Salary must be positive'),
   maxSalary: Yup.number()
     .required('Maximum Salary is required')
     .positive('Maximum Salary must be positive'),
-  experienceLevel: Yup.string().required('experienceLevel level is required'),
+  experienceLevel: Yup.string().required('Experience level is required'),
+  workMode: Yup.string().required('Work Mode is required'),
   location: Yup.object({
     country: Yup.object({
       name: Yup.string().required('Country is required'),
@@ -33,27 +35,18 @@ const validationSchema = Yup.object({
       name: Yup.string().required('State is required'),
       geoId: Yup.number().required('State ID is required'),
     }),
-    city: Yup.object({
-      name: Yup.string().required('City is required'),
-      geoId: Yup.number().required('City ID is required'),
-    }),
   }),
-  address: Yup.string().required('Address is required'),
-  remote: Yup.string().required('Remote option is required'),
-  responsibilities: Yup.array().of(
-    Yup.string()
-      .required('Responsibility is required')
-      .max(150, 'Responsibility cannot be longer than 150 characters'),
-  ),
+  requirements: Yup.string().required('Requirements is required'),
+  role: Yup.string().required('Role is required'),
   skills: Yup.array().of(
     Yup.string()
       .required('Skill is required')
-      .max(150, 'Skill cannot be longer than 150 characters'),
+      .max(250, 'Skill cannot be longer than 150 characters'),
   ),
   goals: Yup.array().of(
     Yup.string()
       .required('Goal is required')
-      .max(150, 'Goal cannot be longer than 150 characters'),
+      .max(250, 'Goal cannot be longer than 150 characters'),
   ),
 })
 
@@ -62,19 +55,18 @@ const PostJob: React.FC = () => {
   const [jobPostCreation] = useJobPostCreationMutation()
 
   const initialValues: FormValues = {
-    description: '',
+    jobBrief: '',
     role: '',
+    requirements: '',
     minSalary: '',
     maxSalary: '',
+    workMode: '',
     experienceLevel: '',
     location: {
       country: { name: '', geoId: null },
       state: { name: '', geoId: null },
       city: { name: '', geoId: null },
     },
-    address: '',
-    remote: '',
-    responsibilities: [''],
     skills: [''],
     goals: [''],
   }
@@ -83,13 +75,16 @@ const PostJob: React.FC = () => {
     values: FormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
+    const location = {
+      country: values.location.country.name,
+      state: values.location.state.name,
+      ...(values.location.city?.name
+        ? { city: values.location.city?.name }
+        : {}),
+    }
     const submissionValues = {
       ...values,
-      location: {
-        country: values.location.country.name,
-        state: values.location.state.name,
-        city: values.location.city.name,
-      },
+      location,
     }
     try {
       const data = await jobPostCreation(submissionValues).unwrap()
@@ -131,11 +126,13 @@ const PostJob: React.FC = () => {
           {({ values, isSubmitting, setFieldValue, errors, touched }) => (
             <Form>
               <div className="mb-4">
-                <h5 className="font-bold text-[14px] text-[#434144]">
-                  Select Role
-                </h5>
+                <LabelWithAsterisk
+                  asterick={true}
+                  name="role"
+                  label="Select Role"
+                />
                 <div className="py-2 pl-0 rounded-lg w-full">
-                  <AllRoles
+                  <CreatableRoleSelect
                     name="role"
                     value={values.role}
                     onChange={(value: any) => {
@@ -151,15 +148,16 @@ const PostJob: React.FC = () => {
               </div>
               <TextField
                 label="Job Brief"
+                asterick={true}
                 name="jobBrief"
                 placeholder="Add Job Brief (300 words max)"
                 type="textarea"
                 MAX_WORDS={600}
               />
-
               <TextField
-                label="Requirement"
-                name="requirement"
+                label="Requirements"
+                name="requirements"
+                asterick={true}
                 placeholder="Role requirements"
                 type="textarea"
               />
@@ -171,6 +169,7 @@ const PostJob: React.FC = () => {
                   geoId={null}
                   height="54px"
                   bold="bold"
+                  asterick={true}
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
@@ -179,12 +178,18 @@ const PostJob: React.FC = () => {
                   }}
                   customHeight="60px"
                 />
+                <ErrorMessage
+                  name="location.country.name"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
               </div>
               <div className="mb-4">
                 <Location
                   locationTitle="State"
                   locationLabel="State"
                   geoId={values.location.country.geoId}
+                  asterick={true}
                   height="54px"
                   bold="bold"
                   isCountry={false}
@@ -193,6 +198,11 @@ const PostJob: React.FC = () => {
                     setFieldValue('location.city', { name: '', geoId: null })
                   }}
                   customHeight="60px"
+                />
+                <ErrorMessage
+                  name="location.state.name"
+                  component="div"
+                  className="text-red-500 text-sm"
                 />
               </div>
               <div className="mb-4">
@@ -212,25 +222,27 @@ const PostJob: React.FC = () => {
               <TextField
                 label="Minimum Salary"
                 name="minSalary"
+                asterick={true}
                 placeholder="Min Salary"
                 type="text"
               />
               <TextField
                 label="Maximum Salary"
                 name="maxSalary"
+                asterick={true}
                 placeholder="Max Salary"
                 type="text"
               />
 
               <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="workMode">
-                  Work Mode
-                </label>
+                <LabelWithAsterisk
+                  label="Work Mode"
+                  asterick={true}
+                  name="workMode"
+                />
 
                 <Field
-                  name="Work Mode"
+                  name="workMode"
                   render={({ field, form }: { field: any; form: any }) => (
                     <WorkModeSelect
                       value={field.value}
@@ -243,21 +255,21 @@ const PostJob: React.FC = () => {
                 />
 
                 <ErrorMessage
-                  name="Work Mode"
+                  name="workMode"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
 
               <div className="mb-4">
-                <label
-                  className="block font-bold text-[14px] text-[#434144]"
-                  htmlFor="experienceLevel">
-                  Experience Level
-                </label>
+                <LabelWithAsterisk
+                  label="Experience Level"
+                  asterick={true}
+                  name="experienceLevel"
+                />
 
                 <Field
-                  name="Work Mode"
+                  name="experienceLevel"
                   render={({ field, form }: { field: any; form: any }) => (
                     <ExperienceLevelSelect
                       value={field.value}
@@ -272,60 +284,18 @@ const PostJob: React.FC = () => {
                 />
 
                 <ErrorMessage
-                  name="Experience Level"
+                  name="experienceLevel"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
-              {/* Responsibility
-              <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="responsibilities">
-                  Responsibilities
-                </label>
-                <FieldArray name="responsibilities">
-                  {({ remove, push }) => (
-                    <div>
-                      {values.responsibilities.map((responsibility, index) => (
-                        <div
-                          key={index}
-                          className="flex mb-2 items-center space-x-0">
-                          <Field
-                            name={`responsibilities.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded-lg w-full"
-                          />
-                          <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded-lg"
-                            onClick={() => remove(index)}>
-                            <RiDeleteBin6Line />
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
-                        <span className="flex items-center gap-2">
-                          <FaPlus /> Add Responsibility
-                        </span>
-                      </button>
-                    </div>
-                  )}
-                </FieldArray>
-                <ErrorMessage
-                  name="responsibilities"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div> */}
               {/* skills */}
               <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="skills">
-                  Skills
-                </label>
+                <LabelWithAsterisk
+                  asterick={true}
+                  label="Skills"
+                  name="skills"
+                />
                 <FieldArray name="skills">
                   {({ remove, push }) => (
                     <div>
@@ -358,16 +328,12 @@ const PostJob: React.FC = () => {
                 <ErrorMessage
                   name="skills"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
               {/* Goals */}
               <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="goals">
-                  Goals
-                </label>
+                <LabelWithAsterisk asterick={true} name="goals" label="Goals" />
                 <FieldArray name="goals">
                   {({ remove, push }) => (
                     <div>
@@ -400,7 +366,7 @@ const PostJob: React.FC = () => {
                 <ErrorMessage
                   name="goals"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
               <div className="mt-10">
