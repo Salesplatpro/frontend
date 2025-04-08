@@ -1,42 +1,51 @@
-import { Field } from 'formik'
+import { useField } from 'formik'
 import React, { useState } from 'react'
 
-type TextFieldProps = {
+import LabelWithAsterisk from '../../utils/LabelWithAstericks'
+
+interface TextFieldProps {
   label: string
   name: string
+  asterick?: boolean
   placeholder?: string
   type?: string
   MAX_WORDS?: number
 }
 
-const TextField = ({
+const TextField: React.FC<TextFieldProps> = ({
   label,
   name,
+  asterick,
   placeholder,
-  type,
+  type = 'text',
   MAX_WORDS,
-}: TextFieldProps) => {
+}) => {
+  const [field, meta, helpers] = useField(name)
   const [wordCount, setWordCount] = useState(0)
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newWord = e.target.value.length
-    setWordCount(newWord)
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    let value = e.target.value
+    const words = value.trim().split(/\s+/)
+
+    if (MAX_WORDS && words.length > MAX_WORDS) {
+      value = words.slice(0, MAX_WORDS).join(' ')
+    }
+
+    setWordCount(value.trim() ? value.trim().split(/\s+/).length : 0)
+    helpers.setValue(value)
   }
 
   return (
     <div className="mb-4">
-      <label htmlFor={name} className="font-bold text-[14px] text-[#434144]">
-        {label}
-      </label>
+      <LabelWithAsterisk label={label} asterick={asterick} name={name} />
+
       {type === 'textarea' ? (
         <div>
-          <Field
-            as="textarea"
+          <textarea
+            {...field}
             id={name}
-            name={name}
             placeholder={placeholder}
-            maxLength={MAX_WORDS}
-            onChange={handleChange}
+            onChange={handleTextAreaChange}
             className="border border-[#D0D5DD] p-4 rounded-lg w-full h-[140px] focus:outline-none"
           />
 
@@ -47,13 +56,17 @@ const TextField = ({
           )}
         </div>
       ) : (
-        <Field
+        <input
+          {...field}
           type={type}
           id={name}
-          name={name}
           placeholder={placeholder}
           className="block border border-[#D0D5DD] p-4 rounded w-full mt-1"
         />
+      )}
+
+      {meta.touched && meta.error && (
+        <div className="text-red-500 text-sm">{meta.error}</div>
       )}
     </div>
   )
