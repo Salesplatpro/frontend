@@ -14,6 +14,7 @@ export interface LocationProps {
   height?: string
   customHeight: string
   bold?: string
+  asterick?: boolean
 }
 
 export interface LocationValues {
@@ -22,20 +23,19 @@ export interface LocationValues {
 }
 
 export interface FormValues {
-  description: string
+  jobBrief: string
   // aiConfig: string
   role: string
   minSalary: string
   maxSalary: string
   experienceLevel: string
+  workMode: string
   location: {
     country: LocationValues
     state: LocationValues
-    city: LocationValues
+    city?: LocationValues
   }
-  address: string
-  remote: string
-  responsibilities: string[]
+  requirements: string
   skills: string[]
   goals: string[]
 }
