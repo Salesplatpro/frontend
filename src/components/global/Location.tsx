@@ -20,6 +20,7 @@ const Location: React.FC<LocationProps> = ({
   onChange,
   height,
   bold,
+  asterick,
 }) => {
   const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
@@ -104,7 +105,7 @@ const Location: React.FC<LocationProps> = ({
       }
       setSelectedValue(selectedOption.geoId.toString())
       setFieldValue(`location.${locationTitle?.toLowerCase()}`, value)
-      onChange(value.geoId) // Notify parent component of the geoId change
+      onChange(value.geoId)
     }
   }
 
@@ -122,7 +123,7 @@ const Location: React.FC<LocationProps> = ({
     }),
     input: (base: any) => ({
       ...base,
-      color: '#333333', // Custom search text color
+      color: '#333333',
       fontSize: '16px',
     }),
   }
@@ -135,7 +136,7 @@ const Location: React.FC<LocationProps> = ({
         }`}
         htmlFor={locationTitle}>
         {locationLabel}
-        <span className="text-red-500">*</span>
+        {asterick && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       {isLoading ? (
