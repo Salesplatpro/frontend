@@ -104,7 +104,9 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 align={align}
                 sx={tableCellStyle}
                 className="capitalize">
-                {job.role.name}
+                <Link to={`/recruiterDashboard/jobdetail/${job._id}`}>
+                  {job.role.name}
+                </Link>
               </TableCell>
               <TableCell align={align} sx={tableCellStyle}>
                 {job.noOfApplicants}

@@ -86,22 +86,16 @@ const PostedJob = () => {
                 {jobProfile?.postedBy?.lastName}
               </h5>
               <p className="text-[#667085] text-base mt-0 text-justify">
-                {jobProfile?.description}
+                {jobProfile?.jobBrief}
               </p>
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your Responsibilities
+                Your Requirements
               </h5>
-              {jobProfile?.responsibilities && (
-                <ul className="list-disc ml-5 pl-0">
-                  {jobProfile?.responsibilities.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <p className="text-[#667085] text-base mt-0 text-justify">
+                {jobProfile?.requirements}
+              </p>
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
@@ -155,7 +149,7 @@ const PostedJob = () => {
                   Job Type
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
-                  {jobProfile?.remote ? 'True' : 'False'}
+                  {capitalizeFirstWord(jobProfile?.workMode)}
                 </h5>
               </div>
               <div className="mt-4">

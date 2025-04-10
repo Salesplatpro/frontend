@@ -78,6 +78,9 @@ export interface JobProfileProps {
     lastName?: string
   }
   responsibilities?: string[]
+  requirements?: string
+  jobBrief?: string
+  workMode?: 'remote' | 'onsite' | 'hybrid'
   skills?: string[]
   goals?: string[]
   remote?: boolean
