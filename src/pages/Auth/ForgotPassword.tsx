@@ -234,12 +234,12 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               <label
                 htmlFor="otp"
                 className="text-[14px] pt-10 text-[#344054] leading-[22px] font-raleway font-medium">
-                One Time Password
+                One Time OTP
               </label>
               <input
                 id="otp"
                 type="password"
-                placeholder="One time password"
+                placeholder="One time OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
