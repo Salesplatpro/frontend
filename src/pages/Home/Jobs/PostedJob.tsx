@@ -96,15 +96,6 @@ const PostedJob = () => {
               <p className="text-[#667085] text-base mt-0 text-justify">
                 {jobProfile?.requirements}
               </p>
-              {/* {jobProfile?.responsibilities && (
-                <ul className="list-disc ml-5 pl-0">
-                  {jobProfile?.responsibilities.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )} */}
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
