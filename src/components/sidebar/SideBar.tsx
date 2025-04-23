@@ -21,6 +21,7 @@ const feedBack = [
   {
     name: 'Support',
     icon: <MdSupport size={24} />,
+    link: 'support',
   },
   {
     name: 'Leave us feedBack',
@@ -69,6 +70,7 @@ export const SideBar: React.FC<sideBarProps> = ({
             key={index}
             icon={data.icon}
             name={data.name}
+            link={data.link}
             active={activeItem === `feedback-${index}`}
             onClick={() => handleItemClick('feedback', index)}
           />

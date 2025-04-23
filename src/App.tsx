@@ -49,6 +49,7 @@ import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
 import Notification from './pages/TalentProfile/Notification/NotificationList'
 import TalentProfile from './pages/TalentProfile/Profile'
+import { Support } from './pages/TalentProfile/Support'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
@@ -129,7 +130,10 @@ const router = createBrowserRouter([
             path: 'job',
             element: <Job />,
           },
-
+          {
+            path: '/talentDashboard/support',
+            element: <Support />,
+          },
           {
             path: 'Chat',
             element: <Chat />,
