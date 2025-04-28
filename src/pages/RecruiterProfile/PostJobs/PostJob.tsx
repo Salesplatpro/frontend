@@ -275,8 +275,7 @@ const PostJob: React.FC = () => {
                       value={field.value}
                       onChange={(value) =>
                         form.setFieldValue(field.name, value)
-                      } // Set value to Formik field
-                      // options={options} // Pass the options
+                      }
                       customHeight="60px"
                       options={[]}
                     />
@@ -333,7 +332,11 @@ const PostJob: React.FC = () => {
               </div>
               {/* Goals */}
               <div className="mb-4">
-                <LabelWithAsterisk asterick={true} name="goals" label="Goals" />
+                <LabelWithAsterisk
+                  asterick={true}
+                  name="goals"
+                  label="Top 3 Goals"
+                />
                 <FieldArray name="goals">
                   {({ remove, push }) => (
                     <div>

@@ -30,7 +30,7 @@ const RichTextEditor = ({
     <div
       id={id}
       className={`border border-[#D0D5DD] rounded-lg w-full focus:outline-none overflow-hidden flex flex-col ${className}`}
-      style={{ height: '200px' }}>
+      style={{ height: '180px' }}>
       <ReactQuill
         value={value}
         onChange={onChange}
