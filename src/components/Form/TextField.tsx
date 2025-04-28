@@ -1,4 +1,4 @@
-import { useField } from 'formik'
+import { Field } from 'formik'
 import React, { useState } from 'react'
 
 import LabelWithAsterisk from '../../utils/LabelWithAstericks'
@@ -12,61 +12,50 @@ interface TextFieldProps {
   MAX_WORDS?: number
 }
 
-const TextField: React.FC<TextFieldProps> = ({
+const TextField = ({
   label,
   name,
-  asterick,
   placeholder,
-  type = 'text',
+  asterick,
+  type,
   MAX_WORDS,
-}) => {
-  const [field, meta, helpers] = useField(name)
+}: TextFieldProps) => {
   const [wordCount, setWordCount] = useState(0)
-
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    let value = e.target.value
-    const words = value.trim().split(/\s+/)
-
-    if (MAX_WORDS && words.length > MAX_WORDS) {
-      value = words.slice(0, MAX_WORDS).join(' ')
-    }
-
-    setWordCount(value.trim() ? value.trim().split(/\s+/).length : 0)
-    helpers.setValue(value)
-  }
 
   return (
     <div className="mb-4">
-      <LabelWithAsterisk label={label} asterick={asterick} name={name} />
-
+      <LabelWithAsterisk label={label} asterick={asterick} />
       {type === 'textarea' ? (
-        <div>
-          <textarea
-            {...field}
-            id={name}
-            placeholder={placeholder}
-            onChange={handleTextAreaChange}
-            className="border border-[#D0D5DD] p-4 rounded-lg w-full h-[140px] focus:outline-none"
-          />
-
-          {MAX_WORDS && (
-            <p className="text-sm text-gray-500 mt-1 text-right">
-              {wordCount}/{MAX_WORDS} words
-            </p>
+        <Field name={name}>
+          {({ field }: any) => (
+            <div>
+              <textarea
+                {...field}
+                id={name}
+                placeholder={placeholder}
+                maxLength={MAX_WORDS}
+                onChange={(e) => {
+                  field.onChange(e) // <-- Let Formik handle the value
+                  setWordCount(e.target.value.length) // <-- Track word count separately
+                }}
+                className="border border-[#D0D5DD] p-4 rounded-lg w-full h-[140px] focus:outline-none"
+              />
+              {MAX_WORDS && (
+                <p className="text-sm text-gray-500 mt-1 text-right">
+                  {wordCount}/{MAX_WORDS} words
+                </p>
+              )}
+            </div>
           )}
-        </div>
+        </Field>
       ) : (
-        <input
-          {...field}
+        <Field
           type={type}
           id={name}
+          name={name}
           placeholder={placeholder}
           className="block border border-[#D0D5DD] p-4 rounded w-full mt-1"
         />
-      )}
-
-      {meta.touched && meta.error && (
-        <div className="text-red-500 text-sm">{meta.error}</div>
       )}
     </div>
   )
