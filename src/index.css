@@ -163,32 +163,3 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
-
-/* Override ReactQuill default styles */
-/* Make the outer wrapper look like a textarea */
-.custom-quill-wrapper {
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
-  padding: 0;
-  overflow: hidden;
-}
-
-/* Remove extra borders inside ReactQuill */
-.ql-toolbar {
-  border: none !important;
-  background: transparent;
-  padding: 0 0 8px 0; /* Only padding bottom */
-  display: flex;
-  justify-content: flex-end;
-}
-
-.ql-container {
-  border: none !important;
-  height: calc(100% - 42px); /* Subtract toolbar height */
-}
-
-.ql-editor {
-  padding: 0;
-  font-size: 1rem;
-  font-family: inherit;
-}

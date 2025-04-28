@@ -1,7 +1,6 @@
 import { Field } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 
-import RichTextEditor from '../../pages/RecruiterProfile/PostJobs/RichTextEditor'
 import LabelWithAsterisk from '../../utils/LabelWithAstericks'
 
 interface TextFieldProps {
@@ -11,7 +10,6 @@ interface TextFieldProps {
   placeholder?: string
   type?: string
   MAX_WORDS?: number
-  // eslint-disable-next-line no-undef
 }
 
 const TextField = ({
@@ -22,7 +20,7 @@ const TextField = ({
   type,
   MAX_WORDS,
 }: TextFieldProps) => {
-  // const [wordCount, setWordCount] = useState(0)
+  const [wordCount, setWordCount] = useState(0)
 
   return (
     <div className="mb-4">
@@ -31,7 +29,7 @@ const TextField = ({
         <Field name={name}>
           {({ field }: any) => (
             <div>
-              {/* <textarea
+              <textarea
                 {...field}
                 id={name}
                 placeholder={placeholder}
@@ -41,22 +39,12 @@ const TextField = ({
                   setWordCount(e.target.value.length) // <-- Track word count separately
                 }}
                 className="border border-[#D0D5DD] p-4 rounded-lg w-full h-[140px] focus:outline-none"
-              /> */}
-              <RichTextEditor
-                id={name}
-                value={field.value}
-                onChange={(value: string) => {
-                  field.onChange({ target: { name, value } })
-                }}
-                placeholder={placeholder}
-                maxLength={MAX_WORDS}
               />
-
-              {/* {MAX_WORDS && (
+              {MAX_WORDS && (
                 <p className="text-sm text-gray-500 mt-1 text-right">
                   {wordCount}/{MAX_WORDS} words
                 </p>
-              )} */}
+              )}
             </div>
           )}
         </Field>
