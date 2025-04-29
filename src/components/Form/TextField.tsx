@@ -1,8 +1,8 @@
 import { Field } from 'formik'
 import React from 'react'
 
-import RichTextEditor from '../../pages/RecruiterProfile/PostJobs/RichTextEditor'
 import LabelWithAsterisk from '../../utils/LabelWithAstericks'
+import RichTextEditor from '../InputField/RichTextEditor'
 
 interface TextFieldProps {
   label: string
