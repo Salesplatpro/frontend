@@ -9,6 +9,7 @@ interface ProfilePicType {
   uploadPic: any
   updateProfilePics: any
   user: any
+  useChangeImageButton?: boolean
 }
 
 const ProfilePic: React.FC<ProfilePicType> = ({
@@ -16,6 +17,7 @@ const ProfilePic: React.FC<ProfilePicType> = ({
   uploadPic,
   updateProfilePics,
   user,
+  useChangeImageButton = false,
 }) => {
   const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
     userInfo?.picture,
@@ -108,11 +110,13 @@ const ProfilePic: React.FC<ProfilePicType> = ({
           className="hidden"
           onChange={handleImageChange}
         />
-        <button
-          className="text-[10px] font-raleway font-medium lg:text-[12px] text-[#4884DF] cursor-pointer mt-1"
-          onClick={() => document.getElementById('profileImage')?.click()}>
-          Change Image
-        </button>
+        {useChangeImageButton && (
+          <button
+            className="text-[10px] font-raleway font-medium lg:text-[12px] text-[#4884DF] cursor-pointer mt-1"
+            onClick={() => document.getElementById('profileImage')?.click()}>
+            Change Image
+          </button>
+        )}
       </div>
     </div>
   )

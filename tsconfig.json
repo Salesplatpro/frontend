@@ -21,7 +21,8 @@
     "../postcss.config.js",
     "declaration.d.ts",
     "Carousel.module.scss.d.ts",
-    "sidebar.module.scss.d.ts"
+    "sidebar.module.scss.d.ts",
+    "src/components/InputField/RichTextEditor.tsx"
   ],
   // "exclude": ["node_modules"]
   "exclude": ["node_modules/vite"]
