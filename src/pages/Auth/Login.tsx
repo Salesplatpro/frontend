@@ -4,13 +4,13 @@ import { useFormik } from 'formik'
 import React, { useState } from 'react'
 // import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
 // import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 // import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
+import { useLoginRedirect } from '../../hooks/useLoginRedirect'
 import { useUserLoginMutation } from '../../redux/api/apiSlice'
 import {
   loginFailure,
@@ -36,10 +36,11 @@ const defaultLoginFormValues: LoginFormValues = {
 const Login: React.FC = () => {
   const [login] = useUserLoginMutation()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useLoginRedirect()
 
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
@@ -63,20 +64,26 @@ const Login: React.FC = () => {
           autoClose: 5000,
         })
 
-        const userRole = response.data.user?.userRole
-        switch (userRole) {
-          case 'recruiter':
-            navigate('/recruiterDashboard/dashboard')
-            break
-          case 'talent':
-            navigate('/talentDashboard/TalentProfile')
-            break
-          case 'admin':
-            navigate('/adminDashboard/viewcandidates')
-            break
-          default:
-            navigate('/')
-        }
+        // const userRole = response.data.user?.userRole
+
+        // if (redirectTo) {
+        //   navigate(redirectTo)
+        //   return
+        // }
+
+        // switch (userRole) {
+        //   case 'recruiter':
+        //     navigate('/recruiterDashboard/dashboard')
+        //     break
+        //   case 'talent':
+        //     navigate('/talentDashboard/TalentProfile')
+        //     break
+        //   case 'admin':
+        //     navigate('/adminDashboard/viewcandidates')
+        //     break
+        //   default:
+        //     navigate('/')
+        // }
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
 
