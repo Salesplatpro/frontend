@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
@@ -13,14 +13,17 @@ import { notify } from '../../../utils/toastNotifications'
 import ShareJobModal from '../../TalentProfile/Job/ShareJobModal'
 
 const PostedJob = () => {
-  const { jobId } = useParams()
+  const { jobId } = useParams<{ jobId: string }>()
+  const navigate = useNavigate()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
   const user = useSelector((state: RootState) => state.auth)
   const userRole = user?.user?.userRole || ' '
+  const isLoggedIn = !!user?.token
   console.log(userRole)
+  console.log(isLoggedIn)
 
   const [shareLinks, setShareLinks] = useState<{
     facebook: string
@@ -65,6 +68,20 @@ const PostedJob = () => {
       linkedin: LinkedInshareUrl,
     })
     setIsModalOpen(true)
+  }
+
+  const handleApply = () => {
+    if (!jobId) {
+      notify('error', 'Invalid job ID')
+      return
+    }
+
+    if (userRole === 'talent') {
+      navigate(`/talentDashboard/job/${jobId}`)
+    } else if (!user?.token) {
+      sessionStorage.setItem('pending_job_application', jobId ?? '')
+      navigate(`/login?from=job_application`)
+    }
   }
 
   return (
@@ -125,22 +142,17 @@ const PostedJob = () => {
                 </ul>
               )}
             </div>
-            <Link
-              to={
-                userRole === 'talent'
-                  ? `/talentDashboard/applicationPipeline/${jobId}`
-                  : '/login'
-              }>
-              <button className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
-                Apply for this position
-              </button>
-            </Link>
+            <button
+              onClick={handleApply}
+              className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+              Apply for this position
+            </button>
           </div>
 
           <div className="md:w-[30%] w-full mt-7 md:mt-0 mx-auto">
             <div className="bg-[#F3F6FC] md:w-[260px] w-full rounded-lg px-8 py-8 mx-auto">
               <button
-                type="submit"
+                onClick={handleApply}
                 className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
                 Apply
               </button>
