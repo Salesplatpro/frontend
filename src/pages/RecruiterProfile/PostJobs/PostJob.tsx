@@ -150,7 +150,7 @@ const PostJob: React.FC = () => {
                 label="Job Brief"
                 asterick={true}
                 name="jobBrief"
-                placeholder="Add Job Brief (300 words max)"
+                placeholder="Add Job Brief (600 words max)"
                 type="textarea"
                 MAX_WORDS={600}
               />
@@ -158,7 +158,7 @@ const PostJob: React.FC = () => {
                 label="Requirements"
                 name="requirements"
                 asterick={true}
-                placeholder="Role requirements"
+                placeholder="Role requirements "
                 type="textarea"
               />
 
