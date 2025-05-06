@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { Link, useParams } from 'react-router-dom'
 
+import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
@@ -79,17 +80,19 @@ const IndividualJob = () => {
                 {/* Your role at{jobProfile?.title} */}
                 Job Brief
               </h5>
-              <p className="text-[#667085] text-base mt-0 text-justify">
-                {jobProfile?.jobBrief}
-              </p>
+              <RichTextDisplay
+                content={jobProfile?.jobBrief || ' '}
+                className="text-[#667085] text-base mt-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
                 Job Requirements
               </h5>
-              <p className="text-[#667085] text-base mt-0 text-justify">
-                {jobProfile?.requirements}
-              </p>
+              <RichTextDisplay
+                content={jobProfile?.requirements || ' '}
+                className="text-[#667085] text-base mt-0 mb-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">

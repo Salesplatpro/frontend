@@ -192,6 +192,39 @@
   font-family: inherit;
 }
 
+.rich-text-content {
+  line-height: 1.6;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  padding-left: 1.5rem;
+}
+
+.rich-text-content ul {
+  list-style-type: disc;
+}
+
+.rich-text-content ol {
+  list-style-type: decimal;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.5rem;
+}
+
+.rich-text-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.rich-text-content code {
+  background-color: #f3f4f6;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .custom-quill-wrapper {
@@ -240,7 +273,7 @@
 
 @media (max-width: 400px) {
   .ql-toolbar {
-    flex-wrap: wrap; /* Allow icons to wrap to the next line */
+    flex-wrap: wrap; 
     justify-content: center; /* Center the toolbar icons */
     padding: 4px 0; /* Slight padding for better spacing */
     gap: 6px; /* Add space between buttons */
