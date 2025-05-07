@@ -54,7 +54,7 @@ const PricingCard: React.FC<PricingDataProp> = ({
           </p>
         </div>
         <div className="w-[250px] flex flex-col justify-center space-y-3">
-          <button className="px-4 py-4 text-[18px] bg-[#4985DF] text-white cursor-pointer font-raleway font-semibold rounded-lg">
+          <button className="px-4 py-4 text-[18px] bg-[#4985DF] border border-[#4985DF] text-white cursor-pointer font-raleway font-semibold rounded-lghover:bg-[#FFFFFF] hover:text-[#4985DF] hover:border hover:border-[#D0D5DD]">
             Get started
           </button>
           <button className="px-4 py-4 text-[18px] bg-[#FFFFFF] border border-[#D0D5DD] text-[#344054] cursor-pointer font-raleway font-semibold rounded-lg">
