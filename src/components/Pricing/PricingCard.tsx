@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import CheckBox from '../../assets/CheckIcon.svg'
 
 interface PricingDataProp {
