@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
                 <h6>Product</h6>
                 <div>
                   <a href="/solution">Solutions</a>
-                  <a href="/">Pricing</a>
+                  <a href="/pricing">Pricing</a>
                 </div>
               </div>
 

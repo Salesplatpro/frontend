@@ -17,7 +17,7 @@ const PricingHero = () => {
         </p>
 
         <button
-          className="px-2 py-2 text-[13px] rounded-lg lg:px-5 lg:py-5 lg:text-[18px] md:px-4 md:py-4 md:text-[16px] sm:px-3 sm:py-3 sm:text-[15px] bg-white border border-[#F1F6FD] text-center font-inter font-medium text-[#4985DF] 
+          className="px-2 py-2 text-[13px] rounded-lg lg:px-4 lg:py-4 lg:text-[18px] md:px-4 md:py-4 md:text-[16px] sm:px-3 sm:py-3 sm:text-[15px] bg-white border border-[#F1F6FD] text-center font-inter font-medium text-[#4985DF] 
          hover:bg-[#4985DF] hover:text-white hover:border-[#4985DF] cursor-pointer">
           Aux HR Pricing
         </button>

@@ -13,6 +13,8 @@ module.exports = {
       },
       boxShadow: {
         custom: '0px 1.52px 3.05px 0px rgba(16, 24, 40, 0.05)',
+        'custom-1': '0px 4.09px 6.14px -2.05px rgba(16, 24, 40, 0.05)',
+        'custom-2': '0px 12.28px 16.38px -4.09px rgba(16, 24, 40, 0.10)',
       },
     },
   },
