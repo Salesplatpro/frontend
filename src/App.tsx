@@ -12,6 +12,7 @@ import { Slide, ToastContainer } from 'react-toastify'
 
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
+import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: 'customerstories',
         element: <CustomerStories />,
+      },
+      {
+        path: 'pricing',
+        element: <Pricing />,
       },
       {
         path: 'login',

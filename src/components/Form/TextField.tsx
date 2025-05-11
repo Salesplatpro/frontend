@@ -14,20 +14,19 @@ interface TextFieldProps {
   // eslint-disable-next-line no-undef
 }
 
-const TextField: React.FC<TextFieldProps> = ({
+const TextField = ({
   label,
   name,
-  asterick,
   placeholder,
-  type = 'text',
+  asterick,
+  type,
   MAX_WORDS,
 }: TextFieldProps) => {
   // const [wordCount, setWordCount] = useState(0)
 
   return (
     <div className="mb-4">
-      <LabelWithAsterisk label={label} asterick={asterick} name={name} />
-
+      <LabelWithAsterisk label={label} asterick={asterick} />
       {type === 'textarea' ? (
         <Field name={name}>
           {({ field }: any) => (
