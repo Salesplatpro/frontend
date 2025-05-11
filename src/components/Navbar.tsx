@@ -60,6 +60,14 @@ const Navbar = () => {
                   explore jobs
                 </Link>
               </li>
+
+              <li>
+                <Link
+                  to="/pricing"
+                  className={activeTab === '/pricing' ? 'activeTab' : ''}>
+                  Pricing
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/customerstories"
@@ -144,6 +152,17 @@ const Navbar = () => {
                           setToggleBtn(false) // Close the menu
                         }}>
                         Explore Jobs
+                      </Link>
+                    </li>
+
+                    <li className="font-semibold text-lg text-[#4985df] capitalize decoration-0 leading-[18px] font-raleway hover:text-white">
+                      <Link
+                        to="/pricing"
+                        className={activeTab === '/pricing' ? 'activeTab' : ''}
+                        onClick={() => {
+                          setToggleBtn(false) // Close the menu
+                        }}>
+                        Pricing
                       </Link>
                     </li>
                     <li className="font-semibold text-lg text-[#4985df] capitalize decoration-0 leading-[18px] font-raleway hover:text-white">
