@@ -17,7 +17,7 @@ const PricingSwitch: React.FC<PricingSwitchProp> = ({
   }
 
   return (
-    <div className="relative bg-[#F4EBFF] w-[320px] my-5 flex rounded-lg p-2 justify-between items-center overflow-hidden">
+    <div className="relative z-0 bg-[#F4EBFF] w-[320px] my-5 flex rounded-lg p-2 justify-between items-center overflow-hidden">
       {/* Sliding background */}
       <span
         className={`absolute top-2 bottom-2 w-[48%] rounded-lg bg-white shadow-custom-1 transition-all duration-300 ease-in-out ${
