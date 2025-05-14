@@ -1,4 +1,3 @@
-import { Question } from './../../utils/types'
 export interface PlanDetails {
   price: string
   priceSpan: string

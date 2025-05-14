@@ -3,7 +3,6 @@ import PricingCard from './PricingCard'
 import { PricingData } from './pricingData'
 import ReactCardFlip from 'react-card-flip'
 import PricingBackCard from './PricingBackCard'
-import { PlanDetails } from './pricingData'
 
 interface PricePlanProp {
   isFlipped: boolean
