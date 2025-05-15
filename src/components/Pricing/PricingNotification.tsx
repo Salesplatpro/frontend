@@ -18,18 +18,18 @@ const PricingNotification = () => {
           Buy Now
         </button>
       </div>
-      <div className="border border-[#241C15] w-[320px] lg:w-0 lg:h-[200px] md:w-[500px] md:h-[1px] sm:w-[450px]" />
+      <div className="border border-[#241C15] w-[300px] lg:w-0 lg:h-[200px] md:w-[500px] md:h-[1px] sm:w-[450px]" />
       <div className="w-[300px] lg:w-[500px] md:w-[500px] sm:w-[450px] space-y-4">
         <h1 className="font-normal font-poppins text-[20px] leading-[18px] lg:text-[30px] lg:leading-[40px] md:text-[30px] md:leading-[35px] sm:text-[25px] sm:leading-[20px]">
           Candidate Assessment slots
         </h1>
 
-        <p className="w-[350px] text-[16px]  lg:w-[450px] font-raleway font-normal lg:text-[18px] md:text-[18px] leading-[150%] sm:text-[17px]  ">
+        <p className="w-[300px] text-[16px]  lg:w-[450px] font-raleway font-normal lg:text-[18px] md:text-[18px] leading-[150%] sm:text-[17px]  ">
           We give extra 15 days with reminders to the company that the link will
           stop assessing applicants upon the 45th Day
         </p>
 
-        <p className="w-[350px] text-[16px] lg:w-[420px] font-raleway font-normal lg:text-[18px] leading-[150%]">
+        <p className="w-[300px] text-[16px] lg:w-[420px] font-raleway font-normal lg:text-[18px] leading-[150%]">
           Company renews link at{' '}
           <span className="text-[18px] leading-[150%]">#50,000 / $30</span> per
           month after Day 45

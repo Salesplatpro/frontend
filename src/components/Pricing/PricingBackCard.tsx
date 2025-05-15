@@ -7,7 +7,7 @@ interface PricingDataProp {
   item: PlanDetails
 }
 
-const PricingCard: React.FC<PricingDataProp> = ({ plan, item }) => {
+const PricingBackCard: React.FC<PricingDataProp> = ({ plan, item }) => {
   return (
     <div className="w-[360px] h-[900px]  border-2 rounded-xl border-[#E4E7EC] shadow-custom-2">
       <div className="p-6">
@@ -53,7 +53,7 @@ const PricingCard: React.FC<PricingDataProp> = ({ plan, item }) => {
       <div className="border border-[#E4E7EC] mt-6" />
 
       <div className="p-6">
-        <div className="my-4 space-y-3">
+        <div className="my-6 space-y-3">
           <h1 className="font-inter font-semibold text-[#101828] text-[17px] leading-[25px]">
             {item.featuresTitle}
           </h1>
@@ -77,4 +77,4 @@ const PricingCard: React.FC<PricingDataProp> = ({ plan, item }) => {
   )
 }
 
-export default PricingCard
+export default PricingBackCard
