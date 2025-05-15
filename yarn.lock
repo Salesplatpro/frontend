@@ -3661,6 +3661,11 @@ rc-util@^5.36.0:
     "@babel/runtime" "^7.18.3"
     react-is "^18.2.0"
 
+react-card-flip@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/react-card-flip/-/react-card-flip-1.2.3.tgz#befca5fa41fcaa7c62ca6035a69b3dc3ded1bc3c"
+  integrity sha512-yb8+yyeTf5UVlZ/FC78XDgxYeWhgA0W28OXNB31LjiFeY1Y2kFhLP7bFiED4KNaRWKjaafT74G38XU53a6eIuw==
+
 react-circular-progressbar@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/react-circular-progressbar/-/react-circular-progressbar-2.2.0.tgz#282b7351dab2fd19c6d2c7f3cc698ed546c71c86"
