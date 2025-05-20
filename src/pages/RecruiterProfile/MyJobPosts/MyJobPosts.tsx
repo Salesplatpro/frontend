@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../../../index.css'
 
-import { Button, DisplayError } from '../../../components'
+import { DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
 import { JobsTable } from './JobsTable'
