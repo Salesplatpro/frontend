@@ -1,6 +1,5 @@
 import React from 'react'
 import { IoIosLink } from 'react-icons/io'
-import { LuShare } from 'react-icons/lu'
 import { IoMdShare } from 'react-icons/io'
 
 import { notify } from '../../utils/toastNotifications'
