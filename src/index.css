@@ -273,7 +273,7 @@
 
 @media (max-width: 400px) {
   .ql-toolbar {
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     justify-content: center; /* Center the toolbar icons */
     padding: 4px 0; /* Slight padding for better spacing */
     gap: 6px; /* Add space between buttons */
@@ -288,4 +288,21 @@
     font-size: 0.85rem; /* Slightly smaller text */
     padding: 6px; /* Better readability */
   }
+}
+
+.MuiTablePagination-root {
+  @apply text-xl text-[#4884DF];
+}
+
+.MuiTablePagination-toolbar {
+  @apply flex flex-wrap items-center justify-center gap-2 space-y-20;
+}
+
+.MuiTablePagination-selectLabel,
+.MuiTablePagination-displayedRows {
+  @apply text-sm text-[#4884DF];
+}
+
+.MuiTablePagination-actions {
+  @apply text-blue-600;
 }

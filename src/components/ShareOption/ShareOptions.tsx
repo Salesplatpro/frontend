@@ -1,6 +1,7 @@
 import React from 'react'
 import { IoIosLink } from 'react-icons/io'
 import { LuShare } from 'react-icons/lu'
+import { IoMdShare } from 'react-icons/io'
 
 import { notify } from '../../utils/toastNotifications'
 
@@ -27,7 +28,7 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
 
   const shareOptions = [
     {
-      icon: <LuShare />,
+      icon: <IoMdShare />,
       text: 'Share',
       action: () => handleShare(jobId),
     },
@@ -39,14 +40,15 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
   ]
 
   return (
-    <div className="flex space-x-2 items-center justify-center">
+    <div className="flex space-x-2 items-center justify-center px-2">
       {shareOptions.map((option, i) => (
         <div
           key={i}
           onClick={option.action}
-          className="flex cursor-pointer items-center justify-center space-x-2 border border-[#E7E7E9] w-[72px] h-[34px] rounded-lg hover:bg-[#5c8beb] hover:text-white">
+          className={`flex cursor-pointer items-center justify-center text-[17px] ${
+            i !== 0 ? 'border-l border-gray-300 px-2' : ''
+          }`}>
           {option.icon}
-          <span className="font-medium hover:text-white">{option.text}</span>
         </div>
       ))}
     </div>
