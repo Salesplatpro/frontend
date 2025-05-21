@@ -2,6 +2,9 @@ import React from 'react'
 import { IoIosLink } from 'react-icons/io'
 import { IoMdShare } from 'react-icons/io'
 
+import share from '../../assets/share.svg'
+import copy from '../../assets/copy.svg'
+
 import { notify } from '../../utils/toastNotifications'
 
 type ShareOptionsProps = {
@@ -27,12 +30,12 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
 
   const shareOptions = [
     {
-      icon: <IoMdShare />,
+      icon: <img src={share} alt="share icon" className="size-6" />,
       text: 'Share',
       action: () => handleShare(jobId),
     },
     {
-      icon: <IoIosLink />,
+      icon: <img src={copy} alt="copy icon" className="size-5" />,
       text: 'Copy',
       action: copyToClipBoard,
     },
@@ -44,7 +47,7 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
         <div
           key={i}
           onClick={option.action}
-          className={`flex cursor-pointer items-center justify-center text-[17px] ${
+          className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
             i !== 0 ? 'border-l border-gray-300 px-2' : ''
           }`}>
           {option.icon}

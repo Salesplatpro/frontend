@@ -13,7 +13,7 @@ export const MyJobPosts = () => {
   const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
-  const rowsPerPage = 5
+  const rowsPerPage = 7
 
   const jobs = data?.data || []
   const startIndex = (page - 1) * rowsPerPage
