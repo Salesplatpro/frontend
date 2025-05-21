@@ -1,7 +1,4 @@
 import React from 'react'
-import { IoIosLink } from 'react-icons/io'
-import { IoMdShare } from 'react-icons/io'
-
 import share from '../../assets/share.svg'
 import copy from '../../assets/copy.svg'
 
