@@ -4,14 +4,22 @@ import copy from '../../assets/copy.svg'
 
 import { notify } from '../../utils/toastNotifications'
 
+import { Tooltip as ReactTooltip } from 'react-tooltip'
+
 type ShareOptionsProps = {
   handleShare: (jobId: string) => void
   jobId: string
+  tooltipContent?: string
+  tooltipPosition?: 'top' | 'bottom' | 'left' | 'right'
+  tooltipVariant?: 'dark' | 'light' | 'success' | 'error' | 'info' | 'warning'
 }
 
 export const ShareOptions: React.FC<ShareOptionsProps> = ({
   handleShare,
   jobId,
+  tooltipContent,
+  tooltipPosition = 'bottom',
+  tooltipVariant = 'info',
 }) => {
   const copyToClipBoard = () => {
     const jobLink = `https://auxhr.com/job/postedjob/${jobId}`
@@ -41,14 +49,25 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
   return (
     <div className="flex space-x-2 items-center justify-center px-2">
       {shareOptions.map((option, i) => (
-        <div
-          key={i}
-          onClick={option.action}
-          className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
-            i !== 0 ? 'border-l border-gray-300 px-2' : ''
-          }`}>
-          {option.icon}
-        </div>
+        <>
+          <div
+            key={i}
+            data-tooltip-id="share-tooltip"
+            data-tooltip-content={option.text}
+            onClick={option.action}
+            className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
+              i !== 0 ? 'border-l border-gray-300 px-2' : ''
+            }`}>
+            {option.icon}
+          </div>
+
+          <ReactTooltip
+            id="share-tooltip"
+            place={tooltipPosition}
+            variant={tooltipVariant}
+            content={tooltipContent}
+          />
+        </>
       ))}
     </div>
   )
