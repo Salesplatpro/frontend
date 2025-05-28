@@ -150,8 +150,8 @@ const IndividualJob = () => {
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
                   {jobProfile?.location &&
-                    capitalizeFirstWord(jobProfile?.location?.country)}{' '}
-                  {''}
+                    capitalizeFirstWord(jobProfile?.location?.country)}
+                  {','}{' '}
                   {jobProfile?.location?.city &&
                     capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>
