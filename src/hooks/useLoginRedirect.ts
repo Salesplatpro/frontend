@@ -20,7 +20,7 @@ export const useLoginRedirect = () => {
       // Default dashboard redirect
       const dashboardPath =
         user?.userRole === 'recruiter'
-          ? '/recruiterDashboard'
+          ? '/recruiterDashboard/dashboard'
           : user?.userRole === 'talent'
           ? '/talentDashboard/talentProfile'
           : '/adminDashboard/viewcandidates'

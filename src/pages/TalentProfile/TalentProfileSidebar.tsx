@@ -1,19 +1,33 @@
-import './TalentProfileSidebar.scss'
+import './TalentProfileSidebar.scss' // Ensure your styles are imported
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
-// import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 
-import { SideBar } from '../../components/sidebar'
-import { sidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
-// import { RootState } from '../../redux/store/store'
+import { SideBar } from '../../components/sidebar/SideBar'
+import { sidebarData as originalSidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
-const TalentProfileSidebar = () => {
+interface TalentSidebarContext {
+  setUnreadCount: (count: number) => void
+}
+
+const TalentProfileSidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
-  // const user = useSelector((state: RootState) => state.auth.user)
+  const [unreadCount, setUnreadCount] = useState<number>(0)
+  const [currentSidebarData, setCurrentSidebarData] =
+    useState(originalSidebarData)
+
+  useEffect(() => {
+    const updatedData = originalSidebarData.map((item) => {
+      if (item.name === 'Notification') {
+        return { ...item, count: unreadCount }
+      }
+      return item
+    })
+    setCurrentSidebarData(updatedData)
+  }, [unreadCount])
 
   return (
     <div className="dashboard">
@@ -23,17 +37,20 @@ const TalentProfileSidebar = () => {
         </button>
         <LoggedInUserBadge />
       </div>
+
       <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
-          sideBarData={sidebarData}
+          sideBarData={currentSidebarData}
           handleClick={() => setIsOpen(false)}
         />
+
         <button className="close" onClick={() => setIsOpen(!isOpen)}>
           {isOpen && <AiOutlineCloseCircle className="text-[24px]" />}
         </button>
       </div>
+
       <div className="outlet">
-        <Outlet />
+        <Outlet context={{ setUnreadCount } as TalentSidebarContext} />
       </div>
     </div>
   )

@@ -4,7 +4,7 @@ import './index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 // eslint-disable-next-line no-unused-vars
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -45,10 +45,9 @@ import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
-import Chat from './pages/TalentProfile/Chat/ChatList'
+import Notification from './pages/TalentProfile/Notification/NotificationList'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
-import Notification from './pages/TalentProfile/Notification/NotificationList'
 import TalentProfile from './pages/TalentProfile/Profile'
 import { Support } from './pages/TalentProfile/Support'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
@@ -58,220 +57,220 @@ import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <MainLayout />,
-    children: [
-      {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: 'explore',
-        element: <Explore />,
-      },
-      {
-        path: 'solution',
-        element: <Solutions />,
-      },
-      {
-        path: 'resources',
-        element: <Resources />,
-      },
-      {
-        path: 'customerstories',
-        element: <CustomerStories />,
-      },
-      {
-        path: 'pricing',
-        element: <Pricing />,
-      },
-      {
-        path: 'login',
-        element: <TalentLogin />,
-      },
-
-      {
-        path: 'talentRegister',
-        element: <SignIn />,
-      },
-
-      {
-        path: 'recruiterRegister',
-        element: <SignIn />,
-      },
-      {
-        path: 'customerstories',
-        element: <CustomerStories />,
-      },
-      {
-        path: 'job',
-        element: <SingleJob />,
-      },
-      {
-        path: 'job/postedjob/:jobId',
-        element: <PostedJob />,
-      },
-    ],
-  },
-  {
-    path: '/talentDashboard',
-    element: <ProtectedRoute allowedRoles={['talent']} />,
-    children: [
-      {
-        path: '',
-        element: <TalentProfileSidebar />,
-        children: [
-          {
-            path: 'talentProfile',
-            element: <TalentProfile />,
-          },
-          {
-            path: 'talentQuiz',
-            element: <TalentAssessment />,
-          },
-          {
-            path: 'job',
-            element: <Job />,
-          },
-          {
-            path: '/talentDashboard/support',
-            element: <Support />,
-          },
-          {
-            path: 'Chat',
-            element: <Chat />,
-          },
-
-          {
-            path: 'Notification',
-            element: <Notification />,
-          },
-          {
-            path: 'job/:jobId',
-            element: <IndividualJob />,
-          },
-          {
-            path: 'applicationPipeline',
-            element: <ApplicationPipeline />,
-          },
-          {
-            path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
-            element: <PersonalizedTest />,
-          },
-          {
-            path: 'applicationPipeline/:jobId',
-            element: <ProgressView />,
-          },
-          {
-            path: 'applicationPipeline/personalityTest/:jobId',
-            element: <PersonalityTest />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: '/recruiterDashboard',
-    element: <ProtectedRoute allowedRoles={['recruiter']} />,
-    children: [
-      {
-        path: '',
-        element: <RecruiterProfileSidebar />,
-        children: [
-          {
-            path: 'dashboard',
-            element: <Dashboard />,
-          },
-          {
-            path: 'dashboard/allapplications',
-            element: <AllApplications />,
-          },
-          {
-            path: 'postjob',
-            element: <PostJobTab />,
-          },
-          {
-            path: 'myJobPosts',
-            element: <MyJobPosts />,
-          },
-
-          {
-            path: 'scout',
-            element: <Batching />,
-          },
-          {
-            path: 'scout/:id',
-            element: <ChooseMethod />,
-          },
-          {
-            path: 'scout/upload-cv-cover-letter/:id',
-            element: <UploadCvAndCoverLetter />,
-          },
-          {
-            path: 'scout/process-cv-cover-letter/:id',
-            element: <ProcessCvAndCoverLetter />,
-          },
-          {
-            path: 'scout/search-talent/:id',
-            element: <SearchTalent />,
-          },
-          {
-            path: 'scout/search-results/:id',
-            element: <SearchResult />,
-          },
-          {
-            path: 'scout/create-jd',
-            element: <CreateJD />,
-          },
-          {
-            path: 'scout/upload-cv/:id',
-            element: <UploadCVOnly />,
-          },
-          {
-            path: 'scout/process-cv/:id',
-            element: <ProcessCV />,
-          },
-          {
-            path: 'singleJobPost/:jobId',
-            element: <SingleJobPost />,
-          },
-          {
-            path: 'singleJobPost/:jobId/:applicationId',
-            element: <ApplicationProgress />,
-          },
-          {
-            path: 'postjob/:jobId',
-            element: <PostJobTab />,
-          },
-          {
-            path: 'jobdetail/:jobId',
-            element: <JobDetail />,
-          },
-          {
-            path: 'shortlist',
-            element: <Shortlist />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: '/adminDashboard',
-    element: <AdminProfileSidebar />,
-    children: [
-      {
-        path: 'viewcandidates',
-        // element: <ViewTalents />,
-      },
-    ],
-  },
-])
-
 function App() {
-  // const [count, setCount] = useState(0)
   const dispatch = useDispatch()
+
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <MainLayout />,
+      children: [
+        {
+          path: '/',
+          element: <Home />,
+        },
+        {
+          path: 'explore',
+          element: <Explore />,
+        },
+        {
+          path: 'solution',
+          element: <Solutions />,
+        },
+        {
+          path: 'resources',
+          element: <Resources />,
+        },
+        {
+          path: 'customerstories',
+          element: <CustomerStories />,
+        },
+        {
+          path: 'pricing',
+          element: <Pricing />,
+        },
+        {
+          path: 'login',
+          element: <TalentLogin />,
+        },
+
+        {
+          path: 'talentRegister',
+          element: <SignIn />,
+        },
+
+        {
+          path: 'recruiterRegister',
+          element: <SignIn />,
+        },
+        {
+          path: 'customerstories',
+          element: <CustomerStories />,
+        },
+        {
+          path: 'job',
+          element: <SingleJob />,
+        },
+        {
+          path: 'job/postedjob/:jobId',
+          element: <PostedJob />,
+        },
+      ],
+    },
+    {
+      path: '/talentDashboard',
+      element: <ProtectedRoute allowedRoles={['talent']} />,
+
+      children: [
+        {
+          path: '',
+          element: <TalentProfileSidebar />,
+          children: [
+            {
+              path: 'talentProfile',
+              element: <TalentProfile />,
+            },
+            {
+              path: 'talentQuiz',
+              element: <TalentAssessment />,
+            },
+            {
+              path: 'job',
+              element: <Job />,
+            },
+            {
+              path: '/talentDashboard/support',
+              element: <Support />,
+            },
+            {
+              path: 'Chat',
+              // element: <Chat />,
+            },
+
+            {
+              path: 'Notification',
+              element: <Notification />,
+            },
+            {
+              path: 'job/:jobId',
+              element: <IndividualJob />,
+            },
+            {
+              path: 'applicationPipeline',
+              element: <ApplicationPipeline />,
+            },
+            {
+              path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
+              element: <PersonalizedTest />,
+            },
+            {
+              path: 'applicationPipeline/:jobId',
+              element: <ProgressView />,
+            },
+            {
+              path: 'applicationPipeline/personalityTest/:jobId',
+              element: <PersonalityTest />,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      path: '/recruiterDashboard',
+      element: <ProtectedRoute allowedRoles={['recruiter']} />,
+      children: [
+        {
+          path: '',
+          element: <RecruiterProfileSidebar />,
+          children: [
+            {
+              path: 'dashboard',
+              element: <Dashboard />,
+            },
+            {
+              path: 'dashboard/allapplications',
+              element: <AllApplications />,
+            },
+            {
+              path: 'postjob',
+              element: <PostJobTab />,
+            },
+            {
+              path: 'myJobPosts',
+              element: <MyJobPosts />,
+            },
+
+            {
+              path: 'scout',
+              element: <Batching />,
+            },
+            {
+              path: 'scout/:id',
+              element: <ChooseMethod />,
+            },
+            {
+              path: 'scout/upload-cv-cover-letter/:id',
+              element: <UploadCvAndCoverLetter />,
+            },
+            {
+              path: 'scout/process-cv-cover-letter/:id',
+              element: <ProcessCvAndCoverLetter />,
+            },
+            {
+              path: 'scout/search-talent/:id',
+              element: <SearchTalent />,
+            },
+            {
+              path: 'scout/search-results/:id',
+              element: <SearchResult />,
+            },
+            {
+              path: 'scout/create-jd',
+              element: <CreateJD />,
+            },
+            {
+              path: 'scout/upload-cv/:id',
+              element: <UploadCVOnly />,
+            },
+            {
+              path: 'scout/process-cv/:id',
+              element: <ProcessCV />,
+            },
+            {
+              path: 'singleJobPost/:jobId',
+              element: <SingleJobPost />,
+            },
+            {
+              path: 'singleJobPost/:jobId/:applicationId',
+              element: <ApplicationProgress />,
+            },
+            {
+              path: 'postjob/:jobId',
+              element: <PostJobTab />,
+            },
+            {
+              path: 'jobdetail/:jobId',
+              element: <JobDetail />,
+            },
+            {
+              path: 'shortlist',
+              element: <Shortlist />,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      path: '/adminDashboard',
+      element: <AdminProfileSidebar />,
+      children: [
+        {
+          path: 'viewcandidates',
+          // element: <ViewTalents />,
+        },
+      ],
+    },
+  ])
 
   useEffect(() => {
     const token = getToken()

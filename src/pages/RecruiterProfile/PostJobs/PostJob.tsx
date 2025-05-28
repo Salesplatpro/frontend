@@ -158,7 +158,7 @@ const PostJob: React.FC = () => {
                 label="Requirements"
                 name="requirements"
                 asterick={true}
-                placeholder="Role requirements "
+                placeholder="Role requirements"
                 type="textarea"
               />
 

@@ -14,6 +14,7 @@ interface sideBarProps {
     count?: number
     link?: string
   }[]
+  unreadCount?: number
   handleClick?: () => void
 }
 
@@ -51,17 +52,19 @@ export const SideBar: React.FC<sideBarProps> = ({
           </Link>
         </div>
         <div className={styles.sidebarList}>
-          {sideBarData.map((data, index) => (
-            <SidebarList
-              key={index}
-              icon={data.icon}
-              name={data.name}
-              count={data.count}
-              link={data.link}
-              active={activeItem === `sideBar-${index}`}
-              onClick={() => handleItemClick('sideBar', index)}
-            />
-          ))}
+          {sideBarData.map((data, index) => {
+            return (
+              <SidebarList
+                key={index}
+                icon={data.icon}
+                name={data.name}
+                count={data.count}
+                link={data.link}
+                active={activeItem === `sideBar-${index}`}
+                onClick={() => handleItemClick('sideBar', index)}
+              />
+            )
+          })}
         </div>
       </div>
       <div>

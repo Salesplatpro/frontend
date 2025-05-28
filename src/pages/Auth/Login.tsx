@@ -22,6 +22,7 @@ import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import ForgotPasswordModal from './ForgotPasswordModal'
 import Loading from './Loading'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 interface LoginFormValues {
   email: string
@@ -37,7 +38,7 @@ const Login: React.FC = () => {
   const [login] = useUserLoginMutation()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-
+  const [showPassword, setShowPassword] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useLoginRedirect()
@@ -142,20 +143,29 @@ const Login: React.FC = () => {
                 }
               />
 
-              <TextInput
-                title="Password"
-                label="password"
-                name="password"
-                value={formik.values.password}
-                onChange={handleChange}
-                isPassword
-                placeholder="Enter your password"
-                error={
-                  formik.touched.password && formik.errors.password
-                    ? formik.errors.password
-                    : ''
-                }
-              />
+              <div className="relative">
+                <TextInput
+                  title="Password"
+                  label="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={handleChange}
+                  isPassword={!showPassword}
+                  placeholder="Enter your password"
+                  error={
+                    formik.touched.password && formik.errors.password
+                      ? formik.errors.password
+                      : ''
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
 
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />
