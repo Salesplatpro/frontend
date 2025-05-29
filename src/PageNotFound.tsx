@@ -2,11 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import errorImage from './assets/errorImage.png'
 import { RiArrowGoBackLine } from 'react-icons/ri'
-import youtube from './assets/Lozengeyoutube.svg'
-import telegram from './assets/Subtracttelegram.svg'
-import facebook from './assets/Vectorfacebook.svg'
-import linkedin from './assets/Vectorlinkedin.svg'
-import twitter from './assets/Vectortwitter.svg'
+
 import Footer from './components/Footer'
 
 function PageNotFound() {
@@ -37,7 +33,7 @@ function PageNotFound() {
         <div className="w-full flex flex-col justify-center items-center">
           <img
             src={errorImage}
-            alt="error Image"
+            alt="error"
             className=" w-[380px] h-[280px] lg:w-[460px] lg:h-[400px] md:w-[400px] md:h-[320px] sm:w-[400px] sm:h-[300px]"
           />
         </div>
