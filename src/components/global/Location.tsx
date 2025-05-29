@@ -76,11 +76,11 @@ const Location: React.FC<LocationProps> = ({
 
   // After options are set, check if the selectedName exists and matches
   useEffect(() => {
-    if (options.length && selectedName) {
+    if (options.length && typeof selectedName === 'string') {
       const matchedOption = options.find((place) => {
         const placeName = place.name
         return (
-          placeName?.trim().toLowerCase() === selectedName.trim().toLowerCase()
+          placeName.trim().toLowerCase() === selectedName.trim().toLowerCase()
         )
       })
 

@@ -1,95 +1,102 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { Link } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
+import Loading from '../../../components/Loading/Loading'
 import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
-import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
-import { FormValues } from '../../../utils/jobPostTypes'
+import { useIndividualJobQuery } from '../../../redux/api/talent'
+import { EditJobType } from '../../../utils'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
 import { notify } from '../../../utils/toastNotifications'
-import ExperienceLevelSelect from './ExperienceLevelSelect'
-import { validationSchema } from './validationSchema'
-import WorkModeSelect from './WorkModeSelect'
+import ExperienceLevelSelect from '../PostJobs/ExperienceLevelSelect'
+import { validationSchema } from '../PostJobs/validationSchema'
+import WorkModeSelect from '../PostJobs/WorkModeSelect'
+import { useUpdateJobMutation } from "../../../redux/api/recruiter";
 
-const PostJob: React.FC = () => {
-  const [jobId, setJobId] = useState(null)
-  const [jobPostCreation] = useJobPostCreationMutation()
+type Props = {
+  jobId?: string
+}
 
-  const initialValues: FormValues = {
-    jobBrief: '',
-    role: '',
-    requirements: '',
-    minSalary: '',
-    maxSalary: '',
-    workMode: '',
-    experienceLevel: '',
-    location: {
-      country: { name: '', geoId: null },
-      state: { name: '', geoId: null },
-      city: { name: '', geoId: null },
-    },
-    skills: [''],
-    goals: [''],
-  }
+export const EditJob = ({ jobId }: Props) => {
+  const [jobToEdit, setJobToEdit] = useState<EditJobType | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [updateJob] = useUpdateJobMutation();
 
-  const onSubmit = async (
-    values: FormValues,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
-  ) => {
+  const { data, error, isLoading } = useIndividualJobQuery(jobId)
+
+  useEffect(() => {
+    if (data) {
+      setJobToEdit(data?.data)
+    }
+    if (error) {
+      notify('error', 'DisplayError loading job post')
+    }
+  }, [data, error])
+
+  if (isLoading) return <Loading />
+
+  const handleUpdateJob = async (values: EditJobType) => {
+    setIsSubmitting(true);
     const location = {
-      country: values.location.country.name,
-      state: values.location.state.name,
-      ...(values.location.city?.name
-        ? { city: values.location.city?.name }
+      country: values?.location?.country?.name,
+      state: values?.location?.state?.name,
+      ...(values?.location?.city?.name
+        ? { city: values?.location?.city?.name }
         : {}),
     }
-    const submissionValues = {
+
+    const { role, ...submissionValues } = {
       ...values,
       location,
     }
-    try {
-      const data = await jobPostCreation(submissionValues).unwrap()
-      console.log(data)
-      if (data.status) {
-        notify('success', `Job Post Created successfully`, {
-          autoClose: 5000,
-        })
 
-        setJobId(data?.data._id)
-      } else {
-        notify('error', data.message, {
-          autoClose: 5000,
-          transition: Bounce,
-        })
-      }
+    try {
+      const response = await updateJob({ jobId, data: submissionValues }).unwrap();
+      notify('success', 'Job updated successfully');
+      setIsSubmitting(false);
     } catch (error) {
-      notify('error', 'Failed to create job post', {
-        autoClose: 5000,
-        transition: Bounce,
-      })
+      notify('error', 'Failed to update job');
+      console.error(error);
+      setIsSubmitting(false);
+
     }
-    setSubmitting(false)
+  };
+
+
+  const initialValues: EditJobType = {
+    jobBrief: jobToEdit?.jobBrief || '',
+    role: jobToEdit?.role?._id || "",
+    requirements: jobToEdit?.requirements || '',
+    minSalary: jobToEdit?.minSalary || 0,
+    maxSalary: jobToEdit?.maxSalary || 0,
+    workMode: jobToEdit?.workMode || undefined,
+    experienceLevel: jobToEdit?.experienceLevel || '',
+    location: jobToEdit?.location || {
+      country: '',
+      state: '',
+      city: '',
+    },
+    skills: jobToEdit?.skills || [],
+    goals: jobToEdit?.goals || [],
   }
 
   return (
     <div className="md:px-4 py-4 w-full">
       <div className="md:w-[70%] mx-auto w-full">
         <h2 className="text-[#101828] text-[32px] mt-6 font-bold">
-          Job details
+          Edit {capitalizeEachWord(jobToEdit?.role?.name)} Job
         </h2>
-        <p className="text-[#667085] text-[16px] mb-6 font-light">
-          Tell us about your job
-        </p>
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}>
-          {({ values, isSubmitting, setFieldValue, errors, touched }) => (
+          enableReinitialize={true}
+          onSubmit={() => {}}>
+          {({ values, setFieldValue, errors, touched }) => (
             <Form>
               <div className="mb-4">
                 <LabelWithAsterisk
@@ -136,11 +143,18 @@ const PostJob: React.FC = () => {
                   height="54px"
                   bold="bold"
                   asterick={true}
+                  selectedName={values?.location?.country}
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
-                    setFieldValue('location.state', { name: '', geoId: null })
-                    setFieldValue('location.city', { name: '', geoId: null })
+                    setFieldValue('location.state', {
+                      name: '',
+                      geoId: null,
+                    })
+                    setFieldValue('location.city', {
+                      name: '',
+                      geoId: null,
+                    })
                   }}
                   customHeight="60px"
                 />
@@ -154,14 +168,18 @@ const PostJob: React.FC = () => {
                 <Location
                   locationTitle="State"
                   locationLabel="State"
-                  geoId={values.location.country.geoId}
+                  selectedName={values?.location?.state}
+                  geoId={values?.location?.country?.geoId}
                   asterick={true}
                   height="54px"
                   bold="bold"
                   isCountry={false}
                   onChange={(geoId) => {
                     setFieldValue('location.state.geoId', geoId)
-                    setFieldValue('location.city', { name: '', geoId: null })
+                    setFieldValue('location.city', {
+                      name: '',
+                      geoId: null,
+                    })
                   }}
                   customHeight="60px"
                 />
@@ -175,7 +193,8 @@ const PostJob: React.FC = () => {
                 <Location
                   locationTitle="City"
                   locationLabel="Region/City (Optional)"
-                  geoId={values.location.state.geoId}
+                  selectedName={values?.location?.city as string}
+                  geoId={values?.location?.state?.geoId}
                   height="54px"
                   bold="bold"
                   isCountry={false}
@@ -264,7 +283,7 @@ const PostJob: React.FC = () => {
                 <FieldArray name="skills">
                   {({ remove, push }) => (
                     <div>
-                      {values.skills.map((skill, index) => (
+                      {values?.skills?.map((skill, index) => (
                         <div
                           key={index}
                           className="flex mb-2 items-center space-x-0">
@@ -306,7 +325,7 @@ const PostJob: React.FC = () => {
                 <FieldArray name="goals">
                   {({ remove, push }) => (
                     <div>
-                      {values.goals.map((goal, index) => (
+                      {values?.goals?.map((goal, index) => (
                         <div
                           key={index}
                           className="flex mb-2 items-center space-x-0">
@@ -339,22 +358,13 @@ const PostJob: React.FC = () => {
                 />
               </div>
               <div className="mt-10">
-                {jobId !== null ? (
-                  <Link to={`/recruiterDashboard/postjob/${jobId}`}>
-                    <button className="px-20 py-3 bg-[#3C6FD4] text-white rounded hover:bg-blue-700">
-                      Next
-                    </button>
-                  </Link>
-                ) : (
-                  <div>
-                    <button
-                      type="submit"
-                      className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-                      disabled={isSubmitting}>
-                      {isSubmitting ? 'Submitting' : 'Submit'}
-                    </button>
-                  </div>
-                )}
+                <button
+                  type="submit"
+                  className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
+                  disabled={isSubmitting}
+                  onClick={() => handleUpdateJob(values)}>
+                  {isSubmitting ? 'Submitting' : 'Submit'}
+                </button>
               </div>
             </Form>
           )}
@@ -363,5 +373,3 @@ const PostJob: React.FC = () => {
     </div>
   )
 }
-
-export default PostJob

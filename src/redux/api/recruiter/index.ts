@@ -143,6 +143,13 @@ export const recruiterApi = createApi({
         method: 'GET',
       }),
     }),
+    updateJob: builder.mutation({
+      query: ({ jobId, data }) => ({
+        url: `/jobs/${jobId}`,
+        method: 'PATCH',
+        body: data,
+      }),
+    })
   }),
 })
 
@@ -166,4 +173,5 @@ export const {
   usePatchApplicationStatusMutation,
   useSendTalentMessageMutation,
   useGetMessagesSentToTalentQuery,
+  useUpdateJobMutation,
 } = recruiterApi
