@@ -26,8 +26,6 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [updateJob] = useUpdateJobMutation()
 
-
-
   const handleUpdateJob = async (values: EditJobType) => {
     setIsSubmitting(true)
     const location = {

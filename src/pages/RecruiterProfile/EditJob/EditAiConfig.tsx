@@ -12,6 +12,7 @@ import {
 } from '../../../redux/api/recruiter'
 import { JobAiConfig } from '../../../utils'
 import { notify } from '../../../utils/toastNotifications'
+import Loading from "../../../components/Loading/Loading";
 
 type EditAiConfigProps = {
   aiConfigId: string
@@ -44,7 +45,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
   }, [data])
 
   if (isLoading || !aiConfigValues) {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

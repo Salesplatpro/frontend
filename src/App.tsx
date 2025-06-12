@@ -57,6 +57,7 @@ import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
 import PageNotFound from './PageNotFound'
+import { EditJobTab } from './pages/RecruiterProfile/EditJob'
 
 const router = createBrowserRouter([
   {
@@ -246,6 +247,10 @@ const router = createBrowserRouter([
           {
             path: 'postjob/:jobId',
             element: <PostJobTab />,
+          },
+          {
+            path: 'editJob/:jobId',
+            element: <EditJobTab />,
           },
           {
             path: 'jobdetail/:jobId',
