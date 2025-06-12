@@ -96,6 +96,28 @@ export interface JobProfileProps {
 }
 
 export interface EditJobType extends JobProfileProps {
+  aiConfig: string
   maxSalary?: number
   minSalary?: number
+}
+
+export interface JobAiConfig {
+  name: string
+  recruiter: string
+  cvSimilarity: boolean
+  minCvSimilarityScore: number
+  minPrescreeningScore: number
+  noOfCvSimilarCandidates: number
+  noPersonalizedQuestions: number
+  personalityEvaluation: boolean
+  personalizedAssessment: boolean
+  prescreeningAssessment: boolean
+  uploadedQuestions: string[]
+  recruiterGuide?: string
+  stages: {
+    cv_similarity: string
+    personality: string
+    personalized: string
+    prescreening: string
+  }
 }

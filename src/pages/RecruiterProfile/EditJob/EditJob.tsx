@@ -7,6 +7,7 @@ import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
 import Loading from '../../../components/Loading/Loading'
 import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
+import { useUpdateJobMutation } from '../../../redux/api/recruiter'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { EditJobType } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
@@ -15,32 +16,20 @@ import { notify } from '../../../utils/toastNotifications'
 import ExperienceLevelSelect from '../PostJobs/ExperienceLevelSelect'
 import { validationSchema } from '../PostJobs/validationSchema'
 import WorkModeSelect from '../PostJobs/WorkModeSelect'
-import { useUpdateJobMutation } from "../../../redux/api/recruiter";
 
 type Props = {
+  jobToEdit: EditJobType | null
   jobId?: string
 }
 
-export const EditJob = ({ jobId }: Props) => {
-  const [jobToEdit, setJobToEdit] = useState<EditJobType | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [updateJob] = useUpdateJobMutation();
+export const EditJob = ({ jobToEdit, jobId }: Props) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [updateJob] = useUpdateJobMutation()
 
-  const { data, error, isLoading } = useIndividualJobQuery(jobId)
 
-  useEffect(() => {
-    if (data) {
-      setJobToEdit(data?.data)
-    }
-    if (error) {
-      notify('error', 'DisplayError loading job post')
-    }
-  }, [data, error])
-
-  if (isLoading) return <Loading />
 
   const handleUpdateJob = async (values: EditJobType) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     const location = {
       country: values?.location?.country?.name,
       state: values?.location?.state?.name,
@@ -55,21 +44,19 @@ export const EditJob = ({ jobId }: Props) => {
     }
 
     try {
-      const response = await updateJob({ jobId, data: submissionValues }).unwrap();
-      notify('success', 'Job updated successfully');
-      setIsSubmitting(false);
+      await updateJob({ jobId, data: submissionValues }).unwrap()
+      notify('success', 'Job updated successfully')
+      setIsSubmitting(false)
     } catch (error) {
-      notify('error', 'Failed to update job');
-      console.error(error);
-      setIsSubmitting(false);
-
+      notify('error', 'Failed to update job')
+      console.error(error)
+      setIsSubmitting(false)
     }
-  };
-
+  }
 
   const initialValues: EditJobType = {
     jobBrief: jobToEdit?.jobBrief || '',
-    role: jobToEdit?.role?._id || "",
+    role: jobToEdit?.role?._id || { _id: '', name: '' },
     requirements: jobToEdit?.requirements || '',
     minSalary: jobToEdit?.minSalary || 0,
     maxSalary: jobToEdit?.maxSalary || 0,
@@ -108,6 +95,7 @@ export const EditJob = ({ jobId }: Props) => {
                   <CreatableRoleSelect
                     name="role"
                     value={values.role}
+                    isDisabled={true}
                     onChange={(value: any) => {
                       setFieldValue('role', value)
                       // Update Formik state

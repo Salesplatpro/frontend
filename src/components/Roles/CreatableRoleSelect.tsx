@@ -9,6 +9,7 @@ interface RoleTypes {
   name: string
   onChange: (value: any) => void
   customHeight: string
+  isDisabled: boolean
 }
 
 const CreatableRoleSelect = ({
@@ -16,6 +17,7 @@ const CreatableRoleSelect = ({
   onChange,
   name,
   customHeight,
+  isDisabled = false,
 }: RoleTypes) => {
   const { data } = useGetRoleQuery({})
 
@@ -79,6 +81,7 @@ const CreatableRoleSelect = ({
         onChange={handleChange}
         options={roleOptions}
         styles={customStyles}
+        isDisabled={isDisabled}
         isClearable
       />
     </div>
