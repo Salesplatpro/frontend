@@ -39,6 +39,7 @@ const RadioFieldGroup = ({
             id={`${name}${option.value}`}
             name={name}
             value={option.value}
+
           />
           <span>{option.label}</span>
         </label>
