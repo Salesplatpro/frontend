@@ -1,3 +1,5 @@
+import { LocationValues } from "./jobPostTypes";
+
 type JobLocation = {
   city: string
   state: string
@@ -69,6 +71,7 @@ export type SingleJobDetails = {
 
 export interface JobProfileProps {
   role?: {
+    _id: string
     name: string
   }
   title?: string
@@ -85,9 +88,36 @@ export interface JobProfileProps {
   goals?: string[]
   remote?: boolean
   location?: {
-    country: string
-    city?: string
-    state?: string
+    country?: LocationValues
+    city?: LocationValues
+    state?: LocationValues
   }
   experienceLevel?: string
+}
+
+export interface EditJobType extends JobProfileProps {
+  aiConfig: string
+  maxSalary?: number
+  minSalary?: number
+}
+
+export interface JobAiConfig {
+  name: string
+  recruiter: string
+  cvSimilarity: boolean
+  minCvSimilarityScore: number
+  minPrescreeningScore: number
+  noOfCvSimilarCandidates: number
+  noPersonalizedQuestions: number
+  personalityEvaluation: boolean
+  personalizedAssessment: boolean
+  prescreeningAssessment: boolean
+  uploadedQuestions: string[]
+  recruiterGuide?: string
+  stages: {
+    cv_similarity: string
+    personality: string
+    personalized: string
+    prescreening: string
+  }
 }

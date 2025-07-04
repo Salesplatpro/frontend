@@ -38,9 +38,17 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+
+    getAiConfig: builder.query({
+      query: (aiConfigId: string) => ({
+        url: `/ai-config/${aiConfigId}`,
+        method: 'GET',
+      }),
+    }),
+
     patchAiConfig: builder.mutation({
-      query: ({ jobId, data }) => ({
-        url: `/jobs/${jobId}`,
+      query: ({ aiConfigId, data }) => ({
+        url: `/ai-config/${aiConfigId}`,
         method: 'PATCH',
         body: data,
       }),
@@ -143,6 +151,13 @@ export const recruiterApi = createApi({
         method: 'GET',
       }),
     }),
+    updateJob: builder.mutation({
+      query: ({ jobId, data }) => ({
+        url: `/jobs/${jobId}`,
+        method: 'PATCH',
+        body: data,
+      }),
+    })
   }),
 })
 
@@ -166,4 +181,6 @@ export const {
   usePatchApplicationStatusMutation,
   useSendTalentMessageMutation,
   useGetMessagesSentToTalentQuery,
+  useUpdateJobMutation,
+  useGetAiConfigQuery,
 } = recruiterApi
