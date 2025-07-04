@@ -16,7 +16,6 @@ import { notify } from '../../../utils/toastNotifications'
 import ExperienceLevelSelect from '../PostJobs/ExperienceLevelSelect'
 import { validationSchema } from '../PostJobs/validationSchema'
 import WorkModeSelect from '../PostJobs/WorkModeSelect'
-import { string } from 'yup'
 
 type Props = {
   jobToEdit: EditJobType | null
@@ -55,7 +54,7 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
 
   const initialValues: EditJobType = {
     jobBrief: jobToEdit?.jobBrief || '',
-    role: jobToEdit?.role?._id || { _id: '', name: '' },
+    role: jobToEdit?.role || { _id: '', name: '' },
     requirements: jobToEdit?.requirements || '',
     minSalary: jobToEdit?.minSalary || 0,
     maxSalary: jobToEdit?.maxSalary || 0,
