@@ -36,7 +36,7 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
         : {}),
     }
 
-    const { role, ...submissionValues } = {
+    const submissionValues = {
       ...values,
       location,
     }
