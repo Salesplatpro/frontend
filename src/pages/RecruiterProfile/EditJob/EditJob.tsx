@@ -36,7 +36,7 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
         : {}),
     }
 
-    const submissionValues = {
+    const { ...submissionValues } = {
       ...values,
       location,
     }
@@ -54,7 +54,7 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
 
   const initialValues: EditJobType = {
     jobBrief: jobToEdit?.jobBrief || '',
-    role: jobToEdit?.role || { _id: '', name: '' },
+    role: jobToEdit?.role?._id || { _id: '', name: '' },
     requirements: jobToEdit?.requirements || '',
     minSalary: jobToEdit?.minSalary || 0,
     maxSalary: jobToEdit?.maxSalary || 0,
