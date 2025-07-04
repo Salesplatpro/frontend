@@ -1,14 +1,14 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 
 import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
-import Loading from '../../../components/Loading/Loading'
+// import Loading from '../../../components/Loading/Loading'
 import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
 import { useUpdateJobMutation } from '../../../redux/api/recruiter'
-import { useIndividualJobQuery } from '../../../redux/api/talent'
+// import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { EditJobType } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
@@ -16,6 +16,7 @@ import { notify } from '../../../utils/toastNotifications'
 import ExperienceLevelSelect from '../PostJobs/ExperienceLevelSelect'
 import { validationSchema } from '../PostJobs/validationSchema'
 import WorkModeSelect from '../PostJobs/WorkModeSelect'
+import { string } from 'yup'
 
 type Props = {
   jobToEdit: EditJobType | null
