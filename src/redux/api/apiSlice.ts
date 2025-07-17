@@ -45,6 +45,21 @@ export const api = createApi({
         body: data,
       }),
     }),
+
+    pricingPlan: builder.query({
+      query: () => ({
+        url: `/plans`,
+        method: 'GET',
+      }),
+    }),
+
+    paymentInitiate: builder.mutation({
+      query: (data) => ({
+        url: `/payments`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -54,4 +69,6 @@ export const {
   useUserLoginMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  usePricingPlanQuery,
+  usePaymentInitiateMutation,
 } = api

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
-import PricingHero from './Pricing/PricingHero'
 import PricePlan from './Pricing/PricePlan'
-import QuoteSection from './QuoteSection'
+import PricingHero from './Pricing/PricingHero'
 import PricingNotification from './Pricing/PricingNotification'
+import QuoteSection from './QuoteSection'
 
 const Pricing = () => {
   const [isFlipped, setIsFlipped] = useState(false)
