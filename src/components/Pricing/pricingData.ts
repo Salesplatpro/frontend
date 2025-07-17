@@ -51,7 +51,7 @@ export const PricingData: PricingDatas[] = [
     plan: 'SME(Basic) Plan',
     monthly: {
       price: '$98',
-      priceSpan: '#150,000',
+      priceSpan: '₦150,000',
       jobListing: 'SME (Basic) Plan',
       featuresTitle: 'FEATURES',
       featuresText: 'Everything in SME (Basic) plan...',
@@ -66,7 +66,7 @@ export const PricingData: PricingDatas[] = [
     },
     annually: {
       price: '$75',
-      priceSpan: '#120,000',
+      priceSpan: '₦120,000',
       jobListing: '5 Job Listings',
       featuresTitle: 'FEATURES',
       featuresText: 'Everything in Pay per Use plus....',
@@ -84,7 +84,7 @@ export const PricingData: PricingDatas[] = [
     plan: 'Growth plan',
     monthly: {
       price: '$195',
-      priceSpan: '#300,0000',
+      priceSpan: '₦300,0000',
       jobListing: '10 Job Listings',
       featuresTitle: 'FEATURES',
       featuresText: 'Everything in Growth plan....',
@@ -98,7 +98,7 @@ export const PricingData: PricingDatas[] = [
     },
     annually: {
       price: '$325',
-      priceSpan: '#500,0000',
+      priceSpan: '₦500,0000',
       jobListing: 'Growth Plan',
       featuresTitle: 'FEATURES',
       featuresText: 'Everything in Growth plan....',
@@ -115,7 +115,7 @@ export const PricingData: PricingDatas[] = [
     plan: 'Enterprise plan',
     monthly: {
       price: '$645',
-      priceSpan: '#1,000,0000',
+      priceSpan: '₦1,000,0000',
       jobListing: 'Enterprise plan',
       featuresTitle: 'FEATURES',
       featuresText: 'Everything in Enterprise plan....',
@@ -131,7 +131,7 @@ export const PricingData: PricingDatas[] = [
     },
     annually: {
       price: '$325',
-      priceSpan: '#500,0000',
+      priceSpan: '₦500,0000',
       jobListing: 'Pay per Job Listing',
       featuresTitle: 'FEATURES',
       featuresText: 'Everything in Enterprise plan....',

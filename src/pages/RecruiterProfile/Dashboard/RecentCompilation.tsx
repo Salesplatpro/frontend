@@ -30,6 +30,8 @@ const RecentCompilation = () => {
     if (dashboardData?.data?.data?.recentCompilations) {
       setInfoData(dashboardData.data.data.recentCompilations)
     }
+
+    console.log(dashboardData.data.data.recentCompilations)
   }, [dashboardData])
 
   // Handle filter selection
