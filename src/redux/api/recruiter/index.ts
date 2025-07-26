@@ -157,7 +157,7 @@ export const recruiterApi = createApi({
         method: 'PATCH',
         body: data,
       }),
-    })
+    }),
   }),
 })
 
