@@ -12,7 +12,7 @@ import {
 } from '../../../redux/api/recruiter'
 import { JobAiConfig } from '../../../utils'
 import { notify } from '../../../utils/toastNotifications'
-import Loading from "../../../components/Loading/Loading";
+import Loading from '../../../components/Loading/Loading'
 
 type EditAiConfigProps = {
   aiConfigId: string
@@ -154,7 +154,9 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               <FieldArray name="uploadedQuestions">
                 {({ remove, push }) => (
                   <div className="flex flex-col mt-4 mb-4">
-                    <label className="font-medium mb-1">Questions:</label>
+                    <label className="font-medium mb-1" htmlFor="Questions">
+                      Questions:
+                    </label>
                     <div className="space-y-2">
                       {values.uploadedQuestions.map((q, i) => (
                         <div

@@ -7,7 +7,7 @@ import { notify } from '../../../utils/toastNotifications'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import Loading from '../../../components/Loading/Loading'
 import { EditJobType } from '../../../utils'
-import { useGetAiConfigQuery, usePatchAiConfigMutation } from '../../../redux/api/recruiter'
+// import { useGetAiConfigQuery, usePatchAiConfigMutation } from '../../../redux/api/recruiter'
 
 const tabs = [
   {
@@ -32,7 +32,6 @@ export const EditJobTab = () => {
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const aiConfigId = data?.data?.aiConfig || ''
 
-  
   useEffect(() => {
     if (data) {
       setJobToEdit(data?.data)

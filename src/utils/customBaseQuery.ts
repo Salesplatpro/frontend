@@ -28,11 +28,16 @@ export const customBaseQuery: BaseQueryFn<
   const result = await baseQuery(args, api, extraOptions)
 
   if (result.error?.status === 401) {
+    const currentPath = window.location.pathname + window.location.search
+    sessionStorage.setItem('redirectAfterLogin', currentPath)
+
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+
     notify('error', 'Session expired. Please log in again.', {
       autoClose: 5000,
     })
+
     window.location.href = '/login'
   }
 
