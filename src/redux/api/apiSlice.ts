@@ -60,6 +60,13 @@ export const api = createApi({
         body: data,
       }),
     }),
+    verifyPayment: builder.mutation({
+      query: (data) => ({
+        url: `/payments/verify`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -71,4 +78,5 @@ export const {
   useResetPasswordMutation,
   usePricingPlanQuery,
   usePaymentInitiateMutation,
+  useVerifyPaymentMutation,
 } = api

@@ -2,6 +2,7 @@ import '../form.scss'
 
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 // import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { Bounce } from 'react-toastify'
@@ -22,7 +23,6 @@ import { loginSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import ForgotPasswordModal from './ForgotPasswordModal'
 import Loading from './Loading'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 interface LoginFormValues {
   email: string
