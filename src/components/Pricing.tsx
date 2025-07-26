@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-import PricePlan from './Pricing/PricePlan'
-import PricingHero from './Pricing/PricingHero'
-import PricingNotification from './Pricing/PricingNotification'
+import PricePlan from '../pages/Pricing/PricePlan'
+import PricingHero from '../pages/Pricing/PricingHero'
+import PricingNotification from '../pages/Pricing/PricingNotification'
 import QuoteSection from './QuoteSection'
 
 const Pricing = () => {

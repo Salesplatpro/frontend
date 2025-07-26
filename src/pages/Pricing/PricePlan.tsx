@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 import ReactCardFlip from 'react-card-flip'
 
+import Loading from '../../components/Loading/Loading'
 import {
   usePaymentInitiateMutation,
   usePricingPlanQuery,
 } from '../../redux/api/apiSlice'
 import { notify } from '../../utils/toastNotifications'
-import Loading from '../Loading/Loading'
 import PricingBackCard from './PricingBackCard'
 import PricingCard from './PricingCard'
 import { Plan, PlanApiResponse, PlanDetails } from './pricingData'
