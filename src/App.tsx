@@ -4,7 +4,7 @@ import './index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 // eslint-disable-next-line no-unused-vars
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
