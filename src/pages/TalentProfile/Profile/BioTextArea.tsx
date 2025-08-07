@@ -9,7 +9,6 @@ const BioTextArea = () => {
 
     if (value.length <= 1000) {
       setFieldValue('bio', value)
-      console.log(value)
     }
   }
 
