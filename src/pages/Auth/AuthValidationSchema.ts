@@ -1,3 +1,4 @@
+import { isValidPhoneNumber } from 'react-phone-number-input';
 import * as Yup from 'yup'
 
 const emailValidation = () => Yup.string().required('Email is required')
@@ -36,7 +37,13 @@ export const SignUpSchema = Yup.object().shape({
       /^[a-zA-Z]+$/.test(value || ''),
     ),
 
-  phone: Yup.string().required('Phone Number is required'),
+  phone: Yup.string()
+    .required('Phone number is required')
+    .test('is-valid-phone', 'Invalid phone number', (value) => {
+      if (!value) return false
+      return isValidPhoneNumber(value)
+    }),
+
   userType: Yup.string()
     .oneOf(['talent', 'recruiter'], 'Invalid user type')
     .required('User type is required'),
