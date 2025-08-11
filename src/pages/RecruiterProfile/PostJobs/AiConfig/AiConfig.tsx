@@ -76,7 +76,7 @@ const AiConfig = () => {
 
     personalityEvaluation: Yup.string().required('Required'),
 
-    recruiterGuide: Yup.string().required('Required'),
+    // recruiterGuide: Yup.string().required('Required'),
   })
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
@@ -94,6 +94,9 @@ const AiConfig = () => {
     }
     if (values.personalityEvaluation === 'false') {
       delete cleanedValues.uploadedQuestions
+    }
+    if (values.recruiterGuide === '') {
+      delete cleanedValues.recruiterGuide
     }
 
     try {

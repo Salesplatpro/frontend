@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-// eslint-disable-next-line no-unused-vars
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
+import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
@@ -14,7 +14,9 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
+  console.log(jobId)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const navigation = useNavigate()
   const link = `https://auxhr.com/job/postedjob/${jobId}`
 
   const [shareLinks, setShareLinks] = useState<{
@@ -30,7 +32,6 @@ const IndividualJob = () => {
   useEffect(() => {
     if (data) {
       setJobProfile(data.data)
-      console.log(data.data)
     }
     if (error) {
       notify('error', 'DisplayError loading job post')
@@ -76,25 +77,22 @@ const IndividualJob = () => {
           <div className="text-start">
             <div className="">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your role at{jobProfile?.title}
+                {/* Your role at{jobProfile?.title} */}
+                Job Brief
               </h5>
-              <p className="text-[#667085] text-base mt-0 text-justify">
-                {jobProfile?.description}
-              </p>
+              <RichTextDisplay
+                content={jobProfile?.jobBrief || ' '}
+                className="text-[#667085] text-base mt-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your Responsibilities
+                Job Requirements
               </h5>
-              {jobProfile?.responsibilities && (
-                <ul className="list-disc ml-5 pl-0">
-                  {jobProfile?.responsibilities.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <RichTextDisplay
+                content={jobProfile?.requirements || ' '}
+                className="text-[#667085] text-base mt-0 mb-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
@@ -125,7 +123,9 @@ const IndividualJob = () => {
               )}
             </div>
             {/* <Link to={`/talentDashboard/applicationPipeline/${jobId}`}> */}
-            <button className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+            <button
+              onClick={() => navigation(`/recruiterDashboard/editJob/${jobId}`)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
               Edit
             </button>
             {/* </Link> */}
@@ -135,6 +135,9 @@ const IndividualJob = () => {
             <div className="bg-[#F3F6FC] md:w-[260px] w-full rounded-lg px-8 py-8">
               <button
                 type="submit"
+                onClick={() =>
+                  navigation(`/recruiterDashboard/editJob/${jobId}`)
+                }
                 className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
                 Edit
               </button>
@@ -143,7 +146,7 @@ const IndividualJob = () => {
                   Job Type
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
-                  {jobProfile?.remote ? 'True' : 'False'}
+                  {capitalizeFirstWord(jobProfile?.workMode)}
                 </h5>
               </div>
               <div className="mt-4">
@@ -152,8 +155,8 @@ const IndividualJob = () => {
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
                   {jobProfile?.location &&
-                    capitalizeFirstWord(jobProfile?.location?.country)}{' '}
-                  {''}
+                    capitalizeFirstWord(jobProfile?.location?.country)}
+                  {','}{' '}
                   {jobProfile?.location?.city &&
                     capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>

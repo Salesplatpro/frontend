@@ -1,17 +1,25 @@
 import React from 'react'
-import { IoIosLink } from 'react-icons/io'
-import { LuShare } from 'react-icons/lu'
+import share from '../../assets/share.svg'
+import copy from '../../assets/copy.svg'
 
 import { notify } from '../../utils/toastNotifications'
+
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 type ShareOptionsProps = {
   handleShare: (jobId: string) => void
   jobId: string
+  tooltipContent?: string
+  tooltipPosition?: 'top' | 'bottom' | 'left' | 'right'
+  tooltipVariant?: 'dark' | 'light' | 'success' | 'error' | 'info' | 'warning'
 }
 
 export const ShareOptions: React.FC<ShareOptionsProps> = ({
   handleShare,
   jobId,
+  tooltipContent,
+  tooltipPosition = 'bottom',
+  tooltipVariant = 'info',
 }) => {
   const copyToClipBoard = () => {
     const jobLink = `https://auxhr.com/job/postedjob/${jobId}`
@@ -27,27 +35,39 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
 
   const shareOptions = [
     {
-      icon: <LuShare />,
+      icon: <img src={share} alt="share icon" className="size-6" />,
       text: 'Share',
       action: () => handleShare(jobId),
     },
     {
-      icon: <IoIosLink />,
+      icon: <img src={copy} alt="copy icon" className="size-5" />,
       text: 'Copy',
       action: copyToClipBoard,
     },
   ]
 
   return (
-    <div className="flex space-x-2 items-center justify-center">
+    <div className="flex space-x-2 items-center justify-center px-2">
       {shareOptions.map((option, i) => (
-        <div
-          key={i}
-          onClick={option.action}
-          className="flex cursor-pointer items-center justify-center space-x-2 border border-[#E7E7E9] w-[72px] h-[34px] rounded-lg hover:bg-[#5c8beb] hover:text-white">
-          {option.icon}
-          <span className="font-medium hover:text-white">{option.text}</span>
-        </div>
+        <>
+          <div
+            key={i}
+            data-tooltip-id="share-tooltip"
+            data-tooltip-content={option.text}
+            onClick={option.action}
+            className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
+              i !== 0 ? 'border-l border-gray-300 px-2' : ''
+            }`}>
+            {option.icon}
+          </div>
+
+          <ReactTooltip
+            id="share-tooltip"
+            place={tooltipPosition}
+            variant={tooltipVariant}
+            content={tooltipContent}
+          />
+        </>
       ))}
     </div>
   )

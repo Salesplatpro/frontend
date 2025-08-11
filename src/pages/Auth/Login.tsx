@@ -2,15 +2,16 @@ import '../form.scss'
 
 import { useFormik } from 'formik'
 import React, { useState } from 'react'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 // import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
 // import google from '../../assets/google.png'
 import logo from '../../assets/logo.png'
 // import Salesplat from '../../assets/salesplat.png'
 import { CheckBox, TextInput } from '../../components'
+import { useLoginRedirect } from '../../hooks/useLoginRedirect'
 import { useUserLoginMutation } from '../../redux/api/apiSlice'
 import {
   loginFailure,
@@ -36,10 +37,11 @@ const defaultLoginFormValues: LoginFormValues = {
 const Login: React.FC = () => {
   const [login] = useUserLoginMutation()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-
+  const [showPassword, setShowPassword] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useLoginRedirect()
 
   const formik = useFormik<LoginFormValues>({
     initialValues: defaultLoginFormValues,
@@ -63,20 +65,26 @@ const Login: React.FC = () => {
           autoClose: 5000,
         })
 
-        const userRole = response.data.user?.userRole
-        switch (userRole) {
-          case 'recruiter':
-            navigate('/recruiterDashboard/dashboard')
-            break
-          case 'talent':
-            navigate('/talentDashboard/TalentProfile')
-            break
-          case 'admin':
-            navigate('/adminDashboard/viewcandidates')
-            break
-          default:
-            navigate('/')
-        }
+        // const userRole = response.data.user?.userRole
+
+        // if (redirectTo) {
+        //   navigate(redirectTo)
+        //   return
+        // }
+
+        // switch (userRole) {
+        //   case 'recruiter':
+        //     navigate('/recruiterDashboard/dashboard')
+        //     break
+        //   case 'talent':
+        //     navigate('/talentDashboard/TalentProfile')
+        //     break
+        //   case 'admin':
+        //     navigate('/adminDashboard/viewcandidates')
+        //     break
+        //   default:
+        //     navigate('/')
+        // }
       } catch (err: any) {
         dispatch(loginFailure(err.data?.message))
 
@@ -135,20 +143,29 @@ const Login: React.FC = () => {
                 }
               />
 
-              <TextInput
-                title="Password"
-                label="password"
-                name="password"
-                value={formik.values.password}
-                onChange={handleChange}
-                isPassword
-                placeholder="Enter your password"
-                error={
-                  formik.touched.password && formik.errors.password
-                    ? formik.errors.password
-                    : ''
-                }
-              />
+              <div className="relative">
+                <TextInput
+                  title="Password"
+                  label="password"
+                  name="password"
+                  value={formik.values.password}
+                  onChange={handleChange}
+                  isPassword={!showPassword}
+                  placeholder="Enter your password"
+                  error={
+                    formik.touched.password && formik.errors.password
+                      ? formik.errors.password
+                      : ''
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </button>
+              </div>
 
               <div className="remember-me">
                 <CheckBox name="remember" label="Remember me" />

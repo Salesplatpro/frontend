@@ -14,6 +14,7 @@ interface sideBarProps {
     count?: number
     link?: string
   }[]
+  unreadCount?: number
   handleClick?: () => void
 }
 
@@ -21,6 +22,7 @@ const feedBack = [
   {
     name: 'Support',
     icon: <MdSupport size={24} />,
+    link: 'support',
   },
   {
     name: 'Leave us feedBack',
@@ -50,17 +52,19 @@ export const SideBar: React.FC<sideBarProps> = ({
           </Link>
         </div>
         <div className={styles.sidebarList}>
-          {sideBarData.map((data, index) => (
-            <SidebarList
-              key={index}
-              icon={data.icon}
-              name={data.name}
-              count={data.count}
-              link={data.link}
-              active={activeItem === `sideBar-${index}`}
-              onClick={() => handleItemClick('sideBar', index)}
-            />
-          ))}
+          {sideBarData.map((data, index) => {
+            return (
+              <SidebarList
+                key={index}
+                icon={data.icon}
+                name={data.name}
+                count={data.count}
+                link={data.link}
+                active={activeItem === `sideBar-${index}`}
+                onClick={() => handleItemClick('sideBar', index)}
+              />
+            )
+          })}
         </div>
       </div>
       <div>
@@ -69,6 +73,7 @@ export const SideBar: React.FC<sideBarProps> = ({
             key={index}
             icon={data.icon}
             name={data.name}
+            link={data.link}
             active={activeItem === `feedback-${index}`}
             onClick={() => handleItemClick('feedback', index)}
           />

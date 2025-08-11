@@ -1,16 +1,12 @@
-.primary {
-  background-color: #3c6fd4;
+.button-base {
   padding: 6px 20px;
-
   border-radius: 10px;
-  color: white;
-  border: none;
   cursor: pointer;
   width: max-content;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  border: none;
 
   &:hover {
     opacity: 0.7;
@@ -18,29 +14,23 @@
 
   @media (max-width: 768px) {
     width: 100%;
+    margin: 0 auto;
   }
+}
+
+.primary {
+  @extend .button-base;
+  background-color: #3c6fd4;
+  color: white;
 }
 
 .secondary {
+  @extend .button-base;
   background-color: white;
-  padding: 4px;
-  border-radius: 10px;
   color: #344054;
   border: 1px solid #d0d5dd;
-  cursor: pointer;
-  width: max-content;
-  display: flex;
-  justify-content: center;
-  margin: 0 auto;
-
-  &:hover {
-    opacity: 0.7;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 }
+
 
 .element {
   width: 24px;

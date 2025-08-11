@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
+import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
@@ -17,6 +18,10 @@ interface JobProfileProps {
   }
   title?: string
   description?: string
+  jobBrief?: string
+  requirements?: string
+  firstName?: string
+  lastName?: string
   responsibilities?: string[]
   skills?: string[]
   goals?: string[]
@@ -90,8 +95,7 @@ const IndividualJob = () => {
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
         <h2 className="font-bold md:text-3xl text-xl">
-          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)} at{' '}
-          {jobProfile?.title}
+          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
         <div className="flex space-x-5 items-center mt-3">
           <ShareOptions handleShare={handleShare} jobId={jobId!} />
@@ -100,26 +104,26 @@ const IndividualJob = () => {
         <div className="flex md:flex-row flex-col justify-between items-start md:w-[90%] w-full mx-auto md:mt-10 mt-6">
           <div className="md:w-[60%] w-full text-start">
             <div className="">
+              {/* <h5 className="text-[#101828] text-lg text-start font-semibold">
+                Your role at {''} {jobProfile?.firstName} {''}{' '}
+                {jobProfile?.lastName}
+              </h5> */}
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your role at{jobProfile?.title}
+                Your role
               </h5>
-              <p className="text-[#667085] text-base mt-0 text-justify">
-                {jobProfile?.description}
-              </p>
+              <RichTextDisplay
+                content={jobProfile?.jobBrief || ' '}
+                className="text-[#667085] text-base mt-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your Responsibilities
+                Your Requirements
               </h5>
-              {jobProfile?.responsibilities && (
-                <ul className="list-disc ml-5 pl-0">
-                  {jobProfile?.responsibilities.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <RichTextDisplay
+                content={jobProfile?.requirements || ' '}
+                className="text-[#667085] text-base mt-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">

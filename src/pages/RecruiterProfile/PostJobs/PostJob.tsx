@@ -4,7 +4,6 @@ import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
-import * as Yup from 'yup'
 
 import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
@@ -14,41 +13,8 @@ import { FormValues } from '../../../utils/jobPostTypes'
 import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
 import { notify } from '../../../utils/toastNotifications'
 import ExperienceLevelSelect from './ExperienceLevelSelect'
+import { validationSchema } from './validationSchema'
 import WorkModeSelect from './WorkModeSelect'
-
-const validationSchema = Yup.object({
-  jobBrief: Yup.string().required('Job Brief is required'),
-  minSalary: Yup.number()
-    .required('Minimum Salary is required')
-    .positive('Minimum Salary must be positive'),
-  maxSalary: Yup.number()
-    .required('Maximum Salary is required')
-    .positive('Maximum Salary must be positive'),
-  experienceLevel: Yup.string().required('Experience level is required'),
-  workMode: Yup.string().required('Work Mode is required'),
-  location: Yup.object({
-    country: Yup.object({
-      name: Yup.string().required('Country is required'),
-      geoId: Yup.number().required('Country ID is required'),
-    }),
-    state: Yup.object({
-      name: Yup.string().required('State is required'),
-      geoId: Yup.number().required('State ID is required'),
-    }),
-  }),
-  requirements: Yup.string().required('Requirements is required'),
-  role: Yup.string().required('Role is required'),
-  skills: Yup.array().of(
-    Yup.string()
-      .required('Skill is required')
-      .max(250, 'Skill cannot be longer than 150 characters'),
-  ),
-  goals: Yup.array().of(
-    Yup.string()
-      .required('Goal is required')
-      .max(250, 'Goal cannot be longer than 150 characters'),
-  ),
-})
 
 const PostJob: React.FC = () => {
   const [jobId, setJobId] = useState(null)
@@ -139,6 +105,7 @@ const PostJob: React.FC = () => {
                       setFieldValue('role', value)
                       // Update Formik state
                     }}
+                    isDisabled
                     customHeight="60px"
                   />
                   {errors.role && touched.role ? (
@@ -150,7 +117,7 @@ const PostJob: React.FC = () => {
                 label="Job Brief"
                 asterick={true}
                 name="jobBrief"
-                placeholder="Add Job Brief (300 words max)"
+                placeholder="Add Job Brief (600 words max)"
                 type="textarea"
                 MAX_WORDS={600}
               />
@@ -275,8 +242,7 @@ const PostJob: React.FC = () => {
                       value={field.value}
                       onChange={(value) =>
                         form.setFieldValue(field.name, value)
-                      } // Set value to Formik field
-                      // options={options} // Pass the options
+                      }
                       customHeight="60px"
                       options={[]}
                     />
@@ -333,7 +299,11 @@ const PostJob: React.FC = () => {
               </div>
               {/* Goals */}
               <div className="mb-4">
-                <LabelWithAsterisk asterick={true} name="goals" label="Goals" />
+                <LabelWithAsterisk
+                  asterick={true}
+                  name="goals"
+                  label="Top 3 Goals"
+                />
                 <FieldArray name="goals">
                   {({ remove, push }) => (
                     <div>

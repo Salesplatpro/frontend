@@ -6,7 +6,7 @@ type ModalProps = {
   actionType: 'acknowledge' | 'reject'
 }
 
-const ChatModal: React.FC<ModalProps> = ({
+const NotificationModal: React.FC<ModalProps> = ({
   onClose,
   onConfirm,
   actionType,
@@ -98,4 +98,4 @@ const ChatModal: React.FC<ModalProps> = ({
   )
 }
 
-export default ChatModal
+export default NotificationModal

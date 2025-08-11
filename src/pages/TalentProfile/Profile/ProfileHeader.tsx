@@ -63,6 +63,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
             updateProfilePics={updateProfilePics}
             user={user}
             userInfo={userInfo}
+            useChangeImageButton
           />
 
           <div className="w-full">
