@@ -1,0 +1,42 @@
+@use './index' as *;
+
+%shareFlexAlignItems {
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  position: fixed;
+  width: 100%;
+  height: 64px;
+  display: flex;
+}
+
+.leftNav {
+  @extend %shareFlexAlignItems;
+  background-color: $landing-getStarted-text-color;
+  justify-content: flex-start;
+  padding: 34px 0 34px 80px;
+  width: 70%;
+  gap: 48px;
+}
+
+.navItem {
+  font-size: $landing-base-font-size;
+  font-weight: $landing-base-font-weight;
+  color: $landing-white-color;
+}
+
+.leftNavItems {
+  @extend %shareFlexAlignItems;
+  gap: 24px;
+}
+
+.rightNav {
+  background-color: $landing-bg-primary-color;
+  @extend %shareFlexAlignItems;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 34px 80px 34px 0;
+  width: 30%;
+}

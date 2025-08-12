@@ -1,13 +1,13 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
+import { LandingNavbar } from '../components'
 import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
 
 export const MainLayout = () => {
   return (
     <>
-      <Navbar />
+      <LandingNavbar />
       <main>
         <Outlet />
       </main>

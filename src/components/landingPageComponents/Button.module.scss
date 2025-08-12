@@ -1,0 +1,20 @@
+@use './index' as *;
+
+.container {
+  display: block;
+  padding: 8px 16px;
+  font-size: $landing-base-font-size;
+  border-radius: 400px;
+  font-weight: $landing-base-font-weight;
+  color: $landing-text-color;
+}
+
+.primary {
+  background: $landing-btn-primary-bg-color;
+  color: $landing-btn-primary-text-color;
+}
+
+.secondary {
+  background: $landing-btn-secondary-bg-color;
+  color: $landing-btn-secondary-text-color;
+}
