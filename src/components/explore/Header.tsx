@@ -8,7 +8,7 @@ const Header = () => {
           <div className="content">
             <div className="top">
               <h6>Explore jobs</h6>
-              <h4>Find the best jobs...</h4>
+              <h4 data-testId="heading">Find the best jobs...</h4>
             </div>
             <p>
               Untitled is a technology company that builds infrastructure for

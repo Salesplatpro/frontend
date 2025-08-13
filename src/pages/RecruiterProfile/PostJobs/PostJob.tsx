@@ -105,6 +105,7 @@ const PostJob: React.FC = () => {
                       setFieldValue('role', value)
                       // Update Formik state
                     }}
+                    isDisabled
                     customHeight="60px"
                   />
                   {errors.role && touched.role ? (

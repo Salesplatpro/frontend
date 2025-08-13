@@ -7,7 +7,7 @@ const SolutionHeader = () => {
         <div className="content">
           <div className="main-texts">
             <p>Products and solutions</p>
-            <h3>All you need to find the best talents</h3>
+            <h3 data-testId="heading">All you need to find the best talents</h3>
           </div>
 
           <p className="supporting-text">

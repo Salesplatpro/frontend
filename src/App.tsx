@@ -4,7 +4,7 @@ import './index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
 // eslint-disable-next-line no-unused-vars
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -17,12 +17,14 @@ import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
 import Home from './Home'
+import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 // import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
 import PostedJob from './pages/Home/Jobs/PostedJob'
+import VerifyPaymentPage from './pages/Pricing/Verify'
 import {
   ApplicationProgress,
   MyJobPosts,
@@ -39,15 +41,16 @@ import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchR
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
+import { EditJobTab } from './pages/RecruiterProfile/EditJob'
 import JobDetail from './pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
-import Notification from './pages/TalentProfile/Notification/NotificationList'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
+import Notification from './pages/TalentProfile/Notification/NotificationList'
 import TalentProfile from './pages/TalentProfile/Profile'
 import { Support } from './pages/TalentProfile/Support'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
@@ -56,8 +59,6 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
-import PageNotFound from './PageNotFound'
-import { EditJobTab } from './pages/RecruiterProfile/EditJob'
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: 'pricing',
         element: <Pricing />,
+      },
+      {
+        path: 'payment/verify',
+        element: <VerifyPaymentPage />,
       },
       {
         path: 'login',
