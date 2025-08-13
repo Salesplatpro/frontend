@@ -1,0 +1,19 @@
+@use 'index' as *;
+
+.container {
+  display: block;
+  padding: 8px 16px;
+  font-size: $landing-base-font-size;
+  border-radius: 400px;
+  font-weight: $landing-bold-font-weight;
+}
+
+.primary {
+  background: $landing-btn-primary-bg;
+  color: $landing-btn-primary-text;
+}
+
+.secondary {
+  background: $landing-btn-secondary-bg;
+  color: $landing-btn-secondary-text;
+}

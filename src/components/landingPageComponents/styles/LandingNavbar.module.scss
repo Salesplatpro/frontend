@@ -1,4 +1,4 @@
-@use './index' as *;
+@use 'index' as *;
 
 %shareFlexAlignItems {
   display: flex;
@@ -7,24 +7,27 @@
 
 .container {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 64px;
   display: flex;
+  z-index: 1000;
 }
 
 .leftNav {
   @extend %shareFlexAlignItems;
-  background-color: $landing-getStarted-text-color;
+  background-image: url('../../../assets/landing_bg.png');
   justify-content: flex-start;
   padding: 34px 0 34px 80px;
-  width: 70%;
+  width: 65%;
   gap: 48px;
 }
 
 .navItem {
   font-size: $landing-base-font-size;
-  font-weight: $landing-base-font-weight;
-  color: $landing-white-color;
+  font-weight: $landing-bold-font-weight;
+  color: $landing-text-white;
 }
 
 .leftNavItems {
@@ -38,5 +41,5 @@
   justify-content: flex-end;
   gap: 12px;
   padding: 34px 80px 34px 0;
-  width: 30%;
+  width: 35%;
 }

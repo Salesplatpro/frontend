@@ -1,3 +1,7 @@
+import { ButtonVariant } from './LandingButton'
+
+export const containerPadding = 'px-20'
+
 export const leftNav = [
   {
     name: 'For Organisations',
@@ -25,16 +29,16 @@ export const rightNav = [
   {
     name: 'Get a Demo',
     url: '/',
-    variant: 'secondary',
+    variant: 'secondary' as ButtonVariant,
   },
   {
     name: 'Login',
     url: '/',
-    variant: 'secondary',
+    variant: 'secondary' as ButtonVariant,
   },
   {
     name: 'Try it Free',
     url: '/',
-    variant: 'primary',
+    variant: 'primary' as ButtonVariant,
   },
 ]

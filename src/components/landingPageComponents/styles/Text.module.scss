@@ -1,0 +1,52 @@
+@use './index' as *;
+.xs {
+  font-size: 12px;
+}
+
+.sm {
+  font-size: 14px;
+}
+
+.md {
+  font-size: 16px;
+}
+
+.lg {
+  font-size: 18px;
+}
+
+.xl {
+  font-size: 20px;
+}
+
+.xxl {
+  font-size: 24px;
+}
+
+.default {
+  color: $landing-text-primary;
+}
+
+.tag {
+  color: $landing-text-tag;
+}
+
+.white {
+  color: $landing-text-white;
+}
+
+.secondary {
+  color: $landing-text-secondary;
+}
+
+.normal {
+  font-weight: $landing-normal-font-weight;
+}
+
+.bold {
+  font-weight: $landing-bold-font-weight;
+}
+
+.bolder {
+  font-weight: $landing-bolder-font-weight;
+}

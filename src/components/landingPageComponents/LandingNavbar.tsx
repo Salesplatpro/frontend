@@ -3,7 +3,7 @@ import React from 'react'
 import auxHrLogo from '../../assets/aux_logo.png'
 import { LandingButton } from './LandingButton'
 import { leftNav, rightNav } from './landingData'
-import styles from './landingNavbar.module.scss'
+import styles from './styles/LandingNavbar.module.scss'
 
 export const LandingNavbar = () => {
   return (

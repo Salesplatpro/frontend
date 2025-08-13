@@ -1,11 +1,12 @@
 import cn from 'classnames'
 import React from 'react'
 
-import styles from './Button.module.scss'
+import styles from './styles/Button.module.scss'
 
+export type ButtonVariant = 'primary' | 'secondary'
 type ButtonProps = {
   title: string
-  variant: string
+  variant: ButtonVariant
   type?: 'button' | 'submit' | 'reset'
   onClick: () => void
 }

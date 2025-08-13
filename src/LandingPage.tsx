@@ -1,3 +1,9 @@
 import React from 'react'
 
-export const LandingPage = () => <div>Landing Page</div>
+import { LandingHero } from './components'
+
+export const LandingPage = () => (
+  <div>
+    <LandingHero />
+  </div>
+)
