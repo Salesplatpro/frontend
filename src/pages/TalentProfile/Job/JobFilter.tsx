@@ -1,7 +1,7 @@
 import './JobFilter.scss'
 
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
@@ -21,6 +21,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
   setShowFilter,
 }) => {
   const screenWidth = useScreenWidth()
+
+  const [resetKey, setResetKey] = useState(0)
   const initialValues: JobFiltersTypes = {
     role: '',
     experienceLevel: '',
@@ -52,8 +54,18 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 type="button"
                 className="clear"
                 onClick={() => {
-                  setFieldValue('role', '') // Set role back to empty string
-                  screenWidth < 768 && setShowFilter(!showFilter)
+                  setFieldValue('role', '')
+                  setFieldValue('experienceLevel', '')
+                  setFieldValue('remote', '')
+                  setFieldValue('location', {
+                    country: { name: '', geoId: null },
+                    state: { name: '', geoId: null },
+                    city: { name: '', geoId: null },
+                  })
+                  setResetKey((prev) => prev + 1) //remount AllRoles and Location
+                  if (screenWidth < 768) {
+                    setShowFilter(!showFilter)
+                  }
                 }}>
                 Clear/Close
               </button>
@@ -67,6 +79,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 </label>
                 <div className="mt-2 rounded shadow-lg w-full">
                   <AllRoles
+                    key={resetKey}
                     name="role"
                     value={values.role}
                     onChange={(value: any) => {
@@ -126,6 +139,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
               <div className="line" />
 
               <Location
+                key={`country-${resetKey}`}
                 locationTitle="Country"
                 geoId={null}
                 isCountry={true}
@@ -140,6 +154,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
               <div className="line" />
 
               <Location
+                key={`state-${resetKey}`}
                 locationTitle="State"
                 geoId={values.location?.country.geoId}
                 isCountry={false}
@@ -153,6 +168,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
               <div className="line" />
 
               <Location
+                key={`city-${resetKey}`}
                 locationTitle="City"
                 geoId={values.location?.state.geoId}
                 isCountry={false}
