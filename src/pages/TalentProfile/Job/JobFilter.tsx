@@ -8,6 +8,10 @@ import AllRoles from '../../../components/Roles/AllRoles'
 import { useScreenWidth } from '../../../hooks'
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
+import Worktype from '../../../components/Worktype'
+import { useFetchProfileQuery } from '../../../redux/api/talent'
+import WorkModeSelect from '../../RecruiterProfile/PostJobs/WorkModeSelect'
+import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
 
 interface JobFiltersProps {
   onFilterSubmit: (filterValues: JobFiltersTypes) => void
@@ -23,15 +27,22 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
   const screenWidth = useScreenWidth()
 
   const [resetKey, setResetKey] = useState(0)
+
+  const { data: userProfile } = useFetchProfileQuery({})
+
+  const userInfo = userProfile?.data?.user
   const initialValues: JobFiltersTypes = {
     role: '',
     experienceLevel: '',
-    remote: '',
+    // remote: '',
     location: {
       country: { name: '', geoId: null },
       state: { name: '', geoId: null },
       city: { name: '', geoId: null },
     },
+    remote: userInfo?.profile?.remote || false,
+    onSite: userInfo?.profile?.onSite || false,
+    hybrid: userInfo?.profile?.hybrid || false,
   }
 
   const onSubmit = async (
@@ -40,6 +51,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
   ) => {
     setSubmitting(true)
     onFilterSubmit(values)
+
+    console.log(values)
     setSubmitting(false)
   }
 
@@ -117,7 +130,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
               </div>
               <div className="line" />
 
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label className="block mb-2 font-bold" htmlFor="remote">
                   Remote
                 </label>
@@ -135,7 +148,31 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   component="div"
                   className="text-red-500"
                 />
+              </div> */}
+
+              <div className="mb-4">
+                <label className="block mb-2 font-bold" htmlFor="remote">
+                  Work Type
+                </label>
+                <Worktype
+                  options={[
+                    { value: 'remote', label: 'Remote' },
+                    { value: 'onSite', label: 'On Site' },
+                    { value: 'hybrid', label: 'Hybrid' },
+                  ]}
+                  initialSelected={{
+                    remote: values.remote,
+                    onSite: values.onSite,
+                    hybrid: values.hybrid,
+                  }}
+                  onSelectionChange={(selected) => {
+                    setFieldValue('remote', selected.remote)
+                    setFieldValue('onSite', selected.onSite)
+                    setFieldValue('hybrid', selected.hybrid)
+                  }}
+                />
               </div>
+
               <div className="line" />
 
               <Location

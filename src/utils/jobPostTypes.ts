@@ -60,7 +60,10 @@ export interface configProps {
 export interface JobFiltersTypes {
   role?: string
   experienceLevel?: string
-  remote?: ''
+  // remote?: string
+  remote: boolean
+  onSite: boolean
+  hybrid: boolean
   location?: {
     country: LocationValues
     state: LocationValues
