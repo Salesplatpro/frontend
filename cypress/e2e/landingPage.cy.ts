@@ -85,7 +85,9 @@ describe('renders navbar', () => {
               .should('have.attr', 'href', link)
               .and('contain.text', text)
           })
-          .click()
+
+        // Break the chain before clicking
+        cy.get(`button.${className}`).click()
 
         cy.url().should('include', link)
         cy.contains(pageText).should('exist')
