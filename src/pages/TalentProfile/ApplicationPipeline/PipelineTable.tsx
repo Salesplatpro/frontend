@@ -9,7 +9,6 @@ import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-// eslint-disable-next-line no-unused-vars
 import { Button, StatusBadge } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'

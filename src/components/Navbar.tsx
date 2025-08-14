@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable react/jsx-no-comment-textnodes */
+
 import React, { useEffect, useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdClose } from 'react-icons/io'
@@ -29,9 +28,9 @@ const Navbar = () => {
   }, [location.pathname])
 
   return (
-    <React.Fragment >
+    <React.Fragment>
       <div className="navi" data-testId="navbar">
-        <div className="wrapper nav-navigate" >
+        <div className="wrapper nav-navigate">
           <nav className="navbar">
             <ul>
               <Link to="/" className="logo-li">

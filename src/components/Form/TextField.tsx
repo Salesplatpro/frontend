@@ -11,7 +11,6 @@ interface TextFieldProps {
   placeholder?: string
   type?: string
   MAX_WORDS?: number
-  // eslint-disable-next-line no-undef
 }
 
 const TextField = ({

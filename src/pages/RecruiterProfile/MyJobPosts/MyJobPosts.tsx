@@ -1,6 +1,7 @@
+import '../../../index.css'
+
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import '../../../index.css'
 
 import { DisplayError } from '../../../components'
 import Loading from '../../../components/Loading/Loading'

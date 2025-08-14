@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// eslint-disable-next-line no-unused-vars
 import { Link, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 

@@ -5,13 +5,13 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
+import Worktype from '../../../components/Worktype'
 import { useScreenWidth } from '../../../hooks'
+import { useFetchProfileQuery } from '../../../redux/api/talent'
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
-import Worktype from '../../../components/Worktype'
-import { useFetchProfileQuery } from '../../../redux/api/talent'
-import WorkModeSelect from '../../RecruiterProfile/PostJobs/WorkModeSelect'
 import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
+import WorkModeSelect from '../../RecruiterProfile/PostJobs/WorkModeSelect'
 
 interface JobFiltersProps {
   onFilterSubmit: (filterValues: JobFiltersTypes) => void

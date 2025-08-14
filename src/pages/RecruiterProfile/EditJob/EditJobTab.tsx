@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+import Loading from '../../../components/Loading/Loading'
+import { useIndividualJobQuery } from '../../../redux/api/talent'
+import { EditJobType } from '../../../utils'
+import { notify } from '../../../utils/toastNotifications'
 import { EditAiConfig } from './EditAiConfig'
 import { EditJob } from './EditJob'
-import { notify } from '../../../utils/toastNotifications'
-import { useIndividualJobQuery } from '../../../redux/api/talent'
-import Loading from '../../../components/Loading/Loading'
-import { EditJobType } from '../../../utils'
 // import { useGetAiConfigQuery, usePatchAiConfigMutation } from '../../../redux/api/recruiter'
 
 const tabs = [
