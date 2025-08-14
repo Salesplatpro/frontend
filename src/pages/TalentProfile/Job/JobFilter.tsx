@@ -1,6 +1,6 @@
 import './JobFilter.scss'
 
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import {  Field, Form, Formik } from 'formik'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import Location from '../../../components/global/Location'
@@ -10,8 +10,7 @@ import { useScreenWidth } from '../../../hooks'
 import { useFetchProfileQuery } from '../../../redux/api/talent'
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
-import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
-import WorkModeSelect from '../../RecruiterProfile/PostJobs/WorkModeSelect'
+WorkModeSelect'
 
 interface JobFiltersProps {
   onFilterSubmit: (filterValues: JobFiltersTypes) => void
