@@ -1,0 +1,12 @@
+@use './index' as *;
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: $landing-bg-card-color;
+  padding: 24px;
+  max-width: 224px;
+  height: 192px;
+}
