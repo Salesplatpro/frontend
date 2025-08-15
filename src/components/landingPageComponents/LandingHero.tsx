@@ -11,12 +11,16 @@ import { BaseText } from './typography'
 export const LandingHero = () => (
   <div className={styles.container}>
     <div className={cn(styles.heroLeft, containerPadding)}>
-      <div className={styles.heroContainer}>
+      <div className="flex flex-col justify-center gap-12">
         <div className={styles.heroContent}>
-          <div className={styles.heroText}>
+          <BaseText
+            fontColor="white"
+            fontSize="fs-4xl"
+            className="mt-52"
+            fontWeight="bolder">
             Find Top Talent Faster, Smarter, With AuxHr AI.
-          </div>
-          <BaseText fontColor="white" fontSize="lg" fontWeight="normal">
+          </BaseText>
+          <BaseText fontColor="white" fontSize="fs-lg" fontWeight="normal">
             AuxHR is your AI-powered recruitment platform built to streamline
             hiring, match top-tier candidates, and scale your team with
             confidence.
@@ -36,7 +40,7 @@ export const LandingHero = () => (
         </div>
       </div>
       <div className={styles.heroFooter}>
-        <BaseText fontColor="white" fontSize="md" fontWeight="bold">
+        <BaseText fontColor="white" fontSize="fs-md" fontWeight="bold">
           Top HR platform by
         </BaseText>
         <img src={logo} alt="Support pro and Salesplat" />

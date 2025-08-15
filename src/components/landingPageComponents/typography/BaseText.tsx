@@ -2,7 +2,7 @@ import cn from 'classnames'
 import React from 'react'
 import { ReactNode } from 'react'
 
-import styles from '../styles/Text.module.scss'
+import styles from '../styles/BaseText.module.scss'
 
 type BaseTextProps = {
   children: ReactNode

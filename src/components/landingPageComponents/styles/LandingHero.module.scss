@@ -17,18 +17,6 @@
   background-image: url('../../../assets/landing_bg.png');
 }
 
-.heroText {
-  font-size: 48px;
-  margin-top: 200px;
-  font-weight: $landing-bold-font-weight;
-  color: $landing-text-white;
-}
-
-.heroDesc {
-  color: $landing-text-white;
-  font-size: 18px;
-}
-
 .btns {
   display: flex;
   gap: 16px;
