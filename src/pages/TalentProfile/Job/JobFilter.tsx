@@ -28,7 +28,6 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
 
   const { data: userProfile } = useFetchProfileQuery({})
 
-  const userInfo = userProfile?.data?.user
   const initialValues: JobFiltersTypes = {
     role: '',
     experienceLevel: '',
