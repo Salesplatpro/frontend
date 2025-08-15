@@ -7,7 +7,7 @@ import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
 import { useScreenWidth } from '../../../hooks'
-import { useFetchProfileQuery } from '../../../redux/api/talent'
+
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
@@ -25,8 +25,6 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
   const screenWidth = useScreenWidth()
 
   const [resetKey, setResetKey] = useState(0)
-
-  const { data: userProfile } = useFetchProfileQuery({})
 
   const initialValues: JobFiltersTypes = {
     role: '',
