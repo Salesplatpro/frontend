@@ -42,3 +42,48 @@ export const rightNav = [
     variant: 'primary' as ButtonVariant,
   },
 ]
+
+export const footerData = [
+  {
+    key: 'Product',
+    children: [
+      { name: 'Overview', url: '/' },
+      { name: 'Features', url: '/' },
+      { name: 'Solution', url: '/' },
+      { name: 'Tutorials', url: '/' },
+      { name: 'Pricing', url: '/' },
+      { name: 'Release', url: '/' },
+    ],
+  },
+  {
+    key: 'Company',
+    children: [
+      { name: 'About us', url: '/' },
+      { name: 'Features', url: '/' },
+      { name: 'Solution', url: '/' },
+      { name: 'Tutorials', url: '/' },
+      { name: 'Pricing', url: '/' },
+      { name: 'Release', url: '/' },
+    ],
+  },
+  {
+    key: 'Resources',
+    children: [
+      { name: 'Overview', url: '/' },
+      { name: 'Features', url: '/' },
+      { name: 'Solution', url: '/' },
+      { name: 'Tutorials', url: '/' },
+      { name: 'Pricing', url: '/' },
+      { name: 'Release', url: '/' },
+    ],
+  },
+  {
+    key: 'Legal',
+    children: [
+      { name: 'Terms', url: '/' },
+      { name: 'Privacy', url: '/' },
+      { name: 'Cookies', url: '/' },
+      { name: 'Licences', url: '/' },
+    ],
+  },
+]

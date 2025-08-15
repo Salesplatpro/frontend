@@ -1,29 +1,42 @@
 @use './index' as *;
-.xs {
+
+.fs-xs {
   font-size: 12px;
 }
 
-.sm {
+.fs-sm {
   font-size: 14px;
 }
 
-.md {
+.fs-md {
   font-size: 16px;
 }
 
-.lg {
+.fs-lg {
   font-size: 18px;
 }
 
-.xl {
+.fs-xl {
   font-size: 20px;
 }
 
-.xxl {
+.fs-2xl {
   font-size: 24px;
 }
 
+.fs-3xl {
+  font-size: 32px;
+}
+
+.fs-4xl {
+  font-size: 48px;
+}
+
 .default {
+  color: $landing-text-default;
+}
+
+.primary {
   color: $landing-text-primary;
 }
 

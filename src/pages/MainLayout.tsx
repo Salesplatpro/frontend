@@ -1,8 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-import { LandingNavbar } from '../components'
-import Footer from '../components/Footer'
+import { LandingFooter, LandingNavbar } from '../components'
 
 export const MainLayout = () => {
   return (
@@ -11,7 +10,7 @@ export const MainLayout = () => {
       <main>
         <Outlet />
       </main>
-      <Footer />
+      <LandingFooter />
     </>
   )
 }
