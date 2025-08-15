@@ -60,7 +60,7 @@ export interface configProps {
 export interface JobFiltersTypes {
   role?: string
   experienceLevel?: string
-  // remote?: string
+  // remote: boolean
   remote: boolean
   onSite: boolean
   hybrid: boolean

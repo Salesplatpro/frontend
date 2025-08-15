@@ -38,9 +38,9 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
       state: { name: '', geoId: null },
       city: { name: '', geoId: null },
     },
-    remote: userInfo?.profile?.remote || false,
-    onSite: userInfo?.profile?.onSite || false,
-    hybrid: userInfo?.profile?.hybrid || false,
+    remote: false,
+    onSite: false,
+    hybrid: false,
   }
 
   const onSubmit = async (
@@ -50,16 +50,18 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
     setSubmitting(true)
     onFilterSubmit(values)
 
+    setShowFilter(false)
+
     console.log(values)
     setSubmitting(false)
   }
 
   return (
-    <div className="filter">
+    <div className="filter ">
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ values, isSubmitting, setFieldValue }) => (
           <Form>
-            <div className="filter-top">
+            <div className="filter-top z-10">
               <div className="title">Filter</div>
               <button
                 type="button"
@@ -67,7 +69,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 onClick={() => {
                   setFieldValue('role', '')
                   setFieldValue('experienceLevel', '')
-                  setFieldValue('remote', '')
+                  // setFieldValue('remote', '')
                   setFieldValue('location', {
                     country: { name: '', geoId: null },
                     state: { name: '', geoId: null },
@@ -101,7 +103,6 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 </div>
               </div>
               <div className="line" />
-
               <div className="mb-4">
                 <label
                   className="block mb-2 font-bold"
@@ -120,14 +121,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                     </option>
                   ))}
                 </Field>
-                {/* <ErrorMessage
-                  name="experienceLevel"
-                  component="div"
-                  className="text-red-500"
-                /> */}
               </div>
               <div className="line" />
-
               {/* <div className="mb-4">
                 <label className="block mb-2 font-bold" htmlFor="remote">
                   Remote
@@ -141,12 +136,9 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   <option value="true">True</option>
                   <option value="false">False</option>
                 </Field>
-                <ErrorMessage
-                  name="remote"
-                  component="div"
-                  className="text-red-500"
-                />
               </div> */}
+
+              {/* <div className="line" /> */}
 
               <div className="mb-4">
                 <label className="block mb-2 font-bold" htmlFor="remote">
@@ -170,9 +162,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   }}
                 />
               </div>
-
               <div className="line" />
-
               <Location
                 key={`country-${resetKey}`}
                 locationTitle="Country"
@@ -187,7 +177,6 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 customHeight=""
               />
               <div className="line" />
-
               <Location
                 key={`state-${resetKey}`}
                 locationTitle="State"
@@ -201,7 +190,6 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 customHeight=""
               />
               <div className="line" />
-
               <Location
                 key={`city-${resetKey}`}
                 locationTitle="City"
@@ -214,6 +202,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 customHeight=""
               />
               <div className="line" />
+
               <div className="btn">
                 <button
                   type="submit"
