@@ -1,10 +1,11 @@
 import React from 'react'
 
-import { LandingHero, Testimonials } from './components'
+import { HowItWorks, LandingHero, Testimonials } from './components'
 
 export const LandingPage = () => (
   <div>
     <LandingHero />
+    <HowItWorks />
     <Testimonials />
   </div>
 )

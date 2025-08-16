@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import styles from './styles/Button.module.scss'
 
@@ -9,6 +9,7 @@ type ButtonProps = {
   variant: ButtonVariant
   type?: 'button' | 'submit' | 'reset'
   onClick: () => void
+  icon?: ReactNode
 }
 
 export const LandingButton = ({
@@ -16,6 +17,7 @@ export const LandingButton = ({
   variant,
   type = 'submit',
   onClick,
+  icon,
 }: ButtonProps) => {
   const buttonType = variant === 'primary' ? styles.primary : styles.secondary
 
@@ -25,6 +27,7 @@ export const LandingButton = ({
       type={type}
       className={cn(styles.container, buttonType)}>
       {title}
+      {icon && icon}
     </button>
   )
 }

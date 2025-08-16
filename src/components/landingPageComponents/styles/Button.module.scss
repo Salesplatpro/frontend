@@ -1,11 +1,13 @@
 @use 'index' as *;
 
 .container {
-  display: block;
+  display: flex;
   padding: 8px 16px;
   font-size: $landing-base-font-size;
   border-radius: 400px;
   font-weight: $landing-bold-font-weight;
+  align-items: center;
+  gap: 4px;
 }
 
 .primary {
