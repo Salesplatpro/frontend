@@ -19,7 +19,6 @@
   @extend %shareFlexAlignItems;
   background-image: url('../../../assets/landing_bg.png');
   justify-content: flex-start;
-  padding: 34px 0 34px 80px;
   width: 65%;
   gap: 48px;
 }
@@ -33,6 +32,10 @@
 .leftNavItems {
   @extend %shareFlexAlignItems;
   gap: 24px;
+
+  @media screen and (max-width: $small-breakpoint) {
+    display: none;
+  }
 }
 
 .rightNav {
@@ -40,6 +43,30 @@
   @extend %shareFlexAlignItems;
   justify-content: flex-end;
   gap: 12px;
-  padding: 34px 80px 34px 0;
   width: 35%;
+
+  @media screen and (max-width: $large-breakpoint) {
+    > :nth-child(2) {
+      background-color: $landing-bg-card-color;
+      color: $landing-text-white;
+    }
+
+    > :nth-child(3) {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: $small-breakpoint) {
+    > * {
+      display: none;
+    }
+  }
+}
+
+.menu {
+  display: none;
+
+  @media screen and (max-width: $small-breakpoint) {
+    display: block;
+  }
 }

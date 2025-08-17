@@ -48,6 +48,7 @@ export const HowItWorks = () => {
           {flowTitle.map((item, index) => (
             <BaseText
               key={item}
+              fontColor="primary"
               className={cn(
                 index === activeIndex ? styles.active : '',
                 styles.flowTitle,
@@ -66,7 +67,9 @@ export const HowItWorks = () => {
               fontColor="secondary">
               {flows[activeIndex].text}
             </BaseText>
-            <BaseText>{flows[activeIndex].description}</BaseText>
+            <BaseText fontColor="primary">
+              {flows[activeIndex].description}
+            </BaseText>
           </div>
           <div className="w-38">
             <LandingButton

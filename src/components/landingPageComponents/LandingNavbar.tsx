@@ -1,4 +1,7 @@
-import React from 'react'
+import cn from 'classnames'
+import React, { useState } from 'react'
+import { HiOutlineMenu } from 'react-icons/hi'
+import { LiaTimesSolid } from 'react-icons/lia'
 
 import auxHrLogo from '../../assets/aux_logo.png'
 import { LandingButton } from './LandingButton'
@@ -6,9 +9,11 @@ import { leftNav, rightNav } from './landingData'
 import styles from './styles/LandingNavbar.module.scss'
 
 export const LandingNavbar = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
     <div className={styles.container}>
-      <div className={styles.leftNav}>
+      <div className={cn(styles.leftNav, 'pl-5 md:pl-4 lg:pl-20')}>
         <img src={auxHrLogo} alt="Aux HR Logo" />
         <div className={styles.leftNavItems}>
           {leftNav.map((item) => (
@@ -18,7 +23,7 @@ export const LandingNavbar = () => {
           ))}
         </div>
       </div>
-      <div className={styles.rightNav}>
+      <div className={cn(styles.rightNav, 'pr-5 md:pr-4 lg:pr-20')}>
         {rightNav.map((item) => (
           <LandingButton
             key={item.name}
@@ -27,6 +32,13 @@ export const LandingNavbar = () => {
             onClick={() => {}}
           />
         ))}
+        <div className={styles.menu}>
+          {isOpen ? (
+            <LiaTimesSolid size={24} onClick={() => setIsOpen(false)} />
+          ) : (
+            <HiOutlineMenu size={24} onClick={() => setIsOpen(true)} />
+          )}
+        </div>
       </div>
     </div>
   )

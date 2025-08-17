@@ -24,7 +24,7 @@ export const SectionHeader = ({
     </BaseText>
     <BaseText
       fontSize="fs-2xl"
-      fontWeight="bold"
+      fontWeight="bolder"
       fontColor={variant === 'secondary' ? 'white' : 'default'}>
       {subTitle}
     </BaseText>
