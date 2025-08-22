@@ -17,6 +17,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
 import Home from './Home'
+import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
@@ -68,7 +69,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <LandingPage />,
       },
       {
         path: 'explore',
