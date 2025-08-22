@@ -106,6 +106,7 @@ const PostJob: React.FC = () => {
                       // Update Formik state
                     }}
                     customHeight="60px"
+                    isDisabled={false}
                   />
                   {errors.role && touched.role ? (
                     <div className="text-red-500 text-sm">{errors.role}</div>
