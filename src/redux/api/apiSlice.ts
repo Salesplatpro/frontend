@@ -1,20 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
-import { getToken } from '../../utils/authUtils'
-import { baseUrl } from '../../utils/baseConfig'
+import { customBaseQuery } from '../../utils/customBaseQuery'
 
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers) => {
-      const token = getToken()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
+  baseQuery: customBaseQuery,
   tagTypes: ['User'],
   endpoints: (builder) => ({
     talentReg: builder.mutation({
@@ -40,6 +30,43 @@ export const api = createApi({
         body: data,
       }),
     }),
+
+    forgotPassword: builder.mutation({
+      query: (data) => ({
+        url: `/auth/forgot-password`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `/auth/reset-password`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
+    pricingPlan: builder.query({
+      query: () => ({
+        url: `/plans`,
+        method: 'GET',
+      }),
+    }),
+
+    paymentInitiate: builder.mutation({
+      query: (data) => ({
+        url: `/payments`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    verifyPayment: builder.mutation({
+      query: (data) => ({
+        url: `/payments/verify`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -47,4 +74,9 @@ export const {
   useTalentRegMutation,
   useRecruiterRegMutation,
   useUserLoginMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  usePricingPlanQuery,
+  usePaymentInitiateMutation,
+  useVerifyPaymentMutation,
 } = api

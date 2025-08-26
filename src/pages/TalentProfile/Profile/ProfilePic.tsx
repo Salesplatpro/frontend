@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import { getDefaultIcon } from '../../../utils/getDefaultIcon'
+import { notify } from '../../../utils/toastNotifications'
 
 interface ProfilePicType {
   userInfo: any
   uploadPic: any
   updateProfilePics: any
   user: any
+  useChangeImageButton?: boolean
 }
 
 const ProfilePic: React.FC<ProfilePicType> = ({
@@ -15,6 +17,7 @@ const ProfilePic: React.FC<ProfilePicType> = ({
   uploadPic,
   updateProfilePics,
   user,
+  useChangeImageButton = false,
 }) => {
   const [profileImage, setProfileImage] = useState<string | ArrayBuffer | null>(
     userInfo?.picture,
@@ -24,29 +27,16 @@ const ProfilePic: React.FC<ProfilePicType> = ({
     const file = event.target.files?.[0]
     if (file) {
       if (!file.type.startsWith('image/')) {
-        toast.error('Only Image files are allowed', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
+        notify('error', 'Only Image files are allowed', {
+          autoClose: 5000,
           transition: Bounce,
         })
+
         return
       }
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('file size exceed the 5mb limit', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
+        notify('error', 'file size exceed the 5mb limit', {
+          autoClose: 5000,
           transition: Bounce,
         })
       }
@@ -74,29 +64,15 @@ const ProfilePic: React.FC<ProfilePicType> = ({
         }).unwrap()
 
         if (updateResponse.status) {
-          toast.success('Picture Uploaded Successfully', {
-            position: 'top-right',
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Slide,
+          notify('success', 'Picture Uploaded Successfully', {
+            autoClose: 5000,
           })
         } else {
-          toast.error(
+          notify(
+            'error',
             updateResponse.message || 'Failed to upload profile picture',
             {
-              position: 'top-right',
-              autoClose: 2000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
+              autoClose: 5000,
               transition: Bounce,
             },
           )
@@ -106,15 +82,9 @@ const ProfilePic: React.FC<ProfilePicType> = ({
       }
     } catch (error) {
       console.error('Error uploading or updating profile picture:', error)
-      toast.error('An error occurred. Please try again.', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+
+      notify('error', 'An error occurred. Please try again.', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
@@ -140,11 +110,13 @@ const ProfilePic: React.FC<ProfilePicType> = ({
           className="hidden"
           onChange={handleImageChange}
         />
-        <button
-          className="text-[10px] font-raleway font-medium lg:text-[12px] text-[#4884DF] cursor-pointer mt-1"
-          onClick={() => document.getElementById('profileImage')?.click()}>
-          Change Image
-        </button>
+        {useChangeImageButton && (
+          <button
+            className="text-[10px] font-raleway font-medium lg:text-[12px] text-[#4884DF] cursor-pointer mt-1"
+            onClick={() => document.getElementById('profileImage')?.click()}>
+            Change Image
+          </button>
+        )}
       </div>
     </div>
   )

@@ -1,0 +1,13 @@
+@use './index' as *;
+
+@mixin responsive-font($base-size, $small-size, $mobile-size) {
+  font-size: $base-size;
+
+  @media screen and (max-width: $small-breakpoint) {
+    font-size: $small-size;
+  }
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    font-size: $mobile-size;
+  }
+}

@@ -1,14 +1,21 @@
 import React, { useState } from 'react'
 import { IoArrowBackOutline } from 'react-icons/io5'
+import { useNavigate } from 'react-router-dom'
 
 import CheckMark from '../../assets/CheckMark.png'
 import logo from '../../assets/logo.png'
+import {
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+} from '../../redux/api/apiSlice'
+import { notify } from '../../utils/toastNotifications'
 
 interface ForgotPasswordProps {
   handleClose: () => void
 }
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
+  const navigation = useNavigate()
   const [currentScreen, setCurrentScreen] = useState<
     'emailInput' | 'confirmation' | 'newPassword'
   >('emailInput')
@@ -17,22 +24,25 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [password, setPassword] = useState('')
+  const [otp, setOtp] = useState<string | number>('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [requestOtp] = useForgotPasswordMutation()
+  const [resetPassword] = useResetPasswordMutation()
 
-  const handleResetPassword = async () => {
+  const handleRequestOtp = async () => {
     if (!email) {
       setError('Please enter a valid email.')
       return
     }
-
     try {
       setLoading(true)
       setError(null)
+      const response = await requestOtp({ email }).unwrap()
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulates a 2-second delay
-
-      setCurrentScreen('confirmation')
+      // await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulates a 2-second delay
+      if (response) {
+        setCurrentScreen('confirmation')
+      }
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message || 'Something went wrong.')
@@ -44,9 +54,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
     }
   }
 
-  const handleSetNewPassword = async () => {
-    if (!password || !confirmPassword) {
-      setError('Both fields are required.')
+  const handleResetPassword = async () => {
+    if (!email || !otp || !password || !confirmPassword) {
+      setError('All fields are required.')
       return
     }
 
@@ -59,11 +69,23 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
       setLoading(true)
       setError(null)
 
-      // Simulate API call to update the password
-      await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulates a 2-second delay
+      const response = await resetPassword({
+        email,
+        otp,
+        password,
+      }).unwrap()
+      if (response) {
+        notify('success', `Password reset successfully`, {
+          autoClose: 5000,
+        })
+        navigation('/login')
+      }
 
-      alert('Password successfully updated!')
-      handleClose()
+      // Simulate API call to update the password
+      // await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulates a 2-second delay
+
+      // alert('Password successfully updated!')
+      // handleClose()
     } catch (err) {
       setError('Failed to update password. Please try again.')
     } finally {
@@ -89,7 +111,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               className="flex justify-start items-start flex-col space-y-2 "
               onSubmit={(e) => {
                 e.preventDefault()
-                handleResetPassword()
+                handleRequestOtp()
               }}>
               <label
                 htmlFor="email"
@@ -119,7 +141,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
           <button
             className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df]"
             // onClick={() => setCurrentScreen('confirmation')}
-            onClick={handleResetPassword}
+            onClick={handleRequestOtp}
             disabled={loading}
             aria-label="Move to confirmation">
             {loading ? 'Sending...' : 'Reset Password'}
@@ -164,10 +186,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
           <button
             className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-[#667085] hover:cursor-pointer hover:text-[#4f5563]"
             onClick={() => setCurrentScreen('newPassword')}
-            // onClick={handleResetPassword}
-            // disabled={loading}
             aria-label="Move to newPassword">
-            New Password
+            Reset Password
           </button>
         </>
       )}
@@ -175,12 +195,12 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
       {currentScreen === 'newPassword' && (
         <>
           <img className="logo pb-2 " src={logo} alt="company" />
-          <div>
+          <div className="text-center">
             <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
-              Forgot password
+              Reset password
             </div>
             <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-[#667085] text-center pt-3">
-              Please enter your details
+              Please enter your new password details
             </div>
           </div>
 
@@ -188,8 +208,43 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             className="flex justify-center items-start flex-col mt-2 py-3 space-y-2 mx-12"
             onSubmit={(e) => {
               e.preventDefault()
-              handleSetNewPassword()
+              handleResetPassword()
             }}>
+            <div className="pt-1 space-y-2">
+              <label
+                htmlFor="email"
+                className="text-[14px] text-[#344054] leading-[22px] font-raleway font-medium">
+                Email
+              </label>
+              <input
+                id="email"
+                title="Email"
+                name="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                style={{
+                  boxShadow: '0px 1.07px 2.14px 0px rgba(16, 24, 40, 0.05)',
+                }}
+              />
+            </div>
+
+            <div className="pt-1 space-y-2">
+              <label
+                htmlFor="otp"
+                className="text-[14px] pt-10 text-[#344054] leading-[22px] font-raleway font-medium">
+                One Time OTP
+              </label>
+              <input
+                id="otp"
+                type="password"
+                placeholder="One time OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+              />
+            </div>
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="password"
@@ -233,9 +288,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
 
           <button
             className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-2 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df] whitespace-nowrap"
-            onClick={handleSetNewPassword}
+            onClick={handleResetPassword}
             disabled={loading}>
-            {loading ? 'Saving...' : 'Create Password'}
+            {loading ? 'Resetting...' : 'Reset Password'}
           </button>
 
           <button

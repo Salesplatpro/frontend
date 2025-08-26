@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from 'react'
 // eslint-disable-next-line no-unused-vars
-import { FaCopy, FaFacebook, FaTwitter } from 'react-icons/fa'
-import { FaXTwitter } from 'react-icons/fa6'
-import { IoIosLink } from 'react-icons/io'
 import { Link, useParams } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
+import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
+import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
-
-const shareOptions = [
-  {
-    icon: <FaFacebook />,
-    text: 'Share',
-  },
-  {
-    icon: <FaXTwitter />,
-    text: 'Tweet',
-  },
-  {
-    icon: <IoIosLink />,
-    text: 'Copy',
-  },
-]
+import { notify } from '../../../utils/toastNotifications'
+import ShareJobModal from './ShareJobModal'
 
 interface JobProfileProps {
   role?: {
@@ -32,6 +18,10 @@ interface JobProfileProps {
   }
   title?: string
   description?: string
+  jobBrief?: string
+  requirements?: string
+  firstName?: string
+  lastName?: string
   responsibilities?: string[]
   skills?: string[]
   goals?: string[]
@@ -48,6 +38,18 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const link = `https://auxhr.com/job/postedjob/${jobId}`
+
+  const [shareLinks, setShareLinks] = useState<{
+    facebook: string
+    twitter: string
+    linkedin: string
+  }>({
+    facebook: '',
+    twitter: '',
+    linkedin: '',
+  })
 
   useEffect(() => {
     if (data) {
@@ -55,15 +57,8 @@ const IndividualJob = () => {
       console.log(data.data)
     }
     if (error) {
-      toast.error('DisplayError loading job post', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'DisplayError loading job post', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
@@ -71,47 +66,64 @@ const IndividualJob = () => {
 
   if (isLoading) return <Loading />
 
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleShare = () => {
+    const TwittershareUrl = `https://twitter.com/share?url=${encodeURIComponent(
+      link,
+    )}`
+
+    const FacebookshareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      link,
+    )}`
+
+    const LinkedInshareUrl = `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
+      link,
+    )}`
+
+    setShareLinks({
+      facebook: FacebookshareUrl,
+      twitter: TwittershareUrl,
+      linkedin: LinkedInshareUrl,
+    })
+    setIsModalOpen(true)
+  }
+
   return (
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
         <h2 className="font-bold md:text-3xl text-xl">
-          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)} at{' '}
-          {jobProfile?.title}
+          {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
         <div className="flex space-x-5 items-center mt-3">
-          {shareOptions.map((option, i) => (
-            <div
-              key={i}
-              className="flex cursor-pointer items-center justify-center space-x-2 border border-[#E7E7E9] w-[89px] h-[40px] rounded-lg">
-              {option.icon}
-              <span>{option.text}</span>
-            </div>
-          ))}
+          <ShareOptions handleShare={handleShare} jobId={jobId!} />
         </div>
 
         <div className="flex md:flex-row flex-col justify-between items-start md:w-[90%] w-full mx-auto md:mt-10 mt-6">
           <div className="md:w-[60%] w-full text-start">
             <div className="">
+              {/* <h5 className="text-[#101828] text-lg text-start font-semibold">
+                Your role at {''} {jobProfile?.firstName} {''}{' '}
+                {jobProfile?.lastName}
+              </h5> */}
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your role at{jobProfile?.title}
+                Your role
               </h5>
-              <p className="text-[#667085] text-base mt-0 text-justify">
-                {jobProfile?.description}
-              </p>
+              <RichTextDisplay
+                content={jobProfile?.jobBrief || ' '}
+                className="text-[#667085] text-base mt-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
-                Your Responsibilities
+                Your Requirements
               </h5>
-              {jobProfile?.responsibilities && (
-                <ul className="list-disc ml-5 pl-0">
-                  {jobProfile?.responsibilities.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <RichTextDisplay
+                content={jobProfile?.requirements || ' '}
+                className="text-[#667085] text-base mt-0 text-justify"
+              />
             </div>
             <div className="mt-4">
               <h5 className="text-[#101828] text-lg text-start font-semibold">
@@ -187,7 +199,9 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
-      {/* ))} */}
+      {isModalOpen && (
+        <ShareJobModal onClose={closeModal} shareLinks={shareLinks} />
+      )}
     </div>
   )
 }

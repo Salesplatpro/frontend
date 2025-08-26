@@ -12,15 +12,20 @@ import { Slide, ToastContainer } from 'react-toastify'
 
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
+import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
 import Home from './Home'
+import { LandingPage } from './LandingPage'
+import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
 import TalentLogin from './pages/Auth/Login'
 // import RecruiterRegister from './pages/Auth/RecruiterRegister'
 import SignIn from './pages/Auth/SignIn'
+import PostedJob from './pages/Home/Jobs/PostedJob'
+import VerifyPaymentPage from './pages/Pricing/Verify'
 import {
   ApplicationProgress,
   MyJobPosts,
@@ -37,16 +42,18 @@ import SearchResult from './pages/RecruiterProfile/Batching/TalentSearch/SearchR
 import SearchTalent from './pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import AllApplications from './pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from './pages/RecruiterProfile/Dashboard/Dashboard'
+import { EditJobTab } from './pages/RecruiterProfile/EditJob'
+import JobDetail from './pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from './pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from './pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from './pages/RecruiterProfile/RecruiterProfileSidebar'
 import { ApplicationPipeline } from './pages/TalentProfile/ApplicationPipeline'
 import ProgressView from './pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
-import Chat from './pages/TalentProfile/Chat/ChatList'
 import IndividualJob from './pages/TalentProfile/Job/IndividualJob'
 import Job from './pages/TalentProfile/Job/Job'
 import Notification from './pages/TalentProfile/Notification/NotificationList'
 import TalentProfile from './pages/TalentProfile/Profile'
+import { Support } from './pages/TalentProfile/Support'
 import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
@@ -58,10 +65,11 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <PageNotFound />,
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <LandingPage />,
       },
       {
         path: 'explore',
@@ -78,6 +86,14 @@ const router = createBrowserRouter([
       {
         path: 'customerstories',
         element: <CustomerStories />,
+      },
+      {
+        path: 'pricing',
+        element: <Pricing />,
+      },
+      {
+        path: 'payment/verify',
+        element: <VerifyPaymentPage />,
       },
       {
         path: 'login',
@@ -101,11 +117,16 @@ const router = createBrowserRouter([
         path: 'job',
         element: <SingleJob />,
       },
+      {
+        path: 'job/postedjob/:jobId',
+        element: <PostedJob />,
+      },
     ],
   },
   {
     path: '/talentDashboard',
     element: <ProtectedRoute allowedRoles={['talent']} />,
+
     children: [
       {
         path: '',
@@ -123,10 +144,13 @@ const router = createBrowserRouter([
             path: 'job',
             element: <Job />,
           },
-
+          {
+            path: '/talentDashboard/support',
+            element: <Support />,
+          },
           {
             path: 'Chat',
-            element: <Chat />,
+            // element: <Chat />,
           },
 
           {
@@ -231,6 +255,14 @@ const router = createBrowserRouter([
             element: <PostJobTab />,
           },
           {
+            path: 'editJob/:jobId',
+            element: <EditJobTab />,
+          },
+          {
+            path: 'jobdetail/:jobId',
+            element: <JobDetail />,
+          },
+          {
             path: 'shortlist',
             element: <Shortlist />,
           },
@@ -251,7 +283,6 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  // const [count, setCount] = useState(0)
   const dispatch = useDispatch()
 
   useEffect(() => {

@@ -1,20 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
-import { getToken } from '../../../utils'
-import { baseUrl } from '../../../utils/baseConfig'
+import { customBaseQuery } from '../../../utils/customBaseQuery'
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers) => {
-      const token = getToken()
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
+  baseQuery: customBaseQuery,
   tagTypes: ['Recruiter'],
   endpoints: (builder) => ({
     jobPostCreation: builder.mutation({
@@ -48,9 +38,17 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+
+    getAiConfig: builder.query({
+      query: (aiConfigId: string) => ({
+        url: `/ai-config/${aiConfigId}`,
+        method: 'GET',
+      }),
+    }),
+
     patchAiConfig: builder.mutation({
-      query: ({ jobId, data }) => ({
-        url: `/jobs/${jobId}`,
+      query: ({ aiConfigId, data }) => ({
+        url: `/ai-config/${aiConfigId}`,
         method: 'PATCH',
         body: data,
       }),
@@ -153,6 +151,13 @@ export const recruiterApi = createApi({
         method: 'GET',
       }),
     }),
+    updateJob: builder.mutation({
+      query: ({ jobId, data }) => ({
+        url: `/jobs/${jobId}`,
+        method: 'PATCH',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -176,4 +181,6 @@ export const {
   usePatchApplicationStatusMutation,
   useSendTalentMessageMutation,
   useGetMessagesSentToTalentQuery,
+  useUpdateJobMutation,
+  useGetAiConfigQuery,
 } = recruiterApi

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { getToken } from '../../../utils/authUtils'
+import { talentApi } from '../../api/talent'
 
 const initialState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
@@ -59,6 +60,11 @@ export const authSlice = createSlice({
       state.error = action.payload
       state.loading = false
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(talentApi.util.resetApiState, (state) => {
+      state.user = null
+    })
   },
 })
 

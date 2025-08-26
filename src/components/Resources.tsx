@@ -19,7 +19,7 @@ export const Resources = () => {
       <div className="solution-header">
         <div className="content">
           <div className="main-texts">
-            <h3>Business Resources</h3>
+            <h3 data-testId="heading">Business Resources</h3>
           </div>
           <p className="supporting-text">
             Streamline Your Hiring Process and Make Confident Decisions with

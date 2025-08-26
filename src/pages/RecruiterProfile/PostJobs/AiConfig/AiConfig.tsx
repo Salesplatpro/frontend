@@ -1,14 +1,16 @@
 import { Field, FieldArray, Form, Formik } from 'formik'
 import React from 'react'
 import { FaPlus } from 'react-icons/fa6'
+import { IoIosInformationCircle } from 'react-icons/io'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 import * as Yup from 'yup'
 
 import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
 import TextField from '../../../../components/Form/TextField'
 import { useAiConfigMutation } from '../../../../redux/api/recruiter'
+import { notify } from '../../../../utils/toastNotifications'
 import QuestionGenerator from './QuestionGenerator'
 import useGeneratedQuestion from './useGeneratedQuestion'
 
@@ -74,7 +76,7 @@ const AiConfig = () => {
 
     personalityEvaluation: Yup.string().required('Required'),
 
-    recruiterGuide: Yup.string().required('Required'),
+    // recruiterGuide: Yup.string().required('Required'),
   })
 
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
@@ -93,22 +95,18 @@ const AiConfig = () => {
     if (values.personalityEvaluation === 'false') {
       delete cleanedValues.uploadedQuestions
     }
+    if (values.recruiterGuide === '') {
+      delete cleanedValues.recruiterGuide
+    }
 
     try {
       const response = await aiConfig(cleanedValues).unwrap()
       if ('data' in response && response.data) {
-        toast.success(response.data?.message || 'Submitted successfully', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+        notify('success', response.data?.message || 'Submitted successfully', {
+          autoClose: 5000,
         })
-        navigate('/recruiterDashboard/myjobposts')
+        navigate(`/recruiterDashboard/jobdetail/${jobId}`)
+        // navigate('/recruiterDashboard/myjobposts')
       }
     } catch (error: any) {
       const errorMessage =
@@ -116,15 +114,8 @@ const AiConfig = () => {
         error.message ||
         'An error occurred while processing your request'
 
-      toast.error(errorMessage, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', errorMessage, {
+        autoClose: 5000,
         transition: Bounce,
       })
     } finally {
@@ -144,136 +135,180 @@ const AiConfig = () => {
         onSubmit={handleSubmit}>
         {({ values, isSubmitting }) => (
           <Form>
-            <TextField label="Name" name="name" placeholder="Enter name" />
+            <TextField label="Name" name="name" placeholder="Name of Job" />
 
-            <RadioFieldGroup
-              name="prescreeningAssessment"
-              label="Enable Pre-assessment:"
-              options={[
-                { value: 'true', label: 'Yes' },
-                { value: 'false', label: 'No' },
-              ]}
-            />
-            {values.prescreeningAssessment === 'true' && (
-              <TextField
-                label="Min Pre-assessment Score"
-                name="minPrescreeningScore"
-                placeholder="Enter score"
-                type="number"
+            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
+              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+                Pre-screening assessment
+              </span>{' '}
+              (These are the list of questions needed to be answered)
+            </h3>
+
+            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
+              <RadioFieldGroup
+                name="prescreeningAssessment"
+                label="Enable Pre-assessment:"
+                options={[
+                  { value: 'true', label: 'True' },
+                  { value: 'false', label: 'False' },
+                ]}
+                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
+                tooltipContent="Automatically screen candidates with a quick initial test before further Evaluation"
               />
-            )}
-
-            <RadioFieldGroup
-              name="cvSimilarity"
-              label="Enable CV Similarity:"
-              options={[
-                { value: 'true', label: 'Yes' },
-                { value: 'false', label: 'No' },
-              ]}
-            />
-            {values.cvSimilarity === 'true' && (
-              <>
+              {values.prescreeningAssessment === 'true' && (
                 <TextField
-                  label="Min CV Similarity Score"
-                  name="minCvSimilarityScore"
-                  placeholder="Enter score"
+                  label="Min Pre-assessment Score"
+                  name="minPrescreeningScore"
+                  placeholder="Enter score (%)"
                   type="number"
                 />
+              )}
+            </div>
+
+            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
+              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+                CV Similarity assessment
+              </span>{' '}
+              (These are the list of questions needed to be answered)
+            </h3>
+
+            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
+              <RadioFieldGroup
+                name="cvSimilarity"
+                label="Enable CV Similarity:"
+                options={[
+                  { value: 'true', label: 'Yes' },
+                  { value: 'false', label: 'No' },
+                ]}
+                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
+                tooltipContent="Match Candidate's CV against job requirements to find best fit"
+              />
+              {values.cvSimilarity === 'true' && (
+                <>
+                  <TextField
+                    label="Min CV Similarity Score"
+                    name="minCvSimilarityScore"
+                    placeholder="Enter score (%)"
+                    type="number"
+                  />
+                  <TextField
+                    label="Number of Similar CV Candidates"
+                    name="noOfCvSimilarCandidates"
+                    placeholder="Enter number"
+                    type="number"
+                  />
+                </>
+              )}
+            </div>
+
+            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
+              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+                Personalized assessment
+              </span>{' '}
+              (These are the list of questions needed to be answered)
+            </h3>
+
+            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
+              <RadioFieldGroup
+                name="personalizedAssessment"
+                label="Enable Personalized Assessment:"
+                options={[
+                  { value: 'true', label: 'Yes' },
+                  { value: 'false', label: 'No' },
+                ]}
+                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
+                tooltipContent="Generate tailored tests based on job-specific skills and qualifications."
+              />
+              {values.personalizedAssessment === 'true' && (
                 <TextField
-                  label="Number of Similar CV Candidates"
-                  name="noOfCvSimilarCandidates"
+                  label="Number of Personalized Questions"
+                  name="noPersonalizedQuestions"
                   placeholder="Enter number"
                   type="number"
                 />
-              </>
-            )}
+              )}
+            </div>
 
-            <RadioFieldGroup
-              name="personalizedAssessment"
-              label="Enable Personalized Assessment:"
-              options={[
-                { value: 'true', label: 'Yes' },
-                { value: 'false', label: 'No' },
-              ]}
-            />
-            {values.personalizedAssessment === 'true' && (
-              <TextField
-                label="Number of Personalized Questions"
-                name="noPersonalizedQuestions"
-                placeholder="Enter number"
-                type="number"
+            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
+              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+                Personality Evaluation
+              </span>{' '}
+              (These are the list of questions needed to be answered)
+            </h3>
+
+            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
+              <RadioFieldGroup
+                name="personalityEvaluation"
+                label="Enable Personality Evaluation:"
+                options={[
+                  { value: 'true', label: 'Yes' },
+                  { value: 'false', label: 'No' },
+                ]}
+                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
+                tooltipContent="Access candidate's personality traits to determine cultural and role fit"
               />
-            )}
 
-            <RadioFieldGroup
-              name="personalityEvaluation"
-              label="Enable Personality Evaluation:"
-              options={[
-                { value: 'true', label: 'Yes' },
-                { value: 'false', label: 'No' },
-              ]}
-            />
+              {values.personalityEvaluation === 'true' && (
+                <FieldArray name="uploadedQuestions">
+                  {({ remove, push }) => (
+                    <>
+                      {['EI', 'SN', 'TF', 'JP'].map((pair) => (
+                        <QuestionGenerator
+                          key={pair}
+                          pair={pair}
+                          generatedQuestion={generatedQuestions[pair]?.question}
+                          isLoading={loadingPairs[pair]}
+                          onGenerate={() => generateQuestion(pair)}
+                          onAddQuestion={() => {
+                            const question = generatedQuestions[pair]?.question
+                            if (question) {
+                              push(question)
+                              resetQuestion(pair)
+                            }
+                          }}
+                        />
+                      ))}
 
-            {values.personalityEvaluation === 'true' && (
-              <FieldArray name="uploadedQuestions">
-                {({ remove, push }) => (
-                  <>
-                    {['EI', 'SN', 'TF', 'JP'].map((pair) => (
-                      <QuestionGenerator
-                        key={pair}
-                        pair={pair}
-                        generatedQuestion={generatedQuestions[pair]?.question}
-                        isLoading={loadingPairs[pair]}
-                        onGenerate={() => generateQuestion(pair)}
-                        onAddQuestion={() => {
-                          const question = generatedQuestions[pair]?.question
-                          if (question) {
-                            push(question)
-                            resetQuestion(pair)
-                          }
-                        }}
-                      />
-                    ))}
-
-                    <div className="flex flex-col mt-4 mb-4">
-                      <label
-                        htmlFor="personalityQuestion"
-                        className="font-medium mb-1">
-                        Questions:
-                      </label>
-                      <div className="space-y-2">
-                        {values.uploadedQuestions?.map((pQuestion, index) => (
-                          <div
-                            key={index}
-                            className="flex flex-row items-center space-x-1">
-                            <Field
-                              name={`uploadedQuestions.${index}`}
-                              className="border border-[#D0D5DD] p-4 rounded w-full"
-                            />
+                      <div className="flex flex-col mt-4 mb-4">
+                        <label
+                          htmlFor="personalityQuestion"
+                          className="font-medium mb-1">
+                          Questions:
+                        </label>
+                        <div className="space-y-2">
+                          {values.uploadedQuestions?.map((pQuestion, index) => (
                             <div
-                              className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
-                              onClick={() => remove(index)}>
-                              <RiDeleteBin6Line />
+                              key={index}
+                              className="flex flex-row items-center space-x-1">
+                              <Field
+                                name={`uploadedQuestions.${index}`}
+                                className="border border-[#D0D5DD] p-4 rounded w-full"
+                              />
+                              <div
+                                className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
+                                onClick={() => remove(index)}>
+                                <RiDeleteBin6Line />
+                              </div>
                             </div>
-                          </div>
-                        ))}
-                        <button
-                          type="button"
-                          className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF]"
-                          onClick={() => push('')}>
-                          <span className="flex items-center gap-2">
-                            <FaPlus /> Add Question
-                          </span>
-                        </button>
+                          ))}
+                          <button
+                            type="button"
+                            className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF]"
+                            onClick={() => push('')}>
+                            <span className="flex items-center gap-2">
+                              <FaPlus /> Add Question
+                            </span>
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </>
-                )}
-              </FieldArray>
-            )}
+                    </>
+                  )}
+                </FieldArray>
+              )}
+            </div>
 
             <TextField
-              label="Recruiter Guide"
+              label="Recruiter Guide (Optional)"
               name="recruiterGuide"
               placeholder="Enter recruiter guide"
             />

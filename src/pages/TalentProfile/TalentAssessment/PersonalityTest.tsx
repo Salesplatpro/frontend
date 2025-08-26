@@ -1,12 +1,13 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
+import { Bounce } from 'react-toastify'
 
 import Loading from '../../../components/Loading/Loading'
 import {
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
 } from '../../../redux/api/talent'
+import { notify } from '../../../utils/toastNotifications'
 interface FormData {
   jobId: string
   answers: { [key: string]: string }
@@ -52,17 +53,11 @@ const PersonalityTest: React.FC = () => {
     if (personalityData?.data) {
       setPersonalityQuestions(personalityData.data)
     } else if (personalityError) {
-      toast.error('Error loading personality test data', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'Error loading personality test data', {
+        autoClose: 5000,
         transition: Bounce,
       })
+
       console.error(personalityError)
     }
   }, [personalityData, personalityError])
@@ -89,42 +84,29 @@ const PersonalityTest: React.FC = () => {
         formData,
       ).unwrap()) as PostAnswerResponse
       if (response.status) {
-        toast.success(`${response.message} ${response.data.scorePercent}%`, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
-        })
+        notify(
+          'success',
+          `${response.message} ${response.data.scorePercent}%`,
+          {
+            autoClose: 5000,
+          },
+        )
       } else {
-        toast.error(response.message || 'DisplayError submitting question', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        notify(
+          'error',
+          response.message || 'DisplayError submitting question',
+          {
+            autoClose: 5000,
+            transition: Bounce,
+          },
+        )
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
       console.error(error)
-      toast.error('DisplayError submitting quiz', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+
+      notify('error', 'DisplayError submitting quiz', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }

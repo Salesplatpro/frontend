@@ -8,9 +8,8 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-// eslint-disable-next-line no-unused-vars
-import { Bounce, Slide, toast } from 'react-toastify'
 
+// eslint-disable-next-line no-unused-vars
 import { Button, StatusBadge } from '../../../components'
 import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'
@@ -19,6 +18,7 @@ import {
   calculateDaysFromCreation,
   ResponsiveTableRenderer,
 } from '../../../utils'
+import { notify } from '../../../utils/toastNotifications'
 import { AllJobTypes } from '../../../utils/types'
 // import { applications } from './ApplicationData'
 
@@ -84,16 +84,9 @@ export const PipelineTable = () => {
     if (data) {
       console.log(data)
       console.log('data')
-      toast.success(data?.message, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Slide,
+
+      notify('success', data?.message, {
+        autoClose: 5000,
       })
       setAllJobs(data.data.applications)
     }

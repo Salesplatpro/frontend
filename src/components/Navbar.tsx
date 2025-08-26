@@ -29,9 +29,9 @@ const Navbar = () => {
   }, [location.pathname])
 
   return (
-    <React.Fragment>
-      <div className="navi">
-        <div className="wrapper nav-navigate">
+    <React.Fragment >
+      <div className="navi" data-testId="navbar">
+        <div className="wrapper nav-navigate" >
           <nav className="navbar">
             <ul>
               <Link to="/" className="logo-li">
@@ -58,6 +58,14 @@ const Navbar = () => {
                   to="/explore"
                   className={activeTab === '/explore' ? 'activeTab' : ''}>
                   explore jobs
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  to="/pricing"
+                  className={activeTab === '/pricing' ? 'activeTab' : ''}>
+                  Pricing
                 </Link>
               </li>
               <li>
@@ -144,6 +152,17 @@ const Navbar = () => {
                           setToggleBtn(false) // Close the menu
                         }}>
                         Explore Jobs
+                      </Link>
+                    </li>
+
+                    <li className="font-semibold text-lg text-[#4985df] capitalize decoration-0 leading-[18px] font-raleway hover:text-white">
+                      <Link
+                        to="/pricing"
+                        className={activeTab === '/pricing' ? 'activeTab' : ''}
+                        onClick={() => {
+                          setToggleBtn(false) // Close the menu
+                        }}>
+                        Pricing
                       </Link>
                     </li>
                     <li className="font-semibold text-lg text-[#4985df] capitalize decoration-0 leading-[18px] font-raleway hover:text-white">

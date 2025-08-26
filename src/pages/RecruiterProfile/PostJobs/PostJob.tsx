@@ -1,79 +1,38 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-// import { FaChevronDown } from 'react-icons/fa'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-import { Bounce, Slide, toast } from 'react-toastify'
-import * as Yup from 'yup'
+import { Bounce } from 'react-toastify'
 
 import TextField from '../../../components/Form/TextField'
 import Location from '../../../components/global/Location'
-import AllRoles from '../../../components/Roles/AllRoles'
+import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
-import { experienceLevel } from '../../../utils'
 import { FormValues } from '../../../utils/jobPostTypes'
-
-const validationSchema = Yup.object({
-  description: Yup.string().required('Description is required'),
-  minSalary: Yup.number()
-    .required('Minimum Salary is required')
-    .positive('Minimum Salary must be positive'),
-  maxSalary: Yup.number()
-    .required('Maximum Salary is required')
-    .positive('Maximum Salary must be positive'),
-  experienceLevel: Yup.string().required('experienceLevel level is required'),
-  location: Yup.object({
-    country: Yup.object({
-      name: Yup.string().required('Country is required'),
-      geoId: Yup.number().required('Country ID is required'),
-    }),
-    state: Yup.object({
-      name: Yup.string().required('State is required'),
-      geoId: Yup.number().required('State ID is required'),
-    }),
-    city: Yup.object({
-      name: Yup.string().required('City is required'),
-      geoId: Yup.number().required('City ID is required'),
-    }),
-  }),
-  address: Yup.string().required('Address is required'),
-  remote: Yup.string().required('Remote option is required'),
-  responsibilities: Yup.array().of(
-    Yup.string()
-      .required('Responsibility is required')
-      .max(150, 'Responsibility cannot be longer than 150 characters'),
-  ),
-  skills: Yup.array().of(
-    Yup.string()
-      .required('Skill is required')
-      .max(150, 'Skill cannot be longer than 150 characters'),
-  ),
-  goals: Yup.array().of(
-    Yup.string()
-      .required('Goal is required')
-      .max(150, 'Goal cannot be longer than 150 characters'),
-  ),
-})
+import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
+import { notify } from '../../../utils/toastNotifications'
+import ExperienceLevelSelect from './ExperienceLevelSelect'
+import { validationSchema } from './validationSchema'
+import WorkModeSelect from './WorkModeSelect'
 
 const PostJob: React.FC = () => {
   const [jobId, setJobId] = useState(null)
   const [jobPostCreation] = useJobPostCreationMutation()
 
   const initialValues: FormValues = {
-    description: '',
+    jobBrief: '',
     role: '',
+    requirements: '',
     minSalary: '',
     maxSalary: '',
+    workMode: '',
     experienceLevel: '',
     location: {
       country: { name: '', geoId: null },
       state: { name: '', geoId: null },
       city: { name: '', geoId: null },
     },
-    address: '',
-    remote: '',
-    responsibilities: [''],
     skills: [''],
     goals: [''],
   }
@@ -82,53 +41,35 @@ const PostJob: React.FC = () => {
     values: FormValues,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
+    const location = {
+      country: values.location.country.name,
+      state: values.location.state.name,
+      ...(values.location.city?.name
+        ? { city: values.location.city?.name }
+        : {}),
+    }
     const submissionValues = {
       ...values,
-      location: {
-        country: values.location.country.name,
-        state: values.location.state.name,
-        city: values.location.city.name,
-      },
+      location,
     }
     try {
       const data = await jobPostCreation(submissionValues).unwrap()
       console.log(data)
       if (data.status) {
-        toast.success('Job Post Created successfully', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
+        notify('success', `Job Post Created successfully`, {
+          autoClose: 5000,
         })
+
         setJobId(data?.data._id)
       } else {
-        toast.error(data.message, {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
+        notify('error', data.message, {
+          autoClose: 5000,
           transition: Bounce,
         })
       }
     } catch (error) {
-      toast.error('Failed to create job post', {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
+      notify('error', 'Failed to create job post', {
+        autoClose: 5000,
         transition: Bounce,
       })
     }
@@ -151,17 +92,20 @@ const PostJob: React.FC = () => {
           {({ values, isSubmitting, setFieldValue, errors, touched }) => (
             <Form>
               <div className="mb-4">
-                <h5 className="font-bold text-[14px] text-[#434144]">
-                  Select Role
-                </h5>
+                <LabelWithAsterisk
+                  asterick={true}
+                  name="role"
+                  label="Select Role"
+                />
                 <div className="py-2 pl-0 rounded-lg w-full">
-                  <AllRoles
+                  <CreatableRoleSelect
                     name="role"
                     value={values.role}
                     onChange={(value: any) => {
                       setFieldValue('role', value)
                       // Update Formik state
                     }}
+                    isDisabled
                     customHeight="60px"
                   />
                   {errors.role && touched.role ? (
@@ -170,11 +114,21 @@ const PostJob: React.FC = () => {
                 </div>
               </div>
               <TextField
-                label="Description"
-                name="Description"
-                placeholder="Add Job description"
-                type="text"
+                label="Job Brief"
+                asterick={true}
+                name="jobBrief"
+                placeholder="Add Job Brief (600 words max)"
+                type="textarea"
+                MAX_WORDS={600}
               />
+              <TextField
+                label="Requirements"
+                name="requirements"
+                asterick={true}
+                placeholder="Role requirements"
+                type="textarea"
+              />
+
               <div className="mb-4">
                 <Location
                   locationTitle="Country"
@@ -182,6 +136,7 @@ const PostJob: React.FC = () => {
                   geoId={null}
                   height="54px"
                   bold="bold"
+                  asterick={true}
                   isCountry={true}
                   onChange={(geoId) => {
                     setFieldValue('location.country.geoId', geoId)
@@ -190,12 +145,18 @@ const PostJob: React.FC = () => {
                   }}
                   customHeight="60px"
                 />
+                <ErrorMessage
+                  name="location.country.name"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
               </div>
               <div className="mb-4">
                 <Location
                   locationTitle="State"
-                  locationLabel="States/Province"
+                  locationLabel="State"
                   geoId={values.location.country.geoId}
+                  asterick={true}
                   height="54px"
                   bold="bold"
                   isCountry={false}
@@ -205,11 +166,16 @@ const PostJob: React.FC = () => {
                   }}
                   customHeight="60px"
                 />
+                <ErrorMessage
+                  name="location.state.name"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
               </div>
               <div className="mb-4">
                 <Location
                   locationTitle="City"
-                  locationLabel="Region"
+                  locationLabel="Region/City (Optional)"
                   geoId={values.location.state.geoId}
                   height="54px"
                   bold="bold"
@@ -223,116 +189,79 @@ const PostJob: React.FC = () => {
               <TextField
                 label="Minimum Salary"
                 name="minSalary"
+                asterick={true}
                 placeholder="Min Salary"
                 type="text"
               />
               <TextField
                 label="Maximum Salary"
                 name="maxSalary"
+                asterick={true}
                 placeholder="Max Salary"
                 type="text"
               />
+
               <div className="mb-4">
-                <label
-                  className="block font-bold text-[14px] text-[#434144]"
-                  htmlFor="experienceLevel">
-                  Experience Level
-                </label>
+                <LabelWithAsterisk
+                  label="Work Mode"
+                  asterick={true}
+                  name="workMode"
+                />
+
                 <Field
-                  as="select"
-                  id="experienceLevel"
-                  name="experienceLevel"
-                  className="border border-[#D0D5DD] p-5 rounded-lg w-full mt-1">
-                  <option value="">Select experience Level</option>
-                  {Object.values(experienceLevel).map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </Field>
+                  name="workMode"
+                  render={({ field, form }: { field: any; form: any }) => (
+                    <WorkModeSelect
+                      value={field.value}
+                      onChange={(value) =>
+                        form.setFieldValue(field.name, value)
+                      } // Set value to Formik field
+                      customHeight="60px"
+                    />
+                  )}
+                />
 
                 <ErrorMessage
-                  name="Experience Level"
+                  name="workMode"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
-              <TextField
-                label="Address"
-                name="address"
-                placeholder="Address"
-                type="text"
-              />
+
               <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="remote">
-                  Remote
-                </label>
+                <LabelWithAsterisk
+                  label="Experience Level"
+                  asterick={true}
+                  name="experienceLevel"
+                />
+
                 <Field
-                  as="select"
-                  id="remote"
-                  name="remote"
-                  className="border border-[#D0D5DD] p-5 rounded-lg w-full">
-                  <option value="">Select Remote Option</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </Field>
-                <ErrorMessage
-                  name="remote"
-                  component="div"
-                  className="text-red-500"
-                />
-              </div>
-              {/* Responsibility */}
-              <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="responsibilities">
-                  Responsibilities
-                </label>
-                <FieldArray name="responsibilities">
-                  {({ remove, push }) => (
-                    <div>
-                      {values.responsibilities.map((responsibility, index) => (
-                        <div
-                          key={index}
-                          className="flex mb-2 items-center space-x-0">
-                          <Field
-                            name={`responsibilities.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded-lg w-full"
-                          />
-                          <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded-lg"
-                            onClick={() => remove(index)}>
-                            <RiDeleteBin6Line />
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
-                        <span className="flex items-center gap-2">
-                          <FaPlus /> Add Responsibility
-                        </span>
-                      </button>
-                    </div>
+                  name="experienceLevel"
+                  render={({ field, form }: { field: any; form: any }) => (
+                    <ExperienceLevelSelect
+                      value={field.value}
+                      onChange={(value) =>
+                        form.setFieldValue(field.name, value)
+                      }
+                      customHeight="60px"
+                      options={[]}
+                    />
                   )}
-                </FieldArray>
+                />
+
                 <ErrorMessage
-                  name="responsibilities"
+                  name="experienceLevel"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
               {/* skills */}
               <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="skills">
-                  Skills
-                </label>
+                <LabelWithAsterisk
+                  asterick={true}
+                  label="Skills"
+                  name="skills"
+                />
                 <FieldArray name="skills">
                   {({ remove, push }) => (
                     <div>
@@ -365,16 +294,16 @@ const PostJob: React.FC = () => {
                 <ErrorMessage
                   name="skills"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
               {/* Goals */}
               <div className="mb-4">
-                <label
-                  className="font-bold text-[14px] text-[#434144] block"
-                  htmlFor="goals">
-                  Goals
-                </label>
+                <LabelWithAsterisk
+                  asterick={true}
+                  name="goals"
+                  label="Top 3 Goals"
+                />
                 <FieldArray name="goals">
                   {({ remove, push }) => (
                     <div>
@@ -407,7 +336,7 @@ const PostJob: React.FC = () => {
                 <ErrorMessage
                   name="goals"
                   component="div"
-                  className="text-red-500"
+                  className="text-red-500 text-sm"
                 />
               </div>
               <div className="mt-10">

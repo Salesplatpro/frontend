@@ -8,12 +8,14 @@ export interface LocationProps {
   locationTitle?: string
   locationLabel: string
   geoId?: any
-  selectedName?: string
+  selectedName?: any
   isCountry?: boolean
   onChange: (geoId: number) => void
   height?: string
   customHeight: string
   bold?: string
+  asterick?: boolean
+  value?: string
 }
 
 export interface LocationValues {
@@ -22,20 +24,20 @@ export interface LocationValues {
 }
 
 export interface FormValues {
-  description: string
+  jobBrief: string
   // aiConfig: string
   role: string
+  name?: string
   minSalary: string
   maxSalary: string
   experienceLevel: string
+  workMode: string
   location: {
     country: LocationValues
     state: LocationValues
-    city: LocationValues
+    city?: LocationValues
   }
-  address: string
-  remote: string
-  responsibilities: string[]
+  requirements: string
   skills: string[]
   goals: string[]
 }

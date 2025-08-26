@@ -14,6 +14,7 @@ import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
 import UploadCV from './UploadCV'
 import useProfile from './useProfileHook'
+import BioTextArea from './BioTextArea'
 
 const TalentProfile = () => {
   const {
@@ -75,13 +76,8 @@ const TalentProfile = () => {
                     className="text-[14px] text-[#344054] font-medium">
                     Bio
                   </label>
-                  <Field
-                    as="textarea"
-                    id="bio"
-                    name="bio"
-                    placeholder="Tell us about yourself"
-                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-4"
-                  />
+                  <BioTextArea />
+
                   <ErrorMessage
                     name="bio"
                     component="div"
@@ -119,6 +115,7 @@ const TalentProfile = () => {
                         onChange={(value: any) => {
                           setFieldValue('role', value) // Update Formik state
                         }}
+                        customHeight=""
                       />
                     </div>
                   </div>
@@ -179,6 +176,7 @@ const TalentProfile = () => {
                       geoId={null}
                       isCountry={true}
                       selectedName={values.location.country.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.country.geoId', geoId)
                         setFieldValue('location.state', {
@@ -199,6 +197,7 @@ const TalentProfile = () => {
                       geoId={values.location.country.geoId}
                       isCountry={false}
                       selectedName={values.location.state.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.state.geoId', geoId)
                         setFieldValue('location.city', {
@@ -217,6 +216,7 @@ const TalentProfile = () => {
                       geoId={values.location.state.geoId}
                       isCountry={false}
                       selectedName={values.location.city.name}
+                      customHeight=""
                       onChange={(geoId) => {
                         setFieldValue('location.city.geoId', geoId)
                       }}

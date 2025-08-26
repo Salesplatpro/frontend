@@ -19,8 +19,8 @@ const Location: React.FC<LocationProps> = ({
   isCountry,
   onChange,
   height,
-  customHeight,
   bold,
+  asterick,
 }) => {
   const { setFieldValue } = useFormikContext()
   const [options, setOptions] = useState<LocationOption[]>([])
@@ -76,11 +76,11 @@ const Location: React.FC<LocationProps> = ({
 
   // After options are set, check if the selectedName exists and matches
   useEffect(() => {
-    if (options.length && selectedName) {
+    if (options.length && typeof selectedName === 'string') {
       const matchedOption = options.find((place) => {
         const placeName = place.name
         return (
-          placeName?.trim().toLowerCase() === selectedName.trim().toLowerCase()
+          placeName.trim().toLowerCase() === selectedName.trim().toLowerCase()
         )
       })
 
@@ -105,7 +105,7 @@ const Location: React.FC<LocationProps> = ({
       }
       setSelectedValue(selectedOption.geoId.toString())
       setFieldValue(`location.${locationTitle?.toLowerCase()}`, value)
-      onChange(value.geoId) // Notify parent component of the geoId change
+      onChange(value.geoId)
     }
   }
 
@@ -118,12 +118,12 @@ const Location: React.FC<LocationProps> = ({
     control: (base: any) => ({
       ...base,
       borderColor: '#D0D5DD',
-      height: customHeight || '44px',
+      height: height ? `${height}` : '44px',
       fontFamily: 'Raleway',
     }),
     input: (base: any) => ({
       ...base,
-      color: '#333333', // Custom search text color
+      color: '#333333',
       fontSize: '16px',
     }),
   }
@@ -136,6 +136,7 @@ const Location: React.FC<LocationProps> = ({
         }`}
         htmlFor={locationTitle}>
         {locationLabel}
+        {asterick && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       {isLoading ? (

@@ -1,6 +1,10 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+// @import 'tailwindcss/base';
+// @import 'tailwindcss/components';
+// @import 'tailwindcss/utilities';
+
+@use 'tailwindcss/base' as *;
+@use 'tailwindcss/components' as *;
+@use 'tailwindcss/utilities' as *;
 
 $font-color: #4b4b4b;
 $nav-f-size: 1rem;
@@ -553,8 +557,8 @@ $deep-gray: #525c68;
 
 .footer {
   background-color: #233657;
-  max-height: 473px;
-  height: 473px;
+  max-height: 490px;
+  height: 490px;
   overflow: hidden;
 
   .main-contain {
@@ -1939,7 +1943,7 @@ $deep-gray: #525c68;
         gap: 15px;
 
         .socials {
-          padding-top: 10px;
+          padding-top: 30px;
           justify-content: flex-start;
         }
       }

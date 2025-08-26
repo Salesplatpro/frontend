@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,12 @@
 
 .hoverEffect {
   @apply hover:text-white ease-in duration-200 cursor-pointer;
+}
+
+.tooltip-wrap {
+  white-space: normal !important; /* Allows the text to wrap */
+  word-wrap: break-word; /* Breaks long words to the next line */
+  max-width: 200px; /* Optional: Set a maximum width for the tooltip */
 }
 
 .flip-2-ver-right-fwd {
@@ -156,4 +162,147 @@
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+}
+
+/* Override ReactQuill default styles */
+.custom-quill-wrapper {
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Remove extra borders inside ReactQuill */
+.ql-toolbar {
+  border-bottom: 1px solid #d0d5dd !important;
+  background: transparent;
+  padding: 0 0 8px 0; /* Only padding bottom */
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ql-container {
+  border: none !important;
+  height: calc(100% - 42px); /* Subtract toolbar height */
+}
+
+.ql-editor {
+  padding: 0;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.rich-text-content {
+  line-height: 1.6;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  padding-left: 1.5rem;
+}
+
+.rich-text-content ul {
+  list-style-type: disc;
+}
+
+.rich-text-content ol {
+  list-style-type: decimal;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.5rem;
+}
+
+.rich-text-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.rich-text-content code {
+  background-color: #f3f4f6;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .custom-quill-wrapper {
+    border-radius: 6px; /* Slightly smaller border radius for mobile */
+    padding: 0; /* Remove padding for mobile */
+  }
+
+  .ql-toolbar {
+    border-bottom: 1px solid #d0d5dd !important;
+    background: transparent;
+    padding: 0 0 6px 0; /* Reduced padding on mobile */
+    display: flex;
+    flex-direction: row;
+    /* justify-content: flex-start; */
+    justify-content: center; /* Center toolbar items for mobile */
+  }
+
+  .ql-container {
+    height: 50%; /* Reduce height for mobile to account for smaller toolbar */
+  }
+
+  .ql-editor {
+    font-size: 0.875rem; /* Smaller font size for mobile */
+    padding: 8px; /* Add a bit of padding to make the editor more comfortable on mobile */
+  }
+}
+
+/* Extra small mobile devices (portrait mode) */
+@media (max-width: 480px) {
+  .ql-toolbar {
+    display: flex;
+    flex-direction: row; /* Stack toolbar buttons vertically on smaller screens */
+    justify-content: center;
+    padding: 4px 0; /* More compact toolbar */
+  }
+
+  .ql-container {
+    height: 60%; /* Reduce height for mobile to account for smaller toolbar */
+  }
+
+  .ql-editor {
+    font-size: 0.8rem; /* Even smaller font size for very small devices */
+    padding: 6px; /* More padding for better readability */
+  }
+}
+
+@media (max-width: 400px) {
+  .ql-toolbar {
+    flex-wrap: wrap;
+    justify-content: center; /* Center the toolbar icons */
+    padding: 4px 0; /* Slight padding for better spacing */
+    gap: 6px; /* Add space between buttons */
+  }
+
+  .ql-container {
+    height: auto; /* Let content grow naturally */
+    min-height: 150px; /* Minimum readable height */
+  }
+
+  .ql-editor {
+    font-size: 0.85rem; /* Slightly smaller text */
+    padding: 6px; /* Better readability */
+  }
+}
+
+.MuiTablePagination-root {
+  @apply text-xl text-[#4884DF];
+}
+
+.MuiTablePagination-toolbar {
+  @apply flex flex-wrap items-center justify-center gap-2 space-y-20;
+}
+
+.MuiTablePagination-selectLabel,
+.MuiTablePagination-displayedRows {
+  @apply text-sm text-[#4884DF];
+}
+
+.MuiTablePagination-actions {
+  @apply text-blue-600;
 }
