@@ -1,7 +1,6 @@
 import React from 'react'
 import { BiMessageDetail } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
-// import { FiHome } from 'react-icons/fi'
 import { IoBagOutline } from 'react-icons/io5'
 import { FaHome } from 'react-icons/fa'
 import { MdPersonOutline } from 'react-icons/md'
