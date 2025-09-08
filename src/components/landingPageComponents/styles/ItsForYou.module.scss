@@ -1,6 +1,11 @@
 .imgContainer {
-  max-width: 389px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.img {
+  width: 489px;
+    height: auto;
+    border-radius: 8px;
 }

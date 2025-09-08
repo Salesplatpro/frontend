@@ -7,25 +7,28 @@ import {
   FaTwitter,
   FaYoutube,
 } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
+import { paths } from '../../paths'
 import { LandingButton } from './LandingButton'
 import { containerPadding, footerData } from './landingData'
 import styles from './styles/LandingFooter.module.scss'
 import { BaseText } from './typography'
 
 export const LandingFooter = () => {
+  const navigate = useNavigate()
   const socialFooterData = [
-    { id: 'facebook', icon: FaFacebook },
-    { id: 'twitter', icon: FaTwitter },
-    { id: 'linkedin', icon: FaLinkedin },
-    { id: 'instagram', icon: FaInstagram },
-    { id: 'youtube', icon: FaYoutube },
+    { id: 'facebook', icon: FaFacebook, url: paths.facebook },
+    { id: 'twitter', icon: FaTwitter, url: paths.twitter },
+    { id: 'linkedin', icon: FaLinkedin, url: paths.linkedIn },
+    { id: 'instagram', icon: FaInstagram, url: paths.instagram },
+    { id: 'youtube', icon: FaYoutube, url: paths.youtube },
   ]
 
   return (
     <div className={cn(containerPadding, styles.container)}>
       <div className="flex flex-col gap-14">
-        <div className="flex justify-between align-center">
+        <div className="flex flex-col gap-4 md:flex-row justify-between align-center">
           <div className="flex flex-col gap-4">
             <BaseText fontSize="fs-3xl" fontWeight="bold" fontColor="white">
               Ready to hire smarter?
@@ -38,16 +41,16 @@ export const LandingFooter = () => {
             <LandingButton
               title="Get a Demo"
               variant="primary"
-              onClick={() => {}}
+              onClick={() => navigate(paths.login)}
             />
             <LandingButton
               title="Try it Free"
               variant="secondary"
-              onClick={() => {}}
+              onClick={() => navigate(paths.login)}
             />
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {footerData.map((item) => (
             <div key={item.key} className="flex flex-col items-start gap-3">
               <BaseText fontColor="white" fontSize="fs-sm">
@@ -66,13 +69,17 @@ export const LandingFooter = () => {
           ))}
         </div>
       </div>
-      <div className="flex justify-between align-center">
+      <div className="flex flex-col gap-2 items-center md:flex-row justify-between align-center">
         <BaseText fontSize="fs-xs" fontColor="white">
           ©{new Date().getFullYear()} AuxHr. All rights reserved
         </BaseText>
         <div className="flex gap-4">
-          {socialFooterData.map(({ id, icon: Icon }) => (
-            <Icon key={id} color="white" />
+          {socialFooterData.map(({ id, icon: Icon, url }) => (
+            <Icon
+              key={id}
+              color="white"
+              onClick={() => window.open(url, '_blank')}
+            />
           ))}
         </div>
       </div>

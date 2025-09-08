@@ -7,7 +7,7 @@ export const MainLayout = () => {
   return (
     <>
       <LandingNavbar />
-      <main>
+      <main className="mt-16">
         <Outlet />
       </main>
       <LandingFooter />

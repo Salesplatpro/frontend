@@ -1,3 +1,4 @@
+import {paths} from "../../paths";
 import { ButtonVariant } from './LandingButton'
 
 export const containerPadding = 'px-5 md:px-4 lg:px-20'
@@ -21,24 +22,24 @@ export const leftNav = [
   },
   {
     name: 'Pricing',
-    url: '/',
+    url: paths.pricing,
   },
 ]
 
 export const rightNav = [
   {
     name: 'Get a Demo',
-    url: '/',
+    url: paths.register,
     variant: 'secondary' as ButtonVariant,
   },
   {
     name: 'Login',
-    url: '/',
+    url: paths.login,
     variant: 'secondary' as ButtonVariant,
   },
   {
     name: 'Try it Free',
-    url: '/',
+    url: paths.register,
     variant: 'primary' as ButtonVariant,
   },
 ]
@@ -51,7 +52,7 @@ export const footerData = [
       { name: 'Features', url: '/' },
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
-      { name: 'Pricing', url: '/' },
+      { name: 'Pricing', url: paths.pricing },
       { name: 'Release', url: '/' },
     ],
   },
@@ -73,7 +74,7 @@ export const footerData = [
       { name: 'Features', url: '/' },
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
-      { name: 'Pricing', url: '/' },
+      { name: 'Pricing', url: paths.pricing },
       { name: 'Release', url: '/' },
     ],
   },

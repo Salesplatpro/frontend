@@ -1,8 +1,10 @@
 import cn from 'classnames'
 import React, { useState } from 'react'
 import { MdArrowOutward } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 
 import howItWorks from '../../assets/howItWorks.png'
+import { paths } from '../../paths'
 import { LandingButton } from './LandingButton'
 import { containerPadding } from './landingData'
 import { SectionHeader } from './SectionHeader'
@@ -31,6 +33,7 @@ const flows = [
 
 export const HowItWorks = () => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const navigate = useNavigate()
 
   return (
     <div
@@ -43,8 +46,8 @@ export const HowItWorks = () => {
         title="How it works"
         subTitle="Your Recruitment Workflow, Reinvented."
       />
-      <div className="flex justify-between">
-        <div className="flex flex-col">
+      <div className="flex flex-col gap-5 md:flex-row justify-between">
+        <div className="flex justify-evenly md:justify-normal md:flex-col md:items-start">
           {flowTitle.map((item, index) => (
             <BaseText
               key={item}
@@ -76,7 +79,7 @@ export const HowItWorks = () => {
               title="Get Started"
               icon={<MdArrowOutward />}
               variant="secondary"
-              onClick={() => {}}
+              onClick={() => navigate(paths.register)}
             />
           </div>
           <img src={howItWorks} alt="How it works" />

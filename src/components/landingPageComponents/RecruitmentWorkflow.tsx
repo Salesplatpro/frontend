@@ -58,7 +58,7 @@ export const RecruitmentWorkflow = () => {
       />
       <div className={styles.gridContainer}>
         {gridItems.map(({ text, image, alt, style, imgClass }, index) => (
-          <div key={index} className={cn(styles.gridItem, style)}>
+          <div key={index} className={style}>
             <BaseText fontSize="fs-2xl" fontWeight="bold" className="p-6">
               {text}
             </BaseText>

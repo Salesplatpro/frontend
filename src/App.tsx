@@ -101,12 +101,12 @@ const router = createBrowserRouter([
       },
 
       {
-        path: 'talentRegister',
+        path: 'register',
         element: <SignIn />,
       },
 
       {
-        path: 'recruiterRegister',
+        path: 'register',
         element: <SignIn />,
       },
       {
