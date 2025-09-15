@@ -1,8 +1,8 @@
 import React from 'react'
 import { BiMessageDetail } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
-import { FiHome } from 'react-icons/fi'
 import { IoBagOutline } from 'react-icons/io5'
+import { MdSpaceDashboard } from 'react-icons/md'
 import { MdPersonOutline } from 'react-icons/md'
 import { MdOutlineAssessment } from 'react-icons/md'
 import { RiFlowChart } from 'react-icons/ri'
@@ -13,7 +13,7 @@ const COLOR = '#ffffff'
 export const sidebarData = [
   {
     name: 'Dashboard',
-    icon: <FiHome size={ICON_SIZE} color={COLOR} />,
+    icon: <MdSpaceDashboard size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/',
   },
   {
