@@ -15,7 +15,7 @@ import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
-import Home from './Home'
+
 import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
