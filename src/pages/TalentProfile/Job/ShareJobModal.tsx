@@ -103,7 +103,6 @@ const ShareJobModal: React.FC<ModalProps> = ({ onClose, shareLinks }) => {
 
         {shareOptions.map((option, index) => {
           return (
-            // eslint-disable-next-line react/jsx-key
             <div key={index}>
               <button
                 className="px-14 lg:px-24 md:px-24 border-[1px] py-4 my-5 rounded-lg font-normal font-raleway text-center text-[14px] lg:text-[20px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex flex-row justify-center items-center"

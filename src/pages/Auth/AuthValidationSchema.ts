@@ -1,4 +1,4 @@
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import { isValidPhoneNumber } from 'react-phone-number-input'
 import * as Yup from 'yup'
 
 const emailValidation = () => Yup.string().required('Email is required')

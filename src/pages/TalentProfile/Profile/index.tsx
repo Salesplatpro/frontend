@@ -10,11 +10,11 @@ import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
 import { experienceLevel } from '../../../utils'
 import { calculateProgress } from '../../../utils/calculateProgress'
+import BioTextArea from './BioTextArea'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
 import UploadCV from './UploadCV'
 import useProfile from './useProfileHook'
-import BioTextArea from './BioTextArea'
 
 const TalentProfile = () => {
   const {

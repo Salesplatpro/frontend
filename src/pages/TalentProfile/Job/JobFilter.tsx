@@ -1,11 +1,13 @@
 import './JobFilter.scss'
 
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React, { Dispatch, SetStateAction } from 'react'
+import { Field, Form, Formik } from 'formik'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
+import Worktype from '../../../components/Worktype'
 import { useScreenWidth } from '../../../hooks'
+
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
@@ -21,15 +23,21 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
   setShowFilter,
 }) => {
   const screenWidth = useScreenWidth()
+
+  const [resetKey, setResetKey] = useState(0)
+
   const initialValues: JobFiltersTypes = {
     role: '',
     experienceLevel: '',
-    remote: '',
+    // remote: '',
     location: {
       country: { name: '', geoId: null },
       state: { name: '', geoId: null },
       city: { name: '', geoId: null },
     },
+    remote: false,
+    onSite: false,
+    hybrid: false,
   }
 
   const onSubmit = async (
@@ -38,22 +46,36 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
   ) => {
     setSubmitting(true)
     onFilterSubmit(values)
+
+    setShowFilter(false)
+
+    console.log(values)
     setSubmitting(false)
   }
 
   return (
-    <div className="filter">
+    <div className="filter ">
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ values, isSubmitting, setFieldValue }) => (
           <Form>
-            <div className="filter-top">
+            <div className="filter-top z-10">
               <div className="title">Filter</div>
               <button
                 type="button"
                 className="clear"
                 onClick={() => {
-                  setFieldValue('role', '') // Set role back to empty string
-                  screenWidth < 768 && setShowFilter(!showFilter)
+                  setFieldValue('role', '')
+                  setFieldValue('experienceLevel', '')
+                  // setFieldValue('remote', '')
+                  setFieldValue('location', {
+                    country: { name: '', geoId: null },
+                    state: { name: '', geoId: null },
+                    city: { name: '', geoId: null },
+                  })
+                  setResetKey((prev) => prev + 1) //remount AllRoles and Location
+                  if (screenWidth < 768) {
+                    setShowFilter(!showFilter)
+                  }
                 }}>
                 Clear/Close
               </button>
@@ -67,6 +89,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 </label>
                 <div className="mt-2 rounded shadow-lg w-full">
                   <AllRoles
+                    key={resetKey}
                     name="role"
                     value={values.role}
                     onChange={(value: any) => {
@@ -77,7 +100,6 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 </div>
               </div>
               <div className="line" />
-
               <div className="mb-4">
                 <label
                   className="block mb-2 font-bold"
@@ -96,15 +118,9 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                     </option>
                   ))}
                 </Field>
-                {/* <ErrorMessage
-                  name="experienceLevel"
-                  component="div"
-                  className="text-red-500"
-                /> */}
               </div>
               <div className="line" />
-
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label className="block mb-2 font-bold" htmlFor="remote">
                   Remote
                 </label>
@@ -117,15 +133,35 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   <option value="true">True</option>
                   <option value="false">False</option>
                 </Field>
-                <ErrorMessage
-                  name="remote"
-                  component="div"
-                  className="text-red-500"
+              </div> */}
+
+              {/* <div className="line" /> */}
+
+              <div className="mb-4">
+                <label className="block mb-2 font-bold" htmlFor="remote">
+                  Work Type
+                </label>
+                <Worktype
+                  options={[
+                    { value: 'remote', label: 'Remote' },
+                    { value: 'onSite', label: 'On Site' },
+                    { value: 'hybrid', label: 'Hybrid' },
+                  ]}
+                  initialSelected={{
+                    remote: values.remote,
+                    onSite: values.onSite,
+                    hybrid: values.hybrid,
+                  }}
+                  onSelectionChange={(selected) => {
+                    setFieldValue('remote', selected.remote)
+                    setFieldValue('onSite', selected.onSite)
+                    setFieldValue('hybrid', selected.hybrid)
+                  }}
                 />
               </div>
               <div className="line" />
-
               <Location
+                key={`country-${resetKey}`}
                 locationTitle="Country"
                 geoId={null}
                 isCountry={true}
@@ -138,8 +174,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 customHeight=""
               />
               <div className="line" />
-
               <Location
+                key={`state-${resetKey}`}
                 locationTitle="State"
                 geoId={values.location?.country.geoId}
                 isCountry={false}
@@ -151,8 +187,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 customHeight=""
               />
               <div className="line" />
-
               <Location
+                key={`city-${resetKey}`}
                 locationTitle="City"
                 geoId={values.location?.state.geoId}
                 isCountry={false}
@@ -163,6 +199,7 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                 customHeight=""
               />
               <div className="line" />
+
               <div className="btn">
                 <button
                   type="submit"

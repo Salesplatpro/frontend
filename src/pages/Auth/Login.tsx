@@ -133,6 +133,7 @@ const Login: React.FC = () => {
                 title="Email"
                 label="email"
                 name="email"
+                autoComplete="email"
                 value={formik.values.email}
                 onChange={handleChange}
                 placeholder="Email"
@@ -148,6 +149,7 @@ const Login: React.FC = () => {
                   title="Password"
                   label="password"
                   name="password"
+                  autoComplete="current-password"
                   value={formik.values.password}
                   onChange={handleChange}
                   isPassword={!showPassword}

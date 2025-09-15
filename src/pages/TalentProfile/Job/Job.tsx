@@ -18,7 +18,9 @@ import { SingleJob } from './SingleJob'
 const defaultFilterValues: JobFiltersTypes = {
   role: '',
   experienceLevel: '',
-  remote: '',
+  remote: false,
+  onSite: false,
+  hybrid: false,
   location: {
     city: { name: '', geoId: null },
     state: { name: '', geoId: null },

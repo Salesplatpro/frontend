@@ -1,10 +1,9 @@
 import React from 'react'
-import share from '../../assets/share.svg'
-import copy from '../../assets/copy.svg'
-
-import { notify } from '../../utils/toastNotifications'
-
 import { Tooltip as ReactTooltip } from 'react-tooltip'
+
+import copy from '../../assets/copy.svg'
+import share from '../../assets/share.svg'
+import { notify } from '../../utils/toastNotifications'
 
 type ShareOptionsProps = {
   handleShare: (jobId: string) => void

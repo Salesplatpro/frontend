@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// eslint-disable-next-line no-unused-vars
 import { Link, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
@@ -162,11 +161,13 @@ const IndividualJob = () => {
 
           <div className="md:w-[30%] w-full mt-7 md:mt-0">
             <div className="bg-[#F3F6FC] md:w-[260px] w-full rounded-lg px-8 py-8">
-              <button
-                type="submit"
-                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
-                Apply
-              </button>
+              <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
+                <button
+                  type="submit"
+                  className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                  Apply
+                </button>
+              </Link>
               <div className="mt-4">
                 <p className="text-[#667085] text-sm text-start font-medium">
                   Job Type

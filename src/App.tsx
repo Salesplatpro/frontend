@@ -3,7 +3,6 @@ import './index.scss'
 import './index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
-// eslint-disable-next-line no-unused-vars
 import React, { Fragment, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
@@ -16,7 +15,7 @@ import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
-import Home from './Home'
+
 import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
