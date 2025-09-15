@@ -1,6 +1,7 @@
 export * from './Badges'
 export * from './Button'
 export * from './InputField'
+export * from './landingPageComponents'
 export * from './lists'
 export * from './Loading'
 export * from './sidebar'
