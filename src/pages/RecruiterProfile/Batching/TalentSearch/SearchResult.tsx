@@ -50,7 +50,7 @@ const SearchResult = () => {
   }
 
   if (error) {
-    let errorMessage = 'An error occurred while fetching the data'
+    const errorMessage = 'An error occurred while fetching the data'
     return <Alert severity="error">{errorMessage}</Alert>
   }
 

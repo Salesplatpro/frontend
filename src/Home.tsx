@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { LandingHero } from './components'
 import FeaturedBrand from './components/FeaturedBrand'
 import MetricSection from './components/MetricSection'
 import QuoteSection from './components/QuoteSection'

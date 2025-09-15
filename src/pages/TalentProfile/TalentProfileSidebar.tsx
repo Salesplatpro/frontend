@@ -1,6 +1,6 @@
 import './TalentProfileSidebar.scss' // Ensure your styles are imported
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
 import { Outlet } from 'react-router-dom'

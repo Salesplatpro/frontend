@@ -71,7 +71,7 @@ const RecruiterRegister: React.FC = () => {
   }
 
   const validateForm = (data: typeof formValues): FormErrors => {
-    let errors = {} as FormErrors
+    const errors = {} as FormErrors
 
     if (!data.email) {
       errors.email = 'Email is Required'

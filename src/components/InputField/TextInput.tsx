@@ -6,6 +6,7 @@ type TextInputProps = {
   title: string
   name: string
   label: string
+  autoComplete: string
   isPassword?: boolean
   placeholder?: string
   required?: boolean
@@ -19,6 +20,7 @@ export const TextInput = ({
   label,
   title,
   name,
+  autoComplete,
   value,
   placeholder,
   disabled,
@@ -40,6 +42,7 @@ export const TextInput = ({
           type={inputType}
           id={label}
           name={name}
+          autoComplete={name}
           placeholder={placeholder}
           value={value}
           onChange={onChange}

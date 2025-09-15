@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaLessThan, FaGreaterThan } from 'react-icons/fa6'
+import { FaGreaterThan, FaLessThan } from 'react-icons/fa6'
 
 export type PaginationProps = {
   totalItems: number
