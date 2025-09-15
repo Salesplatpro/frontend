@@ -2,19 +2,25 @@ import cn from 'classnames'
 import React, { useState } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { LiaTimesSolid } from 'react-icons/lia'
+import { useNavigate } from 'react-router-dom'
 
 import auxHrLogo from '../../assets/aux_logo.png'
+import { paths } from '../../paths'
 import { LandingButton } from './LandingButton'
 import { leftNav, rightNav } from './landingData'
 import styles from './styles/LandingNavbar.module.scss'
 
 export const LandingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <div className={styles.container}>
       <div className={cn(styles.leftNav, 'pl-5 md:pl-4 lg:pl-20')}>
-        <img src={auxHrLogo} alt="Aux HR Logo" />
+        <div onClick={() => navigate(paths.home)} className="cursor-pointer">
+          <img src={auxHrLogo} alt="Aux HR Logo" />
+        </div>
+
         <div className={styles.leftNavItems}>
           {leftNav.map((item) => (
             <a key={item.name} href={item.url} className={styles.navItem}>
@@ -29,7 +35,7 @@ export const LandingNavbar = () => {
             key={item.name}
             title={item.name}
             variant={item.variant}
-            onClick={() => {}}
+            onClick={() => navigate(item.url)}
           />
         ))}
         <div className={styles.menu}>

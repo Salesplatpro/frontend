@@ -54,6 +54,11 @@
     > :nth-child(3) {
       display: none;
     }
+
+    @media screen and (max-width: 768px) {
+      background-image: url('../../../assets/landing_bg.png');
+      color: $landing-text-white;
+    }
   }
 
   @media screen and (max-width: $small-breakpoint) {

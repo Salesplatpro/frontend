@@ -10,7 +10,7 @@ import {
 } from './components'
 
 export const LandingPage = () => (
-  <div>
+  <div style={{ overflowX: 'hidden' }}>
     <LandingHero />
     <RecruitmentWorkflow />
     <ItsForYou />

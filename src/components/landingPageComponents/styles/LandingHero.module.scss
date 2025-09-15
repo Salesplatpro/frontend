@@ -32,6 +32,12 @@
   @extend .flexDirectionColumn;
   max-width: 600px;
   gap: 16px;
+  z-index: 100;
+
+  @media screen and (max-width: 768px) {
+    margin-top: -50px;
+    width: 100%;
+  }
 }
 
 .heroFooter {
@@ -47,6 +53,12 @@
   height: initial;
   background: $landing-bg-primary-color;
   padding-right: 80px;
+
+  @media screen and (max-width: 768px) {
+    background-image: url('../../../assets/landing_bg.png');
+  }
+
+
 }
 
 .applicationImage {
@@ -55,4 +67,23 @@
   height: 600px;
   top: 102px;
   scale: unset;
+
+  @media screen and (max-width: 1300px) {
+    right: -400px;
+    height: 600px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    right: -480px;
+    height: 600px;
+  }
+
+  @media screen and (max-width: 1050px) {
+    right: -530px;
+    height: 600px;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 }
