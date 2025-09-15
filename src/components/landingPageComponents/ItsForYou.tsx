@@ -33,10 +33,10 @@ export const ItsForYou = () => {
         title="It’s for you"
         subTitle="Designed for Modern Hiring Teams."
       />
-      <div className="flex justify-between">
+      <div className="flex flex-col items-center gap-5 w-full md:flex-row">
         {items.map((item) => (
           <div key={item.title} className={styles.imgContainer}>
-            <img src={item.img} alt={item.title} />
+            <img src={item.img} alt={item.title} className={styles.img} />
             <div>
               <BaseText fontSize="fs-xl">{item.title}</BaseText>
               <BaseText fontSize="fs-sm" fontColor="primary" className="mt-1">

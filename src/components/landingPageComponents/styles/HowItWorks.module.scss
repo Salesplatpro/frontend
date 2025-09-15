@@ -7,9 +7,19 @@
 .flowTitle {
   padding: 8px 24px;
   color: $landing-btn-primary-bg;
+
+  @media screen and (max-width: 768px) {
+    padding: 8px;
+    background: $landing-text-white;
+    border-radius: 16px;
+  }
 }
 
 .active {
   color: $landing-text-tag;
   border-left: 4px solid $landing-text-tag;
+
+  @media screen and (max-width: 768px) {
+    border-left: none;
+  }
 }
