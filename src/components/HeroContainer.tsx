@@ -10,7 +10,9 @@ const HeroContainer = () => {
         <div className="home-pg">
           <div className="text">
             <div className="inner-text">
-              <h2>Hire the best talents for your organization</h2>
+              <h2 data-testId="major-title">
+                Hire the best talents for your organization
+              </h2>
 
               <p className="inner">
                 Streamline Your Hiring Process and Make Confident Decisions with

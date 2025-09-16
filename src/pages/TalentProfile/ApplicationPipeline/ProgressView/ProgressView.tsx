@@ -29,7 +29,7 @@ const getProgresses = (application: Application): Progress[] => {
   const stages = Object.keys(
     application.stages,
   ) as (keyof typeof stagesMapping)[]
-  let currentStage = application.currentStage
+  const currentStage = application.currentStage
   let currentStageFound = false
 
   stages.forEach((stage) => {

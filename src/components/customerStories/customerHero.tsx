@@ -21,7 +21,9 @@ const CustomerHero = () => {
               </div>
               <h2>
                 Roy’s Peak <br />{' '}
-                <h2 className="h2-sub">Wanaka, New Zealand</h2>
+                <h2 data-testId="heading" className="h2-sub">
+                  Wanaka, New Zealand
+                </h2>
               </h2>
 
               <p className="inner">

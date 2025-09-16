@@ -6,13 +6,13 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 
 import RadioFieldGroup from '../../../components/Form/RadioFieldGroup'
 import TextField from '../../../components/Form/TextField'
+import Loading from '../../../components/Loading/Loading'
 import {
   useGetAiConfigQuery,
   usePatchAiConfigMutation,
 } from '../../../redux/api/recruiter'
 import { JobAiConfig } from '../../../utils'
 import { notify } from '../../../utils/toastNotifications'
-import Loading from '../../../components/Loading/Loading'
 
 type EditAiConfigProps = {
   aiConfigId: string

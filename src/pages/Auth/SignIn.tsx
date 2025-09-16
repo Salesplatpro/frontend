@@ -9,7 +9,7 @@ import { Bounce } from 'react-toastify'
 // import google from '../../assets/google.png'
 // import Salesplat from '../../assets/salesplat.png'
 import logo from '../../assets/logo.png'
-import { CheckBox, TextInput } from '../../components'
+import { CheckBox, PhoneNumberInput, TextInput } from '../../components'
 import {
   useRecruiterRegMutation,
   useTalentRegMutation,
@@ -167,19 +167,8 @@ const SignIn = () => {
                       className="text-red-500 text-sm"
                     />
                   </div>
-                  <Field
-                    title="Phone Number"
-                    label="phone"
-                    name="phone"
-                    type="text"
-                    as={TextInput}
-                    placeholder="Enter your phone number"
-                  />
-                  <ErrorMessage
-                    name="phone"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
+                  <PhoneNumberInput name="phone" label="Phone Number" />
+
                   <div className="relative">
                     <Field
                       title="Password"

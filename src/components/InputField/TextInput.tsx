@@ -6,13 +6,13 @@ type TextInputProps = {
   title: string
   name: string
   label: string
+  autoComplete: string
   isPassword?: boolean
   placeholder?: string
   required?: boolean
   value?: string | number
   disabled?: boolean
   error?: string
-  // eslint-disable-next-line no-unused-vars
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -20,6 +20,7 @@ export const TextInput = ({
   label,
   title,
   name,
+  autoComplete,
   value,
   placeholder,
   disabled,
@@ -41,6 +42,7 @@ export const TextInput = ({
           type={inputType}
           id={label}
           name={name}
+          autoComplete={name}
           placeholder={placeholder}
           value={value}
           onChange={onChange}

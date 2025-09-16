@@ -7,7 +7,7 @@
   max-height: 85vh;
   overflow-y: auto;
   width: 30%;
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   padding: 24px 18px;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
@@ -15,7 +15,8 @@
   @media (max-width: 768px) {
     position: absolute;
     width: 90%;
-    max-height: 100%;
+    max-height: 125%;
+    margin-bottom: 20rem;
     overflow-y: unset;
   }
 }
@@ -27,14 +28,14 @@
   justify-content: space-between;
 
   .title {
-    color: #0D0C22;
+    color: #0d0c22;
     font-size: 24px;
     font-weight: 700;
   }
 
   .clear {
     font-size: 16px;
-    color: #4884DF;
+    color: #4884df;
 
     &:hover {
       cursor: pointer;
@@ -51,7 +52,7 @@
 
 .each-list-gap {
   @extend .shared;
-  gap: 16px
+  gap: 16px;
 }
 
 .btn {
@@ -66,5 +67,3 @@
   border: 1px solid #e7e7e9;
   margin: 28px auto;
 }
-
-

@@ -3,8 +3,7 @@ import './index.scss'
 import './index.css'
 import 'react-toastify/dist/ReactToastify.css'
 
-// eslint-disable-next-line no-unused-vars
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -16,7 +15,8 @@ import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
-import Home from './Home'
+
+import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
 import AdminProfileSidebar from './pages/AdminProfile/AdminProfileSidebar'
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <LandingPage />,
       },
       {
         path: 'explore',
@@ -100,12 +100,12 @@ const router = createBrowserRouter([
       },
 
       {
-        path: 'talentRegister',
+        path: 'register',
         element: <SignIn />,
       },
 
       {
-        path: 'recruiterRegister',
+        path: 'register',
         element: <SignIn />,
       },
       {

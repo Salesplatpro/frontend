@@ -1,0 +1,10 @@
+@use 'index' as *;
+
+.container {
+  background: $landing-bg-secondary-color;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  padding-top: 70px;
+  padding-bottom: 48px;
+}

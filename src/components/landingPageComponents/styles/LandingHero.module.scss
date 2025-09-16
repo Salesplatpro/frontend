@@ -1,0 +1,89 @@
+@use './index' as *;
+
+.flexDirectionColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  position: relative;
+}
+
+.heroLeft {
+  @extend .flexDirectionColumn;
+  width: 65%;
+  background-image: url('../../../assets/landing_bg.png');
+}
+
+.btns {
+  display: flex;
+  gap: 16px;
+}
+
+.heroContainer {
+  @extend .flexDirectionColumn;
+  justify-content: center;
+  gap: 48px;
+}
+
+.heroContent {
+  @extend .flexDirectionColumn;
+  max-width: 600px;
+  gap: 16px;
+  z-index: 100;
+
+  @media screen and (max-width: 768px) {
+    margin-top: -50px;
+    width: 100%;
+  }
+}
+
+.heroFooter {
+  margin: auto 0 20px 0;
+}
+
+.heroFooter img {
+  margin-top: 8px;
+}
+
+.heroRight {
+  width: 35%;
+  height: initial;
+  background: $landing-bg-primary-color;
+  padding-right: 80px;
+
+  @media screen and (max-width: 768px) {
+    background-image: url('../../../assets/landing_bg.png');
+  }
+
+
+}
+
+.applicationImage {
+  position: absolute;
+  right: -300px;
+  height: 600px;
+  top: 102px;
+  scale: unset;
+
+  @media screen and (max-width: 1300px) {
+    right: -400px;
+    height: 600px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    right: -480px;
+    height: 600px;
+  }
+
+  @media screen and (max-width: 1050px) {
+    right: -530px;
+    height: 600px;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}

@@ -10,6 +10,7 @@ import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
 import { experienceLevel } from '../../../utils'
 import { calculateProgress } from '../../../utils/calculateProgress'
+import BioTextArea from './BioTextArea'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
 import UploadCV from './UploadCV'
@@ -75,13 +76,8 @@ const TalentProfile = () => {
                     className="text-[14px] text-[#344054] font-medium">
                     Bio
                   </label>
-                  <Field
-                    as="textarea"
-                    id="bio"
-                    name="bio"
-                    placeholder="Tell us about yourself"
-                    className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-4"
-                  />
+                  <BioTextArea />
+
                   <ErrorMessage
                     name="bio"
                     component="div"

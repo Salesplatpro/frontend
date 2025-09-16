@@ -1,4 +1,4 @@
-import { LocationValues } from "./jobPostTypes";
+import { LocationValues } from './jobPostTypes'
 
 type JobLocation = {
   city: string

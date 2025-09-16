@@ -1,8 +1,8 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import errorImage from './assets/errorImage.png'
 import { RiArrowGoBackLine } from 'react-icons/ri'
+import { useNavigate } from 'react-router-dom'
 
+import errorImage from './assets/errorImage.png'
 import Footer from './components/Footer'
 
 function PageNotFound() {

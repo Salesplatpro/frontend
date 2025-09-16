@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { MdSupport } from 'react-icons/md'
 import { Link } from 'react-router-dom'
@@ -10,7 +10,7 @@ import styles from './sidebar.module.scss'
 interface sideBarProps {
   sideBarData: {
     name: string
-    icon: React.ReactElement
+    icon: ReactNode
     count?: number
     link?: string
   }[]
