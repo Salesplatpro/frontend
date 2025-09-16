@@ -3,6 +3,8 @@ export const paths = {
   login: 'login',
   signup: 'signup',
   register: 'register',
+  solution: 'solution',
+  faq: 'faq',
   pricing: 'pricing',
   facebook: 'https://facebook.com/Salesplat',
   twitter: 'https://x.com/SalesPlat',

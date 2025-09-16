@@ -26,7 +26,7 @@ export const BaseText = ({
   fontSize = 'fs-md',
   fontColor = 'default',
   fontWeight = 'normal',
-  onClick = () => {},
+  onClick,
   className,
 }: BaseTextProps) => {
   const fontsize = styles[fontSize]

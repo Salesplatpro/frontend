@@ -1,4 +1,4 @@
-import {paths} from "../../paths";
+import { paths } from '../../paths'
 import { ButtonVariant } from './LandingButton'
 
 export const containerPadding = 'px-5 md:px-4 lg:px-20'
@@ -14,7 +14,7 @@ export const leftNav = [
   },
   {
     name: 'Solutions',
-    url: '/',
+    url: paths.solution,
   },
   {
     name: 'Blog',
@@ -64,7 +64,7 @@ export const footerData = [
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
       { name: 'Pricing', url: '/' },
-      { name: 'Release', url: '/' },
+      { name: 'FAQ', url: paths.faq },
     ],
   },
   {
