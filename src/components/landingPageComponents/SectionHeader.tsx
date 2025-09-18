@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 import { BaseText } from './typography'
 
 type SectionHeaderProps = {
-  title: string | ReactNode
+  title?: string | ReactNode
   subTitle: string | ReactNode
   className?: string
   variant?: 'primary' | 'secondary'

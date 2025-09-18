@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 
 import styles from './styles/Button.module.scss'
 
-export type ButtonVariant = 'primary' | 'secondary'
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary'
 type ButtonProps = {
   title: string
   variant: ButtonVariant
@@ -19,7 +19,7 @@ export const LandingButton = ({
   onClick,
   icon,
 }: ButtonProps) => {
-  const buttonType = variant === 'primary' ? styles.primary : styles.secondary
+  const buttonType = styles[variant]
 
   return (
     <button
