@@ -1,3 +1,4 @@
+export * from './Features'
 export * from './HowItWorks'
 export * from './ItsForYou'
 export * from './LandingFooter'

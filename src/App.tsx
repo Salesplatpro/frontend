@@ -9,13 +9,13 @@ import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Slide, ToastContainer } from 'react-toastify'
 
+import { Features } from './components'
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
 import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
-
 import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
@@ -78,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: 'solution',
         element: <Solutions />,
+      },
+      {
+        path: 'features',
+        element: <Features />,
       },
       {
         path: 'resources',
