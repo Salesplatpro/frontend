@@ -113,6 +113,7 @@ const router = createBrowserRouter([
         path: 'faq',
         element: <Faq />,
       },
+
       {
         path: 'job',
         element: <SingleJob />,
