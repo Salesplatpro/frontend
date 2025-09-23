@@ -1,7 +1,15 @@
 @use './index' as *;
 
-.container {
+.primary {
   background-color: $landing-bg-primary-color;
+}
+
+.secondary {
+  background: $landing-text-tag;
+  color: $landing-bg-primary-color;
+}
+
+.container {
   padding-top: 96px;
   padding-bottom: 96px;
   display: flex;

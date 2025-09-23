@@ -8,11 +8,16 @@ import {
   Statistics,
   Testimonials,
 } from './components'
+import { howItWorksData } from './components/landingPageComponents/utils'
 
 export const LandingPage = () => (
   <div style={{ overflowX: 'hidden' }}>
     <LandingHero />
-    <RecruitmentWorkflow />
+    <RecruitmentWorkflow
+      title="How it works"
+      subTitle="Your Recruitment Workflow, Reinvented."
+      data={howItWorksData}
+    />
     <ItsForYou />
     <Statistics />
     <HowItWorks />

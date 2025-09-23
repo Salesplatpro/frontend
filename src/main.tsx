@@ -7,6 +7,8 @@ import { Provider } from 'react-redux'
 import App from './App'
 import { store } from './redux/store/store'
 
+import '@coreui/coreui/dist/css/coreui.min.css'
+
 const container = document.getElementById('root')
 if (!container) {
   throw new Error('Root container is missing in index.html')

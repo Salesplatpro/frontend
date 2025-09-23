@@ -15,7 +15,8 @@ type BaseTextProps = {
     | 'fs-2xl'
     | 'fs-3xl'
     | 'fs-4xl'
-  fontColor?: 'default' | 'primary' | 'tag' | 'secondary' | 'white'
+    | 'fs-5xl'
+  fontColor?: 'default' | 'primary' | 'tag' | 'secondary' | 'white' | 'hero'
   fontWeight?: 'normal' | 'bold' | 'bolder'
   onClick?: () => void
   className?: string
@@ -26,7 +27,7 @@ export const BaseText = ({
   fontSize = 'fs-md',
   fontColor = 'default',
   fontWeight = 'normal',
-  onClick = () => {},
+  onClick,
   className,
 }: BaseTextProps) => {
   const fontsize = styles[fontSize]

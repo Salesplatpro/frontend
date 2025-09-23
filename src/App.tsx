@@ -9,13 +9,13 @@ import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Slide, ToastContainer } from 'react-toastify'
 
+import { Features } from './components'
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
 import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
 import Solutions from './components/Solutions'
-
 import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'
@@ -59,6 +59,7 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
+import Faq from './FAQ/Faq'
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: 'solution',
         element: <Solutions />,
+      },
+      {
+        path: 'features',
+        element: <Features />,
       },
       {
         path: 'resources',
@@ -109,9 +114,10 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
-        path: 'customerstories',
-        element: <CustomerStories />,
+        path: 'faq',
+        element: <Faq />,
       },
+
       {
         path: 'job',
         element: <SingleJob />,
