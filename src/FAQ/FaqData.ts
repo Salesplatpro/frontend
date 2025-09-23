@@ -55,7 +55,14 @@ export const faqData = [
 
   {
     id: '8',
-    question: 'How does AUXHR ensure better hires?',
+    question: 'How does AUXHR ensure better hires ?',
+    answer:
+      'Through AI-driven matching, collaborative reviews, and structured workflows, AUXHR increases the chances of hiring candidates who not only have the right skills but also fit your company’s culture.',
+  },
+
+  {
+    id: '9',
+    question: 'Why should I trust AUXHR ?',
     answer:
       'Through AI-driven matching, collaborative reviews, and structured workflows, AUXHR increases the chances of hiring candidates who not only have the right skills but also fit your company’s culture.',
   },
