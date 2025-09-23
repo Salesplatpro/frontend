@@ -175,7 +175,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
           </div>
 
           <a
-            href="https://mail.google.com/"
+            href={`https://mail.google.com/${email}`}
             target="_blank"
             rel="noopener noreferrer"
             className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df]"

@@ -14,7 +14,7 @@ export const leftNav = [
   },
   {
     name: 'Solutions',
-    url: '/',
+    url: paths.solution,
   },
   {
     name: 'Blog',
@@ -59,12 +59,12 @@ export const footerData = [
   {
     key: 'Company',
     children: [
-      { name: 'About us', url: '/' },
+      { name: 'About us', url: paths.aboutUs },
       { name: 'Features', url: '/' },
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
       { name: 'Pricing', url: '/' },
-      { name: 'Release', url: '/' },
+      { name: 'FAQ', url: paths.faq },
     ],
   },
   {

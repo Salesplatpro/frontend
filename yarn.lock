@@ -173,6 +173,23 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.27.1"
 
+"@coreui/coreui@^5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui/-/coreui-5.4.3.tgz#af9d88cef7430d9324c715906e685cce6b4eee9b"
+  integrity sha512-Tj+3LOcr4Qf2fGL/xDull+Q0d6+t3c/4HtxDtb+j964YOJjki4wqHxam+hQoemqnf2p1tLQ4nmoUjiFwA9FZBg==
+  dependencies:
+    html-entities "^2.6.0"
+    html-to-md "^0.8.8"
+
+"@coreui/react@^5.9.0":
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/@coreui/react/-/react-5.9.0.tgz#c2af1fedb5e474def36385b077a045ada9c65b46"
+  integrity sha512-hXrUEQYEMXPWQ9w73fO6lOQv4UgoA66Hk+6VOvk77AgHRtKEgujlV5H2b2VtPrKrmXQcJVxrkJQSiIYTW0ZlpQ==
+  dependencies:
+    "@coreui/coreui" "^5.4.3"
+    "@popperjs/core" "^2.11.8"
+    prop-types "^15.8.1"
+
 "@cypress/request@^3.0.9":
   version "3.0.9"
   resolved "https://registry.npmjs.org/@cypress/request/-/request-3.0.9.tgz"
@@ -3275,6 +3292,16 @@ html-encoding-sniffer@^3.0.0:
   integrity sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==
   dependencies:
     whatwg-encoding "^2.0.0"
+
+html-entities@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.6.0.tgz#7c64f1ea3b36818ccae3d3fb48b6974208e984f8"
+  integrity sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==
+
+html-to-md@^0.8.8:
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/html-to-md/-/html-to-md-0.8.8.tgz#50e589dd8dcf26c3ccfdb294be5ab2e20409e459"
+  integrity sha512-lgK3KKagobOguNi1XOfNaTtFSsjySir1CPfzewzVUjFM4x0RASnyZu47Hoe9nStpWFwpOwIrdxXzhxLIRbWllQ==
 
 http-proxy-agent@^5.0.0:
   version "5.0.0"

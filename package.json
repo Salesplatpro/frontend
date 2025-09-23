@@ -11,6 +11,8 @@
     "cypress": "cypress open"
   },
   "dependencies": {
+    "@coreui/coreui": "^5.4.3",
+    "@coreui/react": "^5.9.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.4",
@@ -73,8 +75,8 @@
     "prettier": "^2.6.1",
     "sass": "^1.71.0",
     "tailwindcss": "^3.4.4",
-    "typescript-eslint": "^8.39.1",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1",
     "vite": "^6.3.5",
     "vitest": "^0.7.11"
   },
