@@ -5,6 +5,15 @@ import { faqData } from './FaqData'
 
 const Faq = () => {
   const [search, setSearch] = useState('')
+
+  const filteredFaq = faqData.filter((faq) => {
+    const faqTerm = search.toLowerCase()
+    const searchQuestionMatch = faq.question.toLowerCase().includes(faqTerm)
+    const searchAnswerMatch = faq.answer.toLowerCase().includes(faqTerm)
+
+    return searchQuestionMatch || searchAnswerMatch
+  })
+
   return (
     <div className="w-full min-h-screen flex justify-start items-center flex-col">
       <div className="flex justify-center items-center flex-col space-y-5 py-14">
@@ -23,10 +32,11 @@ const Faq = () => {
             onChange={(e) => {
               setSearch(e.target.value)
             }}
+            placeholder="search"
             className="lg:w-[500px] lg:h-[40px] rounded-lg bg-[#006BFF1A] border border-[#006BFF] text-black pl-10"
           />
         </div>
-        <FaqItem faqs={faqData} />
+        <FaqItem faqs={filteredFaq} />
       </div>
     </div>
   )

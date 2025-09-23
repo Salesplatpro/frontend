@@ -23,7 +23,7 @@ const FaqItem: React.FC<FaqsProp> = ({ faqs }) => {
           <div key={faq.id} className="py-2">
             <button
               onClick={() => setVisible(isOpen ? null : faq.id)}
-              className="w-full bg-[#0027AF] rounded-lg px-3 py-3 flex justify-between items-center">
+              className="w-full bg-[#2447c8] rounded-lg px-3 py-3 flex justify-between items-center">
               <span className="text-white">{faq.question}</span>
 
               <span className="flex justify-end   items-end text-right">
