@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { CButton, CCollapse } from '@coreui/react'
+import { CCollapse } from '@coreui/react'
 import { IoIosArrowDropdown, IoIosArrowDropup } from 'react-icons/io'
 
-type FaqItem = {
+type FaqData = {
   id: string
   question: string
   answer: string
 }
 
 type FaqsProp = {
-  faqs: FaqItem[]
+  faqs: FaqData[]
 }
 
 const FaqItem: React.FC<FaqsProp> = ({ faqs }) => {
