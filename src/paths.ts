@@ -4,6 +4,7 @@ export const paths = {
   signup: 'signup',
   register: 'register',
   pricing: 'pricing',
+  features: 'features',
   facebook: 'https://facebook.com/Salesplat',
   twitter: 'https://x.com/SalesPlat',
   instagram: 'https://www.instagram.com/salesplat/',

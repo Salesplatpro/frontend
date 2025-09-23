@@ -1,4 +1,4 @@
-import {paths} from "../../paths";
+import { paths } from '../../paths'
 import { ButtonVariant } from './LandingButton'
 
 export const containerPadding = 'px-5 md:px-4 lg:px-20'
@@ -49,7 +49,7 @@ export const footerData = [
     key: 'Product',
     children: [
       { name: 'Overview', url: '/' },
-      { name: 'Features', url: '/' },
+      { name: 'Features', url: paths.features },
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
       { name: 'Pricing', url: paths.pricing },
