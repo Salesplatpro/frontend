@@ -61,7 +61,10 @@ export const LandingFooter = () => {
                   fontSize="fs-lg"
                   fontColor="white"
                   key={child.name}
-                  onClick={() => navigate(child.url)}
+                  onClick={() => {
+                    navigate(child.url)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
                   className="cursor-pointer">
                   {child.name}
                 </BaseText>
