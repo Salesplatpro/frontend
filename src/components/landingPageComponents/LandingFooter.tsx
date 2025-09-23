@@ -61,6 +61,7 @@ export const LandingFooter = () => {
                   fontSize="fs-lg"
                   fontColor="white"
                   key={child.name}
+                  onClick={() => navigate(child.url)}
                   className="cursor-pointer">
                   {child.name}
                 </BaseText>

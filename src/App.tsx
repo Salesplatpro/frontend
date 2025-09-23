@@ -59,6 +59,7 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
+import Faq from './FAQ/Faq'
 
 const router = createBrowserRouter([
   {
@@ -113,9 +114,10 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
-        path: 'customerstories',
-        element: <CustomerStories />,
+        path: 'faq',
+        element: <Faq />,
       },
+
       {
         path: 'job',
         element: <SingleJob />,
