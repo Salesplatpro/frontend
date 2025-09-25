@@ -49,7 +49,7 @@ export const footerData = [
     key: 'Product',
     children: [
       { name: 'Overview', url: '/' },
-      { name: 'Features', url: '/' },
+      { name: 'Features', url: paths.features },
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
       { name: 'Pricing', url: paths.pricing },
