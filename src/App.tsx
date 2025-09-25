@@ -59,7 +59,7 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
-import Faq from './FAQ/Faq'
+import Faq from './components/landingPageComponents/FAQ/Faq'
 
 const router = createBrowserRouter([
   {

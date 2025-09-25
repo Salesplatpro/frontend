@@ -59,7 +59,7 @@ export const footerData = [
   {
     key: 'Company',
     children: [
-      { name: 'About us', url: paths.aboutUs },
+      { name: 'About us', url: '/' },
       { name: 'Features', url: '/' },
       { name: 'Solution', url: '/' },
       { name: 'Tutorials', url: '/' },
