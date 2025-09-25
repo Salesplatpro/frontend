@@ -1,16 +1,16 @@
 @use '../styles/index' as *;
 
 .container{
-  padding: 52px 0;
+  padding: 32px 0;
 }
 
 .headingContainer {
   max-width: 1256px;
-  margin: 52px 20px;
+  width: calc(100% - 40px);
+  margin: 52px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 45px;
   justify-content: center;
   background: $landing-btn-secondary-bg;
   padding: 58px 160px;
