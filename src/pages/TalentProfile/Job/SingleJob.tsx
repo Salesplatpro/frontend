@@ -47,7 +47,9 @@ export const SingleJob = ({
       <PiBuildingOfficeBold size={36} />
       <div className="title-container">
         <Link to={`/talentDashboard/job/${jobId}`} className="jobTitle">
-          <div className="title">{capitalizeFirstWord(jobTitle)}</div>
+          <div className="title text-black font-raleway">
+            {capitalizeFirstWord(jobTitle)}
+          </div>
           <span className="category">
             <GoDotFill color="#2e90fa" />
             {capitalizeFirstWord(jobCategory)}

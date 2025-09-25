@@ -114,7 +114,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 className="capitalize">
                 <Link
                   to={`/recruiterDashboard/jobdetail/${job._id}`}
-                  className="block max-w-[280px] text-left truncate">
+                  className="block max-w-[280px] text-left truncate text-black font-raleway">
                   {job.role.name}
                 </Link>
               </TableCell>

@@ -46,7 +46,7 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
 
   return (
     <div className="lg:w-[90%] lg:min-h-[180px] rounded-[16px] bg-[#F8F8F8] border border-[#D0D5DD]">
-      <h1 className="px-6 py-5">
+      <h1 className="text-[16px] px-4 py-3 text-gray-500">
         {calculateDaysFromCreation(createdAt)} Days ago
       </h1>
       <div className="px-6 lg:flex lg:justify-start lg:items-start flex-col space-y-2">

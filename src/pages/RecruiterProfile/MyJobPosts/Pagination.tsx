@@ -30,26 +30,28 @@ export const Pagination = ({
   }
 
   return (
-    <div className="min-h-[180px] flex items-center justify-center space-x-2 text-center">
+    <div className="min-h-[80px] flex items-center justify-center space-x-2">
+      {/* Previous */}
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className={`px-3 py-1 rounded text-[14px] font-semibold font-raleway text-center ${
+        className={`flex items-center gap-2 px-3 py-1 rounded text-[14px] font-semibold font-raleway ${
           currentPage === 1
             ? 'text-gray-400 cursor-not-allowed'
-            : 'text-blue-600'
+            : 'text-blue-600 hover:bg-blue-100'
         }`}>
-        <div className="flex flex-row space-x-2 items-center justify-center">
-          <FaLessThan title="Previous" size={14} />
-          <p>Previous</p>
-        </div>
+        <FaLessThan size={14} />
+        <span className="font-raleway font-medium text-[16px] text-[#4884DF] leading-[100%]">
+          Previous
+        </span>
       </button>
 
+      {/* Pages */}
       {pages.map((page) => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`px-3 py-1 rounded text-center ${
+          className={`px-3 py-1 rounded ${
             page === currentPage
               ? 'bg-blue-600 text-white'
               : 'text-blue-600 hover:bg-blue-100'
@@ -58,18 +60,19 @@ export const Pagination = ({
         </button>
       ))}
 
+      {/* Next */}
       <button
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className={`px-3 py-1 rounded text-[14px] font-semibold font-raleway  ${
+        className={`flex items-center gap-2 px-3 py-1 rounded text-[14px] font-semibold font-raleway ${
           currentPage === totalPages
-            ? 'text-gray-400 font-raleway font-medium cursor-not-allowed'
-            : 'text-blue-600'
+            ? 'text-gray-400 cursor-not-allowed'
+            : 'text-blue-600 hover:bg-blue-100'
         }`}>
-        <div className="flex flex-row space-x-2 items-center justify-center">
-          <p>Next</p>
-          <FaGreaterThan title="Next" size={14} />
-        </div>
+        <span className="font-raleway font-medium text-[16px] text-[#4884DF] leading-[100%]">
+          Next
+        </span>
+        <FaGreaterThan size={14} />
       </button>
     </div>
   )

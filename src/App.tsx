@@ -9,7 +9,7 @@ import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Slide, ToastContainer } from 'react-toastify'
 
-import { Features } from './components'
+import { Features, Testimonials } from './components'
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
 import Pricing from './components/Pricing'
@@ -116,6 +116,11 @@ const router = createBrowserRouter([
       {
         path: 'faq',
         element: <Faq />,
+      },
+
+      {
+        path: 'testimonials',
+        element: <Testimonials />,
       },
 
       {
