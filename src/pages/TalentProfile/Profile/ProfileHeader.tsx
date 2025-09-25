@@ -43,7 +43,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
     <div>
       <div className="w-full">
         <div className="md:my-3 flex justify-between items-center">
-          <h2 className="font-bold md:text-3xl text-xl">
+          <h2 className="font-bold font-raleway md:text-[30px] text-xl">
             {userInfo?.profile
               ? 'Edit Talent Profile'
               : 'Create Talent Profile'}
@@ -57,7 +57,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
             size={70}
           />
         </div>
-        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
+        <div className="border flex space-x-5 p-4 rounded-2xl border-[#D0D5DD] mt-1">
           <ProfilePic
             uploadPic={uploadPic}
             updateProfilePics={updateProfilePics}
@@ -68,9 +68,11 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
 
           <div className="w-full">
             <div className="flex justify-between w-full">
-              <div className="text-[#101828]">
+              <div className="text-[#101828] flex justify-center items-start flex-col">
                 <p className="text-[20px] font-semibold">{`${userInfo?.firstName} ${userInfo?.lastName}`}</p>
-                <p className="text-[16px]">
+                <p
+                  className="text-[16px] font-medium
+                font-raleway text-[#101828]">
                   {capitalizeEachWord(userInfo?.userRole)}
                 </p>
               </div>
@@ -78,7 +80,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
                 {userInfo?.profile ? 'Edit Profile' : 'Create Profile'}
               </button>
             </div>
-            <hr className="my-2" />
+            {/* <hr className="my-2" /> */}
             {/* <p className="text-[14px] text-[#667085]">
               Morbi sed imperdiet in ipsum, adipiscing elit dui lectus. Tellus
               id scelerisque est ultricies ultricies. Duis est sit sed leo nisl,
