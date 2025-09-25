@@ -79,45 +79,43 @@ const ShareJobModal: React.FC<ModalProps> = ({ onClose, shareLinks }) => {
 
   return (
     <div
-      className="modal w-full h-full fixed top-7 lg:left-16 md:left-0 right-0 bottom-0"
+      className="modal fixed inset-0 w-full h-full flex items-center justify-center z-50"
       role="dialog"
       aria-labelledby="modal-title"
       aria-modal="true">
       <div
-        className="overlay w-full h-full fixed top-0 md:left-0 right-0 bottom-0 bg-[rgba(49,49,49,0.8)]"
+        className="overlay absolute inset-0 bg-[rgba(49,49,49,0.8)]"
         onClick={handleOverlayClick}
         role="presentation"
         aria-hidden="true"></div>
 
       <div
-        className={`modal-content absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center flex-col rounded-lg bg-gray-100 p-5 lg:p-14 md:p-12 sm:p-13 max-w-[600px] min-w-[300px] ${
+        className={`modal-content relative z-10 flex flex-col justify-center items-center rounded-lg bg-gray-100 p-5 lg:p-14 md:p-12 sm:p-13 max-w-[600px] min-w-[300px] ${
           isVisible ? 'scale-up-center' : ''
         }`}
         role="document">
         <h2
           id="modal-title"
           className="text-[18px] lg:text-[20px] md:text-[25px] text-center sm:text-[20px] font-medium font-raleway">
-          Select you preferred social media to share job
+          Select your preferred social media to share job
         </h2>
-        <p className="text-center px-10 py-3">{}</p>
+        <p className="text-center px-10 py-3"></p>
 
-        {shareOptions.map((option, index) => {
-          return (
-            <div key={index}>
-              <button
-                className="px-14 lg:px-24 md:px-24 border-[1px] py-4 my-5 rounded-lg font-normal font-raleway text-center text-[14px] lg:text-[20px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex flex-row justify-center items-center"
-                onClick={() => handleShare(option.link)}
-                aria-label="Confirm action">
-                <img
-                  src={option.icon}
-                  alt={option.text}
-                  className="pr-4 w-[38px] h-[38px] object-contain "
-                />
-                {option.text}
-              </button>
-            </div>
-          )
-        })}
+        {shareOptions.map((option, index) => (
+          <div key={index}>
+            <button
+              className="px-14 lg:px-24 md:px-24 border-[1px] py-4 my-5 rounded-lg font-normal font-raleway text-center text-[14px] lg:text-[20px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex flex-row justify-center items-center"
+              onClick={() => handleShare(option.link)}
+              aria-label="Confirm action">
+              <img
+                src={option.icon}
+                alt={option.text}
+                className="pr-4 w-[38px] h-[38px] object-contain"
+              />
+              {option.text}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+import { testimonials } from './../../Xora/src/constants/index'
 export const paths = {
   home: '/',
   login: 'login',
@@ -5,6 +6,7 @@ export const paths = {
   register: 'register',
   solution: 'solution',
   faq: 'faq',
+  testimonials: 'testimonials',
   pricing: 'pricing',
   features: 'features',
   facebook: 'https://facebook.com/Salesplat',

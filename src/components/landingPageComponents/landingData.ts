@@ -48,34 +48,26 @@ export const footerData = [
   {
     key: 'Product',
     children: [
-      { name: 'Overview', url: '/' },
+      { name: 'For Organizations', url: '/' },
+      { name: 'For Talents', url: '/' },
       { name: 'Features', url: paths.features },
-      { name: 'Solution', url: '/' },
-      { name: 'Tutorials', url: '/' },
       { name: 'Pricing', url: paths.pricing },
-      { name: 'Release', url: '/' },
+      { name: 'FAQ', url: paths.faq },
     ],
   },
   {
     key: 'Company',
     children: [
       { name: 'About us', url: '/' },
-      { name: 'Features', url: '/' },
-      { name: 'Solution', url: '/' },
-      { name: 'Tutorials', url: '/' },
-      { name: 'Pricing', url: '/' },
-      { name: 'FAQ', url: paths.faq },
+      { name: 'Support', url: '/' },
+      { name: 'Solutions', url: paths.solution },
     ],
   },
   {
     key: 'Resources',
     children: [
-      { name: 'Overview', url: '/' },
-      { name: 'Features', url: '/' },
-      { name: 'Solution', url: '/' },
-      { name: 'Tutorials', url: '/' },
-      { name: 'Pricing', url: paths.pricing },
-      { name: 'Release', url: '/' },
+      { name: 'Blog', url: '/' },
+      { name: 'Testimonials', url: paths.testimonials },
     ],
   },
   {
@@ -84,7 +76,6 @@ export const footerData = [
       { name: 'Terms', url: '/' },
       { name: 'Privacy', url: '/' },
       { name: 'Cookies', url: '/' },
-      { name: 'Licences', url: '/' },
     ],
   },
 ]

@@ -45,6 +45,7 @@ const IndividualJob = () => {
   }
 
   const handleShare = () => {
+    console.log('🔵 handleShare clicked')
     const TwittershareUrl = `https://twitter.com/share?url=${encodeURIComponent(
       link,
     )}`
@@ -61,12 +62,13 @@ const IndividualJob = () => {
       linkedin: LinkedInshareUrl,
     })
     setIsModalOpen(true)
+    console.log('🟢 isModalOpen set to true')
   }
 
   return (
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
-        <h2 className="font-bold md:text-3xl text-xl">
+        <h2 className="font-bold font-raleway md:text-3xl text-xl text-[#101828]">
           {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
         <div className="flex space-x-5 items-center mt-3">
@@ -76,22 +78,23 @@ const IndividualJob = () => {
         <div className="flex md:flex-row flex-col justify-between items-start md:space-x-10 w-full mx-auto md:mt-10 mt-6">
           <div className="text-start">
             <div className="">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-[#101828] text-lg text-start font-semibold font-raleway">
                 {/* Your role at{jobProfile?.title} */}
                 Job Brief
               </h5>
               <RichTextDisplay
                 content={jobProfile?.jobBrief || ' '}
-                className="text-[#667085] text-base mt-0 text-justify"
+                className="text-[#667085] text-base mt-0 text-justify font-raleway font-medium"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-[#101828] text-lg text-start font-semibold font-raleway">
                 Job Requirements
               </h5>
               <RichTextDisplay
                 content={jobProfile?.requirements || ' '}
-                className="text-[#667085] text-base mt-0 mb-0 text-justify"
+                className="text-[#667085] text-base
+                mt-0 mb-0 text-justify font-raleway font-medium"
               />
             </div>
             <div className="mt-4">
@@ -99,9 +102,11 @@ const IndividualJob = () => {
                 Your Skills
               </h5>
               {jobProfile?.skills && (
-                <ul className="list-disc ml-5 pl-0">
+                <ul className="list-disc ml-5 pl-0 ">
                   {jobProfile?.skills.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
+                    <li
+                      key={i}
+                      className="text-[#667085] text-base font-raleway font-medium">
                       {item}
                     </li>
                   ))}
@@ -113,9 +118,11 @@ const IndividualJob = () => {
                 Your Goals
               </h5>
               {jobProfile?.goals && (
-                <ul className="list-disc ml-5 pl-0">
+                <ul className="list-disc ml-5 pl-0 ">
                   {jobProfile?.goals.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
+                    <li
+                      key={i}
+                      className="text-[#667085] text-base font-raleway font-medium">
                       {item}
                     </li>
                   ))}
