@@ -4,9 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
-.hoverEffect {
-  @apply hover:text-white ease-in duration-200 cursor-pointer;
+a {
+  text-decoration: none;
+  border: none;
+  outline: none;
+  color: inherit;
 }
+
+/* a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  border: none;
+  outline: none;
+  color: inherit;
+} */
 
 .tooltip-wrap {
   white-space: normal !important; /* Allows the text to wrap */
