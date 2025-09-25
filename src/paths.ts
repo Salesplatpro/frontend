@@ -1,4 +1,3 @@
-import { testimonials } from './../../Xora/src/constants/index'
 export const paths = {
   home: '/',
   login: 'login',

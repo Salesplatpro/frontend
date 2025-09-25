@@ -9,14 +9,15 @@
   width: 30%;
   background-color: #f8f8f8;
   padding: 24px 18px;
+
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
 
   @media (max-width: 768px) {
     position: absolute;
     width: 90%;
-    max-height: 125%;
-    margin-bottom: 20rem;
+    max-height: 140%;
+    margin-bottom: 0;
     overflow-y: unset;
   }
 }
@@ -55,12 +56,12 @@
   gap: 16px;
 }
 
-.btn {
-  display: flex;
-  margin-top: 50px;
-  flex-direction: column;
-  gap: 16px;
-}
+// .btn {
+//   display: flex;
+//   margin-top: 50px;
+//   flex-direction: column;
+//   gap: 16px;
+// }
 
 .line {
   width: 100%;

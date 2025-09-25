@@ -200,11 +200,12 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
               />
               <div className="line" />
 
-              <div className="btn">
+              <div>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-10 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700
+             border-none outline-none focus:outline-none focus:ring-0 active:ring-0 shadow-none">
                   {isSubmitting ? 'applying...' : 'Apply'}
                 </button>
               </div>

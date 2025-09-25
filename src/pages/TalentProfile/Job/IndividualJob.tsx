@@ -153,7 +153,7 @@ const IndividualJob = () => {
               )}
             </div>
             <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
-              <button className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+              <button className="px-3 py-3 md:w-[190px] w-full bg-blue-500 font-raleway font-medium text-nowrap text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
                 Apply for this position
               </button>
             </Link>
