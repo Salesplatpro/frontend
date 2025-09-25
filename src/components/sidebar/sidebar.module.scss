@@ -4,9 +4,9 @@
   flex-direction: column;
   justify-content: space-between;
   padding-bottom: 20px;
-  background-color: #1E2A4D;
+  background-color: #1e2a4d;
   color: white;
-  width: 100%;;
+  width: 100%;
 }
 
 .imageContainer {
@@ -20,4 +20,17 @@
 .sidebarList {
   margin-top: 40px;
   margin-left: 20px;
+}
+
+.sidebarList a {
+  text-decoration: none;
+  border: none;
+  color: inherit;
+}
+
+.sidebarList :global(a) {
+  text-decoration: none;
+  border: none;
+  outline: none;
+  color: inherit;
 }

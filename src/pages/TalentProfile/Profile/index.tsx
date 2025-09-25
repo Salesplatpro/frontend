@@ -57,7 +57,7 @@ const TalentProfile = () => {
           handleProfileImageUpload={handleProfileImageUpload}
         />
       </div>
-      <div className="border p-5 rounded-2xl border-[#D0D5DD] mt-6 w-[100%]">
+      <div className="border p-4 rounded-2xl border-[#D0D5DD] mt-3 w-[100%]">
         <Formik
           initialValues={initialValues}
           validationSchema={!userInfo?.profile ? validationSchema : null}
@@ -73,7 +73,7 @@ const TalentProfile = () => {
                 <div>
                   <label
                     htmlFor="bio"
-                    className="text-[14px] text-[#344054] font-medium">
+                    className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
                     Bio
                   </label>
                   <BioTextArea />
@@ -89,7 +89,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="names"
-                      className="text-[14px] text-[#344054] font-medium">
+                      className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
                       Name
                     </label>
                     <Field
@@ -105,7 +105,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="role"
-                      className="text-[14px] text-[#344054]">
+                      className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
                       Role
                     </label>
                     <div className=" border-gray-300 h-[44px] mt-1">
@@ -125,7 +125,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="phoneNumber"
-                      className="text-[14px] text-[#344054] font-medium">
+                      className="text-[16px] text-[#344054] font-medium font-raleway pb-2 ">
                       Phone number
                     </label>
                     <Field
@@ -146,7 +146,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="workTypes"
-                      className="text-[14px] text-[#344054] font-medium">
+                      className="text-[16px] text-[#344054] font-medium font-raleway pb-2">
                       Work Type
                     </label>
                     <Worktype

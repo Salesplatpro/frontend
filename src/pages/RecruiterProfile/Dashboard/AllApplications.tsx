@@ -98,7 +98,7 @@ const AllApplications: React.FC = () => {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="px-5 py-3 w-[185px] h-[48px] bg-blue-500 text-white rounded hover:bg-blue-700 mt-6">
+        className="px-2 py-2 w-[185px] h-[48px] bg-blue-500 text-white font-raleway text-[18px] font-medium rounded hover:bg-blue-700 mt-6">
         Back
       </button>
     </div>

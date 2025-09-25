@@ -118,25 +118,28 @@ const TalentAssessment = () => {
   return (
     <div>
       <div className="w-[70%] mx-auto">
-        <h2 className="text-3xl text-[#101828] font-bold">
+        <h2 className="text-[30px]  text-[#101828] font-bold">
           Pre-Assessment Test
         </h2>
-        <p className="text-xl text-[#101828] font-medium my-3">
+        <p className="text-xl font-raleway text-[#101828] font-medium my-3">
           Welcome to your Assessment test, you have 15 Questions to answer in
           this stage.
         </p>
 
-        <div className="md:mt-16 mt-8">
+        <div className="md:mt-16 mt-2">
           <form onSubmit={handleSubmit} className="">
             <ul>
               {questions.map((question, i) => (
                 <div key={i} className="bg-[#F8F8F8] mb-6 p-4 rounded-2xl">
-                  <div className="flex item-center space-x-3 md:text-lg text-base text-[#101828] font-semibold">
-                    <h3>{i + 1}.</h3>
-                    <h3>{question.question}</h3>
+                  <div className="flex items-center justify-start space-x-3 text-[#101828] font-medium">
+                    <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
+                    <h3 className="text-[18px] leading-[150%]">
+                      {question.question}
+                    </h3>
                   </div>
+
                   <textarea
-                    className="w-full bg-white border border-[#D0D5DD] rounded-lg h-[93px] p-3 mt-4"
+                    className="w-full bg-white border border-[#D0D5DD] rounded-lg h-[100px] p-3 mt-3"
                     placeholder="Answer here"
                     name={`answer-${question._id}`}
                     onChange={(e) => handleChange(e, question._id)}

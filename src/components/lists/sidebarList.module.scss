@@ -4,8 +4,19 @@
 }
 
 .listContainer {
+  text-decoration: none; // remove underline
+  border: none;
+  outline: none;
+  color: inherit; // keeps sidebar white text
   @extend .sharedStyles;
   padding: 16px 20px;
+
+  &:active {
+    text-decoration: none;
+    border: none;
+    outline: none;
+    color: inherit;
+  }
 }
 
 .listContainer:hover {
@@ -21,4 +32,19 @@
   background: #374672;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
+}
+
+.sidebarList a {
+  text-decoration: none;
+  border: none;
+  outline: none;
+  color: inherit;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+    border: none;
+    outline: none;
+  }
 }

@@ -48,26 +48,25 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
   return (
     <div className="flex space-x-2 items-center justify-center px-2">
       {shareOptions.map((option, i) => (
-        <>
-          <div
-            key={i}
-            data-tooltip-id="share-tooltip"
-            data-tooltip-content={option.text}
-            onClick={option.action}
-            className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
-              i !== 0 ? 'border-l border-gray-300 px-2' : ''
-            }`}>
-            {option.icon}
-          </div>
-
-          <ReactTooltip
-            id="share-tooltip"
-            place={tooltipPosition}
-            variant={tooltipVariant}
-            content={tooltipContent}
-          />
-        </>
+        <div
+          key={i}
+          data-tooltip-id="share-tooltip"
+          data-tooltip-content={option.text}
+          onClick={option.action}
+          className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
+            i !== 0 ? 'border-l border-gray-300 px-2' : ''
+          }`}>
+          {option.icon}
+        </div>
       ))}
+
+      {/* Tooltip only once */}
+      <ReactTooltip
+        id="share-tooltip"
+        place={tooltipPosition}
+        variant={tooltipVariant}
+        content={tooltipContent}
+      />
     </div>
   )
 }

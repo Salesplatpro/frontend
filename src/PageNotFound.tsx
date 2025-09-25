@@ -24,9 +24,12 @@ function PageNotFound() {
 
           <button
             onClick={handleBack}
-            className="flex justify-center items-center px-4 py-4 text-[18px] bg-[#4985DF] border border-[#4985DF] text-white cursor-pointer font-raleway font-semibold rounded-lg">
-            <RiArrowGoBackLine size={20} />
-            <p className="pl-1">Previous Page</p>
+            className="flex items-center justify-center gap-2
+             bg-[#4985DF] border border-[#4985DF] text-white
+             text-[18px] font-raleway font-semibold rounded-lg
+             px-4 py-3">
+            <RiArrowGoBackLine className="w-5 h-5" />
+            <span className="text-white text-[18px]">Previous Page</span>
           </button>
         </div>
 

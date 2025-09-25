@@ -45,6 +45,11 @@
   font-weight: 600;
 }
 
+.jobTitle {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
 .category {
   @extend .shared;
   width: max-content;
@@ -74,4 +79,3 @@
 .jobdetails {
   @extend .shared;
 }
-

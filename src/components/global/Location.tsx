@@ -131,7 +131,7 @@ const Location: React.FC<LocationProps> = ({
   return (
     <div className="">
       <label
-        className={`text-[14px] text-[#344054] ${
+        className={`text-[16px] text-[#344054] font-raleway pb-2 ${
           bold ? 'font-bold' : 'font-medium'
         }`}
         htmlFor={locationTitle}>
