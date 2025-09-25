@@ -1,0 +1,54 @@
+@use '../styles/index' as *;
+
+.container{
+  padding: 52px 0;
+}
+
+.headingContainer {
+  max-width: 1256px;
+  margin: 52px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 45px;
+  justify-content: center;
+  background: $landing-btn-secondary-bg;
+  padding: 58px 160px;
+  border: 2px solid $hero-text;
+  text-align: center;
+  border-radius: 20px;
+
+  @media screen and (max-width: $small-breakpoint) {
+    padding: 16px;
+    gap: 24px
+  }
+}
+
+.logo {
+  width: 94px;
+  height: 60px;
+  object-fit: cover;
+
+  @media screen and (max-width: $small-breakpoint) {
+    width: 54px;
+    height: 30px;
+  }
+}
+
+.wrapper {
+  background: $landing-bg-how-it-works;
+}
+
+.moreFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 38px 22px;
+  max-width: 360px;
+  border-radius: 10px;
+  background: $landing-bg-card;
+
+  @media screen and (max-width: $small-breakpoint) {
+    max-width: 100%;
+  }
+}
