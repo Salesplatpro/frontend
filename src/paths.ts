@@ -7,7 +7,6 @@ export const paths = {
   faq: 'faq',
   pricing: 'pricing',
   features: 'features',
-  aboutUs: 'aboutUs',
   facebook: 'https://facebook.com/Salesplat',
   twitter: 'https://x.com/SalesPlat',
   instagram: 'https://www.instagram.com/salesplat/',
