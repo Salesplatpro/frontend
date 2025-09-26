@@ -44,7 +44,7 @@ const tableCellStyle = {
 
 export const JobsTable = ({ data }: JobsTableType) => {
   const align = 'center'
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [shareLinks, setShareLinks] = useState<{
     facebook: string
     twitter: string

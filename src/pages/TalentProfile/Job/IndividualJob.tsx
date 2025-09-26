@@ -41,7 +41,7 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
 
   const [shareLinks, setShareLinks] = useState<{
@@ -231,9 +231,6 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
-      {/* {isModalOpen && (
-        <ShareJobModal shareLinks={shareLinks} />
-      )} */}
 
       <Modal open={isModalOpen} onClose={closeModal} center>
         <div className="flex flex-col items-center text-center rounded-lg p-6 max-w-[400px] min-w-[280px] mx-auto">
