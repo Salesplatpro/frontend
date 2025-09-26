@@ -17,15 +17,15 @@ export const LandingHero = () => {
     <div className={styles.container}>
       <div className={cn(styles.heroLeft, containerPadding)}>
         <div className="flex flex-col justify-center gap-12">
-          <div className={styles.heroContent}>
+          <div className={`${styles.heroContent}`}>
             <BaseText
               fontColor="white"
               fontSize="fs-4xl"
-              className="mt-52"
+              className="lg:mt-52 font-raleway mt-14"
               fontWeight="bolder">
               Find Top Talent Faster, Smarter, With AuxHr AI.
             </BaseText>
-            <BaseText fontColor="white" fontSize="fs-lg" fontWeight="normal">
+            <BaseText fontColor="white" fontSize="fs-xl" fontWeight="normal">
               AuxHR is your AI-powered recruitment platform built to streamline
               hiring, match top-tier candidates, and scale your team with
               confidence.
