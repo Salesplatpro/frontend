@@ -9,7 +9,11 @@ import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
-import ShareJobModal from './ShareJobModal'
+import Facebook from '../../../assets/Facebook icon.svg'
+import LinkedIn from '../../../assets/linkedin logo_icon.svg'
+import Twitter from '../../../assets/twitter_new_brand_icon.svg'
+import 'react-responsive-modal/styles.css'
+import { Modal } from 'react-responsive-modal'
 
 interface JobProfileProps {
   role?: {
@@ -37,7 +41,7 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
 
   const [shareLinks, setShareLinks] = useState<{
@@ -90,12 +94,39 @@ const IndividualJob = () => {
     setIsModalOpen(true)
   }
 
+  const shareOptions = [
+    {
+      icon: Facebook,
+      text: 'Share',
+      action: 'share',
+      link: shareLinks.facebook,
+    },
+
+    {
+      icon: Twitter,
+      text: 'Tweet',
+      action: 'share',
+      link: shareLinks.twitter,
+    },
+    {
+      icon: LinkedIn,
+      text: 'Share',
+      action: 'share',
+      link: shareLinks.linkedin,
+    },
+  ]
+
+  const handleRedirectShare = (link: string) => {
+    window.open(link, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
         <h2 className="font-bold md:text-3xl text-xl">
           {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
+
         <div className="flex space-x-5 items-center mt-3">
           <ShareOptions handleShare={handleShare} jobId={jobId!} />
         </div>
@@ -200,9 +231,30 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <ShareJobModal onClose={closeModal} shareLinks={shareLinks} />
-      )}
+
+      <Modal open={isModalOpen} onClose={closeModal} center>
+        <div className="flex flex-col items-center text-center rounded-lg p-6 max-w-[400px] min-w-[280px] mx-auto">
+          <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-medium font-raleway">
+            Select your preferred social media to share job
+          </h2>
+
+          <div className="mt-4 w-full">
+            {shareOptions.map((option, index) => (
+              <button
+                key={index}
+                className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
+                onClick={() => handleRedirectShare(option.link)}>
+                <img
+                  src={option.icon}
+                  alt={option.text}
+                  className="mr-3 w-[28px] h-[28px] object-contain"
+                />
+                {option.text}
+              </button>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

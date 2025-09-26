@@ -8,7 +8,11 @@ import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
-import ShareJobModal from '../../TalentProfile/Job/ShareJobModal'
+import Facebook from '../../../assets/Facebook icon.svg'
+import LinkedIn from '../../../assets/linkedin logo_icon.svg'
+import Twitter from '../../../assets/twitter_new_brand_icon.svg'
+import 'react-responsive-modal/styles.css'
+import { Modal } from 'react-responsive-modal'
 
 const IndividualJob = () => {
   const { jobId } = useParams()
@@ -45,7 +49,6 @@ const IndividualJob = () => {
   }
 
   const handleShare = () => {
-    console.log('🔵 handleShare clicked')
     const TwittershareUrl = `https://twitter.com/share?url=${encodeURIComponent(
       link,
     )}`
@@ -62,7 +65,32 @@ const IndividualJob = () => {
       linkedin: LinkedInshareUrl,
     })
     setIsModalOpen(true)
-    console.log('🟢 isModalOpen set to true')
+  }
+
+  const shareOptions = [
+    {
+      icon: Facebook,
+      text: 'Share',
+      action: 'share',
+      link: shareLinks.facebook,
+    },
+
+    {
+      icon: Twitter,
+      text: 'Tweet',
+      action: 'share',
+      link: shareLinks.twitter,
+    },
+    {
+      icon: LinkedIn,
+      text: 'Share',
+      action: 'share',
+      link: shareLinks.linkedin,
+    },
+  ]
+
+  const handleRedirectShare = (link: string) => {
+    window.open(link, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -180,10 +208,29 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
-      {/* ))} */}
-      {isModalOpen && (
-        <ShareJobModal onClose={closeModal} shareLinks={shareLinks} />
-      )}
+      <Modal open={isModalOpen} onClose={closeModal} center>
+        <div className="flex flex-col items-center text-center rounded-lg p-6 max-w-[400px] min-w-[280px] mx-auto">
+          <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-medium font-raleway">
+            Select your preferred social media to share job
+          </h2>
+
+          <div className="mt-4 w-full">
+            {shareOptions.map((option, index) => (
+              <button
+                key={index}
+                className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
+                onClick={() => handleRedirectShare(option.link)}>
+                <img
+                  src={option.icon}
+                  alt={option.text}
+                  className="mr-3 w-[28px] h-[28px] object-contain"
+                />
+                {option.text}
+              </button>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

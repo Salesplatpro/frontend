@@ -105,14 +105,14 @@ const router = createBrowserRouter([
       },
 
       {
-        path: 'register',
+        path: 'talentRegister',
         element: <SignIn />,
       },
 
-      {
-        path: 'register',
-        element: <SignIn />,
-      },
+      // {
+      //   path: 'register',
+      //   element: <SignIn />,
+      // },
       {
         path: 'faq',
         element: <Faq />,

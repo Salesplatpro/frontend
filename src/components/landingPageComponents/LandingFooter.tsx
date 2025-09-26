@@ -41,12 +41,12 @@ export const LandingFooter = () => {
             <LandingButton
               title="Get a Demo"
               variant="primary"
-              onClick={() => navigate(paths.login)}
+              onClick={() => {}}
             />
             <LandingButton
               title="Try it Free"
               variant="secondary"
-              onClick={() => navigate(paths.login)}
+              onClick={() => navigate(paths.talentRegister)}
             />
           </div>
         </div>

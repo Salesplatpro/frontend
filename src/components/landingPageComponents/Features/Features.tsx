@@ -81,16 +81,16 @@ export const Features = () => {
           AuxHR brings every HR function together hiring, data management, and
           attendance tracking in one simple system of record.
         </BaseText>
-        <div className="flex flex-col md:flex-row justify-center gap-4">
+        <div className="flex flex-col md:flex-row justify-center gap-3 pt-4">
           <LandingButton
             title="Try it free"
             variant="primary"
-            onClick={() => {}}
+            onClick={() => navigate(paths.talentRegister)}
           />
           <LandingButton
             title="Get a Demo"
             variant="tertiary"
-            onClick={() => navigate(paths.login)}
+            onClick={() => {}}
           />
         </div>
       </div>
