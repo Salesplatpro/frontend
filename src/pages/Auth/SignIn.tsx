@@ -33,7 +33,7 @@ const SignIn = () => {
   const dispatch = useDispatch()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -237,9 +237,9 @@ const SignIn = () => {
                       <Loading />
                     ) : (
                       <button
-                        className="w-[93%] rounded-lg bg-[#3c6fd4] border flex justify-center items-center hover:bg-[#4b82e1]"
+                        className=" w-full rounded-lg bg-[#3c6fd4] px-4 py-2 text-white hover:bg-[#4b82e1]"
                         type="submit">
-                        <p className="text-white">Sign Up</p>
+                        Sign Up
                       </button>
                     )}
 

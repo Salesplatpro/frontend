@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import errorImage from './assets/errorImage.png'
 import Footer from './components/Footer'
+import { LandingFooter } from './components'
 
 function PageNotFound() {
   const navigate = useNavigate()
@@ -42,7 +43,7 @@ function PageNotFound() {
         </div>
       </div>
 
-      <Footer />
+      <LandingFooter />
     </div>
   )
 }
