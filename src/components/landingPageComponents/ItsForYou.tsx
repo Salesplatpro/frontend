@@ -28,12 +28,12 @@ const items = [
 ]
 export const ItsForYou = () => {
   return (
-    <div className={cn(containerPadding, 'flex flex-col gap-11 py-24')}>
+    <div className={cn(containerPadding, 'flex flex-col gap-4 py-24')}>
       <SectionHeader
         title="It’s for you"
         subTitle="Designed for Modern Hiring Teams."
       />
-      <div className="flex flex-col items-center gap-5 w-full md:flex-row">
+      <div className="flex flex-col items-center gap-4 w-full md:flex-row">
         {items.map((item) => (
           <div key={item.title} className={styles.imgContainer}>
             <img src={item.img} alt={item.title} className={styles.img} />
