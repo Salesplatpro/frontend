@@ -9,7 +9,7 @@ type ModalProps = {
 }
 
 const Modal: React.FC<ModalProps> = ({ onClose, name, redirectOnClose }) => {
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible] = useState(true)
   const navigate = useNavigate()
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
