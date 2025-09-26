@@ -4,6 +4,7 @@ export const paths = {
   signup: 'signup',
   talentRegister: 'talentRegister',
   solution: 'solution',
+  aboutUs: 'about-us',
   faq: 'faq',
   testimonials: 'testimonials',
   pricing: 'pricing',

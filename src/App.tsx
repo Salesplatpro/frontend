@@ -9,9 +9,10 @@ import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Slide, ToastContainer } from 'react-toastify'
 
-import { Features, Testimonials } from './components'
+import { AboutUs, Features, Testimonials } from './components'
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
+import Faq from './components/landingPageComponents/FAQ/Faq'
 import Pricing from './components/Pricing'
 import ProtectedRoute from './components/ProtectedRoute'
 import SingleJob from './components/SingleJob'
@@ -59,7 +60,6 @@ import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAsses
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
-import Faq from './components/landingPageComponents/FAQ/Faq'
 
 const router = createBrowserRouter([
   {
@@ -94,6 +94,10 @@ const router = createBrowserRouter([
       {
         path: 'pricing',
         element: <Pricing />,
+      },
+      {
+        path: 'about-us',
+        element: <AboutUs />,
       },
       {
         path: 'payment/verify',
