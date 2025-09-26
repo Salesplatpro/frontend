@@ -88,17 +88,18 @@ yarn run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
 ## <a name="project-structure"> Project Structure</a>
-
-/src
-├── assets/ # Local images, icons, static files
-├── components/ # Reusable UI components 
-├── hooks/ # Custom React hooks
-├── pages/ # Page-level components (mapped to routes)
-├── redux/ # Handles global state and API calls (slices, API calls)
-├── index.css/ # Global styles (Tailwind config, theme)
-├── utils/ # Helper functions, constants, formatters
-├── App.tsx # Root component
-└── main.tsx # Entry point (React DOM mount, providers)
+```
+      /src
+      ├── assets/ # Local images, icons, static files
+      ├── components/ # Reusable UI components 
+      ├── hooks/ # Custom React hooks
+      ├── pages/ # Page-level components (mapped to routes)
+      ├── redux/ # Handles global state and API calls (slices, API calls)
+      ├── index.css/ # Global styles (Tailwind config, theme)
+      ├── utils/ # Helper functions, constants, formatters
+      ├── App.tsx # Root component
+      └── main.tsx # Entry point (React DOM mount, providers)
+```
 
 ## <a name="git-workflow--code-management"> Git Workflow & Code Management</a>
 We follow a **branching strategy** to keep development organized and production stable.
@@ -109,18 +110,12 @@ We follow a **branching strategy** to keep development organized and production 
 - **Feature branches** → Create a new branch for every task or bugfix:  
 
 ### Committing
-Use clear, conventional commit messages:
-
-feat: add recruiter job post form
-
-fix: resolve navbar alignment issue
-
-chore: update dependencies
-
-Keep commits small and meaningful (avoid “misc changes”).
+- Use clear, conventional commit messages:
+- feat: add recruiter job post form
+- fix: resolve navbar alignment issue
+- chore: update dependencies
 
 ### Pull Requests (PRs)
-
 - Create a **PR from your feature branch → development**.  
 - Another team member reviews and approves the PR in the **admin repo**.  
 - Once merged, your feature becomes part of the `development` branch.  
@@ -129,12 +124,9 @@ Keep commits small and meaningful (avoid “misc changes”).
 -  Note: Merges into `main` and `development` can only be done from the **admin repo** because we are on the free Git version.  
 
 ### Best Practices
-Always pull the latest development before creating a new branch.
-
-Resolve merge conflicts locally before submitting PRs.
-
-Don’t commit directly to main or development.
-
+- Always pull the latest development before creating a new branch.
+- Resolve merge conflicts locally before submitting PRs.
+- Don’t commit directly to main or development.
 
 ## <a name="links"> Assets </a>
 
