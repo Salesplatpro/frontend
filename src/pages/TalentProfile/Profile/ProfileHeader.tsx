@@ -76,7 +76,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
                   {capitalizeEachWord(userInfo?.userRole)}
                 </p>
               </div>
-              <button className="bg-[#3C6FD4] text-white rounded-xl text-[12px] font-light w-[93px] h-[40px]">
+              <button className="bg-[#3C6FD4] text-white font-raleway font-medium rounded-xl text-[12px] w-[93px] h-[40px]">
                 {userInfo?.profile ? 'Edit Profile' : 'Create Profile'}
               </button>
             </div>
