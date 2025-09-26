@@ -1,6 +1,7 @@
 import React from 'react'
 
 import quotes from '../assets/quote1.jpeg'
+import { Link } from 'react-router-dom'
 
 const QuoteSection = () => {
   return (
@@ -12,7 +13,9 @@ const QuoteSection = () => {
               <h5>Hire the best talents</h5>
               <p>Join over 100+ brands already growing with Supportpro</p>
             </div>
-            <button>Start Hiring</button>
+            <Link to="/talentRegister">
+              <button>Start Hiring</button>
+            </Link>
           </div>
         </div>
 

@@ -18,7 +18,7 @@ export const leftNav = [
   },
   {
     name: 'Blog',
-    url: '/',
+    url: paths.blog,
   },
   {
     name: 'Pricing',
@@ -29,7 +29,7 @@ export const leftNav = [
 export const rightNav = [
   {
     name: 'Get a Demo',
-    url: paths.register,
+    url: '/',
     variant: 'secondary' as ButtonVariant,
   },
   {
@@ -39,7 +39,7 @@ export const rightNav = [
   },
   {
     name: 'Try it Free',
-    url: paths.register,
+    url: paths.talentRegister,
     variant: 'primary' as ButtonVariant,
   },
 ]

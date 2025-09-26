@@ -36,14 +36,14 @@ export const LandingHero = () => {
               title="Try it Free"
               variant="primary"
               onClick={() => {
-                navigate(paths.register)
+                navigate(paths.talentRegister)
                 console.log('try it free')
               }}
             />
             <LandingButton
               title="Get a Demo"
               variant="secondary"
-              onClick={() => navigate(paths.login)}
+              onClick={() => {}}
             />
           </div>
         </div>

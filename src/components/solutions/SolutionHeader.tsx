@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const SolutionHeader = () => {
   return (
@@ -16,8 +17,9 @@ const SolutionHeader = () => {
             startups to public companies—use our software to manage their
             businesses.
           </p>
-
-          <button>Check out our pricing</button>
+          <Link to="/pricing">
+            <button>Check out our pricing</button>
+          </Link>
         </div>
       </div>
     </React.Fragment>

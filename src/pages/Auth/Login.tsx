@@ -179,10 +179,8 @@ const Login: React.FC = () => {
                 {loading ? (
                   <Loading />
                 ) : (
-                  <button
-                    className="w-[93%] rounded-lg bg-[#3c6fd4] border flex justify-center items-center hover:bg-[#4b82e1]"
-                    disabled={formik.isSubmitting}>
-                    <p className="text-white">Log in</p>
+                  <button className=" w-full rounded-lg bg-[#3c6fd4] px-4 py-2 text-white hover:bg-[#4b82e1]">
+                    Log in
                   </button>
                 )}
 

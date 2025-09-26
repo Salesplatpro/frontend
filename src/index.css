@@ -11,15 +11,6 @@ a {
   color: inherit;
 }
 
-/* a:hover,
-a:focus,
-a:active {
-  text-decoration: none;
-  border: none;
-  outline: none;
-  color: inherit;
-} */
-
 .tooltip-wrap {
   white-space: normal !important; /* Allows the text to wrap */
   word-wrap: break-word; /* Breaks long words to the next line */
