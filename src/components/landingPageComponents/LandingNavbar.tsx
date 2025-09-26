@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { LiaTimesSolid } from 'react-icons/lia'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +13,18 @@ import styles from './styles/LandingNavbar.module.scss'
 export const LandingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
+
+  // Close mobile nav when screen resizes above 768px
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isOpen) {
+        setIsOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [isOpen])
 
   return (
     <div className={styles.container}>
