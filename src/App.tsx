@@ -109,10 +109,6 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
 
-      // {
-      //   path: 'register',
-      //   element: <SignIn />,
-      // },
       {
         path: 'faq',
         element: <Faq />,
