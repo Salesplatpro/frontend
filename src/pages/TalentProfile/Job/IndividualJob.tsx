@@ -11,6 +11,9 @@ import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
 import ShareJobModal from './ShareJobModal'
 
+import 'react-responsive-modal/styles.css'
+import { Modal } from 'react-responsive-modal'
+
 interface JobProfileProps {
   role?: {
     name: string
@@ -37,7 +40,7 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [jobProfile, setJobProfile] = useState<JobProfileProps | null>(null)
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState(true)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
 
   const [shareLinks, setShareLinks] = useState<{
@@ -96,6 +99,12 @@ const IndividualJob = () => {
         <h2 className="font-bold md:text-3xl text-xl">
           {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
+
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-blue-500 text-white px-4 py-2 rounded">
+          Open Modal
+        </button>
         <div className="flex space-x-5 items-center mt-3">
           <ShareOptions handleShare={handleShare} jobId={jobId!} />
         </div>
@@ -200,9 +209,18 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <ShareJobModal onClose={closeModal} shareLinks={shareLinks} />
-      )}
+      {/* {isModalOpen && (
+        <ShareJobModal shareLinks={shareLinks} />
+      )} */}
+
+      <Modal open={isModalOpen} onClose={closeModal} center>
+        <h2>Simple centered modal</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+          pulvinar risus non risus hendrerit venenatis. Pellentesque sit amet
+          hendrerit risus, sed porttitor quam.
+        </p>
+      </Modal>
     </div>
   )
 }
