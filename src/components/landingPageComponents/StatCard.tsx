@@ -10,10 +10,17 @@ type StatCardProps = {
 
 export const StatCard = ({ percentage, description }: StatCardProps) => (
   <div className={styles.statCard}>
-    <BaseText fontSize="fs-4xl" fontColor="white" fontWeight="bolder">
+    <BaseText
+      fontSize="fs-4xl"
+      fontColor="white"
+      fontWeight="bolder"
+      className="font-raleway">
       {percentage}
     </BaseText>
-    <BaseText className="flex-wrap" fontColor="white" fontSize="fs-md">
+    <BaseText
+      fontColor="white"
+      fontSize="fs-md"
+      className="font-raleway flex-wrap">
       {description}
     </BaseText>
   </div>

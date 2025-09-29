@@ -39,10 +39,13 @@ export const AboutUs = () => {
     <div>
       <div className={styles.header}>
         <div className="flex flex-col gap-y-4">
-          <BaseText fontSize="fs-4xl" fontWeight="bold">
+          <BaseText
+            fontSize="fs-4xl"
+            fontWeight="bold"
+            className="font-raleway">
             We are AuxHR Creating exceptional HR software.
           </BaseText>
-          <BaseText fontSize="fs-2xl">
+          <BaseText fontSize="fs-2xl" className="font-raleway">
             Hiring is tough for both SMEs and large enterprises, which is why we
             built a people first HR solution that makes recruitment faster,
             smarter
@@ -57,10 +60,16 @@ export const AboutUs = () => {
       <div className={styles.whatwedo}>
         <img src={jobs} alt="Jobs" className={styles.jobImg} />
         <div className="flex flex-col gap-y-4">
-          <BaseText fontSize="fs-3xl" fontWeight="bold">
+          <BaseText
+            fontSize="fs-3xl"
+            fontWeight="bold"
+            className="font-raleway">
             What We Do
           </BaseText>
-          <BaseText fontSize="fs-2xl" fontWeight="normal">
+          <BaseText
+            fontSize="fs-2xl"
+            fontWeight="normal"
+            className="font-raleway">
             AUXHR is more than just recruitment software it’s a complete
             solution designed to solve common hiring challenges. It simplifies
             the recruitment process from job posting to offer, aligns talent
@@ -76,11 +85,14 @@ export const AboutUs = () => {
         <BaseText
           fontSize="fs-3xl"
           fontWeight="bold"
-          className="text-center"
-          fontColor="white">
+          fontColor="white"
+          className="font-raleway text-center">
           Who We Help
         </BaseText>
-        <BaseText className="text-justify" fontSize="fs-2xl" fontColor="white">
+        <BaseText
+          fontSize="fs-2xl"
+          fontColor="white"
+          className="text-justify font-raleway">
           AUXHR is built to adapt to businesses of any size or stage. For micro
           and small teams, it acts as a ready-made recruitment partner, making
           early hires simple and affordable. For medium-sized companies, it
@@ -102,10 +114,13 @@ export const AboutUs = () => {
         </div>
       </div>
       <div className={styles.tryoutauxhr}>
-        <BaseText fontSize="fs-3xl" fontWeight="bold" className="text-center">
+        <BaseText
+          fontSize="fs-3xl"
+          fontWeight="bold"
+          className="text-center font-raleway">
           Try Out AuxHR
         </BaseText>
-        <BaseText fontSize="fs-xl">
+        <BaseText fontSize="fs-xl" className="font-raleway">
           Explore our full platform with a 15-day free trial. No credit card
           required. Post jobs, hire faster, and manage your people effortlessly
           with our all-in-one platform.
