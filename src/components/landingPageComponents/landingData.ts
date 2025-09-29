@@ -58,7 +58,7 @@ export const footerData = [
   {
     key: 'Company',
     children: [
-      { name: 'About us', url: '/' },
+      { name: 'About us', url: paths.aboutUs },
       { name: 'Support', url: '/' },
       { name: 'Solutions', url: paths.solution },
     ],
