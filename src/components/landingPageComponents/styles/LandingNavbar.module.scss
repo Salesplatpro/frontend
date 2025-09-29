@@ -1,4 +1,5 @@
 @use 'index' as *;
+@use 'sass:color';
 
 %shareFlexAlignItems {
   display: flex;
@@ -107,7 +108,7 @@
   text-align: center;
 
   &:hover {
-    color: lighten($landing-text-white, 10%);
+    color: color.adjust($landing-text-white, $lightness: 10%);
   }
 }
 

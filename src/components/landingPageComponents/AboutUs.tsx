@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import image from '../../assets/aboutUs.png'
-import jobs from '../../assets/jobs.png'
+import Jobs from '../../assets/Jobs.png'
 import { paths } from '../../paths'
 import { LandingButton } from './LandingButton'
 import { StatCard } from './StatCard'
@@ -58,7 +58,7 @@ export const AboutUs = () => {
         </div>
       </div>
       <div className={styles.whatwedo}>
-        <img src={jobs} alt="Jobs" className={styles.jobImg} />
+        <img src={Jobs} alt="Jobs" className={styles.jobImg} />
         <div className="flex flex-col gap-y-4">
           <BaseText
             fontSize="fs-3xl"
