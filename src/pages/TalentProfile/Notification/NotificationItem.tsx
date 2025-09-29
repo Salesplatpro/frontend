@@ -68,7 +68,7 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
 
         {isRead && (
           <p
-            className={`font-raleway font-semibold text-[14px] ${
+            className={`font-raleway pb-3 font-semibold text-[14px] ${
               acknowledged ? 'text-green-500' : 'text-red-500'
             }`}>
             {messageStatus}
@@ -77,7 +77,7 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
       </div>
 
       {!isRead && (
-        <div className="flex justify-end items-center mx-5 lg:mx-8 my-4 space-x-2">
+        <div className="flex justify-end items-center mx-5 lg:mx-8 my-4 space-x-4">
           <button
             className="lg:w-[100px] rounded-lg flex justify-center items-center font-semibold font-raleway text-[16px] text-[#3c6fd4] hover:cursor-pointer py-3"
             onClick={onReject}>
