@@ -76,3 +76,49 @@
     display: block;
   }
 }
+
+.mobileNav {
+  position: fixed;
+  top: 64px; // sits below navbar
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 64px);
+  background: #4000e4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  z-index: 999;
+}
+
+.mobileNavContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.mobileNavItem {
+  font-size: $landing-base-font-size;
+  font-weight: $landing-bold-font-weight;
+  color: $landing-text-white;
+  text-decoration: none;
+  text-align: center;
+
+  &:hover {
+    color: lighten($landing-text-white, 10%);
+  }
+}
+
+.mobileNavButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+
+  button {
+    width: 60%;
+    margin: auto;
+  }
+}

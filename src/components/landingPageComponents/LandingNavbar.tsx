@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { LiaTimesSolid } from 'react-icons/lia'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +13,18 @@ import styles from './styles/LandingNavbar.module.scss'
 export const LandingNavbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
+
+  // Close mobile nav when screen resizes above 768px
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isOpen) {
+        setIsOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [isOpen])
 
   return (
     <div className={styles.container}>
@@ -29,6 +41,7 @@ export const LandingNavbar = () => {
           ))}
         </div>
       </div>
+
       <div className={cn(styles.rightNav, 'pr-5 md:pr-4 lg:pr-20')}>
         {rightNav.map((item) => (
           <LandingButton
@@ -46,6 +59,37 @@ export const LandingNavbar = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile nav overlay */}
+      {isOpen && (
+        <div className={styles.mobileNav}>
+          <div className={styles.mobileNavContent}>
+            {leftNav.map((item) => (
+              <a
+                key={item.name}
+                href={item.url}
+                className={styles.mobileNavItem}
+                onClick={() => setIsOpen(false)}>
+                {item.name}
+              </a>
+            ))}
+
+            <div className={styles.mobileNavButtons}>
+              {rightNav.map((item) => (
+                <LandingButton
+                  key={item.name}
+                  title={item.name}
+                  variant={item.variant}
+                  onClick={() => {
+                    navigate(item.url)
+                    setIsOpen(false)
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
