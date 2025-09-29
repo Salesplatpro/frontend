@@ -1,3 +1,4 @@
+export * from './AboutUs'
 export * from './Features'
 export * from './HowItWorks'
 export * from './ItsForYou'
