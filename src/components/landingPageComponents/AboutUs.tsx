@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import image from '../../assets/aboutUs.png'
 import Jobs from '../../assets/Jobs.png'
-import { paths } from '../../paths'
 import { LandingButton } from './LandingButton'
 import { StatCard } from './StatCard'
 import styles from './styles/AboutUs.module.scss'
