@@ -34,19 +34,18 @@ export const MyJobPosts = () => {
       <div className={styles.topContainer}>
         <div className={styles.titleDesc}>
           <div className={styles.title}>Job Posts</div>
-          <div className="text-[15px] w-[280px] lg:text-[18px] lg:w-full md:w-full md:text-[16px] sm:w-[350px] sm:text-[16px]">
+          <div className="text-[15px] w-[220px] flex flex-nowrap lg:text-[18px] lg:w-full md:w-full md:text-[16px] sm:w-[350px] sm:text-[16px]">
             View jobs posted by you and see number of applicants that have
             responded.
           </div>
         </div>
-        <div className="w-[25%] lg:w-[12%] md:w-[17%] sm:w-[17%]">
-          <button
-            className="text-[#ffffff] font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
+
+        <button
+          className="text-[#ffffff] font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
             bg-[#3C6FD4] rounded-lg"
-            onClick={() => navigate('/recruiterDashboard/postjob')}>
-            Create New
-          </button>
-        </div>
+          onClick={() => navigate('/recruiterDashboard/postjob')}>
+          Create New
+        </button>
       </div>
       <div>
         <JobsTable data={paginatedJobs} />

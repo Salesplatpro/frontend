@@ -28,6 +28,8 @@ const TalentAssessment = () => {
     answers: { [key: string]: string }
   }>({ roleId: roleId || '', answers: {} })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   // Track whether all questions have been answered
   const allAnswered =
     questions.length > 0 &&
@@ -86,6 +88,7 @@ const TalentAssessment = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsSubmitting(true)
     try {
       const response = await postAnswer(formData).unwrap()
       console.log(formData)
@@ -112,19 +115,23 @@ const TalentAssessment = () => {
         autoClose: 5000,
         transition: Bounce,
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   return (
     <div>
-      <div className="w-[70%] mx-auto">
-        <h2 className="text-[30px]  text-[#101828] font-bold">
-          Pre-Assessment Test
-        </h2>
-        <p className="text-xl font-raleway text-[#101828] font-medium my-3">
-          Welcome to your Assessment test, you have 15 Questions to answer in
-          this stage.
-        </p>
+      <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
+        <div className="ml-8">
+          <h2 className="text-[30px]  text-[#101828] font-bold">
+            Pre-Assessment Test
+          </h2>
+          <p className="text-xl font-raleway text-[#101828] font-medium my-3">
+            Welcome to your Assessment test, you have 15 Questions to answer in
+            this stage.
+          </p>
+        </div>
 
         <div className="md:mt-16 mt-2">
           <form onSubmit={handleSubmit} className="">
@@ -155,7 +162,7 @@ const TalentAssessment = () => {
                     ? 'bg-blue-500 text-white hover:bg-blue-700'
                     : 'bg-gray-400 text-gray-700 cursor-not-allowed'
                 }`}>
-                Submit
+                {isSubmitting ? 'Submitting' : 'Submit'}
               </button>
             </ul>
           </form>

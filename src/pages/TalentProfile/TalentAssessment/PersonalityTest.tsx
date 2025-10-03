@@ -37,6 +37,7 @@ const PersonalityTest: React.FC = () => {
     jobId: jobId || '',
     answers: {},
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     data: personalityData,
@@ -79,6 +80,7 @@ const PersonalityTest: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsSubmitting(true)
     try {
       const response = (await postAnswer(
         formData,
@@ -91,6 +93,7 @@ const PersonalityTest: React.FC = () => {
             autoClose: 5000,
           },
         )
+        console.log(response.data.scorePercent)
       } else {
         notify(
           'error',
@@ -109,6 +112,8 @@ const PersonalityTest: React.FC = () => {
         autoClose: 5000,
         transition: Bounce,
       })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -117,12 +122,14 @@ const PersonalityTest: React.FC = () => {
   }
 
   return (
-    <div className="w-[70%] mx-auto mt-8">
-      <h2 className="text-3xl text-[#101828] font-bold">Personality Test</h2>
-      <p className="text-xl text-[#101828] font-medium mt-3 font-raleway">
-        Welcome to your Personality test, you have the following Questions to
-        answer in this stage.
-      </p>
+    <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
+      <div className="ml-8">
+        <h2 className="text-3xl text-[#101828] font-bold">Personality Test</h2>
+        <p className="text-xl text-[#101828] font-medium mt-3 font-raleway">
+          Welcome to your Personality test, you have the following Questions to
+          answer in this stage.
+        </p>
+      </div>
       <div className="md:mt-6 mt-2">
         <form onSubmit={handleSubmit}>
           <ul>
@@ -151,7 +158,7 @@ const PersonalityTest: React.FC = () => {
                   ? 'bg-blue-500 text-white hover:bg-blue-700'
                   : 'bg-gray-400 text-gray-700 cursor-not-allowed'
               }`}>
-              Submit
+              {isSubmitting ? 'submitting' : 'submit'}
             </button>
           </ul>
         </form>

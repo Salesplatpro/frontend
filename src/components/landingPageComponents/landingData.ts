@@ -66,7 +66,7 @@ export const footerData = [
   {
     key: 'Resources',
     children: [
-      { name: 'Blog', url: '/' },
+      { name: 'Blog', url: paths.blog },
       { name: 'Testimonials', url: paths.testimonials },
     ],
   },
