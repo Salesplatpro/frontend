@@ -3,7 +3,7 @@ import { CgProfile } from 'react-icons/cg'
 import { MdSupport } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 
-import logo from '../../assets/logo.png'
+import auxHrLogo from '../../assets/aux_logo.png'
 import { SidebarList } from '../lists'
 import styles from './sidebar.module.scss'
 
@@ -48,9 +48,10 @@ export const SideBar: React.FC<sideBarProps> = ({
       <div>
         <div className={styles.imageContainer}>
           <Link to="/">
-            <img src={logo} className={styles.logo} alt="support pro" />
+            <img src={auxHrLogo} alt="Aux HR Logo" />
           </Link>
         </div>
+
         <div className={styles.sidebarList}>
           {sideBarData.map((data, index) => {
             return (
