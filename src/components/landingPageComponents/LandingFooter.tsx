@@ -46,7 +46,10 @@ export const LandingFooter = () => {
             <LandingButton
               title="Try it Free"
               variant="secondary"
-              onClick={() => navigate(paths.talentRegister)}
+              onClick={() => {
+                navigate(paths.talentRegister)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }}
             />
           </div>
         </div>
@@ -56,19 +59,27 @@ export const LandingFooter = () => {
               <BaseText fontColor="white" fontSize="fs-sm">
                 {item.key}
               </BaseText>
-              {item.children.map((child) => (
-                <BaseText
-                  fontSize="fs-lg"
-                  fontColor="white"
-                  key={child.name}
-                  onClick={() => {
-                    navigate(child.url)
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }}
-                  className="cursor-pointer">
-                  {child.name}
-                </BaseText>
-              ))}
+              {item.children.map((child) => {
+                const isExternal = child.url.startsWith('http')
+
+                return (
+                  <BaseText
+                    fontSize="fs-lg"
+                    fontColor="white"
+                    key={child.name}
+                    onClick={() => {
+                      if (isExternal) {
+                        window.open(child.url, '_blank')
+                      } else {
+                        navigate(child.url)
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                      }
+                    }}
+                    className="cursor-pointer">
+                    {child.name}
+                  </BaseText>
+                )
+              })}
             </div>
           ))}
         </div>

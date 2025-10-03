@@ -129,12 +129,12 @@ export const AboutUs = () => {
           <LandingButton
             title="Get a Demo"
             variant="tertiary"
-            onClick={() => navigate(paths.login)}
+            onClick={() => {}}
           />
           <LandingButton
             title="Try it Free"
             variant="primary"
-            onClick={() => navigate(paths.signup)}
+            onClick={() => navigate('/talentRegister')}
           />
         </div>
       </div>
