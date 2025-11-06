@@ -9,7 +9,13 @@ import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Slide, ToastContainer } from 'react-toastify'
 
-import { AboutUs, Features, Testimonials } from './components'
+import {
+  AboutUs,
+  Features,
+  PrivacyPolicy,
+  TermsAndCondition,
+  Testimonials,
+} from './components'
 import CustomerStories from './components/customerStories'
 import Explore from './components/Explore'
 import Faq from './components/landingPageComponents/FAQ/Faq'
@@ -58,6 +64,7 @@ import PersonalityTest from './pages/TalentProfile/TalentAssessment/PersonalityT
 import PersonalizedTest from './pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentAssessment from './pages/TalentProfile/TalentAssessment/TalentAssessment'
 import TalentProfileSidebar from './pages/TalentProfile/TalentProfileSidebar'
+import { paths } from './paths'
 import { setUser } from './redux/features/authSlice/authSlice'
 import { getToken } from './utils'
 
@@ -130,6 +137,14 @@ const router = createBrowserRouter([
       {
         path: 'job/postedjob/:jobId',
         element: <PostedJob />,
+      },
+      {
+        path: paths.privacyPolicy,
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: paths.termsConditions,
+        element: <TermsAndCondition />,
       },
     ],
   },
