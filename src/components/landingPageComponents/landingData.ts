@@ -73,8 +73,8 @@ export const footerData = [
   {
     key: 'Legal',
     children: [
-      { name: 'Terms', url: '/' },
-      { name: 'Privacy', url: '/' },
+      { name: 'Terms And Conditions', url: paths.termsConditions },
+      { name: 'Privacy Policy', url: paths.privacyPolicy },
       { name: 'Cookies', url: '/' },
     ],
   },

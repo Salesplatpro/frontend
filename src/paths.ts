@@ -15,4 +15,6 @@ export const paths = {
   instagram: 'https://www.instagram.com/salesplat/',
   linkedIn: 'https://www.linkedin.com/company/salesplat/posts/?feedView=all',
   youtube: 'https://www.youtube.com/@Incubate_by_SalesPlat',
+  privacyPolicy: 'privacy-policy',
+  termsConditions: 'terms-and-conditions',
 }
