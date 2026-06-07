@@ -1,0 +1,1 @@
+yarn type-check && yarn test run && yarn build
