@@ -1,0 +1,16 @@
+# CODEOWNERS
+#
+# Routes review requests automatically. Takes effect once "Require review from
+# Code Owners" is enabled in branch protection (Settings → Branches → Add rule
+# — that setting requires repo-admin to configure).
+#
+# This is a STARTING POINT: a flat, global ownership list seeded from the
+# current active collaborator set. Refine it into directory-level ownership
+# (e.g. `/src/pages/RecruiterProfile/ @username`) once the codebase gets a
+# clearer `features/<domain>` structure that gives us stable, ownable
+# boundaries — carving up ownership by today's ambiguous `pages/` vs
+# `components/` split would just bake in the ambiguity.
+#
+# Order matters: later patterns override earlier ones for matching paths.
+
+* @mosidrum @Timmydee @HephzibahDesigns @Folakuku @highbee2810
