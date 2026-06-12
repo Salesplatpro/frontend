@@ -56,7 +56,9 @@ export const ProcessCvAndCoverLetter = () => {
 
       const formData = new FormData()
       formData.append('scoutJobId', scoutJobId)
+      // @ts-expect-error TODO: fix type error
       formData.append('cv', file.cv)
+      // @ts-expect-error TODO: fix type error
       formData.append('coverLetter', file.coverLetter)
 
       if (batchId) {

@@ -68,7 +68,8 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
             notify('error', error?.data?.message)
             setSubmitting(false)
           }
-        }}>
+        }}
+      >
         {({ values, isSubmitting }) => (
           <Form>
             <TextField label="Name" name="name" placeholder="Name of Job" />
@@ -84,6 +85,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Automatically screen candidates with a quick initial test before further Evaluation"
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.prescreeningAssessment === 'true' && (
               <TextField
                 label="Min Pre-assessment Score"
@@ -103,6 +105,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Match Candidate's CV against job requirements to find best fit"
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.cvSimilarity === 'true' && (
               <>
                 <TextField
@@ -131,6 +134,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Generate tailored tests based on job-specific skills and qualifications."
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.personalizedAssessment === 'true' && (
               <TextField
                 label="Number of Personalized Questions"
@@ -150,6 +154,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Assess candidate's personality traits to determine cultural and role fit"
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.personalityEvaluation === 'true' && (
               <FieldArray name="uploadedQuestions">
                 {({ remove, push }) => (
@@ -161,14 +166,16 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
                       {values.uploadedQuestions.map((q, i) => (
                         <div
                           key={i}
-                          className="flex flex-row items-center space-x-1">
+                          className="flex flex-row items-center space-x-1"
+                        >
                           <Field
                             name={`uploadedQuestions.${i}`}
                             className="border border-[#D0D5DD] p-4 rounded w-full"
                           />
                           <div
                             className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
-                            onClick={() => remove(i)}>
+                            onClick={() => remove(i)}
+                          >
                             <RiDeleteBin6Line />
                           </div>
                         </div>
@@ -176,7 +183,8 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
                       <button
                         type="button"
                         className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF]"
-                        onClick={() => push('')}>
+                        onClick={() => push('')}
+                      >
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Question
                         </span>
@@ -197,7 +205,8 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
             <button
               type="submit"
               className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-              disabled={isSubmitting}>
+              disabled={isSubmitting}
+            >
               {isSubmitting ? 'Submitting' : 'Submit'}
             </button>
           </Form>

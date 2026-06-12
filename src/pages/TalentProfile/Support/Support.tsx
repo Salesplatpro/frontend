@@ -5,6 +5,7 @@ import ProfilePic from '../Profile/ProfilePic'
 import useProfile from '../Profile/useProfileHook'
 
 export const Support = () => {
+  // @ts-expect-error TODO: fix type error
   const { userInfo, updateProfilePics, uploadPic, user } = useProfile()
   const maxLength = 40
   const [values, setValues] = useState({

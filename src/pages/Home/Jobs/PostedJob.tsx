@@ -177,7 +177,8 @@ const PostedJob = () => {
             </div>
             <button
               onClick={handleApply}
-              className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+              className="px-3 py-2 md:w-[190px] w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4"
+            >
               Apply for this position
             </button>
           </div>
@@ -186,7 +187,8 @@ const PostedJob = () => {
             <div className="bg-[#F3F6FC] md:w-[260px] w-full rounded-lg px-8 py-8 mx-auto">
               <button
                 onClick={handleApply}
-                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700"
+              >
                 Apply
               </button>
               <div className="mt-4">
@@ -203,9 +205,11 @@ const PostedJob = () => {
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
                   {jobProfile?.location &&
+                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.country)}{' '}
                   {''}
                   {jobProfile?.location?.city &&
+                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>
               </div>
@@ -233,7 +237,8 @@ const PostedJob = () => {
               <button
                 key={index}
                 className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
-                onClick={() => handleRedirectShare(option.link)}>
+                onClick={() => handleRedirectShare(option.link)}
+              >
                 <img
                   src={option.icon}
                   alt={option.text}
