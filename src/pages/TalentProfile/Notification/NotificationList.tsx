@@ -1,5 +1,8 @@
+import 'react-responsive-modal/styles.css'
+
 import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import Modal from 'react-responsive-modal'
 import { useOutletContext } from 'react-router-dom' // Make sure this import exists!
 
 import Loading from '../../../components/Loading/Loading'
@@ -9,8 +12,6 @@ import {
 } from '../../../redux/api/talent'
 import { truncateText } from '../../../utils/truncateTexts'
 import NotificationItem from './NotificationItem'
-import Modal from 'react-responsive-modal'
-import 'react-responsive-modal/styles.css'
 
 interface Sender {
   firstName: string
@@ -183,14 +184,16 @@ const NotificationList: React.FC = () => {
 
           <button
             className="w-full sm:w-auto px-8 md:px-12 lg:px-16 py-2 mt-2 rounded-lg text-white font-raleway font-medium text-sm sm:text-base md:text-lg bg-[#3C6FD4] hover:bg-[#4985df] transition"
-            onClick={handleConfirm}>
+            onClick={handleConfirm}
+          >
             {modalAction === 'acknowledge' ? 'Acknowledge' : 'Reject'}
           </button>
 
           <button
             className="w-full sm:w-auto px-8 py-2 mt-3 rounded-lg font-raleway font-medium text-base md:text-lg text-[#3C6FD4] hover:underline"
             onClick={handleClose}
-            aria-label="Close modal">
+            aria-label="Close modal"
+          >
             Cancel
           </button>
         </div>

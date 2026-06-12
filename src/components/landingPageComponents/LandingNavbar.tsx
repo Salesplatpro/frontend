@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { LiaTimesSolid } from 'react-icons/lia'
 import { useNavigate } from 'react-router-dom'
@@ -69,7 +69,8 @@ export const LandingNavbar = () => {
                 key={item.name}
                 href={item.url}
                 className={styles.mobileNavItem}
-                onClick={() => setIsOpen(false)}>
+                onClick={() => setIsOpen(false)}
+              >
                 {item.name}
               </a>
             ))}

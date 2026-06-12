@@ -7,7 +7,6 @@ import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
 import { useScreenWidth } from '../../../hooks'
-
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 
@@ -76,7 +75,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   if (screenWidth < 768) {
                     setShowFilter(!showFilter)
                   }
-                }}>
+                }}
+              >
                 Clear/Close
               </button>
             </div>
@@ -103,14 +103,16 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
               <div className="mb-4">
                 <label
                   className="block mb-2 font-bold"
-                  htmlFor="experienceLevel">
+                  htmlFor="experienceLevel"
+                >
                   Experience Level
                 </label>
                 <Field
                   as="select"
                   id="experienceLevel"
                   name="experienceLevel"
-                  className="w-full p-2 border border-gray-300 rounded">
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
                   <option value="">Select Experience Level</option>
                   {Object.values(experienceLevel).map((value) => (
                     <option key={value} value={value}>
@@ -205,7 +207,8 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   type="submit"
                   disabled={isSubmitting}
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700
-             border-none outline-none focus:outline-none focus:ring-0 active:ring-0 shadow-none">
+             border-none outline-none focus:outline-none focus:ring-0 active:ring-0 shadow-none"
+                >
                   {isSubmitting ? 'applying...' : 'Apply'}
                 </button>
               </div>

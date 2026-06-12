@@ -1,6 +1,12 @@
+import 'react-responsive-modal/styles.css'
+
 import React, { useEffect, useState } from 'react'
+import { Modal } from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import Facebook from '../../../assets/Facebook icon.svg'
+import LinkedIn from '../../../assets/linkedin logo_icon.svg'
+import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
@@ -8,11 +14,6 @@ import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
-import Facebook from '../../../assets/Facebook icon.svg'
-import LinkedIn from '../../../assets/linkedin logo_icon.svg'
-import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
 
 const IndividualJob = () => {
   const { jobId } = useParams()
@@ -134,7 +135,8 @@ const IndividualJob = () => {
                   {jobProfile?.skills.map((item, i) => (
                     <li
                       key={i}
-                      className="text-[#667085] text-base font-raleway font-medium">
+                      className="text-[#667085] text-base font-raleway font-medium"
+                    >
                       {item}
                     </li>
                   ))}
@@ -150,7 +152,8 @@ const IndividualJob = () => {
                   {jobProfile?.goals.map((item, i) => (
                     <li
                       key={i}
-                      className="text-[#667085] text-base font-raleway font-medium">
+                      className="text-[#667085] text-base font-raleway font-medium"
+                    >
                       {item}
                     </li>
                   ))}
@@ -160,7 +163,8 @@ const IndividualJob = () => {
             {/* <Link to={`/talentDashboard/applicationPipeline/${jobId}`}> */}
             <button
               onClick={() => navigation(`/recruiterDashboard/editJob/${jobId}`)}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
+              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4"
+            >
               Edit
             </button>
             {/* </Link> */}
@@ -173,7 +177,8 @@ const IndividualJob = () => {
                 onClick={() =>
                   navigation(`/recruiterDashboard/editJob/${jobId}`)
                 }
-                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700"
+              >
                 Edit
               </button>
               <div className="mt-4">
@@ -219,7 +224,8 @@ const IndividualJob = () => {
               <button
                 key={index}
                 className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
-                onClick={() => handleRedirectShare(option.link)}>
+                onClick={() => handleRedirectShare(option.link)}
+              >
                 <img
                   src={option.icon}
                   alt={option.text}

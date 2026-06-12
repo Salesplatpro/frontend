@@ -1,9 +1,15 @@
 import '../form.scss'
+import 'react-responsive-modal/styles.css'
+
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
+import { Modal } from 'react-responsive-modal'
+import { useNavigate } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
+
+import CheckMark from '../../assets/CheckMark.png'
 // import google from '../../assets/google.png'
 // import Salesplat from '../../assets/salesplat.png'
 import logo from '../../assets/logo.png'
@@ -22,10 +28,6 @@ import { SignUpSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import DropDown from './DropDown'
 import Loading from './Loading'
-import { useNavigate } from 'react-router-dom'
-import CheckMark from '../../assets/CheckMark.png'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
 
 const SignIn = () => {
   const [SendTalentReg] = useTalentRegMutation()
@@ -120,7 +122,8 @@ const SignIn = () => {
                 userType: '',
               }}
               validationSchema={SignUpSchema}
-              onSubmit={handleSubmit}>
+              onSubmit={handleSubmit}
+            >
               {({ values }) => (
                 <Form>
                   <Field
@@ -200,7 +203,8 @@ const SignIn = () => {
                     <button
                       type="button"
                       className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}>
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
                       {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
@@ -225,7 +229,8 @@ const SignIn = () => {
                       className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
-                      }>
+                      }
+                    >
                       {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
@@ -238,7 +243,8 @@ const SignIn = () => {
                     ) : (
                       <button
                         className=" w-full rounded-lg bg-[#3c6fd4] px-4 py-2 text-white hover:bg-[#4b82e1]"
-                        type="submit">
+                        type="submit"
+                      >
                         Sign Up
                       </button>
                     )}
@@ -298,7 +304,8 @@ const SignIn = () => {
           <button
             className="close-modal px-14 py-2 my-4 rounded-lg text-white font-raleway font-medium bg-[#3C6FD4] hover:bg-[#4985df]"
             onClick={handleClose}
-            aria-label="Close modal">
+            aria-label="Close modal"
+          >
             Go to Login
           </button>
         </div>
