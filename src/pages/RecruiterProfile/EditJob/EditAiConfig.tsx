@@ -68,8 +68,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
             notify('error', error?.data?.message)
             setSubmitting(false)
           }
-        }}
-      >
+        }}>
         {({ values, isSubmitting }) => (
           <Form>
             <TextField label="Name" name="name" placeholder="Name of Job" />
@@ -166,16 +165,14 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
                       {values.uploadedQuestions.map((q, i) => (
                         <div
                           key={i}
-                          className="flex flex-row items-center space-x-1"
-                        >
+                          className="flex flex-row items-center space-x-1">
                           <Field
                             name={`uploadedQuestions.${i}`}
                             className="border border-[#D0D5DD] p-4 rounded w-full"
                           />
                           <div
                             className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
-                            onClick={() => remove(i)}
-                          >
+                            onClick={() => remove(i)}>
                             <RiDeleteBin6Line />
                           </div>
                         </div>
@@ -183,8 +180,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
                       <button
                         type="button"
                         className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF]"
-                        onClick={() => push('')}
-                      >
+                        onClick={() => push('')}>
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Question
                         </span>
@@ -205,8 +201,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
             <button
               type="submit"
               className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-              disabled={isSubmitting}
-            >
+              disabled={isSubmitting}>
               {isSubmitting ? 'Submitting' : 'Submit'}
             </button>
           </Form>
