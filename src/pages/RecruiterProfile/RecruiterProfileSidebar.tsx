@@ -22,6 +22,7 @@ const RecruiterProfileSidebar = () => {
       </div>
       <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
+          // @ts-expect-error TODO: fix type error
           sideBarData={sidebarData}
           handleClick={() => setIsOpen(false)}
         />

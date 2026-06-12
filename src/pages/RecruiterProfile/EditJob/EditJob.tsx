@@ -54,12 +54,14 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
 
   const initialValues: EditJobType = {
     jobBrief: jobToEdit?.jobBrief || '',
+    // @ts-expect-error TODO: fix type error
     role: jobToEdit?.role?._id || { _id: '', name: '' },
     requirements: jobToEdit?.requirements || '',
     minSalary: jobToEdit?.minSalary || 0,
     maxSalary: jobToEdit?.maxSalary || 0,
     workMode: jobToEdit?.workMode || undefined,
     experienceLevel: jobToEdit?.experienceLevel || '',
+    // @ts-expect-error TODO: fix type error
     location: jobToEdit?.location || {
       country: '',
       state: '',

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import { CCollapse } from '@coreui/react'
+import React, { useState } from 'react'
 import { IoIosArrowDropdown, IoIosArrowDropup } from 'react-icons/io'
 
 type FaqData = {

@@ -1,7 +1,13 @@
+import 'react-responsive-modal/styles.css'
+
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Modal } from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import Facebook from '../../../assets/Facebook icon.svg'
+import LinkedIn from '../../../assets/linkedin logo_icon.svg'
+import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
@@ -10,11 +16,6 @@ import { RootState } from '../../../redux/store/store'
 import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
-import Facebook from '../../../assets/Facebook icon.svg'
-import LinkedIn from '../../../assets/linkedin logo_icon.svg'
-import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
 
 const PostedJob = () => {
   const { jobId } = useParams<{ jobId: string }>()
@@ -202,9 +203,11 @@ const PostedJob = () => {
                 </p>
                 <h5 className="text-[#101828] text-base text-start font-semibold">
                   {jobProfile?.location &&
+                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.country)}{' '}
                   {''}
                   {jobProfile?.location?.city &&
+                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>
               </div>

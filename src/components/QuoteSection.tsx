@@ -1,7 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import quotes from '../assets/quote1.jpeg'
-import { Link } from 'react-router-dom'
 
 const QuoteSection = () => {
   return (

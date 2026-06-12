@@ -1,7 +1,13 @@
+import 'react-responsive-modal/styles.css'
+
 import React, { useEffect, useState } from 'react'
+import { Modal } from 'react-responsive-modal'
 import { Link, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
+import Facebook from '../../../assets/Facebook icon.svg'
+import LinkedIn from '../../../assets/linkedin logo_icon.svg'
+import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import RichTextDisplay from '../../../components/global/RichTextDisplay'
 import Loading from '../../../components/Loading/Loading'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
@@ -9,11 +15,6 @@ import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
-import Facebook from '../../../assets/Facebook icon.svg'
-import LinkedIn from '../../../assets/linkedin logo_icon.svg'
-import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
 
 interface JobProfileProps {
   role?: {

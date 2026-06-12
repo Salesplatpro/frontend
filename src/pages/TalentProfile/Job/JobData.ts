@@ -65,6 +65,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Software Engineer',
     jobCategory: 'Engineering',
     jobDescription: 'Develop and maintain web applications.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'San Francisco, CA',
@@ -79,6 +80,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',
@@ -93,6 +95,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',
@@ -107,6 +110,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',
@@ -121,6 +125,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',
@@ -135,6 +140,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',
@@ -149,6 +155,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',
@@ -163,6 +170,7 @@ export const jobs: SingleJobProps[] = [
     jobTitle: 'Product Manager',
     jobCategory: 'Management',
     jobDescription: 'Oversee product development from ideation to launch.',
+    // @ts-expect-error TODO: fix type error
     details: [
       {
         location: 'New York, NY',

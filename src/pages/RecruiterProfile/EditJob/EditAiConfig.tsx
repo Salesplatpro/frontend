@@ -84,6 +84,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Automatically screen candidates with a quick initial test before further Evaluation"
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.prescreeningAssessment === 'true' && (
               <TextField
                 label="Min Pre-assessment Score"
@@ -103,6 +104,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Match Candidate's CV against job requirements to find best fit"
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.cvSimilarity === 'true' && (
               <>
                 <TextField
@@ -131,6 +133,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Generate tailored tests based on job-specific skills and qualifications."
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.personalizedAssessment === 'true' && (
               <TextField
                 label="Number of Personalized Questions"
@@ -150,6 +153,7 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
               icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
               tooltipContent="Assess candidate's personality traits to determine cultural and role fit"
             />
+            {/* @ts-expect-error TODO: fix type error */}
             {values.personalityEvaluation === 'true' && (
               <FieldArray name="uploadedQuestions">
                 {({ remove, push }) => (

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
-import FaqItem from './FaqItem'
+
 import { faqData } from './FaqData'
+import FaqItem from './FaqItem'
 
 const Faq = () => {
   const [search, setSearch] = useState('')

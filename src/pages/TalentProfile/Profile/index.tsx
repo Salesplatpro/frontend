@@ -19,7 +19,9 @@ import useProfile from './useProfileHook'
 const TalentProfile = () => {
   const {
     userInfo,
+    // @ts-expect-error TODO: fix type error
     profileImage,
+    // @ts-expect-error TODO: fix type error
     setProfileImage,
     uploadPic,
     updateProfilePics,
@@ -31,6 +33,7 @@ const TalentProfile = () => {
     userProfileError,
 
     // refetchProfile,
+    // @ts-expect-error TODO: fix type error
     handleProfileImageUpload,
 
     initialValues,

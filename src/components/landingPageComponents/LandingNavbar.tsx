@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HiOutlineMenu } from 'react-icons/hi'
 import { LiaTimesSolid } from 'react-icons/lia'
 import { useNavigate } from 'react-router-dom'

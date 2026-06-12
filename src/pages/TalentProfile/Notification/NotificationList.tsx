@@ -1,5 +1,8 @@
+import 'react-responsive-modal/styles.css'
+
 import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import Modal from 'react-responsive-modal'
 import { useOutletContext } from 'react-router-dom' // Make sure this import exists!
 
 import Loading from '../../../components/Loading/Loading'
@@ -9,8 +12,6 @@ import {
 } from '../../../redux/api/talent'
 import { truncateText } from '../../../utils/truncateTexts'
 import NotificationItem from './NotificationItem'
-import Modal from 'react-responsive-modal'
-import 'react-responsive-modal/styles.css'
 
 interface Sender {
   firstName: string

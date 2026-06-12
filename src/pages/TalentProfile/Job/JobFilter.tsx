@@ -7,7 +7,6 @@ import Location from '../../../components/global/Location'
 import AllRoles from '../../../components/Roles/AllRoles'
 import Worktype from '../../../components/Worktype'
 import { useScreenWidth } from '../../../hooks'
-
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 

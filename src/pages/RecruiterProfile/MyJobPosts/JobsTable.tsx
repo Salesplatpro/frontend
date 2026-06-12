@@ -1,3 +1,5 @@
+import 'react-responsive-modal/styles.css'
+
 import {
   Paper,
   Table,
@@ -8,20 +10,17 @@ import {
   TableRow,
 } from '@mui/material'
 import React, { useState } from 'react'
+import { Modal } from 'react-responsive-modal'
 import { Link } from 'react-router-dom'
 
+import Facebook from '../../../assets/Facebook icon.svg'
+import LinkedIn from '../../../assets/linkedin logo_icon.svg'
+import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import {
   calculateDaysFromCreation,
   recruiterJobPostsTypes,
 } from '../../../utils'
-
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
-
-import Facebook from '../../../assets/Facebook icon.svg'
-import LinkedIn from '../../../assets/linkedin logo_icon.svg'
-import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 
 type JobsTableType = {
   data: recruiterJobPostsTypes[]

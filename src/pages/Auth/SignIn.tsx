@@ -1,9 +1,15 @@
 import '../form.scss'
+import 'react-responsive-modal/styles.css'
+
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
+import { Modal } from 'react-responsive-modal'
+import { useNavigate } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
+
+import CheckMark from '../../assets/CheckMark.png'
 // import google from '../../assets/google.png'
 // import Salesplat from '../../assets/salesplat.png'
 import logo from '../../assets/logo.png'
@@ -22,10 +28,6 @@ import { SignUpSchema } from './AuthValidationSchema'
 import { Carousel } from './Carousel'
 import DropDown from './DropDown'
 import Loading from './Loading'
-import { useNavigate } from 'react-router-dom'
-import CheckMark from '../../assets/CheckMark.png'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
 
 const SignIn = () => {
   const [SendTalentReg] = useTalentRegMutation()
