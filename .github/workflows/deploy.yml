@@ -12,11 +12,17 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'yarn'
 
     - name: Install Dependencies and Build
       run: |
-        yarn install
+        yarn install --frozen-lockfile
         NODE_OPTIONS='--max-old-space-size=4096' yarn build
 
     - name: Deploy to Server

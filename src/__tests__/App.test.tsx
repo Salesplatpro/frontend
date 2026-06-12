@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
+import { Provider } from 'react-redux'
 import { describe, expect, it } from 'vitest'
 
 import App from '../App'
+import { store } from '../redux/store/store'
 
 /**
  * @vitest-environment jsdom
@@ -10,7 +12,11 @@ import App from '../App'
 
 describe('App page', () => {
   it('renders page', () => {
-    render(<App />)
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+    )
 
     expect(screen.getByTestId('app-page')).toBeTruthy()
   })

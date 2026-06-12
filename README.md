@@ -5,7 +5,7 @@
 
 </div>
 
-##  <a name="table">Table of Contents</a>
+## <a name="table">Table of Contents</a>
 
 1.  [Introduction](#introduction)
 2.  [Tech Stack](#tech-stack)
@@ -37,7 +37,7 @@ AuxHr is an AI-driven platform designed to streamline the recruitment process by
 - Scout & Recruit – Recruiters can post job openings and scout for talent efficiently.<br/>
 - Talent Registration & Profile Creation – Simplifies the onboarding process for job seekers.<br/>
 
-##  AI-Powered Assessments
+## AI-Powered Assessments
 
 - AI: CV Assessment – Analyzes resumes to extract key skills and qualifications.<br/>
 - AI: Pre-Screening Assessment – Filters out unqualified candidates before they reach recruiters.<br/>
@@ -45,7 +45,7 @@ AuxHr is an AI-driven platform designed to streamline the recruitment process by
 - AI: Personality Assessment – Assesses soft skills and cultural fit.<br/>
 - AI: Assessment Grading – Scores candidates based on their performance in various tests.
 
-##  Recruiter Features
+## Recruiter Features
 
 - Recruiter Job Post Creation – Allows companies to list job openings with AI-driven recommendations.<br/>
 - Recruiter Shortlisting – Automatically ranks and shortlists candidates based on their compatibility score.
@@ -88,10 +88,11 @@ yarn run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
 ## <a name="project-structure"> Project Structure</a>
+
 ```
       /src
       ├── assets/ # Local images, icons, static files
-      ├── components/ # Reusable UI components 
+      ├── components/ # Reusable UI components
       ├── hooks/ # Custom React hooks
       ├── pages/ # Page-level components (mapped to routes)
       ├── redux/ # Handles global state and API calls (slices, API calls)
@@ -102,31 +103,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 ```
 
 ## <a name="git-workflow--code-management"> Git Workflow & Code Management</a>
-We follow a **branching strategy** to keep development organized and production stable.
 
-### Branching
-- **`main`** → Production-ready code only (always stable).  
-- **`development`** → Active development branch where features are tested together.  
-- **Feature branches** → Create a new branch for every task or bugfix:  
-
-### Committing
-- Use clear, conventional commit messages:
-- feat: add recruiter job post form
-- fix: resolve navbar alignment issue
-- chore: update dependencies
-
-### Pull Requests (PRs)
-- Create a **PR from your feature branch → development**.  
-- Another team member reviews and approves the PR in the **admin repo**.  
-- Once merged, your feature becomes part of the `development` branch.  
-- After testing on `development`, create a **PR from development → main**.  
-  - This is for production release.  
--  Note: Merges into `main` and `development` can only be done from the **admin repo** because we are on the free Git version.  
-
-### Best Practices
-- Always pull the latest development before creating a new branch.
-- Resolve merge conflicts locally before submitting PRs.
-- Don’t commit directly to main or development.
+Our full branching strategy, commit conventions (enforced via Husky + commitlint — see `commitlint.config.js`), pull request process, local dev/verification workflow, and release process now live in **[`CONTRIBUTING.md`](./CONTRIBUTING.md)** — that's the source of truth, kept in sync with what's actually enforced in CI (`.github/workflows/ci.yml`) and branch protection. Start there.
 
 ## <a name="links"> Assets </a>
 
