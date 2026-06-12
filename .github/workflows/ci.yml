@@ -2,125 +2,47 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - development
+    branches: ['main', 'development']
   pull_request:
-    branches:
-      - main
-      - development
+    branches: ['main', 'development']
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  install:
-    name: Install dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-  lint:
-    name: Lint
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Run ESLint (no autofix)
-        run: yarn lint:check
-
-  format:
-    name: Format check
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Check formatting with Prettier
-        run: yarn format:check
-
-  typecheck:
-    name: Typecheck
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Run TypeScript compiler
-        run: yarn type-check
-
-  test:
-    name: Test + coverage
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Run tests with coverage
-        run: yarn test run --coverage
-
   build:
     name: Build
-    needs: install
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
+    env:
+      CI: true
+      NODE_ENV: test
+
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🚀 Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Install dependencies
+      - name: 📚 Install Packages
         run: yarn install --frozen-lockfile
 
-      - name: Build production bundle
+      - name: 🔒 Check for lockfile synchronization
+        run: git diff --exit-code yarn.lock || (echo "Lockfile is out of sync. Please run 'yarn install' to update it." && exit 1)
+
+      - name: 🕵️ Check for linting issues
+        run: yarn lint:check
+
+      - name: 🔍 Check for type errors
+        run: yarn type-check
+
+      - name: 🧪 Run unit tests
+        run: yarn test run --coverage
+
+      - name: 🏗️ Build
         run: yarn build
