@@ -24,15 +24,15 @@ interface RecentApplicationsProps {
 }
 
 const tableHeadStyle = {
-  color: '#101828',
-  backgroundColor: '#F8F8F8',
+  color: 'var(--color-grey-900)',
+  backgroundColor: 'var(--color-grey-50)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
 
 const tableCellStyle = {
-  color: '#101828',
+  color: 'var(--color-grey-900)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,

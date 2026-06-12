@@ -3,8 +3,9 @@ import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { CiSearch } from 'react-icons/ci'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { ChooseMethodCard } from '../../../components/Cards'
-import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
+import { ChooseMethodCard } from '@/components/features/recruiter/Cards'
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+
 import styles from './chooseMethod.module.scss'
 
 export const description = (

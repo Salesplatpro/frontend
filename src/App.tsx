@@ -9,20 +9,21 @@ import { useMediaQuery } from 'react-responsive'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Slide, ToastContainer } from 'react-toastify'
 
+import SingleJob from '@/components/features/jobs/SingleJob'
+import CustomerStories from '@/components/features/landing/customerStories'
+import Explore from '@/components/features/landing/Explore'
 import {
   AboutUs,
   Features,
   PrivacyPolicy,
   TermsAndCondition,
   Testimonials,
-} from './components'
-import CustomerStories from './components/customerStories'
-import Explore from './components/Explore'
-import Faq from './components/landingPageComponents/FAQ/Faq'
-import Pricing from './components/Pricing'
-import ProtectedRoute from './components/ProtectedRoute'
-import SingleJob from './components/SingleJob'
-import Solutions from './components/Solutions'
+} from '@/components/features/landing/landingPageComponents'
+import Faq from '@/components/features/landing/landingPageComponents/FAQ/Faq'
+import Pricing from '@/components/features/landing/Pricing'
+import Solutions from '@/components/features/landing/Solutions'
+import ProtectedRoute from '@/components/routing/ProtectedRoute'
+
 import { LandingPage } from './LandingPage'
 import PageNotFound from './PageNotFound'
 import { MainLayout, Resources } from './pages'

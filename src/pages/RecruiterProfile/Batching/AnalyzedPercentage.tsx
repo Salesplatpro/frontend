@@ -21,11 +21,13 @@ const ResultCircleWithLabel = (
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-        }}>
+        }}
+      >
         <Typography
           variant="caption"
           component="div"
-          sx={{ color: '#3c6fd4' }}>{`${Math.round(props.value)}%`}</Typography>
+          sx={{ color: 'var(--color-primary-strong)' }}
+        >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   )

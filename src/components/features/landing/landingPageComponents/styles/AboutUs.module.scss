@@ -1,0 +1,100 @@
+@use 'index' as *;
+
+.pad {
+  padding: 98px 72px;
+
+  @media (max-width: $small-breakpoint) {
+    padding: 32px 24px;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 70px;
+  padding: 109px 88px;
+
+  @media (max-width: $small-breakpoint) {
+    flex-direction: column;
+    padding: 60px 20px;
+    gap: 32px;
+  }
+}
+
+.imgContainer {
+  position: relative;
+  flex-shrink: 0;
+
+  @media (max-width: $small-breakpoint) {
+    width: 100%;
+  }
+}
+
+.img {
+  max-width: 460px;
+  border-radius: 14px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+
+  @media (max-width: $small-breakpoint) {
+    max-width: 100%;
+  }
+}
+
+.box1,
+.box2 {
+  width: 136px;
+  height: 109px;
+  border-radius: 10px;
+  position: absolute;
+  z-index: -20;
+
+  @media (max-width: $small-breakpoint) {
+    display: none;
+  }
+}
+
+.box1 {
+  background: linear-gradient(135deg, var(--color-info), #160040);
+  top: -70px;
+  right: -80px;
+}
+
+.box2 {
+  background: linear-gradient(135deg, var(--color-info), var(--color-midnight));
+  bottom: -70px;
+  left: -80px;
+}
+
+.whatwedo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 82px;
+  @extend .pad;
+  background: $landing-bg-card;
+
+  @media screen and (max-width: $small-breakpoint) {
+    flex-direction: column-reverse;
+    gap: 32px;
+  }
+}
+
+.whowehelp {
+  display: flex;
+  flex-direction: column;
+  gap: 27px;
+  @extend .pad;
+  background: $landing-bg-secondary-color;
+}
+
+.tryoutauxhr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 27px;
+  @extend .pad;
+}

@@ -9,8 +9,9 @@ import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import { Button, StatusBadge } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
 import {
@@ -23,8 +24,8 @@ import { AllJobTypes } from '../../../utils/types'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#d0d5dd',
-    color: '#101828',
+    backgroundColor: 'var(--color-grey-300)',
+    color: 'var(--color-grey-900)',
     fontWeight: 400,
     fontSize: 16,
   },
@@ -91,7 +92,7 @@ export const PipelineTable = () => {
     }
   }, [data])
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   return (
     <TableContainer component={Paper}>
@@ -119,7 +120,8 @@ export const PipelineTable = () => {
               </StyledTableCell>
               <ResponsiveTableRenderer
                 screenWidth={screenWidth}
-                breakpoint={768}>
+                breakpoint={768}
+              >
                 <StyledTableCell align={align}>
                   {application.currentStage}
                 </StyledTableCell>
@@ -135,8 +137,9 @@ export const PipelineTable = () => {
               </ResponsiveTableRenderer>
               <StyledTableCell align={align}>
                 <Link
-                  to={`/talentDashboard/applicationPipeline/${application.job?._id}`}>
-                  <Button title="View More" />
+                  to={`/talentDashboard/applicationPipeline/${application.job?._id}`}
+                >
+                  <Button>View More</Button>
                 </Link>
               </StyledTableCell>
             </StyledTableRow>

@@ -24,15 +24,15 @@ type SingleJobTableProps = {
 }
 
 const tableHeadStyle = {
-  color: '#101828',
-  backgroundColor: '#F8F8F8',
+  color: 'var(--color-grey-900)',
+  backgroundColor: 'var(--color-grey-50)',
   fontSize: '18px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
 
 const tableCellStyle = {
-  color: '#101828',
+  color: 'var(--color-grey-900)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
@@ -94,7 +94,8 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                 </TableCell>
                 <ResponsiveTableRenderer
                   screenWidth={screenWidth}
-                  breakpoint={768}>
+                  breakpoint={768}
+                >
                   <TableCell align={align} sx={tableCellStyle}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <StatusBadge
@@ -109,8 +110,9 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                 </ResponsiveTableRenderer>
                 <TableCell align={align} sx={tableCellStyle}>
                   <Link
-                    to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}>
-                    <Button textType="small" title="View Applicantion" />
+                    to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}
+                  >
+                    <Button size="sm">View Applicantion</Button>
                   </Link>
                 </TableCell>
               </TableRow>

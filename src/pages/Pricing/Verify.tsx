@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import { Button, DisplayError } from '../../components'
-import Loading from '../../components/Loading/Loading'
 import { useVerifyPaymentMutation } from '../../redux/api/apiSlice'
 import { notify } from '../../utils/toastNotifications'
 
@@ -49,10 +50,10 @@ const VerifyPaymentPage: React.FC = () => {
       {error ? (
         <div>
           <DisplayError message={error} />
-          <Button title="Go Back" onClick={() => navigate('/pricing')} />
+          <Button onClick={() => navigate('/pricing')}>Go Back</Button>
         </div>
       ) : (
-        <Loading />
+        <Spinner fullPage />
       )}
     </div>
   )

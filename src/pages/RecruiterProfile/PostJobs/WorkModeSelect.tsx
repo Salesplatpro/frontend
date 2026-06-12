@@ -30,7 +30,7 @@ const WorkModeSelect: React.FC<WorkModeSelectProps> = ({
     control: (base: any) => ({
       ...base,
       borderRadius: '6px',
-      borderColor: '#D0D5DD',
+      borderColor: 'var(--color-grey-300)',
       height: customHeight || '42px',
       fontFamily: 'Raleway',
     }),

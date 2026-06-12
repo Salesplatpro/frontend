@@ -5,8 +5,9 @@ import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
 import { Outlet } from 'react-router-dom'
 
-import { SideBar } from '../../components/sidebar/SideBar'
-import { sidebarData as originalSidebarData } from '../../components/TalentProfile/SideBar/SideBarData'
+import { sidebarData as originalSidebarData } from '@/components/features/talent/SideBar/SideBarData'
+import { SideBar } from '@/components/layout/sidebar/SideBar'
+
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
 interface TalentSidebarContext {

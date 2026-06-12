@@ -1,2 +1,2 @@
-export * from '../components/Resources'
 export * from './MainLayout'
+export * from '@/components/features/landing/Resources'

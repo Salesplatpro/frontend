@@ -122,7 +122,8 @@ const SignIn = () => {
                 userType: '',
               }}
               validationSchema={SignUpSchema}
-              onSubmit={handleSubmit}>
+              onSubmit={handleSubmit}
+            >
               {({ values }) => (
                 <Form>
                   <Field
@@ -202,7 +203,8 @@ const SignIn = () => {
                     <button
                       type="button"
                       className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}>
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
                       {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
@@ -227,7 +229,8 @@ const SignIn = () => {
                       className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
-                      }>
+                      }
+                    >
                       {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
@@ -239,8 +242,9 @@ const SignIn = () => {
                       <Loading />
                     ) : (
                       <button
-                        className=" w-full rounded-lg bg-[#3c6fd4] px-4 py-2 text-white hover:bg-[#4b82e1]"
-                        type="submit">
+                        className=" w-full rounded-lg bg-primary-strong px-4 py-2 text-white hover:bg-[#4b82e1]"
+                        type="submit"
+                      >
                         Sign Up
                       </button>
                     )}
@@ -255,7 +259,7 @@ const SignIn = () => {
                           alt="google"
                           className="w-[30px] h-[30px]"
                         />
-                        <p className="text-[16px] text-[#344054] font-raleway font-semibold leading-[24px]">
+                        <p className="text-[16px] text-grey-700 font-raleway font-semibold leading-[24px]">
                           Continue with Google
                         </p>
                       </button>
@@ -266,7 +270,7 @@ const SignIn = () => {
                           alt="salesplat logo"
                           className="w-[30px] h-[30px]"
                         />
-                        <p className="text-[16px] text-[#344054] font-raleway font-semibold leading-[24px]">
+                        <p className="text-[16px] text-grey-700 font-raleway font-semibold leading-[24px]">
                           Continue with Salesplat
                         </p>
                       </button>
@@ -293,14 +297,15 @@ const SignIn = () => {
           <h2 className="text-[20px] text-center leading-8 lg:text-[28px] font-bold font-raleway">
             Welcome onboard {modalName}
           </h2>
-          <p className="text-center px-7 py-2 text-[#667085] text-[15px] lg:text-[18px] font-raleway">
+          <p className="text-center px-7 py-2 text-grey-500 text-[15px] lg:text-[18px] font-raleway">
             SupportPro provides you with every opportunity to land your dream
             job with corporate organizations.
           </p>
           <button
-            className="close-modal px-14 py-2 my-4 rounded-lg text-white font-raleway font-medium bg-[#3C6FD4] hover:bg-[#4985df]"
+            className="close-modal px-14 py-2 my-4 rounded-lg text-white font-raleway font-medium bg-primary-strong hover:bg-primary"
             onClick={handleClose}
-            aria-label="Close modal">
+            aria-label="Close modal"
+          >
             Go to Login
           </button>
         </div>

@@ -10,8 +10,9 @@ import {
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import { DisplayError } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
 import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
 import { calculateDaysFromCreation } from '../../../utils'
 
@@ -29,15 +30,15 @@ interface ApplicationRow {
 }
 
 const tableHeadStyle = {
-  color: '#101828',
-  backgroundColor: '#F8F8F8',
+  color: 'var(--color-grey-900)',
+  backgroundColor: 'var(--color-grey-50)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
 
 const tableCellStyle = {
-  color: '#101828',
+  color: 'var(--color-grey-900)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
@@ -48,7 +49,7 @@ const AllApplications: React.FC = () => {
   const { data, isLoading, error } = useFetchAllApplicationsQuery({})
   const applications: ApplicationRow[] = data?.data?.applications || []
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   if (error) {
     return <DisplayError message="Error loading applications" />
@@ -98,7 +99,8 @@ const AllApplications: React.FC = () => {
       <button
         type="button"
         onClick={() => navigate(-1)}
-        className="px-2 py-2 w-[185px] h-[48px] bg-blue-500 text-white font-raleway text-[18px] font-medium rounded hover:bg-blue-700 mt-6">
+        className="px-2 py-2 w-[185px] h-[48px] bg-blue-500 text-white font-raleway text-[18px] font-medium rounded hover:bg-blue-700 mt-6"
+      >
         Back
       </button>
     </div>

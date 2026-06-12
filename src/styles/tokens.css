@@ -1,0 +1,162 @@
+/**
+ * Design tokens — single source of truth for all design values.
+ *
+ * Two layers:
+ *   1. Primitives: raw values named by scale (--color-brand-500, --space-4).
+ *      Never reference these directly in components.
+ *   2. Semantic: purpose-named aliases (--color-text-heading, --color-border).
+ *      Components, SCSS variables, and the Tailwind theme consume these.
+ *
+ * Theming: values respond to the OS color scheme via prefers-color-scheme.
+ * Dark values currently mirror light (architecture only — no dark palette has
+ * been designed yet). A future theme can be forced with [data-theme='...'] on
+ * <html>; absence of data-theme follows the OS preference.
+ */
+
+:root {
+  /* Until a real dark palette exists, keep UA-rendered controls light. */
+  color-scheme: light;
+
+  /* ── Color primitives (extracted from existing usage) ─────────────── */
+  --color-white: #ffffff;
+
+  --color-brand-50: #f1f6fd;
+  --color-brand-100: #dfebfa;
+  --color-brand-200: #c6ddf7;
+  --color-brand-300: #cad8ed;
+  --color-brand-500: #4985df;
+  --color-brand-600: #4279cb;
+  --color-brand-700: #3c6fd4;
+  --color-brand-800: #2441ab;
+
+  --color-grey-50: #f8f8f8;
+  --color-grey-200: #e4e7ec;
+  --color-grey-300: #d0d5dd;
+  --color-grey-400: #98a2b3;
+  --color-grey-500: #667085;
+  --color-grey-600: #525c68;
+  --color-grey-700: #344054;
+  --color-grey-900: #101828;
+
+  --color-charcoal: #4b4b4b;
+  --color-midnight: #0d0c22;
+  --color-danger-600: #c4320a;
+  --color-accent-600: #3538cd;
+  --color-success-600: #1b7b44;
+  --color-info-600: #006bff;
+
+  /* ── Semantic colors ───────────────────────────────────────────────── */
+  --color-primary: var(--color-brand-500);
+  --color-primary-hover: var(--color-brand-600);
+  --color-primary-strong: var(--color-brand-700);
+  --color-primary-tint: var(--color-brand-50);
+
+  --color-text-heading: var(--color-grey-900);
+  --color-text-body: var(--color-charcoal);
+  --color-text-muted: var(--color-grey-500);
+  --color-text-inverse: var(--color-white);
+
+  --color-bg-page: var(--color-white);
+  --color-bg-subtle: var(--color-grey-50);
+  --color-bg-dark: var(--color-grey-900);
+
+  --color-border: var(--color-grey-200);
+  --color-border-strong: var(--color-grey-300);
+
+  --color-danger: var(--color-danger-600);
+  --color-accent: var(--color-accent-600);
+  --color-success: var(--color-success-600);
+  --color-info: var(--color-info-600);
+  --color-focus-ring: var(--color-brand-500);
+
+  /* ── Typography ────────────────────────────────────────────────────── */
+  --font-heading: 'Raleway', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-accent: 'Poppins', sans-serif;
+
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-md: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 2rem; /* 32px */
+  --text-4xl: 2.5rem; /* 40px */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ── Spacing (4px base) ────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ── Radii ─────────────────────────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* ── Shadows (ported from tailwind.config.js customs) ──────────────── */
+  --shadow-sm: 0px 1.52px 3.05px 0px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0px 4.09px 6.14px -2.05px rgba(16, 24, 40, 0.05);
+  --shadow-lg: 0px 12.28px 16.38px -4.09px rgba(16, 24, 40, 0.1);
+  --shadow-glow: 0 4px 200px rgba(60, 111, 212, 0.6);
+
+  /* ── Z-index registry ──────────────────────────────────────────────── */
+  /* MUI modals sit at 1300 and react-toastify at 9999 — new layers must
+     slot around them. Never invent ad-hoc z-index values. */
+  --z-sticky: 100;
+  --z-dropdown: 1000;
+  --z-drawer: 1200;
+  --z-modal: 1400;
+  --z-tooltip: 1500;
+  --z-toast: 9999;
+
+  /* ── Motion ────────────────────────────────────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* OS dark preference — values mirror light until a dark palette is designed.
+   Only semantic tokens are ever overridden here; primitives are invariant. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-text-heading: var(--color-grey-900);
+    --color-text-body: var(--color-charcoal);
+    --color-text-muted: var(--color-grey-500);
+    --color-bg-page: var(--color-white);
+    --color-bg-subtle: var(--color-grey-50);
+    --color-border: var(--color-grey-200);
+    --color-border-strong: var(--color-grey-300);
+  }
+}
+
+/* Explicit theme override hook for the future (e.g. <html data-theme='dark'>). */
+[data-theme='dark'] {
+  --color-text-heading: var(--color-grey-900);
+  --color-text-body: var(--color-charcoal);
+  --color-text-muted: var(--color-grey-500);
+  --color-bg-page: var(--color-white);
+  --color-bg-subtle: var(--color-grey-50);
+  --color-border: var(--color-grey-200);
+  --color-border-strong: var(--color-grey-300);
+}

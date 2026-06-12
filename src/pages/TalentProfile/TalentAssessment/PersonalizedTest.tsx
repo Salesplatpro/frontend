@@ -2,7 +2,8 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import {
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
@@ -124,16 +125,16 @@ const PersonalizedTest: React.FC = () => {
   }
 
   if (personalizedLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   return (
     <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
       <div className="ml-8">
-        <h2 className="text-[30px] font-raleway text-[#101828] font-bold">
+        <h2 className="text-[30px] font-raleway text-grey-900 font-bold">
           Personalized Test
         </h2>
-        <p className="text-xl text-[#101828] font-medium mt-3 font-raleway">
+        <p className="text-xl text-grey-900 font-medium mt-3 font-raleway">
           Welcome to your Personalized test, you have these Questions to answer
           in this stage.
         </p>
@@ -143,15 +144,15 @@ const PersonalizedTest: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <ul>
             {personalizedQuestions.map((question, i) => (
-              <div key={i} className="bg-[#F8F8F8] mb-6 p-4 rounded-2xl">
-                <div className="flex justify-center items-start space-x-3 text-[#101828] font-raleway font-medium">
+              <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
+                <div className="flex justify-center items-start space-x-3 text-grey-900 font-raleway font-medium">
                   <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
                   <h3 className="text-[17px] leading-[150%]">
                     {question.question}
                   </h3>
                 </div>
                 <textarea
-                  className="w-full bg-white border border-[#D0D5DD] rounded-lg h-[93px] p-3 mt-4"
+                  className="w-full bg-white border border-grey-300 rounded-lg h-[93px] p-3 mt-4"
                   placeholder="Answer here"
                   name={`answer-${question._id}`}
                   onChange={(e) => handleChange(e, question._id)}
@@ -166,7 +167,8 @@ const PersonalizedTest: React.FC = () => {
                 allAnswered
                   ? 'bg-blue-500 text-white hover:bg-blue-700'
                   : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-              }`}>
+              }`}
+            >
               {isSubmitting ? 'submitting' : 'submit'}
             </button>
           </ul>

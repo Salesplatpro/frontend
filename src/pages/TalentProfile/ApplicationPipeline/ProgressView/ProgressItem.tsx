@@ -56,12 +56,12 @@ const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
         alt=""
         className="w-8"
       />
-      <div className="p-2 bg-[#F8F8F8] rounded-lg flex items-center justify-between w-full">
+      <div className="p-2 bg-grey-50 rounded-lg flex items-center justify-between w-full">
         <div className="flex items-center space-x-6">
           <div className="w-[56px] h-[56px] bg-[#E7EDF7] rounded-full flex items-center justify-center">
             <img src={progress.icon} alt="" />
           </div>
-          <h6 className="text-[18px] font-medium text-[#101828]">
+          <h6 className="text-[18px] font-medium text-grey-900">
             {progress.title}
           </h6>
         </div>
@@ -72,13 +72,15 @@ const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
           <button
             onClick={handleNavigate}
             className="w-[96px] h-[40px] text-white text-base rounded-lg"
-            style={{ backgroundColor: getStatusColor(progress.status) }}>
+            style={{ backgroundColor: getStatusColor(progress.status) }}
+          >
             Take Test
           </button>
         ) : (
           <button
             className="w-[96px] h-[40px] text-white text-base rounded-lg"
-            style={{ backgroundColor: getStatusColor(progress.status) }}>
+            style={{ backgroundColor: getStatusColor(progress.status) }}
+          >
             {progress.status === 'completed' ? 'Completed' : 'Awaiting'}
           </button>
         )}

@@ -60,7 +60,7 @@
 
   .employerType {
     font-size: 12px;
-    color: #667085;
+    color: var(--color-grey-500);
   }
 }
 
@@ -118,7 +118,7 @@
       justify-content: center;
       align-items: center;
       color: #4884df;
-      border: 0.5px solid #d0d5dd;
+      border: 0.5px solid var(--color-grey-300);
     }
 
     .employer {

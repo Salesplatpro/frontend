@@ -4,9 +4,10 @@ import { FaPlus } from 'react-icons/fa6'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 
-import RadioFieldGroup from '../../../components/Form/RadioFieldGroup'
-import TextField from '../../../components/Form/TextField'
-import Loading from '../../../components/Loading/Loading'
+import RadioFieldGroup from '@/components/forms/RadioFieldGroup'
+import TextField from '@/components/forms/TextField'
+import { Spinner } from '@/components/ui/Spinner'
+
 import {
   useGetAiConfigQuery,
   usePatchAiConfigMutation,
@@ -45,13 +46,13 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
   }, [data])
 
   if (isLoading || !aiConfigValues) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   return (
     <div className="md:px-4 py-4 md:w-[70%] w-[100%] mx-auto">
-      <h2 className="text-[#101828] text-[32px] mt-4 font-bold">AI Configs</h2>
-      <p className="text-[#667085] text-[16px] mb-6 font-light">
+      <h2 className="text-grey-900 text-[32px] mt-4 font-bold">AI Configs</h2>
+      <p className="text-grey-500 text-[16px] mb-6 font-light">
         Edit your configurations
       </p>
 
@@ -68,7 +69,8 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
             notify('error', error?.data?.message)
             setSubmitting(false)
           }
-        }}>
+        }}
+      >
         {({ values, isSubmitting }) => (
           <Form>
             <TextField label="Name" name="name" placeholder="Name of Job" />
@@ -165,22 +167,25 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
                       {values.uploadedQuestions.map((q, i) => (
                         <div
                           key={i}
-                          className="flex flex-row items-center space-x-1">
+                          className="flex flex-row items-center space-x-1"
+                        >
                           <Field
                             name={`uploadedQuestions.${i}`}
-                            className="border border-[#D0D5DD] p-4 rounded w-full"
+                            className="border border-grey-300 p-4 rounded w-full"
                           />
                           <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
-                            onClick={() => remove(i)}>
+                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
+                            onClick={() => remove(i)}
+                          >
                             <RiDeleteBin6Line />
                           </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF]"
-                        onClick={() => push('')}>
+                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info"
+                        onClick={() => push('')}
+                      >
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Question
                         </span>
@@ -200,8 +205,9 @@ export const EditAiConfig = ({ aiConfigId }: EditAiConfigProps) => {
 
             <button
               type="submit"
-              className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-              disabled={isSubmitting}>
+              className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? 'Submitting' : 'Submit'}
             </button>
           </Form>

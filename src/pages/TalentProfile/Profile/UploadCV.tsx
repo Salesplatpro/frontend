@@ -9,7 +9,8 @@ const UploadCV: React.FC<UploadCVProps> = ({ cvFileName, upload }) => {
   return (
     <button
       type="button"
-      className=" w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[150px] mt-2 bg-white text-[#344054] flex items-center justify-center flex-col">
+      className=" w-[100%] p-2 rounded-lg border border-grey-300 h-[150px] mt-2 bg-white text-grey-700 flex items-center justify-center flex-col"
+    >
       <img src={upload} alt="uploadCv" />
       {cvFileName ? (
         <span>{cvFileName}</span>

@@ -5,9 +5,10 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
-import TextField from '../../../components/Form/TextField'
-import Location from '../../../components/global/Location'
-import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
+import Location from '@/components/features/shared/global/Location'
+import CreatableRoleSelect from '@/components/forms/Roles/CreatableRoleSelect'
+import TextField from '@/components/forms/TextField'
+
 import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
 import { FormValues } from '../../../utils/jobPostTypes'
 import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
@@ -79,16 +80,17 @@ const PostJob: React.FC = () => {
   return (
     <div className="md:px-4 py-4 w-full">
       <div className="md:w-[70%] mx-auto w-full">
-        <h2 className="text-[#101828] text-[32px] mt-6 font-bold">
+        <h2 className="text-grey-900 text-[32px] mt-6 font-bold">
           Job details
         </h2>
-        <p className="text-[#667085] text-[16px] mb-6 font-light">
+        <p className="text-grey-500 text-[16px] mb-6 font-light">
           Tell us about your job
         </p>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={onSubmit}>
+          onSubmit={onSubmit}
+        >
           {({ values, isSubmitting, setFieldValue, errors, touched }) => (
             <Form>
               <div className="mb-4">
@@ -268,22 +270,25 @@ const PostJob: React.FC = () => {
                       {values.skills.map((skill, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center space-x-0">
+                          className="flex mb-2 items-center space-x-0"
+                        >
                           <Field
                             name={`skills.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded-lg w-full"
+                            className="border border-grey-300 p-4 rounded-lg w-full"
                           />
                           <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded-lg"
-                            onClick={() => remove(index)}>
+                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded-lg"
+                            onClick={() => remove(index)}
+                          >
                             <RiDeleteBin6Line />
                           </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
+                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info b-2 hover:bg-[#92bfff]"
+                        onClick={() => push('')}
+                      >
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Skill
                         </span>
@@ -310,22 +315,25 @@ const PostJob: React.FC = () => {
                       {values.goals.map((goal, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center space-x-0">
+                          className="flex mb-2 items-center space-x-0"
+                        >
                           <Field
                             name={`goals.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded w-full"
+                            className="border border-grey-300 p-4 rounded w-full"
                           />
                           <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
-                            onClick={() => remove(index)}>
+                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
+                            onClick={() => remove(index)}
+                          >
                             <RiDeleteBin6Line />
                           </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
+                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info b-2 hover:bg-[#92bfff]"
+                        onClick={() => push('')}
+                      >
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Goal
                         </span>
@@ -342,7 +350,7 @@ const PostJob: React.FC = () => {
               <div className="mt-10">
                 {jobId !== null ? (
                   <Link to={`/recruiterDashboard/postjob/${jobId}`}>
-                    <button className="px-20 py-3 bg-[#3C6FD4] text-white rounded hover:bg-blue-700">
+                    <button className="px-20 py-3 bg-primary-strong text-white rounded hover:bg-blue-700">
                       Next
                     </button>
                   </Link>
@@ -350,8 +358,9 @@ const PostJob: React.FC = () => {
                   <div>
                     <button
                       type="submit"
-                      className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-                      disabled={isSubmitting}>
+                      className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? 'Submitting' : 'Submit'}
                     </button>
                   </div>

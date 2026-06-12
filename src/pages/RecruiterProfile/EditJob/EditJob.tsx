@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 
-import TextField from '../../../components/Form/TextField'
-import Location from '../../../components/global/Location'
-// import Loading from '../../../components/Loading/Loading'
-import CreatableRoleSelect from '../../../components/Roles/CreatableRoleSelect'
+import Location from '@/components/features/shared/global/Location'
+// import { Spinner } from '@/components/ui/Spinner'
+import CreatableRoleSelect from '@/components/forms/Roles/CreatableRoleSelect'
+import TextField from '@/components/forms/TextField'
+
 import { useUpdateJobMutation } from '../../../redux/api/recruiter'
 // import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { EditJobType } from '../../../utils'
@@ -74,7 +75,7 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
   return (
     <div className="md:px-4 py-4 w-full">
       <div className="md:w-[70%] mx-auto w-full">
-        <h2 className="text-[#101828] text-[32px] mt-6 font-bold">
+        <h2 className="text-grey-900 text-[32px] mt-6 font-bold">
           Edit {capitalizeEachWord(jobToEdit?.role?.name)} Job
         </h2>
 
@@ -82,7 +83,8 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           enableReinitialize={true}
-          onSubmit={() => {}}>
+          onSubmit={() => {}}
+        >
           {({ values, setFieldValue, errors, touched }) => (
             <Form>
               <div className="mb-4">
@@ -274,22 +276,25 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
                       {values?.skills?.map((skill, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center space-x-0">
+                          className="flex mb-2 items-center space-x-0"
+                        >
                           <Field
                             name={`skills.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded-lg w-full"
+                            className="border border-grey-300 p-4 rounded-lg w-full"
                           />
                           <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded-lg"
-                            onClick={() => remove(index)}>
+                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded-lg"
+                            onClick={() => remove(index)}
+                          >
                             <RiDeleteBin6Line />
                           </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
+                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info b-2 hover:bg-[#92bfff]"
+                        onClick={() => push('')}
+                      >
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Skill
                         </span>
@@ -316,22 +321,25 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
                       {values?.goals?.map((goal, index) => (
                         <div
                           key={index}
-                          className="flex mb-2 items-center space-x-0">
+                          className="flex mb-2 items-center space-x-0"
+                        >
                           <Field
                             name={`goals.${index}`}
-                            className="border border-[#D0D5DD] p-4 rounded w-full"
+                            className="border border-grey-300 p-4 rounded w-full"
                           />
                           <div
-                            className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
-                            onClick={() => remove(index)}>
+                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
+                            onClick={() => remove(index)}
+                          >
                             <RiDeleteBin6Line />
                           </div>
                         </div>
                       ))}
                       <button
                         type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF] b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
+                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info b-2 hover:bg-[#92bfff]"
+                        onClick={() => push('')}
+                      >
                         <span className="flex items-center gap-2">
                           <FaPlus /> Add Goal
                         </span>
@@ -348,9 +356,10 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
               <div className="mt-10">
                 <button
                   type="submit"
-                  className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
+                  className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
                   disabled={isSubmitting}
-                  onClick={() => handleUpdateJob(values)}>
+                  onClick={() => handleUpdateJob(values)}
+                >
                   {isSubmitting ? 'Submitting' : 'Submit'}
                 </button>
               </div>

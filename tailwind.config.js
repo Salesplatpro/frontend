@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+// Theme values resolve to the design tokens in src/styles/tokens.css so that
+// Tailwind utilities and CSS modules share a single source of truth.
 module.exports = {
   content: [
     './src/**/*.{js,jsx,ts,tsx}', // Adjust according to your project structure
@@ -6,16 +8,58 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        brand: {
+          50: 'var(--color-brand-50)',
+          100: 'var(--color-brand-100)',
+          200: 'var(--color-brand-200)',
+          300: 'var(--color-brand-300)',
+          500: 'var(--color-brand-500)',
+          600: 'var(--color-brand-600)',
+          700: 'var(--color-brand-700)',
+          800: 'var(--color-brand-800)',
+        },
+        grey: {
+          50: 'var(--color-grey-50)',
+          200: 'var(--color-grey-200)',
+          300: 'var(--color-grey-300)',
+          400: 'var(--color-grey-400)',
+          500: 'var(--color-grey-500)',
+          600: 'var(--color-grey-600)',
+          700: 'var(--color-grey-700)',
+          900: 'var(--color-grey-900)',
+        },
+        charcoal: 'var(--color-charcoal)',
+        midnight: 'var(--color-midnight)',
+        danger: 'var(--color-danger)',
+        accent: 'var(--color-accent)',
+        info: 'var(--color-info)',
+        success: 'var(--color-success)',
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+          strong: 'var(--color-primary-strong)',
+          tint: 'var(--color-primary-tint)',
+        },
+      },
       fontFamily: {
-        raleway: ['Raleway, san-serif'],
-        poppins: ['Poppins, san-serif'],
-        inter: ['inter, san-serif'],
+        raleway: ['var(--font-heading)'],
+        poppins: ['var(--font-accent)'],
+        inter: ['var(--font-body)'],
       },
       boxShadow: {
-        custom: '0px 1.52px 3.05px 0px rgba(16, 24, 40, 0.05)',
-        'custom-1': '0px 4.09px 6.14px -2.05px rgba(16, 24, 40, 0.05)',
-        'custom-2': '0px 12.28px 16.38px -4.09px rgba(16, 24, 40, 0.10)',
-        'custom-blue': '0 4px 200px rgba(60, 111, 212, 0.6)',
+        custom: 'var(--shadow-sm)',
+        'custom-1': 'var(--shadow-md)',
+        'custom-2': 'var(--shadow-lg)',
+        'custom-blue': 'var(--shadow-glow)',
+      },
+      zIndex: {
+        sticky: 'var(--z-sticky)',
+        dropdown: 'var(--z-dropdown)',
+        drawer: 'var(--z-drawer)',
+        modal: 'var(--z-modal)',
+        tooltip: 'var(--z-tooltip)',
+        toast: 'var(--z-toast)',
       },
     },
   },

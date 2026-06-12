@@ -4,8 +4,9 @@ import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 
-import { OutlineButton, RecruiterButton } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
+import { Button } from '../../../components'
 import {
   useFetchApplicantProgressQuery,
   usePatchApplicationStatusMutation,
@@ -99,7 +100,7 @@ export const ApplicationProgress = () => {
   }
 
   if (isLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   return (
@@ -132,18 +133,26 @@ export const ApplicationProgress = () => {
       </div>
       <div className="flex justify-center space-x-2">
         <div className="w-1/3">
-          <OutlineButton
-            buttonTitle={loadingReject ? 'Rejecting...' : 'Reject'}
+          <Button
+            variant="outline"
+            size="wide"
+            fullWidth
             onClick={() => handleStatusUpdate('rejected')}
             disabled={jodStatus === 'rejected' && true}
-          />
+          >
+            {loadingReject ? 'Rejecting...' : 'Reject'}
+          </Button>
         </div>
         <div className="w-1/3">
-          <RecruiterButton
-            buttonTitle={loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
+          <Button
+            variant="primary"
+            size="wide"
+            fullWidth
             onClick={() => handleStatusUpdate('shortlisted')}
             disabled={jodStatus === 'shortlisted' && true}
-          />
+          >
+            {loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
+          </Button>
         </div>
       </div>
       <div>

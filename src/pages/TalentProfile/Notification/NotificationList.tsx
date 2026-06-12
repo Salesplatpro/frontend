@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react'
 import Modal from 'react-responsive-modal'
 import { useOutletContext } from 'react-router-dom' // Make sure this import exists!
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import {
   useGetMessagesQuery,
   usePatchMessageMutation,
@@ -128,7 +129,7 @@ const NotificationList: React.FC = () => {
 
   const closeModal = () => setIsModalOpen(false)
 
-  if (messagesLoading) return <Loading />
+  if (messagesLoading) return <Spinner fullPage />
   if (messagesError) return <Alert severity="error">Error Fetching Data</Alert>
   if (allMessages.length === 0) {
     return (
@@ -174,24 +175,26 @@ const NotificationList: React.FC = () => {
 
       <Modal open={isModalOpen} onClose={closeModal} center>
         <div className="flex flex-col items-center justify-center rounded-lg p-6 sm:p-10 md:p-12 lg:p-14 max-w-[500px] w-full">
-          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold font-raleway text-center text-[#0D0C22]">
+          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold font-raleway text-center text-midnight">
             {modalTitle}
           </h2>
 
-          <p className="text-center font-raleway font-medium text-[16px] lg:text-[18px] py-2 text-[#0D0C22]">
+          <p className="text-center font-raleway font-medium text-[16px] lg:text-[18px] py-2 text-midnight">
             {modalMessage}
           </p>
 
           <button
-            className="w-full sm:w-auto px-8 md:px-12 lg:px-16 py-2 mt-2 rounded-lg text-white font-raleway font-medium text-sm sm:text-base md:text-lg bg-[#3C6FD4] hover:bg-[#4985df] transition"
-            onClick={handleConfirm}>
+            className="w-full sm:w-auto px-8 md:px-12 lg:px-16 py-2 mt-2 rounded-lg text-white font-raleway font-medium text-sm sm:text-base md:text-lg bg-primary-strong hover:bg-primary transition"
+            onClick={handleConfirm}
+          >
             {modalAction === 'acknowledge' ? 'Acknowledge' : 'Reject'}
           </button>
 
           <button
-            className="w-full sm:w-auto px-8 py-2 mt-3 rounded-lg font-raleway font-medium text-base md:text-lg text-[#3C6FD4] hover:underline"
+            className="w-full sm:w-auto px-8 py-2 mt-3 rounded-lg font-raleway font-medium text-base md:text-lg text-primary-strong hover:underline"
             onClick={handleClose}
-            aria-label="Close modal">
+            aria-label="Close modal"
+          >
             Cancel
           </button>
         </div>

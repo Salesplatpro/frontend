@@ -6,24 +6,27 @@
 @use 'tailwindcss/components' as *;
 @use 'tailwindcss/utilities' as *;
 
-$font-color: #4b4b4b;
+// SCSS variables resolve to the design tokens in src/styles/tokens.css.
+// New styles should use var(--*) tokens directly; these aliases exist so
+// legacy SCSS keeps compiling against the same single source of truth.
+$font-color: var(--color-text-body);
 $nav-f-size: 1rem;
 $nav-f-weight: 600;
 $nav-line-height: 18.78px;
-$primary-blue: #4985df;
-$primary-f-white: #f1f6fd;
-$primary-f-blue: #c6ddf7;
-$primary-f-offblue: #cad8ed;
-$primary-font-family: 'Raleway', sans-serif;
-$poppins: 'Poppins', sans-serif;
-$secondary-lm-blue: #dfebfa;
-$primary-dark-bg: #101828;
-$gray-light: #e4e7ec;
-$inter-f: 'Inter', sans-serif;
-$gray-dark: #667085;
-$gray-f-light: #98a2b3;
-$new-dark: #0d0c22;
-$deep-gray: #525c68;
+$primary-blue: var(--color-primary);
+$primary-f-white: var(--color-brand-50);
+$primary-f-blue: var(--color-brand-200);
+$primary-f-offblue: var(--color-brand-300);
+$primary-font-family: var(--font-heading);
+$poppins: var(--font-accent);
+$secondary-lm-blue: var(--color-brand-100);
+$primary-dark-bg: var(--color-bg-dark);
+$gray-light: var(--color-border);
+$inter-f: var(--font-body);
+$gray-dark: var(--color-text-muted);
+$gray-f-light: var(--color-grey-400);
+$new-dark: var(--color-midnight);
+$deep-gray: var(--color-grey-600);
 
 .navi {
   background-color: $primary-dark-bg;
@@ -124,12 +127,12 @@ $deep-gray: #525c68;
     border: 2px solid $primary-blue;
 
     a {
-      color: #ffffff;
+      color: var(--color-white);
       text-decoration: none;
     }
 
     border: 2px solid $primary-blue;
-    color: #ffffff;
+    color: var(--color-white);
   }
 }
 
@@ -186,7 +189,7 @@ $deep-gray: #525c68;
 
       button {
         padding: 12px 24px 12px 24px;
-        background-color: #ffffff;
+        background-color: var(--color-white);
         border-radius: 8px;
         width: fit-content;
         font-size: 18px;
@@ -195,7 +198,7 @@ $deep-gray: #525c68;
         letter-spacing: -1.9%;
         text-transform: capitalize;
         cursor: pointer;
-        color: #344054;
+        color: var(--color-grey-700);
         border: 0.8px solid $primary-f-offblue;
         font-family: $primary-font-family;
       }
@@ -240,7 +243,7 @@ $deep-gray: #525c68;
       font-family: $poppins;
       font-size: 20px;
       line-height: 30px;
-      color: #667085;
+      color: var(--color-grey-500);
 
       h5 {
         font-weight: 600;
@@ -248,7 +251,7 @@ $deep-gray: #525c68;
         line-height: 44px;
         letter-spacing: -2%;
         font-family: $primary-font-family;
-        color: #101828;
+        color: var(--color-grey-900);
       }
     }
 
@@ -271,7 +274,7 @@ $deep-gray: #525c68;
         line-height: 72px;
         font-size: 60px;
         letter-spacing: -2%;
-        color: #ffffff;
+        color: var(--color-white);
       }
 
       p {
@@ -351,7 +354,7 @@ $deep-gray: #525c68;
       border-radius: 8px;
       background-color: $primary-dark-bg;
       border: none;
-      color: #ffffff;
+      color: var(--color-white);
       font-size: 18px;
       line-height: 28px;
       letter-spacing: -1.9%;
@@ -467,7 +470,7 @@ $deep-gray: #525c68;
       gap: 40px;
 
       button {
-        color: #ffffff;
+        color: var(--color-white);
         font-weight: 600;
         font-size: 18px;
         line-height: 28px;
@@ -492,7 +495,7 @@ $deep-gray: #525c68;
         font-size: 36px;
         line-height: 44px;
         letter-spacing: -2%;
-        color: #ffffff;
+        color: var(--color-white);
       }
 
       p {
@@ -531,12 +534,12 @@ $deep-gray: #525c68;
           font-size: 30px;
           line-height: 40.5px;
           letter-spacing: -2%;
-          color: #ffffff;
+          color: var(--color-white);
         }
 
         .inner {
           .tip {
-            color: #ffffff;
+            color: var(--color-white);
             font-weight: 500;
             font-size: 18px;
             line-height: 28px;
@@ -864,10 +867,10 @@ $deep-gray: #525c68;
           padding: 12px 16px;
           display: flex;
           align-items: center;
-          background-color: #ffffff;
+          background-color: var(--color-white);
           gap: 8px;
           border-radius: 8px;
-          border: 1px solid #d0d5dd;
+          border: 1px solid var(--color-grey-300);
 
           img {
             max-width: 20px;
@@ -922,7 +925,7 @@ $deep-gray: #525c68;
           font-size: 16px;
           line-height: 18.78px;
           letter-spacing: -1.9%;
-          color: #ffffff;
+          color: var(--color-white);
           border-radius: 8px;
           padding: 12px 24px;
           border: none;
@@ -939,7 +942,7 @@ $deep-gray: #525c68;
     background-color: $primary-blue;
     border-radius: 8px;
     font-family: $primary-font-family;
-    color: #ffffff;
+    color: var(--color-white);
     font-weight: 600;
     font-size: 16px;
     line-height: 18.78px;
@@ -970,7 +973,7 @@ $deep-gray: #525c68;
       }
 
       h3 {
-        color: #ffffff;
+        color: var(--color-white);
         font-family: $inter-f;
         font-weight: 600;
         font-size: 48px;
@@ -991,7 +994,7 @@ $deep-gray: #525c68;
       font-size: 16px;
       line-height: 28px;
       font-weight: 600;
-      color: #ffffff;
+      color: var(--color-white);
       background-color: $primary-blue;
       border-radius: 8px;
       padding: 12px 24px;
@@ -1064,7 +1067,7 @@ $deep-gray: #525c68;
           font-size: 36px;
           line-height: 42.26px;
           letter-spacing: -0.46px;
-          color: #101828;
+          color: var(--color-grey-900);
           margin-bottom: 16px;
         }
 
@@ -1165,7 +1168,7 @@ $deep-gray: #525c68;
         }
 
         h2 .h2-sub {
-          color: #c6ddf7;
+          color: var(--color-brand-200);
         }
 
         p.inner {
@@ -1202,7 +1205,7 @@ $deep-gray: #525c68;
 }
 
 .customer-intro {
-  background-color: #ffffff;
+  background-color: var(--color-white);
   max-width: 720px;
   margin: 64px auto;
 
@@ -1258,7 +1261,7 @@ $deep-gray: #525c68;
     .line {
       width: 100%;
       height: 2px;
-      background: #e4e7ec;
+      background: var(--color-grey-200);
       margin-bottom: 20px;
     }
 
@@ -1279,7 +1282,7 @@ $deep-gray: #525c68;
     }
 
     .sm {
-      border: 1px solid #d0d5dd;
+      border: 1px solid var(--color-grey-300);
       height: 40px;
       padding: 10px;
       display: flex;
@@ -1295,7 +1298,7 @@ $deep-gray: #525c68;
       .social {
         width: 20px;
         height: 20px;
-        color: #d0d5dd;
+        color: var(--color-grey-300);
       }
     }
 
@@ -1509,7 +1512,7 @@ $deep-gray: #525c68;
       flex-grow: 1;
       border-radius: 8px;
       padding: 12px 24px;
-      color: #344054;
+      color: var(--color-grey-700);
       background-color: white;
       font-weight: 600;
       font-size: 16px;
@@ -2037,10 +2040,10 @@ $deep-gray: #525c68;
     .custom-select-container {
       position: relative;
       padding: 12px 16px;
-      background-color: #ffffff;
+      background-color: var(--color-white);
       gap: 8px;
       border-radius: 8px;
-      border: 1px solid #d0d5dd;
+      border: 1px solid var(--color-grey-300);
       display: flex;
 
       img {
@@ -2100,10 +2103,10 @@ $deep-gray: #525c68;
           .custom-select-container {
             position: relative;
             padding: 12px 16px;
-            background-color: #ffffff;
+            background-color: var(--color-white);
             gap: 8px;
             border-radius: 8px;
-            border: 1px solid #d0d5dd;
+            border: 1px solid var(--color-grey-300);
             display: flex;
 
             img {
@@ -2171,7 +2174,7 @@ $deep-gray: #525c68;
   // customer Story
   .customerstory-container {
     padding: 38px 12px 0px 12px;
-    background-color: #ffffff;
+    background-color: var(--color-white);
     height: fit-content;
 
     .home-pg {
@@ -2194,18 +2197,18 @@ $deep-gray: #525c68;
           h2 {
             font-size: 36px;
             line-height: 43.34px;
-            color: #101828;
+            color: var(--color-grey-900);
           }
 
           h2 .h2-sub {
-            color: #667085;
+            color: var(--color-grey-500);
           }
 
           p.inner {
             font-weight: 400;
             font-size: 18px;
             line-height: 24px;
-            color: #667085;
+            color: var(--color-grey-500);
             font-family: $poppins;
           }
 
@@ -2218,10 +2221,10 @@ $deep-gray: #525c68;
             // }
             .customer-name {
               font-size: 16px;
-              color: #101828;
+              color: var(--color-grey-900);
 
               .role {
-                color: #667085;
+                color: var(--color-grey-500);
               }
             }
           }
@@ -2236,7 +2239,7 @@ $deep-gray: #525c68;
     }
   }
   .customer-intro {
-    background-color: #ffffff;
+    background-color: var(--color-white);
     max-width: 100%;
     padding: 0 12px;
     // margin: 64px auto;
@@ -2300,7 +2303,7 @@ $deep-gray: #525c68;
       .line {
         width: 100%;
         height: 2px;
-        background: #e4e7ec;
+        background: var(--color-grey-200);
         margin-bottom: 25px;
       }
 
@@ -2322,7 +2325,7 @@ $deep-gray: #525c68;
       }
 
       .sm {
-        border: 1px solid #d0d5dd;
+        border: 1px solid var(--color-grey-300);
         height: 40px;
         padding: 10px;
         display: flex;
@@ -2338,7 +2341,7 @@ $deep-gray: #525c68;
         .social {
           width: 20px;
           height: 20px;
-          color: #d0d5dd;
+          color: var(--color-grey-300);
         }
       }
 

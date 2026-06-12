@@ -5,12 +5,13 @@ import { Modal } from 'react-responsive-modal'
 import { Link, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
+import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { Spinner } from '@/components/ui/Spinner'
+
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import RichTextDisplay from '../../../components/global/RichTextDisplay'
-import Loading from '../../../components/Loading/Loading'
-import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
@@ -68,7 +69,7 @@ const IndividualJob = () => {
     }
   }, [data, error])
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   const closeModal = () => {
     setIsModalOpen(false)
@@ -135,35 +136,35 @@ const IndividualJob = () => {
         <div className="flex md:flex-row flex-col justify-between items-start md:w-[90%] w-full mx-auto md:mt-10 mt-6">
           <div className="md:w-[60%] w-full text-start">
             <div className="">
-              {/* <h5 className="text-[#101828] text-lg text-start font-semibold">
+              {/* <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your role at {''} {jobProfile?.firstName} {''}{' '}
                 {jobProfile?.lastName}
               </h5> */}
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your role
               </h5>
               <RichTextDisplay
                 content={jobProfile?.jobBrief || ' '}
-                className="text-[#667085] text-base mt-0 text-justify"
+                className="text-grey-500 text-base mt-0 text-justify"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Requirements
               </h5>
               <RichTextDisplay
                 content={jobProfile?.requirements || ' '}
-                className="text-[#667085] text-base mt-0 text-justify"
+                className="text-grey-500 text-base mt-0 text-justify"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Skills
               </h5>
               {jobProfile?.skills && (
                 <ul className="list-disc ml-5 pl-0">
                   {jobProfile?.skills.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
+                    <li key={i} className="text-grey-500 text-base">
                       {item}
                     </li>
                   ))}
@@ -171,13 +172,13 @@ const IndividualJob = () => {
               )}
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Goals
               </h5>
               {jobProfile?.goals && (
                 <ul className="list-disc ml-5 pl-0">
                   {jobProfile?.goals.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
+                    <li key={i} className="text-grey-500 text-base">
                       {item}
                     </li>
                   ))}
@@ -196,23 +197,24 @@ const IndividualJob = () => {
               <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
                 <button
                   type="submit"
-                  className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
+                  className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700"
+                >
                   Apply
                 </button>
               </Link>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Job Type
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {jobProfile?.remote ? 'True' : 'False'}
                 </h5>
               </div>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Location
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {jobProfile?.location &&
                     capitalizeFirstWord(jobProfile?.location?.country)}{' '}
                   {''}
@@ -221,10 +223,10 @@ const IndividualJob = () => {
                 </h5>
               </div>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Experience Level
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {capitalizeFirstWord(jobProfile?.experienceLevel)}
                 </h5>
               </div>
@@ -244,7 +246,8 @@ const IndividualJob = () => {
               <button
                 key={index}
                 className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
-                onClick={() => handleRedirectShare(option.link)}>
+                onClick={() => handleRedirectShare(option.link)}
+              >
                 <img
                   src={option.icon}
                   alt={option.text}

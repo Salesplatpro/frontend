@@ -16,10 +16,10 @@ const ProgressHeader: React.FC<HeaderProps> = ({
   return (
     <div>
       <div className="mt-4 mb-8 px-4">
-        <h2 className="font-bold md:text-3xl text-xl text-[#101828]">
+        <h2 className="font-bold md:text-3xl text-xl text-grey-900">
           Progress View
         </h2>
-        <p className="text-[20px] font-normal text-[#101828]">
+        <p className="text-[20px] font-normal text-grey-900">
           Your job application pipeline. Track your progress and see where you
           are in the process.
         </p>

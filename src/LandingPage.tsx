@@ -7,8 +7,8 @@ import {
   RecruitmentWorkflow,
   Statistics,
   Testimonials,
-} from './components'
-import { howItWorksData } from './components/landingPageComponents/utils'
+} from '@/components/features/landing/landingPageComponents'
+import { howItWorksData } from '@/components/features/landing/landingPageComponents/utils'
 
 export const LandingPage = () => (
   <div style={{ overflowX: 'hidden' }}>
