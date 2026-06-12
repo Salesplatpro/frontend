@@ -118,22 +118,19 @@ export const JobsTable = ({ data }: JobsTableType) => {
             <TableCell
               align={align}
               sx={tableHeadStyle}
-              className="border-l border-[#b5b4b4]"
-            >
+              className="border-l border-[#b5b4b4]">
               Applicants
             </TableCell>
             <TableCell
               align={align}
               sx={tableHeadStyle}
-              className="whitespace-nowrap border-l border-[#b5b4b4]"
-            >
+              className="whitespace-nowrap border-l border-[#b5b4b4]">
               Date Creation
             </TableCell>
             <TableCell
               align={align}
               sx={tableHeadStyle}
-              className="border-l border-[#b5b4b4]"
-            >
+              className="border-l border-[#b5b4b4]">
               Details
             </TableCell>
           </TableRow>
@@ -145,20 +142,17 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 component="th"
                 align={align}
                 sx={tableCellStyle}
-                className="capitalize"
-              >
+                className="capitalize">
                 <Link
                   to={`/recruiterDashboard/jobdetail/${job._id}`}
-                  className="block max-w-[280px] text-left truncate text-black font-raleway"
-                >
+                  className="block max-w-[280px] text-left truncate text-black font-raleway">
                   {job.role.name}
                 </Link>
               </TableCell>
               <TableCell align={align} sx={tableCellStyle}>
                 <Link
                   to={`/recruiterDashboard/singleJobPost/${job._id}`}
-                  state={{ jobName: job.role.name, postedAt: job.createdAt }}
-                >
+                  state={{ jobName: job.role.name, postedAt: job.createdAt }}>
                   <button className="text-[#3C6FD4] font-raleway font-semibold text-[16px] leading-[28px] underline">
                     View ({job.noOfApplicants})
                   </button>
@@ -173,12 +167,10 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 <div className="flex items-center justify-center md:space-x-2">
                   <Link
                     to={`/recruiterDashboard/jobdetail/${job._id}`}
-                    state={{ jobName: job.role.name, postedAt: job.createdAt }}
-                  >
+                    state={{ jobName: job.role.name, postedAt: job.createdAt }}>
                     <button
                       className="text-[#ffffff] font-raleway font-semibold whitespace-nowrap flex text-[14px] leading-[28px] py-1 px-3 
-                    bg-[#3C6FD4] rounded-lg"
-                    >
+                    bg-[#3C6FD4] rounded-lg">
                       View Job
                     </button>
                   </Link>
@@ -201,8 +193,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
               <button
                 key={index}
                 className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
-                onClick={() => handleRedirectShare(option.link)}
-              >
+                onClick={() => handleRedirectShare(option.link)}>
                 <img
                   src={option.icon}
                   alt={option.text}
