@@ -1,6 +1,6 @@
 @use './index' as *;
 
-.flexDirectionColumn {
+%flexDirectionColumn {
   display: flex;
   flex-direction: column;
 }
@@ -17,7 +17,7 @@
 }
 
 .heroLeft {
-  @extend .flexDirectionColumn;
+  @extend %flexDirectionColumn;
   width: 65%;
   background-image: url('../../../../../assets/landing_bg.png');
 
@@ -44,31 +44,11 @@
   }
 }
 
-.heroContainer {
-  @extend .flexDirectionColumn;
-  justify-content: center;
-  gap: 48px;
-
-  // @media screen and (max-width: 768px) {
-  //   gap: 24px;
-  //   align-items: center;
-  // }
-}
-
 .heroContent {
-  @extend .flexDirectionColumn;
+  @extend %flexDirectionColumn;
   max-width: 600px;
   gap: 16px;
   z-index: 100;
-
-  // @media screen and (max-width: 768px) {
-  //   margin-top: 0;
-  //   width: 100%;
-  //   align-items: center;
-  //   justify-content: flex-start;
-  //   text-align: center;
-  //   gap: 12px;
-  // }
 }
 
 .heroFooter {

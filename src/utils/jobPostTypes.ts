@@ -42,21 +42,6 @@ export interface FormValues {
   goals: string[]
 }
 
-export interface configProps {
-  name: string
-  jobId: string
-  prescreeningAssessment: string
-  minPrescreeningScore?: string
-  cvSimilarity: string
-  minCvSimilarityScore?: string
-  noOfCvSimilarCandidates?: string
-  personalizedAssessment: string
-  noPersonalizedQuestions?: string
-  personalityEvaluation: string
-  uploadedQuestions?: string[]
-  recruiterGuide: string
-}
-
 export interface JobFiltersTypes {
   role?: string
   experienceLevel?: string

@@ -1,10 +1,10 @@
-.shared-style {
+%shared-style {
   display: flex;
   flex-direction: column;
 }
 
 .container {
-  @extend .shared-style;
+  @extend %shared-style;
   gap: 6px;
   padding: 6px 0;
 }

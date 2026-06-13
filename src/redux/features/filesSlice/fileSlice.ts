@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface CvCoverLetter {
+interface CvCoverLetter {
   cv: File | null
   coverLetter: File | null
 }
@@ -49,9 +49,6 @@ const fileSlice = createSlice({
       const index = action.payload
       state.uploads[index] = true
     },
-    setCvCoverLetter: (state, action: PayloadAction<CvCoverLetter[]>) => {
-      state.cvCoverLetter = action.payload
-    },
     addCvCoverLetter(state, action: PayloadAction<CvCoverLetter[]>) {
       state.cvCoverLetter = [...state.cvCoverLetter, ...action.payload]
     },
@@ -78,7 +75,6 @@ export const {
   removeFile,
   saveFileResult,
   markUploadCompleted,
-  setCvCoverLetter,
   addCvCoverLetter,
   saveCvCoverLetterResult,
   markCvCoverLetterUploadCompleted,

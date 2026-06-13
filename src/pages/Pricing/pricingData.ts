@@ -19,7 +19,7 @@ export interface Plan {
   isDeleted: boolean
 }
 
-export type PlansData = {
+type PlansData = {
   plans: Plan[]
 }
 

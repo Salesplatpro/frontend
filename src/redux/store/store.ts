@@ -14,7 +14,6 @@ export const store = configureStore({
           'file/setFiles',
           'file/addFiles',
           'file/addCvCoverLetter',
-          'file/setCvCoverLetter',
         ],
         ignoredPaths: ['file.files', 'file.cvCoverLetter', 'file.results'],
       },
