@@ -1,6 +1,6 @@
 @use 'index' as *;
 
-.pad {
+%pad {
   padding: 98px 72px;
 
   @media (max-width: $small-breakpoint) {
@@ -73,7 +73,7 @@
   justify-content: center;
   align-items: center;
   gap: 82px;
-  @extend .pad;
+  @extend %pad;
   background: $landing-bg-card;
 
   @media screen and (max-width: $small-breakpoint) {
@@ -86,7 +86,7 @@
   display: flex;
   flex-direction: column;
   gap: 27px;
-  @extend .pad;
+  @extend %pad;
   background: $landing-bg-secondary-color;
 }
 
@@ -96,5 +96,5 @@
   align-items: center;
   text-align: center;
   gap: 27px;
-  @extend .pad;
+  @extend %pad;
 }

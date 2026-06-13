@@ -5,8 +5,8 @@ import { Spinner } from '@/components/ui/Spinner'
 
 import styles from './Button.module.scss'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline'
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'wide'
+type ButtonVariant = 'primary' | 'secondary' | 'outline'
+type ButtonSize = 'sm' | 'md' | 'lg' | 'wide'
 
 export type ButtonProps = {
   variant?: ButtonVariant

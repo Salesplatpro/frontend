@@ -3,7 +3,7 @@ import React from 'react'
 
 import styles from './Spinner.module.scss'
 
-export type SpinnerSize = 'sm' | 'md' | 'lg'
+type SpinnerSize = 'sm' | 'md' | 'lg'
 
 type SpinnerProps = {
   size?: SpinnerSize

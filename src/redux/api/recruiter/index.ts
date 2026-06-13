@@ -171,7 +171,6 @@ export const {
   useFetchRecruiterJobPostDetailsQuery,
   useGenJpPersonalityMutation,
   useFetchApplicantProgressQuery,
-  useCvAndCoverLetterMutation,
   useCreateJDMutation,
   useSearchTalentDbQuery,
   useUploadCVOnlyMutation,

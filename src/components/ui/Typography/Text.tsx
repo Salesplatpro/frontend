@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 
 import styles from './Text.module.scss'
 
-export type TextSize =
+type TextSize =
   | 'fs-xs'
   | 'fs-sm'
   | 'fs-md'
@@ -14,15 +14,9 @@ export type TextSize =
   | 'fs-4xl'
   | 'fs-5xl'
 
-export type TextColor =
-  | 'default'
-  | 'primary'
-  | 'tag'
-  | 'secondary'
-  | 'white'
-  | 'hero'
+type TextColor = 'default' | 'primary' | 'tag' | 'secondary' | 'white' | 'hero'
 
-export type TextWeight = 'normal' | 'bold' | 'bolder'
+type TextWeight = 'normal' | 'bold' | 'bolder'
 
 type TextProps = {
   children: ReactNode

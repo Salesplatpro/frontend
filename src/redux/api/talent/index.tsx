@@ -182,7 +182,6 @@ export const {
   useIndividualJobQuery,
   useJobPipelineQuery,
   useLazyCvMatchQuery,
-  usePersonalizedTestQuery,
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
   usePersonalityTestQuery,
@@ -191,5 +190,4 @@ export const {
   useGetRoleQuery,
   useGetMessagesQuery,
   usePatchMessageMutation,
-  useGetNotificationsQuery,
 } = talentApi

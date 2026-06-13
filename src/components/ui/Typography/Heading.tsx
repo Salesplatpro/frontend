@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 
 import styles from './Heading.module.scss'
 
-export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
 
 type HeadingProps = {
   children: ReactNode
