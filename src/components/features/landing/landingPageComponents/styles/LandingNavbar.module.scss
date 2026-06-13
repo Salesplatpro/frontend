@@ -18,7 +18,7 @@
 
 .leftNav {
   @extend %shareFlexAlignItems;
-  background-image: url('../../../assets/landing_bg.png');
+  background-image: url('../../../../../assets/landing_bg.png');
   justify-content: flex-start;
   width: 65%;
   gap: 48px;
@@ -58,7 +58,7 @@
     }
 
     @media screen and (max-width: 768px) {
-      background-image: url('../../../assets/landing_bg.png');
+      background-image: url('../../../../../assets/landing_bg.png');
       color: $landing-text-white;
     }
   }

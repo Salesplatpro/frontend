@@ -6,3 +6,4 @@ package-lock.json
 coverage
 .claude
 storybook-static
+docs
