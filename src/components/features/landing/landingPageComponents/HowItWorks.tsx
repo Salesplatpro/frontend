@@ -4,7 +4,7 @@ import { MdArrowOutward } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
 import howItWorks from '@/assets/howItWorks.png'
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 import { paths } from '@/paths'
 
 import { LandingButton } from './LandingButton'
@@ -51,9 +51,9 @@ export const HowItWorks = () => {
       <div className="flex flex-col gap-5 md:flex-row justify-between">
         <div className="flex justify-evenly md:justify-normal md:flex-col md:items-start">
           {flowTitle.map((item, index) => (
-            <BaseText
+            <Text
               key={item}
-              fontColor="primary"
+              color="primary"
               className={cn(
                 index === activeIndex ? styles.active : '',
                 styles.flowTitle,
@@ -62,21 +62,15 @@ export const HowItWorks = () => {
               onClick={() => setActiveIndex(index)}
             >
               {item}
-            </BaseText>
+            </Text>
           ))}
         </div>
         <div className="flex flex-col gap-3">
           <div className="mb-1">
-            <BaseText
-              fontWeight="bolder"
-              fontSize="fs-3xl"
-              fontColor="secondary"
-            >
+            <Text weight="bolder" size="fs-3xl" color="secondary">
               {flows[activeIndex].text}
-            </BaseText>
-            <BaseText fontColor="primary">
-              {flows[activeIndex].description}
-            </BaseText>
+            </Text>
+            <Text color="primary">{flows[activeIndex].description}</Text>
           </div>
           <div className="w-38">
             <LandingButton

@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 import { paths } from '@/paths'
 
 import { LandingButton } from './LandingButton'
@@ -31,12 +31,12 @@ export const LandingFooter = () => {
       <div className="flex flex-col gap-14">
         <div className="flex flex-col gap-4 md:flex-row justify-between align-center">
           <div className="flex flex-col gap-4">
-            <BaseText fontSize="fs-3xl" fontWeight="bold" fontColor="white">
+            <Text size="fs-3xl" weight="bold" color="white">
               Ready to hire smarter?
-            </BaseText>
-            <BaseText fontSize="fs-xl" fontColor="white">
+            </Text>
+            <Text size="fs-xl" color="white">
               Start using AuxHR today and discover the future of recruitment.
-            </BaseText>
+            </Text>
           </div>
           <div className="flex flex-col gap-3">
             <LandingButton
@@ -57,16 +57,16 @@ export const LandingFooter = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {footerData.map((item) => (
             <div key={item.key} className="flex flex-col items-start gap-3">
-              <BaseText fontColor="white" fontSize="fs-sm">
+              <Text color="white" size="fs-sm">
                 {item.key}
-              </BaseText>
+              </Text>
               {item.children.map((child) => {
                 const isExternal = child.url.startsWith('http')
 
                 return (
-                  <BaseText
-                    fontSize="fs-lg"
-                    fontColor="white"
+                  <Text
+                    size="fs-lg"
+                    color="white"
                     key={child.name}
                     onClick={() => {
                       if (isExternal) {
@@ -79,7 +79,7 @@ export const LandingFooter = () => {
                     className="cursor-pointer"
                   >
                     {child.name}
-                  </BaseText>
+                  </Text>
                 )
               })}
             </div>
@@ -87,9 +87,9 @@ export const LandingFooter = () => {
         </div>
       </div>
       <div className="flex flex-col gap-2 items-center md:flex-row justify-between align-center">
-        <BaseText fontSize="fs-xs" fontColor="white">
+        <Text size="fs-xs" color="white">
           ©{new Date().getFullYear()} AuxHr. All rights reserved
-        </BaseText>
+        </Text>
         <div className="flex gap-4">
           {socialFooterData.map(({ id, icon: Icon, url }) => (
             <Icon

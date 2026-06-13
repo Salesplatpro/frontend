@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 type ImageCardProps = {
   imageUrl: string
@@ -18,8 +18,8 @@ export const ImageCard = ({
   <div className="flex flex-col gap-4">
     <img src={imageUrl} alt={imgDesc} />
     <div>
-      <BaseText className="mb-1">{title}</BaseText>
-      <BaseText>{desc}</BaseText>
+      <Text className="mb-1">{title}</Text>
+      <Text>{desc}</Text>
     </div>
   </div>
 )

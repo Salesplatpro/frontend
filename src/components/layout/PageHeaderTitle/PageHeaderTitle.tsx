@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Heading, Text } from '@/components/ui/Typography'
 import { useGetCampaignNameQuery } from '@/redux/api/recruiter'
 
 type PageHeaderTitleProps = {
@@ -17,16 +18,16 @@ export const PageHeaderTitle = ({
 
   return (
     <div className="pt-2">
-      <h1 className=" font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
+      <Heading level={1}>
         {title
           ? title
           : isLoading
           ? ''
           : `${data?.data?.name || 'Unknown'} scouting`}{' '}
-      </h1>
-      <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
+      </Heading>
+      <Text as="p" size="fs-xl" color="secondary">
         {description}
-      </p>
+      </Text>
     </div>
   )
 }

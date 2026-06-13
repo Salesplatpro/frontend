@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import image from '@/assets/aboutUs.png'
 import Jobs from '@/assets/Jobs.png'
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import { LandingButton } from './LandingButton'
 import { StatCard } from './StatCard'
@@ -39,18 +39,14 @@ export const AboutUs = () => {
     <div>
       <div className={styles.header}>
         <div className="flex flex-col gap-y-4">
-          <BaseText
-            fontSize="fs-4xl"
-            fontWeight="bold"
-            className="font-raleway"
-          >
+          <Text size="fs-4xl" weight="bold" className="font-raleway">
             We are AuxHR Creating exceptional HR software.
-          </BaseText>
-          <BaseText fontSize="fs-2xl" className="font-raleway">
+          </Text>
+          <Text size="fs-2xl" className="font-raleway">
             Hiring is tough for both SMEs and large enterprises, which is why we
             built a people first HR solution that makes recruitment faster,
             smarter
-          </BaseText>
+          </Text>
         </div>
         <div className={styles.imgContainer}>
           <div className={styles.box1} />
@@ -61,18 +57,10 @@ export const AboutUs = () => {
       <div className={styles.whatwedo}>
         <img src={Jobs} alt="Jobs" className={styles.jobImg} />
         <div className="flex flex-col gap-y-4">
-          <BaseText
-            fontSize="fs-3xl"
-            fontWeight="bold"
-            className="font-raleway"
-          >
+          <Text size="fs-3xl" weight="bold" className="font-raleway">
             What We Do
-          </BaseText>
-          <BaseText
-            fontSize="fs-2xl"
-            fontWeight="normal"
-            className="font-raleway"
-          >
+          </Text>
+          <Text size="fs-2xl" weight="normal" className="font-raleway">
             AUXHR is more than just recruitment software it’s a complete
             solution designed to solve common hiring challenges. It simplifies
             the recruitment process from job posting to offer, aligns talent
@@ -81,23 +69,19 @@ export const AboutUs = () => {
             scheduling. Scalable for both growing SMEs and large enterprises,
             AUXHR provides professional, accessible, and efficient recruitment
             tools that adapt to businesses of any size.
-          </BaseText>
+          </Text>
         </div>
       </div>
       <div className={styles.whowehelp}>
-        <BaseText
-          fontSize="fs-3xl"
-          fontWeight="bold"
-          fontColor="white"
+        <Text
+          size="fs-3xl"
+          weight="bold"
+          color="white"
           className="font-raleway text-center"
         >
           Who We Help
-        </BaseText>
-        <BaseText
-          fontSize="fs-2xl"
-          fontColor="white"
-          className="text-justify font-raleway"
-        >
+        </Text>
+        <Text size="fs-2xl" color="white" className="text-justify font-raleway">
           AUXHR is built to adapt to businesses of any size or stage. For micro
           and small teams, it acts as a ready-made recruitment partner, making
           early hires simple and affordable. For medium-sized companies, it
@@ -107,7 +91,7 @@ export const AboutUs = () => {
           a plug-and-play solution. Even established organisations gain faster,
           more efficient hiring cycles, allowing HR teams to focus on strategy
           over admin.
-        </BaseText>
+        </Text>
         <div className="flex flex-wrap justify-center gap-6">
           {stats.map((item) => (
             <StatCard
@@ -119,18 +103,14 @@ export const AboutUs = () => {
         </div>
       </div>
       <div className={styles.tryoutauxhr}>
-        <BaseText
-          fontSize="fs-3xl"
-          fontWeight="bold"
-          className="text-center font-raleway"
-        >
+        <Text size="fs-3xl" weight="bold" className="text-center font-raleway">
           Try Out AuxHR
-        </BaseText>
-        <BaseText fontSize="fs-xl" className="font-raleway">
+        </Text>
+        <Text size="fs-xl" className="font-raleway">
           Explore our full platform with a 15-day free trial. No credit card
           required. Post jobs, hire faster, and manage your people effortlessly
           with our all-in-one platform.
-        </BaseText>
+        </Text>
         <div className="flex gap-2">
           <LandingButton
             title="Get a Demo"

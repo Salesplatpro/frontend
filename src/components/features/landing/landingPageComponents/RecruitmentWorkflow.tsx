@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import React from 'react'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import { containerPadding } from './landingData'
 import { SectionHeader } from './SectionHeader'
@@ -29,9 +29,9 @@ export const RecruitmentWorkflow = ({
       <div className={styles.gridContainer}>
         {data.map(({ text, image, alt, style, imgClass }, index) => (
           <div key={index} className={style}>
-            <BaseText fontSize="fs-2xl" fontWeight="bold" className="p-6">
+            <Text size="fs-2xl" weight="bold" className="p-6">
               {text}
-            </BaseText>
+            </Text>
             <img src={image} alt={alt} className={imgClass} />
           </div>
         ))}

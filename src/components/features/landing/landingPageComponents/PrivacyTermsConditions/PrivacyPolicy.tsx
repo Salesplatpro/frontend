@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import styles from './PrivacyPolicy.module.scss'
 
@@ -11,10 +11,10 @@ type PolicyItemProps = {
 
 export const PolicyItem = ({ title, children }: PolicyItemProps) => (
   <div className={styles.policyItem}>
-    <BaseText fontSize="fs-2xl" fontWeight="bold">
+    <Text size="fs-2xl" weight="bold">
       {title}
-    </BaseText>
-    <BaseText fontColor="primary">{children}</BaseText>
+    </Text>
+    <Text color="primary">{children}</Text>
   </div>
 )
 
@@ -22,26 +22,22 @@ export const PrivacyPolicy = () => {
   return (
     <div>
       <div className={styles.topContent}>
-        <BaseText fontSize="fs-4xl" fontColor="white" fontWeight="bold">
+        <Text size="fs-4xl" color="white" weight="bold">
           Privacy Policy
-        </BaseText>
-        <BaseText
-          fontSize="fs-xl"
-          fontColor="white"
-          fontWeight="normal"
+        </Text>
+        <Text
+          size="fs-xl"
+          color="white"
+          weight="normal"
           className={styles.text}
         >
           Your privacy is important to us at Untitled. We respect your privacy
           regarding any information we may collect from you across our website.
-        </BaseText>
+        </Text>
       </div>
 
       <div className={styles.content}>
-        <BaseText
-          fontSize="fs-lg"
-          fontColor="primary"
-          className={styles.policy}
-        >
+        <Text size="fs-lg" color="primary" className={styles.policy}>
           This Privacy Policy explains how AUXHR collects, uses, and shares
           information linked to an identified or identifiable individual
           (referred to in this Privacy Policy as “Personal Data”). It also
@@ -50,7 +46,7 @@ export const PrivacyPolicy = () => {
           out to us. When we mention “AUXHR,” we are referring to AUXHR
           Technologies and its affiliates, as described further in the
           “Identifying the Data Controller and Processor” section below.
-        </BaseText>
+        </Text>
 
         <PolicyItem title="What information do we collect?">
           We collect different types of information to provide seamless HR and

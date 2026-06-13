@@ -10,7 +10,7 @@ import {
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Button, StatusBadge } from '../../../components'
+import { Button, EmptyState, StatusBadge } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
 import {
   calculateDaysFromCreation,
@@ -83,8 +83,8 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {applications?.length > 0 &&
-            applications?.map((item, index) => (
+          {applications?.length > 0 ? (
+            applications.map((item, index) => (
               <TableRow key={index}>
                 <TableCell align={align} sx={tableCellStyle}>
                   {item.talent.firstName} {item.talent.lastName}
@@ -116,7 +116,17 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                   </Link>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={screenWidth > 768 ? 5 : 3}>
+                <EmptyState
+                  title="No applications yet"
+                  description="Applications for this job will appear here once candidates apply."
+                />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

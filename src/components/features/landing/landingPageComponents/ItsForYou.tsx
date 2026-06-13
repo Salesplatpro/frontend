@@ -4,7 +4,7 @@ import React from 'react'
 import image1 from '@/assets/image1.png'
 import image2 from '@/assets/image2.png'
 import image3 from '@/assets/image3.png'
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import { containerPadding } from './landingData'
 import { SectionHeader } from './SectionHeader'
@@ -39,10 +39,10 @@ export const ItsForYou = () => {
           <div key={item.title} className={styles.imgContainer}>
             <img src={item.img} alt={item.title} className={styles.img} />
             <div>
-              <BaseText fontSize="fs-xl">{item.title}</BaseText>
-              <BaseText fontSize="fs-sm" fontColor="primary" className="mt-1">
+              <Text size="fs-xl">{item.title}</Text>
+              <Text size="fs-sm" color="primary" className="mt-1">
                 {item.desc}
-              </BaseText>
+              </Text>
             </div>
           </div>
         ))}

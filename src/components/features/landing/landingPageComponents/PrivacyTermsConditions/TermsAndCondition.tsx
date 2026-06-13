@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import { PolicyItem } from './PrivacyPolicy'
 import styles from './PrivacyPolicy.module.scss'
@@ -9,33 +9,24 @@ export const TermsAndCondition = () => {
   return (
     <div>
       <div className={styles.topContent}>
-        <BaseText fontSize="fs-4xl" fontColor="white" fontWeight="bold">
+        <Text size="fs-4xl" color="white" weight="bold">
           Terms and Conditions
-        </BaseText>
-        <BaseText
-          fontSize="fs-xl"
-          fontColor="white"
-          fontWeight="bold"
-          className={styles.text}
-        >
+        </Text>
+        <Text size="fs-xl" color="white" weight="bold" className={styles.text}>
           By accessing our website, you are agreeing to be bound by these terms
           of service, all applicable laws and regulations, and agree that you
           are responsible for compliance with any applicable local laws.
-        </BaseText>
+        </Text>
       </div>
 
       <div className={styles.content}>
-        <BaseText
-          fontSize="fs-lg"
-          fontColor="primary"
-          className={styles.policy}
-        >
+        <Text size="fs-lg" color="primary" className={styles.policy}>
           By accessing our website, mobile application, and related services,
           you agree to be bound by these Terms of Service, all applicable laws
           and regulations, and agree that you are responsible for compliance
           with any applicable local laws. If you do not agree, please do not use
           our services.
-        </BaseText>
+        </Text>
 
         <PolicyItem title="What information do we collect?">
           AuxHR collects information to provide, improve, and secure our

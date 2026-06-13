@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import React from 'react'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import { containerPadding } from './landingData'
 import { SectionHeader } from './SectionHeader'
@@ -36,23 +36,18 @@ export const Statistics = () => {
     <div className={cn(styles.container, 'py-24', containerPadding)}>
       <SectionHeader
         title={
-          <BaseText
-            fontSize="fs-md"
-            fontWeight="bold"
-            fontColor="white"
-            className="mb-2"
-          >
+          <Text size="fs-md" weight="bold" color="white" className="mb-2">
             Why Teams Switch to AuxHR
-          </BaseText>
+          </Text>
         }
         subTitle={
           <div>
-            <BaseText fontSize="fs-3xl" fontColor="white">
+            <Text size="fs-3xl" color="white">
               Let the Numbers Talk.
-            </BaseText>
-            <BaseText fontSize="fs-3xl" fontColor="white">
+            </Text>
+            <Text size="fs-3xl" color="white">
               AuxHR Doesn’t Just Improve Hiring — It Transforms It
-            </BaseText>
+            </Text>
           </div>
         }
         variant="secondary"

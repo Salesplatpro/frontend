@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 import applicationPipeline from '@/assets/application_pipeline.png'
 import logo from '@/assets/salesplate_support_pro.png'
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 import { paths } from '@/paths'
 
 import { LandingButton } from './LandingButton'
@@ -19,19 +19,19 @@ export const LandingHero = () => {
       <div className={cn(styles.heroLeft, containerPadding)}>
         <div className="flex flex-col justify-center gap-12">
           <div className={`${styles.heroContent}`}>
-            <BaseText
-              fontColor="white"
-              fontSize="fs-4xl"
+            <Text
+              color="white"
+              size="fs-4xl"
               className="lg:mt-52 font-raleway mt-14"
-              fontWeight="bolder"
+              weight="bolder"
             >
               Find Top Talent Faster, Smarter, With AuxHr AI.
-            </BaseText>
-            <BaseText fontColor="white" fontSize="fs-xl" fontWeight="normal">
+            </Text>
+            <Text color="white" size="fs-xl" weight="normal">
               AuxHR is your AI-powered recruitment platform built to streamline
               hiring, match top-tier candidates, and scale your team with
               confidence.
-            </BaseText>
+            </Text>
           </div>
           <div className={styles.btns}>
             <LandingButton
@@ -50,9 +50,9 @@ export const LandingHero = () => {
           </div>
         </div>
         <div className={styles.heroFooter}>
-          <BaseText fontColor="white" fontSize="fs-md" fontWeight="bold">
+          <Text color="white" size="fs-md" weight="bold">
             Top HR platform by
-          </BaseText>
+          </Text>
           <img src={logo} alt="Support pro and Salesplat" />
         </div>
       </div>

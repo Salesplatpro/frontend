@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import aiConfig from '@/assets/aiConfig.png'
 import cypress from '@/assets/cypress.png'
 import auxHrPink from '@/assets/pinkAuxHr.png'
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 import { paths } from '@/paths'
 
 import { LandingButton } from '../LandingButton'
@@ -75,13 +75,13 @@ export const Features = () => {
   return (
     <div className={styles.container}>
       <div className={styles.headingContainer}>
-        <BaseText fontSize="fs-5xl" fontColor="hero" fontWeight="bold">
+        <Text size="fs-5xl" color="hero" weight="bold">
           AuxHR is your all in one solution for HR and hiring
-        </BaseText>
-        <BaseText fontSize="fs-2xl" fontWeight="bold" className="text-center">
+        </Text>
+        <Text size="fs-2xl" weight="bold" className="text-center">
           AuxHR brings every HR function together hiring, data management, and
           attendance tracking in one simple system of record.
-        </BaseText>
+        </Text>
         <div className="flex flex-col md:flex-row justify-center gap-3 pt-4">
           <LandingButton
             title="Try it free"
@@ -107,20 +107,20 @@ export const Features = () => {
           <div className={styles.logo}>
             <img src={auxHrPink} alt="aux hr" />
           </div>
-          <BaseText fontWeight="bold" fontSize="fs-2xl">
+          <Text weight="bold" size="fs-2xl">
             Smart Recruitment Engine Post jobs, track applicants, and manage the
             hiring pipeline all in one platform.
-          </BaseText>
+          </Text>
         </div>
         <img src={cypress} alt="job oppurtunity" className={styles.pics} />
       </div>
       <FeaturesSection data={moreFeatureData} header="More Features" />
       <div className="flex flex-col gap-4 p-8 md:items-center md:px-20 md:py-36 md:flex-row md:gap-7">
         <img src={aiConfig} alt="job oppurtunity" className={styles.pics} />
-        <BaseText fontWeight="bold" fontSize="fs-2xl">
+        <Text weight="bold" size="fs-2xl">
           Smart Recruitment Engine Post jobs, track applicants, and manage the
           hiring pipeline all in one platform.
-        </BaseText>
+        </Text>
       </div>
     </div>
   )

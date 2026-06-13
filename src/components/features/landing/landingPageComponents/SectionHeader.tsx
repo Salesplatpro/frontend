@@ -1,7 +1,7 @@
 import cn from 'classnames'
 import React, { ReactNode } from 'react'
 
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 type SectionHeaderProps = {
   title?: string | ReactNode
@@ -16,19 +16,19 @@ export const SectionHeader = ({
   variant = 'primary',
 }: SectionHeaderProps) => (
   <div className={cn('flex flex-col', className)}>
-    <BaseText
-      fontSize="fs-md"
-      fontColor={variant === 'secondary' ? 'white' : 'tag'}
-      fontWeight="bold"
+    <Text
+      size="fs-md"
+      color={variant === 'secondary' ? 'white' : 'tag'}
+      weight="bold"
     >
       {title}
-    </BaseText>
-    <BaseText
-      fontSize="fs-2xl"
-      fontWeight="bolder"
-      fontColor={variant === 'secondary' ? 'white' : 'default'}
+    </Text>
+    <Text
+      size="fs-2xl"
+      weight="bolder"
+      color={variant === 'secondary' ? 'white' : 'default'}
     >
       {subTitle}
-    </BaseText>
+    </Text>
   </div>
 )

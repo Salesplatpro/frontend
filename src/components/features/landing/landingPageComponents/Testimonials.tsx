@@ -3,7 +3,7 @@ import React from 'react'
 import { FaStar } from 'react-icons/fa'
 
 import testimonialImage from '@/assets/testimonial.png'
-import { BaseText } from '@/components/ui/Typography'
+import { Text } from '@/components/ui/Typography'
 
 import { containerPadding } from './landingData'
 import { SectionHeader } from './SectionHeader'
@@ -23,17 +23,17 @@ export const Testimonials = () => (
             <FaStar key={i} className={style.star} />
           ))}
         </div>
-        <BaseText fontSize="fs-3xl" fontColor="white" fontWeight="bolder">
+        <Text size="fs-3xl" color="white" weight="bolder">
           AuxHR gave us back weeks of time. We hired three top-tier developers
           in half the usual time
-        </BaseText>
+        </Text>
         <div>
-          <BaseText fontSize="fs-2xl" fontWeight="bold" fontColor="white">
+          <Text size="fs-2xl" weight="bold" color="white">
             —Sarah
-          </BaseText>
-          <BaseText fontSize="fs-md" fontWeight="normal" fontColor="white">
+          </Text>
+          <Text size="fs-md" weight="normal" color="white">
             CTO at SeedTech
-          </BaseText>
+          </Text>
         </div>
       </div>
       <img src={testimonialImage} alt="Testimonilas" className={style.image} />
