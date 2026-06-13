@@ -10,7 +10,7 @@ import {
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import { Button, StatusBadge } from '../../../components'
+import { Button, EmptyState, StatusBadge } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
 import {
   calculateDaysFromCreation,
@@ -24,15 +24,15 @@ type SingleJobTableProps = {
 }
 
 const tableHeadStyle = {
-  color: '#101828',
-  backgroundColor: '#F8F8F8',
+  color: 'var(--color-grey-900)',
+  backgroundColor: 'var(--color-grey-50)',
   fontSize: '18px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
 
 const tableCellStyle = {
-  color: '#101828',
+  color: 'var(--color-grey-900)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
@@ -83,8 +83,8 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {applications?.length > 0 &&
-            applications?.map((item, index) => (
+          {applications?.length > 0 ? (
+            applications.map((item, index) => (
               <TableRow key={index}>
                 <TableCell align={align} sx={tableCellStyle}>
                   {item.talent.firstName} {item.talent.lastName}
@@ -110,11 +110,21 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                 <TableCell align={align} sx={tableCellStyle}>
                   <Link
                     to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}>
-                    <Button textType="small" title="View Applicantion" />
+                    <Button size="sm">View Applicantion</Button>
                   </Link>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={screenWidth > 768 ? 5 : 3}>
+                <EmptyState
+                  title="No applications yet"
+                  description="Applications for this job will appear here once candidates apply."
+                />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

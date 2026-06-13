@@ -3,8 +3,9 @@ import '../../../index.css'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import { DisplayError } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
 import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
 import { JobsTable } from './JobsTable'
 import styles from './MyJobPosts.module.scss'
@@ -21,7 +22,7 @@ export const MyJobPosts = () => {
   const paginatedJobs = jobs.slice(startIndex, startIndex + rowsPerPage)
 
   if (isLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   if (error) {
@@ -41,8 +42,8 @@ export const MyJobPosts = () => {
         </div>
 
         <button
-          className="text-[#ffffff] font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
-            bg-[#3C6FD4] rounded-lg"
+          className="text-white font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
+            bg-primary-strong rounded-lg"
           onClick={() => navigate('/recruiterDashboard/postjob')}>
           Create New
         </button>

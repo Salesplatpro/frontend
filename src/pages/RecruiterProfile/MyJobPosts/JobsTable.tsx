@@ -13,10 +13,11 @@ import React, { useState } from 'react'
 import { Modal } from 'react-responsive-modal'
 import { Link } from 'react-router-dom'
 
+import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import {
   calculateDaysFromCreation,
   recruiterJobPostsTypes,
@@ -27,15 +28,15 @@ type JobsTableType = {
 }
 
 const tableHeadStyle = {
-  color: '#101828',
-  backgroundColor: '#F8F8F8',
+  color: 'var(--color-grey-900)',
+  backgroundColor: 'var(--color-grey-50)',
   fontSize: '18px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
 
 const tableCellStyle = {
-  color: '#101828',
+  color: 'var(--color-grey-900)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
@@ -153,7 +154,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 <Link
                   to={`/recruiterDashboard/singleJobPost/${job._id}`}
                   state={{ jobName: job.role.name, postedAt: job.createdAt }}>
-                  <button className="text-[#3C6FD4] font-raleway font-semibold text-[16px] leading-[28px] underline">
+                  <button className="text-[primary-strong] font-raleway font-semibold text-[16px] leading-[28px] underline">
                     View ({job.noOfApplicants})
                   </button>
                 </Link>
@@ -169,8 +170,8 @@ export const JobsTable = ({ data }: JobsTableType) => {
                     to={`/recruiterDashboard/jobdetail/${job._id}`}
                     state={{ jobName: job.role.name, postedAt: job.createdAt }}>
                     <button
-                      className="text-[#ffffff] font-raleway font-semibold whitespace-nowrap flex text-[14px] leading-[28px] py-1 px-3 
-                    bg-[#3C6FD4] rounded-lg">
+                      className="text-[white] font-raleway font-semibold whitespace-nowrap flex text-[14px] leading-[28px] py-1 px-3 
+                    bg-[primary-strong] rounded-lg">
                       View Job
                     </button>
                   </Link>

@@ -5,3 +5,5 @@ package-lock.json
 .idea
 coverage
 .claude
+storybook-static
+docs

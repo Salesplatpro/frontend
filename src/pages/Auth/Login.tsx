@@ -179,7 +179,7 @@ const Login: React.FC = () => {
                 {loading ? (
                   <Loading />
                 ) : (
-                  <button className=" w-full rounded-lg bg-[#3c6fd4] px-4 py-2 text-white hover:bg-[#4b82e1]">
+                  <button className=" w-full rounded-lg bg-primary-strong px-4 py-2 text-white hover:bg-[#4b82e1]">
                     Log in
                   </button>
                 )}
@@ -195,7 +195,7 @@ const Login: React.FC = () => {
                       alt="google"
                       className="w-[30px] h-[30px]"
                     />
-                    <p className="text-[16px] text-[#344054] font-raleway font-semibold leading-[24px]">
+                    <p className="text-[16px] text-grey-700 font-raleway font-semibold leading-[24px]">
                       Continue with Google
                     </p>
                   </button>
@@ -206,7 +206,7 @@ const Login: React.FC = () => {
                       alt="salesplat logo"
                       className="w-[30px] h-[30px]"
                     />
-                    <p className="text-[16px] text-[#344054] font-raleway font-semibold leading-[24px]">
+                    <p className="text-[16px] text-grey-700 font-raleway font-semibold leading-[24px]">
                       Continue with Salesplat
                     </p>
                   </button>

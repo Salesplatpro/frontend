@@ -1,0 +1,87 @@
+// Breakpoints mirror the landing feature's responsive type scale.
+$small-breakpoint: 868px;
+$mobile-breakpoint: 480px;
+
+@mixin responsive-font($base-size, $small-size, $mobile-size) {
+  font-size: $base-size;
+
+  @media screen and (max-width: $small-breakpoint) {
+    font-size: $small-size;
+  }
+
+  @media screen and (max-width: $mobile-breakpoint) {
+    font-size: $mobile-size;
+  }
+}
+
+.fs-xs {
+  font-size: 12px;
+}
+
+.fs-sm {
+  @include responsive-font(14px, 12px, 10px);
+}
+
+.fs-md {
+  @include responsive-font(16px, 14px, 12px);
+}
+
+.fs-lg {
+  @include responsive-font(18px, 16px, 14px);
+}
+
+.fs-xl {
+  @include responsive-font(20px, 18px, 16px);
+}
+
+.fs-2xl {
+  @include responsive-font(24px, 20px, 18px);
+}
+
+.fs-3xl {
+  @include responsive-font(32px, 24px, 20px);
+}
+
+.fs-4xl {
+  @include responsive-font(48px, 32px, 20px);
+}
+
+.fs-5xl {
+  @include responsive-font(60px, 32px, 24px);
+}
+
+.default {
+  color: #000000;
+}
+
+.primary {
+  color: #525252;
+}
+
+.hero {
+  color: var(--color-primary-strong);
+}
+
+.tag {
+  color: #4000e4;
+}
+
+.white {
+  color: var(--color-white);
+}
+
+.secondary {
+  color: var(--color-text-heading);
+}
+
+.normal {
+  font-weight: var(--weight-regular);
+}
+
+.bold {
+  font-weight: var(--weight-medium);
+}
+
+.bolder {
+  font-weight: var(--weight-semibold);
+}

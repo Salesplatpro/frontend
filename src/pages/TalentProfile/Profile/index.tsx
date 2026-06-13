@@ -2,12 +2,13 @@ import { Alert } from '@mui/material'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 
-import upload from '../../../assets/Featured icon.png'
+import Worktype from '@/components/features/jobs/Worktype'
 // import { handleImageChange } from '../../../utils/HandleImageChange'
-import Location from '../../../components/global/Location'
-import Loading from '../../../components/Loading/Loading'
-import AllRoles from '../../../components/Roles/AllRoles'
-import Worktype from '../../../components/Worktype'
+import Location from '@/components/features/shared/global/Location'
+import AllRoles from '@/components/forms/Roles/AllRoles'
+import { Spinner } from '@/components/ui/Spinner'
+
+import upload from '../../../assets/Featured icon.png'
 import { experienceLevel } from '../../../utils'
 import { calculateProgress } from '../../../utils/calculateProgress'
 import BioTextArea from './BioTextArea'
@@ -41,7 +42,7 @@ const TalentProfile = () => {
 
   const [progress, setProgress] = useState(0)
 
-  if (userProfileLoading) return <Loading />
+  if (userProfileLoading) return <Spinner fullPage />
 
   if (userProfileError) {
     return <Alert severity="error">Error fetching user profile Info</Alert>
@@ -60,7 +61,7 @@ const TalentProfile = () => {
           handleProfileImageUpload={handleProfileImageUpload}
         />
       </div>
-      <div className="border p-4 rounded-2xl border-[#D0D5DD] mt-3 w-[100%]">
+      <div className="border p-4 rounded-2xl border-grey-300 mt-3 w-[100%]">
         <Formik
           initialValues={initialValues}
           validationSchema={!userInfo?.profile ? validationSchema : null}
@@ -76,7 +77,7 @@ const TalentProfile = () => {
                 <div>
                   <label
                     htmlFor="bio"
-                    className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
+                    className="text-[16px] text-grey-700 font-raleway pb-2 font-medium">
                     Bio
                   </label>
                   <BioTextArea />
@@ -92,7 +93,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="names"
-                      className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
+                      className="text-[16px] text-grey-700 font-raleway pb-2 font-medium">
                       Name
                     </label>
                     <Field
@@ -102,13 +103,13 @@ const TalentProfile = () => {
                       placeholder="Williamson Paints"
                       readOnly
                       value={`${userInfo?.firstName} ${userInfo?.lastName}`}
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1"
                     />
                   </div>
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="role"
-                      className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
+                      className="text-[16px] text-grey-700 font-raleway pb-2 font-medium">
                       Role
                     </label>
                     <div className=" border-gray-300 h-[44px] mt-1">
@@ -128,7 +129,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="phoneNumber"
-                      className="text-[16px] text-[#344054] font-medium font-raleway pb-2 ">
+                      className="text-[16px] text-grey-700 font-medium font-raleway pb-2 ">
                       Phone number
                     </label>
                     <Field
@@ -137,7 +138,7 @@ const TalentProfile = () => {
                       name="phoneNumber"
                       placeholder="08198675757"
                       value={userInfo?.phone}
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1"
                     />
                     <ErrorMessage
                       name="phoneNumber"
@@ -149,7 +150,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="workTypes"
-                      className="text-[16px] text-[#344054] font-medium font-raleway pb-2">
+                      className="text-[16px] text-grey-700 font-medium font-raleway pb-2">
                       Work Type
                     </label>
                     <Worktype
@@ -227,7 +228,7 @@ const TalentProfile = () => {
                   </div>
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
-                      className="text-[14px] text-[#344054] font-medium"
+                      className="text-[14px] text-grey-700 font-medium"
                       htmlFor="experience">
                       Experience Level
                     </label>
@@ -235,7 +236,7 @@ const TalentProfile = () => {
                       as="select"
                       id="experience"
                       name="experience"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1">
+                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1">
                       <option value="">Select experience Level</option>
                       {Object.values(experienceLevel).map((value) => (
                         <option key={value} value={value}>
@@ -255,7 +256,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="minSalary"
-                      className="text-[14px] text-[#344054] font-medium">
+                      className="text-[14px] text-grey-700 font-medium">
                       Min Salary
                     </label>
                     <Field
@@ -263,7 +264,7 @@ const TalentProfile = () => {
                       id="minSalary"
                       name="minSalary"
                       placeholder="Your minSalary"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1"
                     />
                     <ErrorMessage
                       name="minSalary"
@@ -274,7 +275,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="maxSalary"
-                      className="text-[14px] text-[#344054] font-medium">
+                      className="text-[14px] text-grey-700 font-medium">
                       Max Salary
                     </label>
                     <Field
@@ -282,7 +283,7 @@ const TalentProfile = () => {
                       id="maxSalary"
                       name="maxSalary"
                       placeholder="Your Max Salary"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1"
                     />
                     <ErrorMessage
                       name="maxSalary"
@@ -298,7 +299,7 @@ const TalentProfile = () => {
                     <div className="md:w-[48%] mb-6 lg:md:mb-0 ">
                       <label
                         htmlFor="cv"
-                        className="text-[14px] text-[#344054] font-medium">
+                        className="text-[14px] text-grey-700 font-medium">
                         Current CV
                       </label>
                       <div className="relative w-[100%]">
@@ -318,7 +319,7 @@ const TalentProfile = () => {
 
                 <div className="inline-block lg:mt-6 w-full">
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label htmlFor="cv" className="text-[14px] text-[#344054]">
+                    <label htmlFor="cv" className="text-[14px] text-grey-700">
                       {/* Upload New CV */}
                       {userInfo?.profile?.cv ? 'Replace CV' : 'Upload CV'}
                     </label>

@@ -2,9 +2,10 @@ import { Field, Form, Formik } from 'formik'
 import React from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import Location from '../../../../components/global/Location'
-import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import AllRoles from '../../../../components/Roles/AllRoles'
+import Location from '@/components/features/shared/global/Location'
+import AllRoles from '@/components/forms/Roles/AllRoles'
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+
 import { experienceLevel } from '../../../../utils'
 
 const SearchTalent = () => {
@@ -82,7 +83,7 @@ const SearchTalent = () => {
                   className="text-[#434144] font-raleway font-bold leading-4 text-[14px]">
                   Job Title
                 </label>
-                <div className="border border-[#D0D5DD] py-4 pl-4 rounded-lg w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+                <div className="border border-grey-300 py-4 pl-4 rounded-lg w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
                   {/* @ts-expect-error TODO: fix type error */}
                   <AllRoles
                     name="role"
@@ -154,7 +155,7 @@ const SearchTalent = () => {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-[#3c6fd4] hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
+                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
                 <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                   Search
                 </p>

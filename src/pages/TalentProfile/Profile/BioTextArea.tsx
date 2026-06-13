@@ -20,7 +20,7 @@ const BioTextArea = () => {
         value={values.bio}
         onChange={handleChange}
         placeholder="Tell us about yourself"
-        className="w-[100%] px-4 pb-16 rounded-lg border border-[#D0D5DD] h-[128px] mt-1 pt-4"
+        className="w-[100%] px-4 pb-16 rounded-lg border border-grey-300 h-[128px] mt-1 pt-4"
       />
 
       <p> {values.bio?.length || 0}/1000 </p>

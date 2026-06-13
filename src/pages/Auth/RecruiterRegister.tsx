@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
-import Navbar from '../../components/Navbar'
+import Navbar from '@/components/layout/Navbar'
+
 // import { SendRecruiterReg } from '../../api/api-communication'
 import { useRecruiterRegMutation } from '../../redux/api/apiSlice'
 import { notify } from '../../utils/toastNotifications'

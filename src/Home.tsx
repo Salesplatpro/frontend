@@ -1,9 +1,9 @@
 import React from 'react'
 
-import FeaturedBrand from './components/FeaturedBrand'
-import MetricSection from './components/MetricSection'
-import QuoteSection from './components/QuoteSection'
-import ServiceSection from './components/ServiceSection'
+import FeaturedBrand from '@/components/features/landing/FeaturedBrand'
+import MetricSection from '@/components/features/landing/MetricSection'
+import QuoteSection from '@/components/features/landing/QuoteSection'
+import ServiceSection from '@/components/features/landing/ServiceSection'
 
 const Home = () => {
   return (

@@ -5,8 +5,9 @@ import { MdKeyboardArrowDown } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { Bounce } from 'react-toastify'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import { Button, DisplayError } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
 import { RootState } from '../../../redux/store/store'
@@ -111,10 +112,10 @@ const Job = () => {
         {screenWidth < 768 && !showFilter ? (
           <div style={{ height: '100px' }}>
             <Button
-              title="Open filters"
               variant="secondary"
-              onClick={() => setShowFilter(!showFilter)}
-            />
+              onClick={() => setShowFilter(!showFilter)}>
+              Open filters
+            </Button>
           </div>
         ) : (
           <JobFilter
@@ -135,7 +136,7 @@ const Job = () => {
           </div>
           <div className="job-listing">
             {isLoading || isFiltering ? (
-              <Loading />
+              <Spinner fullPage />
             ) : jobs.length > 0 ? (
               jobs.map((job, index) => (
                 <SingleJob

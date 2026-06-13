@@ -99,10 +99,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
         <>
           <img className="logo pb-2" src={logo} alt="company" />
           <div>
-            <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+            <div className="font-bold font-raleway text-grey-900 text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
               Forgot password
             </div>
-            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-[#667085] text-center pt-3">
+            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-grey-500 text-center pt-3">
               Please enter your details
             </div>
           </div>
@@ -115,7 +115,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               }}>
               <label
                 htmlFor="email"
-                className="text-[14px] text-[#344054] leading-[22px] font-raleway font-medium">
+                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium">
                 Email
               </label>
               <input
@@ -125,7 +125,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-grey-300 bg-white font-raleway text-grey-500 font-medium leading-[25px]"
                 style={{
                   boxShadow: '0px 1.07px 2.14px 0px rgba(16, 24, 40, 0.05)',
                 }}
@@ -139,7 +139,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             </form>
           </div>
           <button
-            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df]"
+            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-primary-strong hover:bg-primary"
             // onClick={() => setCurrentScreen('confirmation')}
             onClick={handleRequestOtp}
             disabled={loading}
@@ -148,7 +148,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
           </button>
 
           <button
-            className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-[#667085] hover:cursor-pointer hover:text-[#4f5563]"
+            className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-grey-500 hover:cursor-pointer hover:text-[#4f5563]"
             onClick={handleClose}
             aria-label="Close modal">
             <IoArrowBackOutline size={27} />
@@ -165,10 +165,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               alt="checklist"
               className="w-[100px] lg:w-[150px] md:w-[100px]"
             />
-            <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+            <div className="font-bold font-raleway text-grey-900 text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
               Reset Password
             </div>
-            <div className="text-[#667085] font-raleway font-normal text-[16px] leading-[18px] lg:text-[18px] w-[330px] lg:w-[460px] md:w-[440px] sm:w-[360px] text-center lg:leading-[22px] py-2">
+            <div className="text-grey-500 font-raleway font-normal text-[16px] leading-[18px] lg:text-[18px] w-[330px] lg:w-[460px] md:w-[440px] sm:w-[360px] text-center lg:leading-[22px] py-2">
               Link to reset your password has been sent to the email registered
               to this account {email}
             </div>
@@ -178,13 +178,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             href={`https://mail.google.com/${email}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df]"
+            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-primary-strong hover:bg-primary"
             aria-label="Move to confirmation">
             Go to Mail
           </a>
 
           <button
-            className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-[#667085] hover:cursor-pointer hover:text-[#4f5563]"
+            className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-grey-500 hover:cursor-pointer hover:text-[#4f5563]"
             onClick={() => setCurrentScreen('newPassword')}
             aria-label="Move to newPassword">
             Reset Password
@@ -196,10 +196,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
         <>
           <img className="logo pb-2 " src={logo} alt="company" />
           <div className="text-center">
-            <div className="font-bold font-raleway text-[#101828] text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+            <div className="font-bold font-raleway text-grey-900 text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
               Reset password
             </div>
-            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-[#667085] text-center pt-3">
+            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-grey-500 text-center pt-3">
               Please enter your new password details
             </div>
           </div>
@@ -213,7 +213,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="email"
-                className="text-[14px] text-[#344054] leading-[22px] font-raleway font-medium">
+                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium">
                 Email
               </label>
               <input
@@ -223,7 +223,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-grey-300 bg-white font-raleway text-grey-500 font-medium leading-[25px]"
                 style={{
                   boxShadow: '0px 1.07px 2.14px 0px rgba(16, 24, 40, 0.05)',
                 }}
@@ -233,7 +233,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="otp"
-                className="text-[14px] pt-10 text-[#344054] leading-[22px] font-raleway font-medium">
+                className="text-[14px] pt-10 text-grey-700 leading-[22px] font-raleway font-medium">
                 One Time OTP
               </label>
               <input
@@ -242,13 +242,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="One time OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-grey-300 bg-white font-raleway text-grey-500 font-medium leading-[25px]"
               />
             </div>
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="password"
-                className="text-[14px] pt-10 text-[#344054] leading-[22px] font-raleway font-medium">
+                className="text-[14px] pt-10 text-grey-700 leading-[22px] font-raleway font-medium">
                 New Password
               </label>
               <input
@@ -257,14 +257,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="New Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-grey-300 bg-white font-raleway text-grey-500 font-medium leading-[25px]"
               />
             </div>
 
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="confirmPassword"
-                className="text-[14px] text-[#344054] leading-[22px] font-raleway font-medium">
+                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium">
                 Confirm New Password
               </label>
               <input
@@ -273,28 +273,28 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-[#D0D5DD] bg-[#FFFFFF] font-raleway text-[#667085] font-medium leading-[25px]"
+                className="w-[240px] lg:w-[370px] md:w-[300px] h-[48px] py-2 rounded-lg pl-4 border border-grey-300 bg-white font-raleway text-grey-500 font-medium leading-[25px]"
               />
             </div>
 
             {error ? (
               <div className="text-red-500 text-sm">{error}</div>
             ) : (
-              <p className="font-raleway font-normal text-[13px] text-[#667085] leading-[22px]">
+              <p className="font-raleway font-normal text-[13px] text-grey-500 leading-[22px]">
                 Must be at least 8 charaters.
               </p>
             )}
           </form>
 
           <button
-            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-2 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-[#3C6FD4] hover:bg-[#4985df] whitespace-nowrap"
+            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-2 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-primary-strong hover:bg-primary whitespace-nowrap"
             onClick={handleResetPassword}
             disabled={loading}>
             {loading ? 'Resetting...' : 'Reset Password'}
           </button>
 
           <button
-            className="px-20 py-3 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-[#667085] hover:cursor-pointer hover:text-[#4f5563]"
+            className="px-20 py-3 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-grey-500 hover:cursor-pointer hover:text-[#4f5563]"
             onClick={handleClose}
             aria-label="Close modal">
             <IoArrowBackOutline size={27} />

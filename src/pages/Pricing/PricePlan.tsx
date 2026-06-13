@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import ReactCardFlip from 'react-card-flip'
 
-import Loading from '../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import {
   usePaymentInitiateMutation,
   usePricingPlanQuery,
@@ -42,7 +43,7 @@ const PricePlan: React.FC<PricePlanProp> = ({ isFlipped }) => {
   )
 
   if (userPlanLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
   if (userPlanError) {
     notify('error', 'DisplayError loading pricing plans')

@@ -59,10 +59,10 @@ const CreateJD = () => {
   return (
     <div className="py-4 space-y-4">
       <div className="space-y-2">
-        <h1 className="font-raleway text-[#101828] text-[32px] font-bold leading-[37.57px]">
+        <h1 className="font-raleway text-grey-900 text-[32px] font-bold leading-[37.57px]">
           Scout
         </h1>
-        <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-[#101828]">
+        <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-grey-900">
           Upload CV in batch for collective AI assessment
         </p>
       </div>
@@ -88,7 +88,7 @@ const CreateJD = () => {
                   name="name"
                   type="text"
                   placeholder="Campaign name"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
                 />
               </div>
 
@@ -101,7 +101,7 @@ const CreateJD = () => {
                 <Field
                   as="select"
                   name="role"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     handleRoleChange(e, setFieldValue)
                   }>
@@ -123,7 +123,7 @@ const CreateJD = () => {
                 <Field
                   name="description"
                   as="textarea"
-                  className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
                   placeholder="Add Job description here"
                   rows={4}
                 />
@@ -138,14 +138,14 @@ const CreateJD = () => {
                 <Field
                   name="recruiterGuide"
                   type="text"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-[#D0D5DD] rounded-lg pl-3 mt-2"
+                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
                   placeholder="Enter your preferred guide here"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-[#3c6fd4] flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
+                className="w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
                 disabled={isLoading}>
                 <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                   {isLoading ? 'Submitting...' : 'Create'}

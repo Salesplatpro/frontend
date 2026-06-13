@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { EditJobType } from '../../../utils'
 import { notify } from '../../../utils/toastNotifications'
@@ -41,7 +42,7 @@ export const EditJobTab = () => {
     }
   }, [data, error])
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   const renderContent = () => {
     if (activeTab === 'aiconfig') {
@@ -53,17 +54,17 @@ export const EditJobTab = () => {
   return (
     <div className="p-4">
       <div>
-        <h2 className="text-[#101828] text-[32px] mt-1 font-bold">Edit Job</h2>
+        <h2 className="text-grey-900 text-[32px] mt-1 font-bold">Edit Job</h2>
         Modify existing job needed to land a role with your organization
-        <p className="text-[#101828] text-[20px] font-medium"></p>
+        <p className="text-grey-900 text-[20px] font-medium"></p>
         <div className="mt-8 flex flex-row md:space-x-10 space-x-4 items-center justify-center">
           {tabs.map((tab, i) => (
             <div
               key={i}
               className={`${
                 activeTab === tab.tab
-                  ? 'border-[#006BFF] border-t-4 text-[#006BFF]'
-                  : 'border-t-4 text-[#344054]'
+                  ? 'border-info border-t-4 text-info'
+                  : 'border-t-4 text-grey-700'
               } md:min-w-[232px] w-[232px] md:py-2 py-1 text-[14px]`}>
               <button
                 onClick={() => setActiveTab(tab.tab)}

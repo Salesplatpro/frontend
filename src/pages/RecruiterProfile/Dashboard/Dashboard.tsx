@@ -1,7 +1,8 @@
 import { Alert } from '@mui/material'
 import React from 'react'
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
 import ApplicationTracker from './ApplicationTracker'
 import RecentApplications from './RecentApplications'
@@ -14,7 +15,7 @@ const Dashboard = () => {
     error: dashboardError,
   } = useFetchDashboardQuery({})
 
-  if (dashboardLoading) return <Loading />
+  if (dashboardLoading) return <Spinner fullPage />
 
   if (dashboardError) return <Alert severity="error">Error Fetching Data</Alert>
 

@@ -3,12 +3,14 @@ import { AiOutlineCloudUpload } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { IsProcessing, RecruiterButton } from '../../../../components'
 import {
   ChooseMethodCard,
   DocumentUploaderCard,
-} from '../../../../components/Cards'
-import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
+} from '@/components/features/recruiter/Cards'
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { Spinner } from '@/components/ui/Spinner'
+
+import { Button } from '../../../../components'
 import { useUploadCVOnlyMutation } from '../../../../redux/api/recruiter'
 import {
   addFiles,
@@ -110,7 +112,7 @@ export const ProcessCV = () => {
       : ''
 
   const buttonTitle = isReevaluating ? (
-    <IsProcessing />
+    <Spinner size="sm" />
   ) : moreFilesToProcess ? (
     'Try evaluating again'
   ) : files.length === 1 ? (
@@ -148,12 +150,15 @@ export const ProcessCV = () => {
         multiple
       />
       <div>
-        <RecruiterButton
-          buttonTitle={buttonTitle}
+        <Button
+          variant="primary"
+          size="wide"
+          fullWidth
           disabled={files.length === 0 || isReevaluating}
           onClick={handleSubmit}
-          className={displayButton}
-        />
+          className={displayButton}>
+          {buttonTitle}
+        </Button>
       </div>
     </div>
   )

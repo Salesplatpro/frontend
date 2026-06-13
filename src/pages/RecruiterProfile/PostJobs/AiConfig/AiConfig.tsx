@@ -7,8 +7,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 import * as Yup from 'yup'
 
-import RadioFieldGroup from '../../../../components/Form/RadioFieldGroup'
-import TextField from '../../../../components/Form/TextField'
+import RadioFieldGroup from '@/components/forms/RadioFieldGroup'
+import TextField from '@/components/forms/TextField'
+
 import { useAiConfigMutation } from '../../../../redux/api/recruiter'
 import { notify } from '../../../../utils/toastNotifications'
 import QuestionGenerator from './QuestionGenerator'
@@ -125,8 +126,8 @@ const AiConfig = () => {
 
   return (
     <div className="md:px-4 py-4 md:w-[70%] w-[100%] mx-auto">
-      <h2 className="text-[#101828] text-[32px] mt-4 font-bold">AI Configs</h2>
-      <p className="text-[#667085] text-[16px] mb-6 font-light">
+      <h2 className="text-grey-900 text-[32px] mt-4 font-bold">AI Configs</h2>
+      <p className="text-grey-500 text-[16px] mb-6 font-light">
         Select your configurations
       </p>
       <Formik
@@ -282,10 +283,10 @@ const AiConfig = () => {
                               className="flex flex-row items-center space-x-1">
                               <Field
                                 name={`uploadedQuestions.${index}`}
-                                className="border border-[#D0D5DD] p-4 rounded w-full"
+                                className="border border-grey-300 p-4 rounded w-full"
                               />
                               <div
-                                className="p-2 text-[20px] text-[#667085] cursor-pointer rounded"
+                                className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
                                 onClick={() => remove(index)}>
                                 <RiDeleteBin6Line />
                               </div>
@@ -293,7 +294,7 @@ const AiConfig = () => {
                           ))}
                           <button
                             type="button"
-                            className="px-4 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl border border-[#006BFF]"
+                            className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info"
                             onClick={() => push('')}>
                             <span className="flex items-center gap-2">
                               <FaPlus /> Add Question
@@ -315,7 +316,7 @@ const AiConfig = () => {
 
             <button
               type="submit"
-              className="bg-[#3C6FD4] text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
+              className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
               disabled={isSubmitting}>
               {isSubmitting ? 'Submitting' : 'Submit'}
             </button>

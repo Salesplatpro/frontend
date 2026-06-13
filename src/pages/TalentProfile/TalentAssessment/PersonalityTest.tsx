@@ -2,7 +2,8 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import {
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
@@ -118,14 +119,14 @@ const PersonalityTest: React.FC = () => {
   }
 
   if (personalityLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   return (
     <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
       <div className="ml-8">
-        <h2 className="text-3xl text-[#101828] font-bold">Personality Test</h2>
-        <p className="text-xl text-[#101828] font-medium mt-3 font-raleway">
+        <h2 className="text-3xl text-grey-900 font-bold">Personality Test</h2>
+        <p className="text-xl text-grey-900 font-medium mt-3 font-raleway">
           Welcome to your Personality test, you have the following Questions to
           answer in this stage.
         </p>
@@ -134,15 +135,15 @@ const PersonalityTest: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <ul>
             {personalityQuestions.map((question, i) => (
-              <div key={i} className="bg-[#F8F8F8] mb-6 p-4 rounded-2xl">
-                <div className="flex justify-center items-start space-x-3 text-[#101828] font-raleway font-medium">
+              <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
+                <div className="flex justify-center items-start space-x-3 text-grey-900 font-raleway font-medium">
                   <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
                   <h3 className="text-[17px] leading-[150%]">
                     {question.question}
                   </h3>
                 </div>
                 <textarea
-                  className="w-full bg-white border border-[#D0D5DD] rounded-lg h-[93px] p-3 mt-4"
+                  className="w-full bg-white border border-grey-300 rounded-lg h-[93px] p-3 mt-4"
                   placeholder="Type your answer here ..."
                   name={`answer-${question._id}`}
                   onChange={(e) => handleChange(e, question._id)}

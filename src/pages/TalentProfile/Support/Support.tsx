@@ -32,7 +32,7 @@ export const Support = () => {
         <div className="md:my-3 flex justify-between items-center">
           <h2 className="font-bold md:text-3xl text-xl">Fill Support Form</h2>
         </div>
-        <div className="border flex space-x-5 p-5 rounded-2xl border-[#D0D5DD] mt-1">
+        <div className="border flex space-x-5 p-5 rounded-2xl border-grey-300 mt-1">
           <ProfilePic
             uploadPic={uploadPic}
             updateProfilePics={updateProfilePics}
@@ -42,19 +42,19 @@ export const Support = () => {
 
           <div className="w-full">
             <div className="flex justify-between w-full">
-              <div className="text-[#101828]">
+              <div className="text-grey-900">
                 <p className="text-[20px] font-semibold">{`${userInfo?.firstName} ${userInfo?.lastName}`}</p>
               </div>
             </div>
             <hr className="my-2" />
-            <p className="text-[14px] text-[#667085]">
+            <p className="text-[14px] text-grey-500">
               Fill this form with the complaints you have, with correct details.
               And be rest assured we will get back to you as soon as we can.
             </p>
           </div>
         </div>
       </div>
-      <div className="border flex flex-col p-5 rounded-2xl border-[#D0D5DD] mt-1">
+      <div className="border flex flex-col p-5 rounded-2xl border-grey-300 mt-1">
         <div className="flex flex-col gap-2">
           <label htmlFor="message" className="text-sm font-medium mb-[6px]">
             Message
@@ -62,7 +62,7 @@ export const Support = () => {
           <textarea
             rows={5}
             maxLength={maxLength}
-            className="border border-[#D0D5DD] rounded-lg p-2"
+            className="border border-grey-300 rounded-lg p-2"
             placeholder="Tell us what is in your mind"
             value={values.message}
             onChange={(e) => handleMessageChange(e)}
@@ -78,7 +78,7 @@ export const Support = () => {
             </label>
             <input
               type="name"
-              className="w-full border border-[#D0D5DD] rounded-lg p-2 mt-2 text-[#A7B1B9]"
+              className="w-full border border-grey-300 rounded-lg p-2 mt-2 text-[#A7B1B9]"
               value={`${userInfo?.firstName} ${userInfo?.lastName}`}
               disabled
             />
@@ -89,7 +89,7 @@ export const Support = () => {
             </label>
             <input
               type="role"
-              className="w-full border border-[#D0D5DD] rounded-lg p-2 mt-2 text-[#A7B1B9]"
+              className="w-full border border-grey-300 rounded-lg p-2 mt-2 text-[#A7B1B9]"
               value={`${userInfo?.userRole}`}
             />
           </div>
@@ -101,7 +101,7 @@ export const Support = () => {
             </label>
             <input
               type="email"
-              className="w-full border border-[#D0D5DD] rounded-lg p-2 mt-2 text-[#A7B1B9]"
+              className="w-full border border-grey-300 rounded-lg p-2 mt-2 text-[#A7B1B9]"
               value={`${userInfo?.email}`}
             />
           </div>
@@ -111,7 +111,7 @@ export const Support = () => {
             </label>
             <input
               type="phoneNumber"
-              className="w-full border border-[#D0D5DD] rounded-lg p-2 mt-2 text-[#A7B1B9]"
+              className="w-full border border-grey-300 rounded-lg p-2 mt-2 text-[#A7B1B9]"
               value={`${userInfo?.phone}`}
             />
           </div>
@@ -119,15 +119,11 @@ export const Support = () => {
         {values.message.length > 1 && (
           <div className="flex justify-end space-x-4 my-10">
             <Button
-              title="Cancel"
               variant="secondary"
-              onClick={() => setValues((prev) => ({ ...prev, message: '' }))}
-            />
-            <Button
-              title="Done"
-              variant="primary"
-              onClick={() => console.log(values)}
-            />
+              onClick={() => setValues((prev) => ({ ...prev, message: '' }))}>
+              Cancel
+            </Button>
+            <Button onClick={() => console.log(values)}>Done</Button>
           </div>
         )}
       </div>

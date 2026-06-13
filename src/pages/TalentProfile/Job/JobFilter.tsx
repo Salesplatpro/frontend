@@ -3,9 +3,10 @@ import './JobFilter.scss'
 import { Field, Form, Formik } from 'formik'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 
-import Location from '../../../components/global/Location'
-import AllRoles from '../../../components/Roles/AllRoles'
-import Worktype from '../../../components/Worktype'
+import Worktype from '@/components/features/jobs/Worktype'
+import Location from '@/components/features/shared/global/Location'
+import AllRoles from '@/components/forms/Roles/AllRoles'
+
 import { useScreenWidth } from '../../../hooks'
 import { experienceLevel } from '../../../utils'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'

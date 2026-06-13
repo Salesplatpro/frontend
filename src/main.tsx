@@ -1,3 +1,4 @@
+import './styles/tokens.css'
 import './index.css'
 import '@coreui/coreui/dist/css/coreui.min.css'
 

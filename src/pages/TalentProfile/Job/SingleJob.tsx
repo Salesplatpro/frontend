@@ -5,8 +5,9 @@ import { GoDotFill } from 'react-icons/go'
 import { PiBuildingOfficeBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
-import { Button } from '../../../components/Button/Button'
-import Loading from '../../../components/Loading/Loading'
+import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
+
 import { capitalizeFirstWord } from '../../../utils'
 import { JobDetails } from './JobDetails'
 
@@ -40,7 +41,7 @@ export const SingleJob = ({
   isFiltering,
   isLoading,
 }: SingleJobProps) => {
-  if (isFiltering || isLoading) return <Loading />
+  if (isFiltering || isLoading) return <Spinner fullPage />
 
   return (
     <div className="singlejob-container">
@@ -66,7 +67,7 @@ export const SingleJob = ({
             />
           </div>
           <Link to={`/talentDashboard/job/${jobId}`}>
-            <Button title="Apply Now" textType="normal" />
+            <Button>Apply Now</Button>
           </Link>
         </div>
       </div>

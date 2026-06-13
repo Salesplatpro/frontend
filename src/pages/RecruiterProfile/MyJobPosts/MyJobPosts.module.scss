@@ -19,7 +19,7 @@
 }
 
 .title {
-  color: #101828;
+  color: var(--color-grey-900);
   font-weight: 700;
   font-size: 32px;
 
@@ -30,7 +30,7 @@
 
 .desc {
   font-size: 20px;
-  color: #101828;
+  color: var(--color-grey-900);
 
   @media (max-width: 980px) {
     font-size: 16px;

@@ -9,7 +9,7 @@
 }
 
 .singlejob-container {
-  background: #f8f8f8;
+  background: var(--color-grey-50);
   padding: 24px 16px;
   border-radius: 10px;
   align-items: flex-start;
@@ -63,7 +63,7 @@
 }
 
 .description {
-  color: #667085;
+  color: var(--color-grey-500);
 }
 
 .details-container {

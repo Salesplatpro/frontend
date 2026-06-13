@@ -4,12 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { Modal } from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { Spinner } from '@/components/ui/Spinner'
+
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import RichTextDisplay from '../../../components/global/RichTextDisplay'
-import Loading from '../../../components/Loading/Loading'
-import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
@@ -43,7 +44,7 @@ const IndividualJob = () => {
     }
   }, [data, error])
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   const closeModal = () => {
     setIsModalOpen(false)
@@ -97,7 +98,7 @@ const IndividualJob = () => {
   return (
     <div className="w-full">
       <div className="w-[96%] mx-auto mt-4">
-        <h2 className="font-bold font-raleway md:text-3xl text-xl text-[#101828]">
+        <h2 className="font-bold font-raleway md:text-3xl text-xl text-grey-900">
           {jobProfile?.role && capitalizeEachWord(jobProfile?.role?.name)}
         </h2>
         <div className="flex space-x-5 items-center mt-3">
@@ -107,27 +108,27 @@ const IndividualJob = () => {
         <div className="flex md:flex-row flex-col justify-between items-start md:space-x-10 w-full mx-auto md:mt-10 mt-6">
           <div className="text-start">
             <div className="">
-              <h5 className="text-[#101828] text-lg text-start font-semibold font-raleway">
+              <h5 className="text-grey-900 text-lg text-start font-semibold font-raleway">
                 {/* Your role at{jobProfile?.title} */}
                 Job Brief
               </h5>
               <RichTextDisplay
                 content={jobProfile?.jobBrief || ' '}
-                className="text-[#667085] text-base mt-0 text-justify font-raleway font-medium"
+                className="text-grey-500 text-base mt-0 text-justify font-raleway font-medium"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold font-raleway">
+              <h5 className="text-grey-900 text-lg text-start font-semibold font-raleway">
                 Job Requirements
               </h5>
               <RichTextDisplay
                 content={jobProfile?.requirements || ' '}
-                className="text-[#667085] text-base
+                className="text-grey-500 text-base
                 mt-0 mb-0 text-justify font-raleway font-medium"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Skills
               </h5>
               {jobProfile?.skills && (
@@ -135,7 +136,7 @@ const IndividualJob = () => {
                   {jobProfile?.skills.map((item, i) => (
                     <li
                       key={i}
-                      className="text-[#667085] text-base font-raleway font-medium">
+                      className="text-grey-500 text-base font-raleway font-medium">
                       {item}
                     </li>
                   ))}
@@ -143,7 +144,7 @@ const IndividualJob = () => {
               )}
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Goals
               </h5>
               {jobProfile?.goals && (
@@ -151,7 +152,7 @@ const IndividualJob = () => {
                   {jobProfile?.goals.map((item, i) => (
                     <li
                       key={i}
-                      className="text-[#667085] text-base font-raleway font-medium">
+                      className="text-grey-500 text-base font-raleway font-medium">
                       {item}
                     </li>
                   ))}
@@ -178,18 +179,18 @@ const IndividualJob = () => {
                 Edit
               </button>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Job Type
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {capitalizeFirstWord(jobProfile?.workMode)}
                 </h5>
               </div>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Location
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {jobProfile?.location &&
                     // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.country)}
@@ -200,10 +201,10 @@ const IndividualJob = () => {
                 </h5>
               </div>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Experience Level
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {capitalizeFirstWord(jobProfile?.experienceLevel)}
                 </h5>
               </div>

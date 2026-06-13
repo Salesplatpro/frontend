@@ -5,8 +5,9 @@ import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import animationData from '../../../assets/Animation - check.json'
-import Loading from '../../../components/Loading/Loading'
 import {
   useFetchPretestQuery,
   usePostPretestMutation,
@@ -63,14 +64,14 @@ const TalentAssessment = () => {
           />
         </div>
 
-        <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-[#4b4b4b] pt-4">
+        <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-charcoal pt-4">
           You Have Taken The Test Already
         </h2>
       </div>
     )
   }
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>,
@@ -124,10 +125,10 @@ const TalentAssessment = () => {
     <div>
       <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
         <div className="ml-8">
-          <h2 className="text-[30px]  text-[#101828] font-bold">
+          <h2 className="text-[30px]  text-grey-900 font-bold">
             Pre-Assessment Test
           </h2>
-          <p className="text-xl font-raleway text-[#101828] font-medium my-3">
+          <p className="text-xl font-raleway text-grey-900 font-medium my-3">
             Welcome to your Assessment test, you have 15 Questions to answer in
             this stage.
           </p>
@@ -137,8 +138,8 @@ const TalentAssessment = () => {
           <form onSubmit={handleSubmit} className="">
             <ul>
               {questions.map((question, i) => (
-                <div key={i} className="bg-[#F8F8F8] mb-6 p-4 rounded-2xl">
-                  <div className="flex items-center justify-start space-x-3 text-[#101828] font-medium">
+                <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
+                  <div className="flex items-center justify-start space-x-3 text-grey-900 font-medium">
                     <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
                     <h3 className="text-[18px] leading-[150%]">
                       {question.question}
@@ -146,7 +147,7 @@ const TalentAssessment = () => {
                   </div>
 
                   <textarea
-                    className="w-full bg-white border border-[#D0D5DD] rounded-lg h-[100px] p-3 mt-3"
+                    className="w-full bg-white border border-grey-300 rounded-lg h-[100px] p-3 mt-3"
                     placeholder="Answer here"
                     name={`answer-${question._id}`}
                     onChange={(e) => handleChange(e, question._id)}
