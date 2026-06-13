@@ -157,8 +157,7 @@ const ProgressView: React.FC = () => {
       <div>
         <button
           onClick={homePage}
-          className="my-14 ml-4 border-2 border-primary-strong px-[12px] py-[12.3px] rounded-xl cursor-pointer bg-primary-strong text-white shadow-custom font-raleway leading-[30px] text-[16px] font-medium hover:bg-[#3765c0] hover:text-white"
-        >
+          className="my-14 ml-4 border-2 border-primary-strong px-[12px] py-[12.3px] rounded-xl cursor-pointer bg-primary-strong text-white shadow-custom font-raleway leading-[30px] text-[16px] font-medium hover:bg-[#3765c0] hover:text-white">
           Back to Homepage
         </button>
       </div>

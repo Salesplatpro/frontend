@@ -65,12 +65,10 @@ export const EditJobTab = () => {
                 activeTab === tab.tab
                   ? 'border-info border-t-4 text-info'
                   : 'border-t-4 text-grey-700'
-              } md:min-w-[232px] w-[232px] md:py-2 py-1 text-[14px]`}
-            >
+              } md:min-w-[232px] w-[232px] md:py-2 py-1 text-[14px]`}>
               <button
                 onClick={() => setActiveTab(tab.tab)}
-                className="flex flex-col w-full text-left"
-              >
+                className="flex flex-col w-full text-left">
                 <h5 className="font-bold">{tab.title}</h5>
                 <p>{tab.description}</p>
               </button>

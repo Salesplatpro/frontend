@@ -28,8 +28,7 @@ export const SidebarList = ({
     <NavLink
       to={link || ''}
       className={`${styles.listContainer} ${active ? styles.active : ''}`}
-      onClick={onClick}
-    >
+      onClick={onClick}>
       <div className={styles.listItem}>
         <div>{icon}</div>
         <div>

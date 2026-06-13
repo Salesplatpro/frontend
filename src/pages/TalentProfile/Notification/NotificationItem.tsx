@@ -61,8 +61,7 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
         {content.length > truncateLimit && (
           <button
             onClick={onToggleExpand}
-            className="text-blue-500 font-medium"
-          >
+            className="text-blue-500 font-medium">
             {isExpanded ? 'Read Less' : 'Read More'}
           </button>
         )}
@@ -71,8 +70,7 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
           <p
             className={`font-raleway pb-3 font-semibold text-[14px] ${
               acknowledged ? 'text-green-500' : 'text-red-500'
-            }`}
-          >
+            }`}>
             {messageStatus}
           </p>
         )}
@@ -82,15 +80,13 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
         <div className="flex justify-end items-center mx-5 lg:mx-8 my-4 space-x-4">
           <button
             className="lg:w-[100px] rounded-lg flex justify-center items-center font-semibold font-raleway text-[16px] text-primary-strong hover:cursor-pointer py-3"
-            onClick={onReject}
-          >
+            onClick={onReject}>
             Reject
           </button>
 
           <button
             className="w-[110px] text-[14px] lg:w-[151px] h-[44px] rounded-lg bg-primary-strong flex justify-center items-center font-semibold font-raleway lg:text-[16px] text-white hover:bg-[#4b82e1] py-3"
-            onClick={onAcknowledge}
-          >
+            onClick={onAcknowledge}>
             Acknowledge
           </button>
         </div>

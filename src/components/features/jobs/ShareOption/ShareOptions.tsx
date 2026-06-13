@@ -55,8 +55,7 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
           onClick={option.action}
           className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
             i !== 0 ? 'border-l border-gray-300 px-2' : ''
-          }`}
-        >
+          }`}>
           {option.icon}
         </div>
       ))}

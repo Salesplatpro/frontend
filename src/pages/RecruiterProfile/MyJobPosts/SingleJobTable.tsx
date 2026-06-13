@@ -94,8 +94,7 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                 </TableCell>
                 <ResponsiveTableRenderer
                   screenWidth={screenWidth}
-                  breakpoint={768}
-                >
+                  breakpoint={768}>
                   <TableCell align={align} sx={tableCellStyle}>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <StatusBadge
@@ -110,8 +109,7 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => {
                 </ResponsiveTableRenderer>
                 <TableCell align={align} sx={tableCellStyle}>
                   <Link
-                    to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}
-                  >
+                    to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}>
                     <Button size="sm">View Applicantion</Button>
                   </Link>
                 </TableCell>

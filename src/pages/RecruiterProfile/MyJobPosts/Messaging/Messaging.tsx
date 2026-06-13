@@ -86,8 +86,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
             size="wide"
             fullWidth
             onClick={handleSendMessage}
-            disabled={isSending}
-          >
+            disabled={isSending}>
             {isSending ? 'Sending...' : 'Send'}
           </Button>
         </div>

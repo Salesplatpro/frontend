@@ -138,8 +138,7 @@ export const ApplicationProgress = () => {
             size="wide"
             fullWidth
             onClick={() => handleStatusUpdate('rejected')}
-            disabled={jodStatus === 'rejected' && true}
-          >
+            disabled={jodStatus === 'rejected' && true}>
             {loadingReject ? 'Rejecting...' : 'Reject'}
           </Button>
         </div>
@@ -149,8 +148,7 @@ export const ApplicationProgress = () => {
             size="wide"
             fullWidth
             onClick={() => handleStatusUpdate('shortlisted')}
-            disabled={jodStatus === 'shortlisted' && true}
-          >
+            disabled={jodStatus === 'shortlisted' && true}>
             {loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
           </Button>
         </div>

@@ -120,8 +120,7 @@ export const PipelineTable = () => {
               </StyledTableCell>
               <ResponsiveTableRenderer
                 screenWidth={screenWidth}
-                breakpoint={768}
-              >
+                breakpoint={768}>
                 <StyledTableCell align={align}>
                   {application.currentStage}
                 </StyledTableCell>
@@ -137,8 +136,7 @@ export const PipelineTable = () => {
               </ResponsiveTableRenderer>
               <StyledTableCell align={align}>
                 <Link
-                  to={`/talentDashboard/applicationPipeline/${application.job?._id}`}
-                >
+                  to={`/talentDashboard/applicationPipeline/${application.job?._id}`}>
                   <Button>View More</Button>
                 </Link>
               </StyledTableCell>

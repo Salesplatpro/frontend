@@ -136,8 +136,7 @@ const IndividualJob = () => {
                   {jobProfile?.skills.map((item, i) => (
                     <li
                       key={i}
-                      className="text-grey-500 text-base font-raleway font-medium"
-                    >
+                      className="text-grey-500 text-base font-raleway font-medium">
                       {item}
                     </li>
                   ))}
@@ -153,8 +152,7 @@ const IndividualJob = () => {
                   {jobProfile?.goals.map((item, i) => (
                     <li
                       key={i}
-                      className="text-grey-500 text-base font-raleway font-medium"
-                    >
+                      className="text-grey-500 text-base font-raleway font-medium">
                       {item}
                     </li>
                   ))}
@@ -164,8 +162,7 @@ const IndividualJob = () => {
             {/* <Link to={`/talentDashboard/applicationPipeline/${jobId}`}> */}
             <button
               onClick={() => navigation(`/recruiterDashboard/editJob/${jobId}`)}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4"
-            >
+              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 md:my-10 mt-4">
               Edit
             </button>
             {/* </Link> */}
@@ -178,8 +175,7 @@ const IndividualJob = () => {
                 onClick={() =>
                   navigation(`/recruiterDashboard/editJob/${jobId}`)
                 }
-                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700"
-              >
+                className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700">
                 Edit
               </button>
               <div className="mt-4">
@@ -227,8 +223,7 @@ const IndividualJob = () => {
               <button
                 key={index}
                 className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
-                onClick={() => handleRedirectShare(option.link)}
-              >
+                onClick={() => handleRedirectShare(option.link)}>
                 <img
                   src={option.icon}
                   alt={option.text}

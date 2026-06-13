@@ -28,8 +28,7 @@ function PageNotFound() {
             className="flex items-center justify-center gap-2
              bg-primary border border-primary text-white
              text-[18px] font-raleway font-semibold rounded-lg
-             px-4 py-3"
-          >
+             px-4 py-3">
             <RiArrowGoBackLine className="w-5 h-5" />
             <span className="text-white text-[18px]">Previous Page</span>
           </button>

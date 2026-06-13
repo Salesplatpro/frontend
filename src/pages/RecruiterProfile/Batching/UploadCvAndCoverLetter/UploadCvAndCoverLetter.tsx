@@ -168,8 +168,7 @@ export const UploadCvAndCoverLetter = () => {
           <div className={styles.parentContainer}>
             <div
               className={styles.container}
-              onClick={() => cv.current?.click()}
-            >
+              onClick={() => cv.current?.click()}>
               Upload talent Cv
               {selectedFiles.cv ? (
                 <div className={styles.innerContainer}>
@@ -202,8 +201,7 @@ export const UploadCvAndCoverLetter = () => {
             </div>
             <div
               className={styles.container}
-              onClick={() => cover.current?.click()}
-            >
+              onClick={() => cover.current?.click()}>
               Upload talent Cover Letter
               {selectedFiles.coverLetter ? (
                 <div className={styles.innerContainer}>
@@ -239,8 +237,7 @@ export const UploadCvAndCoverLetter = () => {
                 variant="primary"
                 size="wide"
                 fullWidth
-                onClick={handleAddFileToState}
-              >
+                onClick={handleAddFileToState}>
                 {files.length > 0 ? 'Add another profile' : 'Add profile'}
               </Button>
             </div>
@@ -252,8 +249,7 @@ export const UploadCvAndCoverLetter = () => {
             size="wide"
             fullWidth
             onClick={handleSubmit}
-            className={displayButton}
-          >
+            className={displayButton}>
             {buttonTitle}
           </Button>
         )}

@@ -131,11 +131,10 @@ const Location: React.FC<LocationProps> = ({
   return (
     <div className="">
       <label
-        className={`text-[16px] text-[#344054] font-raleway pb-2 ${
+        className={`text-[16px] text-[grey-700] font-raleway pb-2 ${
           bold ? 'font-bold' : 'font-medium'
         }`}
-        htmlFor={locationTitle}
-      >
+        htmlFor={locationTitle}>
         {locationLabel}
         {asterick && <span className="text-red-500 ml-1">*</span>}
       </label>

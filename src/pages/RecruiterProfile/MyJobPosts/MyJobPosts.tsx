@@ -44,8 +44,7 @@ export const MyJobPosts = () => {
         <button
           className="text-white font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
             bg-primary-strong rounded-lg"
-          onClick={() => navigate('/recruiterDashboard/postjob')}
-        >
+          onClick={() => navigate('/recruiterDashboard/postjob')}>
           Create New
         </button>
       </div>

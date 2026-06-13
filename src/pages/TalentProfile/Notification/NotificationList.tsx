@@ -185,16 +185,14 @@ const NotificationList: React.FC = () => {
 
           <button
             className="w-full sm:w-auto px-8 md:px-12 lg:px-16 py-2 mt-2 rounded-lg text-white font-raleway font-medium text-sm sm:text-base md:text-lg bg-primary-strong hover:bg-primary transition"
-            onClick={handleConfirm}
-          >
+            onClick={handleConfirm}>
             {modalAction === 'acknowledge' ? 'Acknowledge' : 'Reject'}
           </button>
 
           <button
             className="w-full sm:w-auto px-8 py-2 mt-3 rounded-lg font-raleway font-medium text-base md:text-lg text-primary-strong hover:underline"
             onClick={handleClose}
-            aria-label="Close modal"
-          >
+            aria-label="Close modal">
             Cancel
           </button>
         </div>

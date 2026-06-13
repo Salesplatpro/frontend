@@ -133,8 +133,7 @@ const AiConfig = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
         {({ values, isSubmitting }) => (
           <Form>
             <TextField label="Name" name="name" placeholder="Name of Job" />
@@ -274,24 +273,21 @@ const AiConfig = () => {
                       <div className="flex flex-col mt-4 mb-4">
                         <label
                           htmlFor="personalityQuestion"
-                          className="font-medium mb-1"
-                        >
+                          className="font-medium mb-1">
                           Questions:
                         </label>
                         <div className="space-y-2">
                           {values.uploadedQuestions?.map((pQuestion, index) => (
                             <div
                               key={index}
-                              className="flex flex-row items-center space-x-1"
-                            >
+                              className="flex flex-row items-center space-x-1">
                               <Field
                                 name={`uploadedQuestions.${index}`}
                                 className="border border-grey-300 p-4 rounded w-full"
                               />
                               <div
                                 className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
-                                onClick={() => remove(index)}
-                              >
+                                onClick={() => remove(index)}>
                                 <RiDeleteBin6Line />
                               </div>
                             </div>
@@ -299,8 +295,7 @@ const AiConfig = () => {
                           <button
                             type="button"
                             className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info"
-                            onClick={() => push('')}
-                          >
+                            onClick={() => push('')}>
                             <span className="flex items-center gap-2">
                               <FaPlus /> Add Question
                             </span>
@@ -322,8 +317,7 @@ const AiConfig = () => {
             <button
               type="submit"
               className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-              disabled={isSubmitting}
-            >
+              disabled={isSubmitting}>
               {isSubmitting ? 'Submitting' : 'Submit'}
             </button>
           </Form>

@@ -45,8 +45,7 @@ export const Text = ({
 }: TextProps) => (
   <Component
     className={cn(styles[size], styles[color], styles[weight], className)}
-    onClick={onClick}
-  >
+    onClick={onClick}>
     {children}
   </Component>
 )

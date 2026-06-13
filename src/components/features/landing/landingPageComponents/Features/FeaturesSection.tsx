@@ -17,8 +17,7 @@ export const FeaturesSection = ({ header, data }: FeatureSectionProps) => {
       className={cn(
         styles.wrapper,
         'flex flex-col gap-4 justify-center md:gap-9 items-start px-8 md:px-24 py-12 md:py-24',
-      )}
-    >
+      )}>
       <Text size="fs-2xl" weight="bolder">
         {header}
       </Text>

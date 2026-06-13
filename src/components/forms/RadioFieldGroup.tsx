@@ -33,8 +33,7 @@ const RadioFieldGroup = ({
         <label
           key={option.value}
           htmlFor={`${name}${option.value}`}
-          className="flex items-center space-x-2"
-        >
+          className="flex items-center space-x-2">
           <Field
             type="radio"
             id={`${name}${option.value}`}

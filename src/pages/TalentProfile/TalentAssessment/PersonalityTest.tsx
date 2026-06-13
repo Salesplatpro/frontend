@@ -158,8 +158,7 @@ const PersonalityTest: React.FC = () => {
                 personalityAnswered
                   ? 'bg-blue-500 text-white hover:bg-blue-700'
                   : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-              }`}
-            >
+              }`}>
               {isSubmitting ? 'submitting' : 'submit'}
             </button>
           </ul>

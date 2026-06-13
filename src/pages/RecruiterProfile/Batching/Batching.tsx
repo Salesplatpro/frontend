@@ -38,8 +38,7 @@ const Batching = () => {
 
             <button
               onClick={handleNavigate}
-              className="w-[250px] lg:w-[358px] md:w-[300px] sm:w-[280px] rounded-lg bg-primary-strong border flex justify-center items-center hover:bg-[#4b82e1] py-3"
-            >
+              className="w-[250px] lg:w-[358px] md:w-[300px] sm:w-[280px] rounded-lg bg-primary-strong border flex justify-center items-center hover:bg-[#4b82e1] py-3">
               <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                 Create New
               </p>

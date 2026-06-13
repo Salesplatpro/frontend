@@ -120,8 +120,7 @@ export const Support = () => {
           <div className="flex justify-end space-x-4 my-10">
             <Button
               variant="secondary"
-              onClick={() => setValues((prev) => ({ ...prev, message: '' }))}
-            >
+              onClick={() => setValues((prev) => ({ ...prev, message: '' }))}>
               Cancel
             </Button>
             <Button onClick={() => console.log(values)}>Done</Button>

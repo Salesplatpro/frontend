@@ -32,8 +32,7 @@ export const UploadCVOnly = () => {
 
       <div
         className="flex justify-center items-center flex-col pt-24 cursor-pointer"
-        onClick={() => document.getElementById('fileInput')?.click()}
-      >
+        onClick={() => document.getElementById('fileInput')?.click()}>
         <div className="flex justify-center items-center w-full max-w-4xl bg-grey-50 border border-grey-300 rounded-2xl">
           <div className="flex justify-center items-center w-full flex-col space-y-4 pb-12 pt-1 px-6 relative">
             <div className="flex flex-row pt-3">
@@ -68,8 +67,7 @@ export const UploadCVOnly = () => {
         onClick={() =>
           navigate(`/recruiterDashboard/scout/process-cv/${params.id}`)
         }
-        disabled={files.length === 0}
-      >
+        disabled={files.length === 0}>
         Upload files
       </Button>
     </div>

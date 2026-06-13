@@ -70,8 +70,7 @@ export const LandingNavbar = () => {
                 key={item.name}
                 href={item.url}
                 className={styles.mobileNavItem}
-                onClick={() => setIsOpen(false)}
-              >
+                onClick={() => setIsOpen(false)}>
                 {item.name}
               </a>
             ))}

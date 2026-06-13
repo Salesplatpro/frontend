@@ -156,8 +156,7 @@ export const ProcessCV = () => {
           fullWidth
           disabled={files.length === 0 || isReevaluating}
           onClick={handleSubmit}
-          className={displayButton}
-        >
+          className={displayButton}>
           {buttonTitle}
         </Button>
       </div>

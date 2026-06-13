@@ -47,7 +47,7 @@ const RecentApplications: React.FC<RecentApplicationsProps> = ({
         <h4 className="text-lg text-[#000] font-semibold">
           Recent Applications
         </h4>
-        <Link to="allapplications" className="text-base text-[#4985DF]">
+        <Link to="allapplications" className="text-base text-[primary]">
           View all
         </Link>
       </div>

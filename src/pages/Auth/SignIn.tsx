@@ -122,8 +122,7 @@ const SignIn = () => {
                 userType: '',
               }}
               validationSchema={SignUpSchema}
-              onSubmit={handleSubmit}
-            >
+              onSubmit={handleSubmit}>
               {({ values }) => (
                 <Form>
                   <Field
@@ -203,8 +202,7 @@ const SignIn = () => {
                     <button
                       type="button"
                       className="absolute inset-y-11 right-0 flex items-center justify-center px-3 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
+                      onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
@@ -229,8 +227,7 @@ const SignIn = () => {
                       className="absolute inset-y-11 right-0 flex items-center px-3 text-gray-500"
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
+                      }>
                       {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </button>
                   </div>
@@ -243,8 +240,7 @@ const SignIn = () => {
                     ) : (
                       <button
                         className=" w-full rounded-lg bg-primary-strong px-4 py-2 text-white hover:bg-[#4b82e1]"
-                        type="submit"
-                      >
+                        type="submit">
                         Sign Up
                       </button>
                     )}
@@ -304,8 +300,7 @@ const SignIn = () => {
           <button
             className="close-modal px-14 py-2 my-4 rounded-lg text-white font-raleway font-medium bg-primary-strong hover:bg-primary"
             onClick={handleClose}
-            aria-label="Close modal"
-          >
+            aria-label="Close modal">
             Go to Login
           </button>
         </div>

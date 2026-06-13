@@ -150,8 +150,7 @@ export const ProcessCvAndCoverLetter = () => {
           fullWidth
           disabled={files.length === 0 || isReevaluating}
           onClick={handleSubmit}
-          className={displayButton}
-        >
+          className={displayButton}>
           {buttonTitle}
         </Button>
       </div>

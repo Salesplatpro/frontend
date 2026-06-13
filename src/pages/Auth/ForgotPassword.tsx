@@ -112,12 +112,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               onSubmit={(e) => {
                 e.preventDefault()
                 handleRequestOtp()
-              }}
-            >
+              }}>
               <label
                 htmlFor="email"
-                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium"
-              >
+                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium">
                 Email
               </label>
               <input
@@ -145,16 +143,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             // onClick={() => setCurrentScreen('confirmation')}
             onClick={handleRequestOtp}
             disabled={loading}
-            aria-label="Move to confirmation"
-          >
+            aria-label="Move to confirmation">
             {loading ? 'Sending...' : 'Reset Password'}
           </button>
 
           <button
             className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-grey-500 hover:cursor-pointer hover:text-[#4f5563]"
             onClick={handleClose}
-            aria-label="Close modal"
-          >
+            aria-label="Close modal">
             <IoArrowBackOutline size={27} />
             Back to Login
           </button>
@@ -183,16 +179,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-primary-strong hover:bg-primary"
-            aria-label="Move to confirmation"
-          >
+            aria-label="Move to confirmation">
             Go to Mail
           </a>
 
           <button
             className="px-20 py-1 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-grey-500 hover:cursor-pointer hover:text-[#4f5563]"
             onClick={() => setCurrentScreen('newPassword')}
-            aria-label="Move to newPassword"
-          >
+            aria-label="Move to newPassword">
             Reset Password
           </button>
         </>
@@ -215,13 +209,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             onSubmit={(e) => {
               e.preventDefault()
               handleResetPassword()
-            }}
-          >
+            }}>
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="email"
-                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium"
-              >
+                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium">
                 Email
               </label>
               <input
@@ -241,8 +233,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="otp"
-                className="text-[14px] pt-10 text-grey-700 leading-[22px] font-raleway font-medium"
-              >
+                className="text-[14px] pt-10 text-grey-700 leading-[22px] font-raleway font-medium">
                 One Time OTP
               </label>
               <input
@@ -257,8 +248,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="password"
-                className="text-[14px] pt-10 text-grey-700 leading-[22px] font-raleway font-medium"
-              >
+                className="text-[14px] pt-10 text-grey-700 leading-[22px] font-raleway font-medium">
                 New Password
               </label>
               <input
@@ -274,8 +264,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             <div className="pt-1 space-y-2">
               <label
                 htmlFor="confirmPassword"
-                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium"
-              >
+                className="text-[14px] text-grey-700 leading-[22px] font-raleway font-medium">
                 Confirm New Password
               </label>
               <input
@@ -300,16 +289,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
           <button
             className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-2 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-primary-strong hover:bg-primary whitespace-nowrap"
             onClick={handleResetPassword}
-            disabled={loading}
-          >
+            disabled={loading}>
             {loading ? 'Resetting...' : 'Reset Password'}
           </button>
 
           <button
             className="px-20 py-3 rounded-lg flex justify-center items-center gap-x-2 font-raleway whitespace-nowrap font-medium leading-[20px] text-center text-[17px] lg:text-[19px] md:text-[18px] text-grey-500 hover:cursor-pointer hover:text-[#4f5563]"
             onClick={handleClose}
-            aria-label="Close modal"
-          >
+            aria-label="Close modal">
             <IoArrowBackOutline size={27} />
             Back to Login
           </button>

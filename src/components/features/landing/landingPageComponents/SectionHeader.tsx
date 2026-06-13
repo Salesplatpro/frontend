@@ -19,15 +19,13 @@ export const SectionHeader = ({
     <Text
       size="fs-md"
       color={variant === 'secondary' ? 'white' : 'tag'}
-      weight="bold"
-    >
+      weight="bold">
       {title}
     </Text>
     <Text
       size="fs-2xl"
       weight="bolder"
-      color={variant === 'secondary' ? 'white' : 'default'}
-    >
+      color={variant === 'secondary' ? 'white' : 'default'}>
       {subTitle}
     </Text>
   </div>

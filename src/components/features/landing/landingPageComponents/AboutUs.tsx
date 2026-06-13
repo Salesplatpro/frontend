@@ -77,8 +77,7 @@ export const AboutUs = () => {
           size="fs-3xl"
           weight="bold"
           color="white"
-          className="font-raleway text-center"
-        >
+          className="font-raleway text-center">
           Who We Help
         </Text>
         <Text size="fs-2xl" color="white" className="text-justify font-raleway">

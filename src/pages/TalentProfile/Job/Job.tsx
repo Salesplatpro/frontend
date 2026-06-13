@@ -113,8 +113,7 @@ const Job = () => {
           <div style={{ height: '100px' }}>
             <Button
               variant="secondary"
-              onClick={() => setShowFilter(!showFilter)}
-            >
+              onClick={() => setShowFilter(!showFilter)}>
               Open filters
             </Button>
           </div>

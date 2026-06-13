@@ -72,8 +72,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
                 <p className="text-[20px] font-semibold">{`${userInfo?.firstName} ${userInfo?.lastName}`}</p>
                 <p
                   className="text-[16px] font-medium
-                font-raleway text-grey-900"
-                >
+                font-raleway text-grey-900">
                   {capitalizeEachWord(userInfo?.userRole)}
                 </p>
               </div>

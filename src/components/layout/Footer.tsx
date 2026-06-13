@@ -83,8 +83,7 @@ const Footer: React.FC = () => {
                   href="https://x.com/thegrowthhub30"
                   aria-label="Twitter"
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   <img src={twitter} alt="Twitter" />
                 </a>
 
@@ -92,8 +91,7 @@ const Footer: React.FC = () => {
                   href="https://www.linkedin.com/company/the-growth-hub-30/"
                   aria-label="LinkedIn"
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   <img src={linkedin} alt="LinkedIn" />
                 </a>
 
@@ -101,8 +99,7 @@ const Footer: React.FC = () => {
                   href="https://www.facebook.com/p/The-Growth-Hub-100093247235214/"
                   aria-label="Facebook"
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   <img src={facebook} alt="Facebook" />
                 </a>
 
@@ -110,8 +107,7 @@ const Footer: React.FC = () => {
                   href="/"
                   aria-label="Telegram"
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   <img src={telegram} alt="Telegram" />
                 </a>
 
@@ -119,8 +115,7 @@ const Footer: React.FC = () => {
                   href="/"
                   aria-label="YouTube"
                   target="_blank"
-                  rel="noopener noreferrer"
-                >
+                  rel="noopener noreferrer">
                   <img src={youtube} alt="YouTube" />
                 </a>
               </div>

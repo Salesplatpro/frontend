@@ -67,8 +67,7 @@ export const Shortlist = () => {
                     </TableCell>
                     <ResponsiveTableRenderer
                       screenWidth={screenWidth}
-                      breakpoint={768}
-                    >
+                      breakpoint={768}>
                       <TableCell align={alignHeader} sx={tableHeadStyle}>
                         Rank
                       </TableCell>
@@ -116,8 +115,7 @@ export const Shortlist = () => {
                     </TableCell>
                     <ResponsiveTableRenderer
                       screenWidth={screenWidth}
-                      breakpoint={768}
-                    >
+                      breakpoint={768}>
                       <TableCell align={alignHeader} sx={tableHeadStyle}>
                         Score
                       </TableCell>

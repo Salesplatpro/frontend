@@ -72,15 +72,13 @@ const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
           <button
             onClick={handleNavigate}
             className="w-[96px] h-[40px] text-white text-base rounded-lg"
-            style={{ backgroundColor: getStatusColor(progress.status) }}
-          >
+            style={{ backgroundColor: getStatusColor(progress.status) }}>
             Take Test
           </button>
         ) : (
           <button
             className="w-[96px] h-[40px] text-white text-base rounded-lg"
-            style={{ backgroundColor: getStatusColor(progress.status) }}
-          >
+            style={{ backgroundColor: getStatusColor(progress.status) }}>
             {progress.status === 'completed' ? 'Completed' : 'Awaiting'}
           </button>
         )}

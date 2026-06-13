@@ -56,8 +56,7 @@ const Worktype: React.FC<WorktypeProps> = ({
     <div className="relative w-[100%]" ref={dropdownRef}>
       <div
         className="w-full p-2 rounded-lg border border-grey-300 h-[44px] mt-1 cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}
-      >
+        onClick={toggleDropdown}>
         <span className="font-medium text-sm font-raleway">
           {Object.keys(selectedValues)
             .filter((key) => selectedValues[key])
@@ -76,8 +75,7 @@ const Worktype: React.FC<WorktypeProps> = ({
           {options.map((option) => (
             <label
               key={option.value}
-              className="block p-2 hover:bg-gray-100 cursor-pointer"
-            >
+              className="block p-2 hover:bg-gray-100 cursor-pointer">
               <input
                 type="checkbox"
                 checked={selectedValues[option.value] || false}

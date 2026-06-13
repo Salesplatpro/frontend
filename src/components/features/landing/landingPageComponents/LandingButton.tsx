@@ -25,8 +25,7 @@ export const LandingButton = ({
     <button
       onClick={onClick}
       type={type}
-      className={cn(styles.container, buttonType)}
-    >
+      className={cn(styles.container, buttonType)}>
       {title}
       {icon && icon}
     </button>

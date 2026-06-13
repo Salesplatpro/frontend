@@ -42,8 +42,7 @@ export const HowItWorks = () => {
         containerPadding,
         'pt-24 pb-24 flex flex-col gap-16',
         styles.container,
-      )}
-    >
+      )}>
       <SectionHeader
         title="How it works"
         subTitle="Your Recruitment Workflow, Reinvented."
@@ -59,8 +58,7 @@ export const HowItWorks = () => {
                 styles.flowTitle,
                 'cursor-pointer',
               )}
-              onClick={() => setActiveIndex(index)}
-            >
+              onClick={() => setActiveIndex(index)}>
               {item}
             </Text>
           ))}

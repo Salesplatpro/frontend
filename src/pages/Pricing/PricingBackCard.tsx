@@ -49,8 +49,7 @@ const PricingBackCard: React.FC<PricingDataProp> = ({
               isLoading
                 ? 'opacity-50 cursor-not-allowed'
                 : 'bg-primary text-white cursor-pointer'
-            } border border-primary font-raleway font-semibold rounded-lg hover:bg-white hover:text-primary hover:border hover:border-grey-300`}
-          >
+            } border border-primary font-raleway font-semibold rounded-lg hover:bg-white hover:text-primary hover:border hover:border-grey-300`}>
             {isLoading ? 'Loading...' : 'Get started'}
           </button>
           <button className="px-4 py-4 text-[18px] bg-white border border-grey-300 text-grey-700 cursor-pointer font-raleway font-semibold rounded-lg">
@@ -73,8 +72,7 @@ const PricingBackCard: React.FC<PricingDataProp> = ({
         {item.featuresText.map((feature, index) => (
           <div
             key={index}
-            className="flex flex-row justify-start space-x-2 space-y-4 items-end text-left"
-          >
+            className="flex flex-row justify-start space-x-2 space-y-4 items-end text-left">
             <img src={CheckBox} alt="check box" className="w-6 h-6" />
             <h1 className="font-inter font-normal text-[16px] leading-[25px] text-grey-500">
               {feature}

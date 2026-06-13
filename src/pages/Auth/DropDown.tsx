@@ -47,8 +47,7 @@ const DropDown: React.FC<SelectUserType> = ({ label, options, field }) => {
         <button
           type="button"
           className="w-full px-4 py-2 text-left text-gray-600 bg-white border rounded-lg focus:outline-none"
-          onClick={toggleDropdown}
-        >
+          onClick={toggleDropdown}>
           {selectedOption || 'Choose an option'}
 
           <span className="absolute right-4 top-1/2 transform -translate-y-1/2">
@@ -61,8 +60,7 @@ const DropDown: React.FC<SelectUserType> = ({ label, options, field }) => {
               <div
                 key={option.value}
                 className="px-4 py-2 hover:bg-primary cursor-pointer"
-                onClick={() => handleOptionClick(option)}
-              >
+                onClick={() => handleOptionClick(option)}>
                 {option.label}
               </div>
             ))}

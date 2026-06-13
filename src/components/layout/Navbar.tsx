@@ -40,8 +40,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/solution"
-                  className={activeTab === '/solution' ? 'activeTab' : ''}
-                >
+                  className={activeTab === '/solution' ? 'activeTab' : ''}>
                   solution
                 </Link>
               </li>
@@ -49,16 +48,14 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/resources"
-                  className={activeTab === '/resources' ? 'activeTab' : ''}
-                >
+                  className={activeTab === '/resources' ? 'activeTab' : ''}>
                   resources
                 </Link>
               </li>
               <li>
                 <Link
                   to="/explore"
-                  className={activeTab === '/explore' ? 'activeTab' : ''}
-                >
+                  className={activeTab === '/explore' ? 'activeTab' : ''}>
                   explore jobs
                 </Link>
               </li>
@@ -66,8 +63,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/pricing"
-                  className={activeTab === '/pricing' ? 'activeTab' : ''}
-                >
+                  className={activeTab === '/pricing' ? 'activeTab' : ''}>
                   Pricing
                 </Link>
               </li>
@@ -76,8 +72,7 @@ const Navbar = () => {
                   to="/customerstories"
                   className={
                     activeTab === '/customerstories' ? 'activeTab' : ''
-                  }
-                >
+                  }>
                   customers stories
                 </Link>
               </li>
@@ -121,8 +116,7 @@ const Navbar = () => {
                         className={activeTab === '/' ? 'activeTab' : ''}
                         onClick={() => {
                           setToggleBtn(false) // Close the menu
-                        }}
-                      >
+                        }}>
                         Home
                       </Link>
                     </li>
@@ -133,8 +127,7 @@ const Navbar = () => {
                         className={activeTab === '/solution' ? 'activeTab' : ''}
                         onClick={() => {
                           setToggleBtn(false) // Close the menu
-                        }}
-                      >
+                        }}>
                         solution
                       </Link>
                     </li>
@@ -146,8 +139,7 @@ const Navbar = () => {
                         }
                         onClick={() => {
                           setToggleBtn(false) // Close the menu
-                        }}
-                      >
+                        }}>
                         Resources
                       </Link>
                     </li>
@@ -157,8 +149,7 @@ const Navbar = () => {
                         className={activeTab === '/explore' ? 'activeTab' : ''}
                         onClick={() => {
                           setToggleBtn(false) // Close the menu
-                        }}
-                      >
+                        }}>
                         Explore Jobs
                       </Link>
                     </li>
@@ -169,8 +160,7 @@ const Navbar = () => {
                         className={activeTab === '/pricing' ? 'activeTab' : ''}
                         onClick={() => {
                           setToggleBtn(false) // Close the menu
-                        }}
-                      >
+                        }}>
                         Pricing
                       </Link>
                     </li>
@@ -182,8 +172,7 @@ const Navbar = () => {
                         }
                         onClick={() => {
                           setToggleBtn(false) // Close the menu
-                        }}
-                      >
+                        }}>
                         Customers Stories
                       </Link>
                     </li>
@@ -195,8 +184,7 @@ const Navbar = () => {
                           onClick={() => {
                             handleLogout()
                             setToggleBtn(false)
-                          }}
-                        >
+                          }}>
                           <Link to="/"> Logout</Link>
                         </button>
                       ) : (
@@ -205,8 +193,7 @@ const Navbar = () => {
                           type="button"
                           onClick={() => {
                             setToggleBtn(false)
-                          }}
-                        >
+                          }}>
                           <Link to="/login"> Login</Link>
                         </button>
                       )}
@@ -216,8 +203,7 @@ const Navbar = () => {
                         className="bg-transparent border-2 border-primary text-primary-tint font-raleway capitalize leading-[18px]  font-semibold text-lg rounded-md px-[12px] py-[12px] hover:bg-primary-hover hover:text-white hover:border-primary-tint"
                         onClick={() => {
                           setToggleBtn(false)
-                        }}
-                      >
+                        }}>
                         <Link to="/talentRegister">Apply for jobs</Link>
                       </button>
                     </li>
@@ -226,8 +212,7 @@ const Navbar = () => {
                         className="bg-primary border-2 border-primary text-white capitalize leading-[18px] font-raleway font-semibold text-lg rounded-md px-[12px] py-[12px] hover:bg-primary-hover hover:text-white hover:border-primary-hover"
                         onClick={() => {
                           setToggleBtn(false)
-                        }}
-                      >
+                        }}>
                         <Link to="/recruiterRegister">Hire Talents</Link>
                       </button>
                     </li>

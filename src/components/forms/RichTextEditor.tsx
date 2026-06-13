@@ -83,8 +83,7 @@ const RichTextEditor = ({
     <div
       id={id}
       className={`border border-grey-300 rounded-lg w-full focus:outline-none overflow-hidden flex flex-col ${className}`}
-      style={{ height: '500px' }}
-    >
+      style={{ height: '500px' }}>
       <ReactQuill
         ref={quillRef}
         value={value}

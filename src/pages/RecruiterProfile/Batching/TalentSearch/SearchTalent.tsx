@@ -80,8 +80,7 @@ const SearchTalent = () => {
               <div>
                 <label
                   htmlFor="role"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[14px]"
-                >
+                  className="text-[#434144] font-raleway font-bold leading-4 text-[14px]">
                   Job Title
                 </label>
                 <div className="border border-grey-300 py-4 pl-4 rounded-lg w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
@@ -137,8 +136,7 @@ const SearchTalent = () => {
               <div className="mb-4 w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
                 <label
                   className="text-[#434144] font-raleway font-bold leading-4 text-[14px]"
-                  htmlFor="experienceLevel"
-                >
+                  htmlFor="experienceLevel">
                   Experience Level
                 </label>
                 <Field
@@ -146,8 +144,7 @@ const SearchTalent = () => {
                   id="experienceLevel"
                   name="experienceLevel"
                   required
-                  className="w-full p-2 border border-gray-300 rounded-lg py-4"
-                >
+                  className="w-full p-2 border border-gray-300 rounded-lg py-4">
                   <option value="">Select Experience Level</option>
                   {Object.values(experienceLevel).map((value) => (
                     <option key={value} value={value}>
@@ -158,8 +155,7 @@ const SearchTalent = () => {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong hover:bg-[#4b82e1] py-3 mt-8 mx-auto"
-              >
+                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
                 <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                   Search
                 </p>

@@ -68,8 +68,7 @@ const SearchResult = () => {
           {talents.map((talent: any, i) => (
             <div
               key={i}
-              className="flex border border-grey-200 w-full items-start justify-center rounded-lg p-3"
-            >
+              className="flex border border-grey-200 w-full items-start justify-center rounded-lg p-3">
               <div className="flex-1 flex space-x-4">
                 <img src={talentdb} alt="" className="w-9 h-9" />
                 <div>
@@ -79,8 +78,7 @@ const SearchResult = () => {
                   {talent.profile.role.map((item: any) => (
                     <h2
                       key={item.id}
-                      className="text-midnight text-sm font-medium"
-                    >
+                      className="text-midnight text-sm font-medium">
                       {item.name}
                     </h2>
                   ))}

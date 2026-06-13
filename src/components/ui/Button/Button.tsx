@@ -41,8 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         fullWidth && styles.fullWidth,
         className,
       )}
-      {...rest}
-    >
+      {...rest}>
       {loading ? (
         <Spinner size="sm" />
       ) : (

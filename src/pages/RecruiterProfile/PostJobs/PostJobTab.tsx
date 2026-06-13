@@ -61,13 +61,11 @@ const PostJobTab = () => {
                     : 'border-t-4 text-[##344054]'
                 } md:min-w-[232px] w-[232px] md:py-2 py-1 text-[14px] ${
                   isDisabled ? 'cursor-not-allowed opacity-50' : ''
-                }`}
-              >
+                }`}>
                 <button
                   onClick={() => !isDisabled && setActiveTab(tab.tab)}
                   className={`flex flex-col`}
-                  disabled={isDisabled}
-                >
+                  disabled={isDisabled}>
                   <h5 className="font-bold">{tab.title}</h5>
                   <p>{tab.description}</p>
                 </button>

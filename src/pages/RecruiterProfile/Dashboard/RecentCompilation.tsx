@@ -62,8 +62,7 @@ const RecentCompilation = () => {
             infoData.map((row, index) => (
               <div
                 key={index}
-                className="flex md:flex-row flex-col justify-between gap-8 p-4 bg-grey-50 rounded-2xl "
-              >
+                className="flex md:flex-row flex-col justify-between gap-8 p-4 bg-grey-50 rounded-2xl ">
                 <div className="flex items-center space-x-4">
                   <img
                     src={profilePics}

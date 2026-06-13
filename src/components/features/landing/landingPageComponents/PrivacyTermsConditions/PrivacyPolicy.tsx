@@ -29,8 +29,7 @@ export const PrivacyPolicy = () => {
           size="fs-xl"
           color="white"
           weight="normal"
-          className={styles.text}
-        >
+          className={styles.text}>
           Your privacy is important to us at Untitled. We respect your privacy
           regarding any information we may collect from you across our website.
         </Text>

@@ -16,8 +16,7 @@ export const StatusBadge = ({
   return (
     <div
       className={styles.statusBadge}
-      style={{ background: backgroundColor, color }}
-    >
+      style={{ background: backgroundColor, color }}>
       {status}
     </div>
   )

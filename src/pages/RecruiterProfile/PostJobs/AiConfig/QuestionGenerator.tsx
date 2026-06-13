@@ -26,8 +26,7 @@ const QuestionGenerator = ({
       className={`p-2 ${
         isLoading ? 'bg-gray-500' : 'bg-primary-strong'
       } text-white text-[14px] rounded mr-2`}
-      disabled={isLoading}
-    >
+      disabled={isLoading}>
       {isLoading
         ? 'Loading...'
         : generatedQuestion
@@ -40,8 +39,7 @@ const QuestionGenerator = ({
         <button
           type="button"
           onClick={onAddQuestion}
-          className="px-4 mt-2 py-2 bg-[#d7e8ff] text-info rounded-3xl"
-        >
+          className="px-4 mt-2 py-2 bg-[#d7e8ff] text-info rounded-3xl">
           <span className="flex items-center gap-2">
             <FaPlus /> Add {pair} Question
           </span>

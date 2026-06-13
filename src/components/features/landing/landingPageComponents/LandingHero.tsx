@@ -23,8 +23,7 @@ export const LandingHero = () => {
               color="white"
               size="fs-4xl"
               className="lg:mt-52 font-raleway mt-14"
-              weight="bolder"
-            >
+              weight="bolder">
               Find Top Talent Faster, Smarter, With AuxHr AI.
             </Text>
             <Text color="white" size="fs-xl" weight="normal">

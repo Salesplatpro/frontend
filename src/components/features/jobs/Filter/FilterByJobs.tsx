@@ -27,8 +27,7 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
     <div className="relative">
       <button
         onClick={() => setDropdownVisible(!dropdownVisible)}
-        className="flex items-center space-x-2 px-4 py-2 border border-[#4884DF] rounded-t-lg hover:bg-gray-100"
-      >
+        className="flex items-center space-x-2 px-4 py-2 border border-[#4884DF] rounded-t-lg hover:bg-gray-100">
         <IoFilterOutline className="text-gray-600" />
         <span className="text-grey-700 text-sm font-medium">Filters</span>
       </button>
@@ -46,8 +45,7 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
                 <div
                   key={job._id}
                   onClick={() => handleFilterSelect(job._id)}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                >
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
                   {job.role.name}
                 </div>
               ))}

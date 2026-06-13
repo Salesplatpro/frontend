@@ -23,8 +23,7 @@ export const DisplayMessage = ({ messages }: MessageProps) => {
       {messages.map((message, index) => (
         <div
           key={index}
-          className="max-w-[803px] h-[61px] border border-gray-300 bg-grey-50 rounded-[10px] flex justify-start items-start"
-        >
+          className="max-w-[803px] h-[61px] border border-gray-300 bg-grey-50 rounded-[10px] flex justify-start items-start">
           <div key={index} className="p-4 text-left">
             {message.content}
           </div>

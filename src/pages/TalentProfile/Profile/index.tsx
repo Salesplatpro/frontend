@@ -66,8 +66,7 @@ const TalentProfile = () => {
           initialValues={initialValues}
           validationSchema={!userInfo?.profile ? validationSchema : null}
           onSubmit={handleProfileSubmit}
-          enableReinitialize
-        >
+          enableReinitialize>
           {({ values, isSubmitting, setFieldValue }) => {
             useEffect(() => {
               setProgress(calculateProgress(values))
@@ -78,8 +77,7 @@ const TalentProfile = () => {
                 <div>
                   <label
                     htmlFor="bio"
-                    className="text-[16px] text-grey-700 font-raleway pb-2 font-medium"
-                  >
+                    className="text-[16px] text-grey-700 font-raleway pb-2 font-medium">
                     Bio
                   </label>
                   <BioTextArea />
@@ -95,8 +93,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="names"
-                      className="text-[16px] text-grey-700 font-raleway pb-2 font-medium"
-                    >
+                      className="text-[16px] text-grey-700 font-raleway pb-2 font-medium">
                       Name
                     </label>
                     <Field
@@ -112,8 +109,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="role"
-                      className="text-[16px] text-grey-700 font-raleway pb-2 font-medium"
-                    >
+                      className="text-[16px] text-grey-700 font-raleway pb-2 font-medium">
                       Role
                     </label>
                     <div className=" border-gray-300 h-[44px] mt-1">
@@ -133,8 +129,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="phoneNumber"
-                      className="text-[16px] text-grey-700 font-medium font-raleway pb-2 "
-                    >
+                      className="text-[16px] text-grey-700 font-medium font-raleway pb-2 ">
                       Phone number
                     </label>
                     <Field
@@ -155,8 +150,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="workTypes"
-                      className="text-[16px] text-grey-700 font-medium font-raleway pb-2"
-                    >
+                      className="text-[16px] text-grey-700 font-medium font-raleway pb-2">
                       Work Type
                     </label>
                     <Worktype
@@ -235,16 +229,14 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       className="text-[14px] text-grey-700 font-medium"
-                      htmlFor="experience"
-                    >
+                      htmlFor="experience">
                       Experience Level
                     </label>
                     <Field
                       as="select"
                       id="experience"
                       name="experience"
-                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1"
-                    >
+                      className="w-[100%] p-2 rounded-lg border border-grey-300 h-[44px] mt-1">
                       <option value="">Select experience Level</option>
                       {Object.values(experienceLevel).map((value) => (
                         <option key={value} value={value}>
@@ -264,8 +256,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="minSalary"
-                      className="text-[14px] text-grey-700 font-medium"
-                    >
+                      className="text-[14px] text-grey-700 font-medium">
                       Min Salary
                     </label>
                     <Field
@@ -284,8 +275,7 @@ const TalentProfile = () => {
                   <div className="md:w-[48%] mb-6 lg:md:mb-0">
                     <label
                       htmlFor="maxSalary"
-                      className="text-[14px] text-grey-700 font-medium"
-                    >
+                      className="text-[14px] text-grey-700 font-medium">
                       Max Salary
                     </label>
                     <Field
@@ -309,8 +299,7 @@ const TalentProfile = () => {
                     <div className="md:w-[48%] mb-6 lg:md:mb-0 ">
                       <label
                         htmlFor="cv"
-                        className="text-[14px] text-grey-700 font-medium"
-                      >
+                        className="text-[14px] text-grey-700 font-medium">
                         Current CV
                       </label>
                       <div className="relative w-[100%]">
@@ -319,8 +308,7 @@ const TalentProfile = () => {
                             href={userInfo?.profile.cv}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block text-[#4884DF] mt-1"
-                          >
+                            className="block text-[#4884DF] mt-1">
                             {userInfo?.profile?.cv.split('/').pop()}
                           </a>
                         </div>
@@ -372,16 +360,14 @@ const TalentProfile = () => {
                         setFieldValue('cv', null)
                         setCvFileName(null) // Reset CV file name
                       }}
-                      className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 mr-2"
-                    >
+                      className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 mr-2">
                       Cancel
                     </button>
 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                    >
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
                       {userInfo?.profile
                         ? isSubmitting
                           ? 'Updating...'

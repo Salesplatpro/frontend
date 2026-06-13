@@ -76,8 +76,7 @@ export const LandingFooter = () => {
                         window.scrollTo({ top: 0, behavior: 'smooth' })
                       }
                     }}
-                    className="cursor-pointer"
-                  >
+                    className="cursor-pointer">
                     {child.name}
                   </Text>
                 )
