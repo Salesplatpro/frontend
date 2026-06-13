@@ -22,11 +22,13 @@
   "include": [
     "cypress",
     "./src",
+    "./stories",
     "../postcss.config.js",
     "declaration.d.ts",
     "Carousel.module.scss.d.ts",
     "sidebar.module.scss.d.ts",
-    "src/components/InputField/RichTextEditor.tsx"
+    "src/components/InputField/RichTextEditor.tsx",
+    ".storybook"
   ],
   // "exclude": ["node_modules"]
   "exclude": ["node_modules/vite"]
