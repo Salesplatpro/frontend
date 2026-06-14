@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useLoginRedirect } from '@/hooks/useLoginRedirect'
+import { useAuthRedirect } from '@/hooks/useAuthRedirect'
 
 import { AuthLayout } from '../components/AuthLayout'
 import { ForgotPasswordModal } from '../components/ForgotPasswordModal'
@@ -9,7 +9,7 @@ import { LoginForm } from '../components/LoginForm'
 export const LoginPage = () => {
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
 
-  useLoginRedirect()
+  useAuthRedirect()
 
   return (
     <>
