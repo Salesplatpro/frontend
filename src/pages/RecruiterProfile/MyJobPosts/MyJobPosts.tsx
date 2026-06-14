@@ -1,12 +1,12 @@
-import '../../../index.css'
+// import '../../../index.css'
 
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { DisplayError } from '@/components'
 import { Spinner } from '@/components/ui/Spinner'
+import { useFetchRecruiterJobPostQuery } from '@/redux/api/recruiter'
 
-import { DisplayError } from '../../../components'
-import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
 import { JobsTable } from './JobsTable'
 import styles from './MyJobPosts.module.scss'
 import { Pagination } from './Pagination'
