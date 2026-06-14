@@ -7,12 +7,16 @@ interface Option {
   label: string
 }
 
-interface SelectUserType extends FieldProps {
+interface UserTypeSelectProps extends FieldProps {
   label: string
   options: Option[]
 }
 
-const DropDown: React.FC<SelectUserType> = ({ label, options, field }) => {
+export const UserTypeSelect: React.FC<UserTypeSelectProps> = ({
+  label,
+  options,
+  field,
+}) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
 
@@ -70,5 +74,3 @@ const DropDown: React.FC<SelectUserType> = ({ label, options, field }) => {
     </div>
   )
 }
-
-export default DropDown

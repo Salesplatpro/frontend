@@ -75,7 +75,6 @@ export const HowItWorks = () => {
               title="Get Started"
               icon={<MdArrowOutward />}
               variant="secondary"
-              // @ts-expect-error TODO: fix type error
               onClick={() => navigate(paths.register)}
             />
           </div>

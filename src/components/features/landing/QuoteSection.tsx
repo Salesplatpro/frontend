@@ -13,7 +13,7 @@ const QuoteSection = () => {
               <h5>Hire the best talents</h5>
               <p>Join over 100+ brands already growing with Supportpro</p>
             </div>
-            <Link to="/talentRegister">
+            <Link to="/register">
               <button>Start Hiring</button>
             </Link>
           </div>

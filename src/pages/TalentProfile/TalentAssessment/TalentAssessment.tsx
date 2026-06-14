@@ -1,24 +1,23 @@
 import { Alert } from '@mui/material'
 import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
 import animationData from '../../../assets/Animation - check.json'
 import {
   useFetchPretestQuery,
   usePostPretestMutation,
 } from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
 import { notify } from '../../../utils/toastNotifications'
 import { Question } from '../../../utils/types'
 
 const TalentAssessment = () => {
-  const user = useSelector((state: RootState) => state.auth)
-  const roleId = user?.user?.profile?.role[0]?._id
+  const user = useAuthStore((state) => state.user)
+  const roleId = user?.profile?.role[0]?._id
   const location = useLocation()
   const canRetakeAssessment = location.state?.canRetakeAssessment || false
   const { data, error, isLoading } = useFetchPretestQuery(roleId)
@@ -53,7 +52,7 @@ const TalentAssessment = () => {
     return <Alert severity="info">Please complete your profile creation</Alert>
   }
 
-  if (user.user.profile.prescreeningScore && !canRetakeAssessment) {
+  if (user?.profile?.prescreeningScore && !canRetakeAssessment) {
     return (
       <div className="flex justify-center items-center flex-col w-full h-full">
         <div>

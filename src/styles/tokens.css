@@ -44,6 +44,7 @@
   --color-accent-600: #3538cd;
   --color-success-600: #1b7b44;
   --color-info-600: #006bff;
+  --color-warning-600: #b54708;
 
   /* ── Semantic colors ───────────────────────────────────────────────── */
   --color-primary: var(--color-brand-500);
@@ -67,6 +68,7 @@
   --color-accent: var(--color-accent-600);
   --color-success: var(--color-success-600);
   --color-info: var(--color-info-600);
+  --color-warning: var(--color-warning-600);
   --color-focus-ring: var(--color-brand-500);
 
   /* ── Typography ────────────────────────────────────────────────────── */

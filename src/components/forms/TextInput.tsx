@@ -2,7 +2,7 @@ import React from 'react'
 
 import styles from './TextInput.module.scss'
 
-type TextInputProps = {
+export type TextInputProps = {
   title: string
   name: string
   label: string
@@ -14,6 +14,7 @@ type TextInputProps = {
   disabled?: boolean
   error?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
 export const TextInput = ({
@@ -28,6 +29,7 @@ export const TextInput = ({
   isPassword,
   error,
   onChange,
+  onBlur,
 }: TextInputProps) => {
   const inputType = isPassword ? 'password' : 'text'
 
@@ -46,6 +48,7 @@ export const TextInput = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
           disabled={disabled}
           className={styles.input}
         />

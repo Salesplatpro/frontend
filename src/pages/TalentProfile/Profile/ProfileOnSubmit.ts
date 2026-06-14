@@ -2,7 +2,8 @@
 
 import { FormikHelpers } from 'formik'
 
-import { setUser } from '../../../redux/features/authSlice/authSlice'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+
 import { notify } from '../../../utils/toastNotifications'
 import { TalentProfileProps } from '../../../utils/types'
 
@@ -10,7 +11,6 @@ export const handleProfileSubmit = async (
   values: TalentProfileProps,
   setSubmitting: FormikHelpers<TalentProfileProps>['setSubmitting'],
   userInfo: any,
-  dispatch: any,
   profilePics: string,
   initialValues: TalentProfileProps,
   talentCreation: any,
@@ -52,7 +52,7 @@ export const handleProfileSubmit = async (
       const response = await talentCreation(updatedFormValues).unwrap()
 
       if (response.status) {
-        dispatch(setUser({ user: response.data.user, isLoggedIn: true }))
+        useAuthStore.getState().setUser(response.data.user)
         notify('success', 'Profile created successfully')
         refetch()
         navigate('/talentDashboard/job')

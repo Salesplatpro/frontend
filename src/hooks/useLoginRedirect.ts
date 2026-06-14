@@ -1,13 +1,13 @@
 // src/hooks/useLoginRedirect.ts
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { RootState } from '../redux/store/store'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
 export const useLoginRedirect = () => {
   const navigate = useNavigate()
-  const { isLoggedIn, user } = useSelector((state: RootState) => state.auth)
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const user = useAuthStore((state) => state.user)
 
   useEffect(() => {
     if (!isLoggedIn) return

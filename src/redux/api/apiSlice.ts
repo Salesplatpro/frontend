@@ -7,45 +7,6 @@ export const api = createApi({
   baseQuery: customBaseQuery,
   tagTypes: ['User'],
   endpoints: (builder) => ({
-    talentReg: builder.mutation({
-      query: (data) => ({
-        url: `/auth/register`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-
-    recruiterReg: builder.mutation({
-      query: (data) => ({
-        url: `/auth/register/recruiter`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-
-    userLogin: builder.mutation({
-      query: (data) => ({
-        url: `/auth/login`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-
-    forgotPassword: builder.mutation({
-      query: (data) => ({
-        url: `/auth/forgot-password`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-    resetPassword: builder.mutation({
-      query: (data) => ({
-        url: `/auth/reset-password`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-
     pricingPlan: builder.query({
       query: () => ({
         url: `/plans`,
@@ -71,11 +32,6 @@ export const api = createApi({
 })
 
 export const {
-  useTalentRegMutation,
-  useRecruiterRegMutation,
-  useUserLoginMutation,
-  useForgotPasswordMutation,
-  useResetPasswordMutation,
   usePricingPlanQuery,
   usePaymentInitiateMutation,
   useVerifyPaymentMutation,

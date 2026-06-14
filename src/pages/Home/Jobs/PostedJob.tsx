@@ -1,19 +1,18 @@
 import 'react-responsive-modal/styles.css'
 
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Modal } from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
 import { Spinner } from '@/components/ui/Spinner'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import { useIndividualJobQuery } from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
 import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 import { notify } from '../../../utils/toastNotifications'
@@ -25,11 +24,9 @@ const PostedJob = () => {
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
-  const user = useSelector((state: RootState) => state.auth)
-  const userRole = user?.user?.userRole || ' '
-  const isLoggedIn = !!user?.token
-  console.log(userRole)
-  console.log(isLoggedIn)
+  const { user, token } = useAuthStore()
+  const userRole = user?.userRole || ' '
+  const isLoggedIn = !!token
 
   const [shareLinks, setShareLinks] = useState<{
     facebook: string
@@ -84,7 +81,7 @@ const PostedJob = () => {
 
     if (userRole === 'talent') {
       navigate(`/talentDashboard/job/${jobId}`)
-    } else if (!user?.token) {
+    } else if (!isLoggedIn) {
       sessionStorage.setItem('pending_job_application', jobId ?? '')
       navigate(`/login?from=job_application`)
     }

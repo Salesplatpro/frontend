@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import {
@@ -13,7 +12,6 @@ import { TalentProfileProps } from '../../../utils/types'
 import { handleProfileSubmit } from './ProfileOnSubmit'
 
 const useProfile = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [cvFileName, setCvFileName] = useState<string | null>(null)
   const [talentCreation] = useTalentCreationMutation()
@@ -71,7 +69,6 @@ const useProfile = () => {
         },
         setSubmitting,
         userInfo,
-        dispatch,
         'defaultProfileImage',
         initialValues,
         talentCreation,

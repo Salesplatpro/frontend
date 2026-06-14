@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
-import { RootState } from '@/redux/store/store'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { notify } from '@/utils/toastNotifications'
 
 interface ProtectedRouteProps {
@@ -11,26 +10,23 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const user = useSelector((state: RootState) => state.auth)
-  const userRole = user.user.userRole
-  const token = localStorage.getItem('token')
+  const { user, isLoggedIn, token } = useAuthStore()
+  const userRole = user?.userRole
 
   useEffect(() => {
-    console.log(userRole)
-    if (user.isLoggedIn && user.user && !allowedRoles.includes(userRole)) {
-      notify(
-        'error',
-        `You don't have access to this page as a ${user.user.userRole}`,
-        { autoClose: 5000, transition: Bounce },
-      )
+    if (isLoggedIn && user && userRole && !allowedRoles.includes(userRole)) {
+      notify('error', `You don't have access to this page as a ${userRole}`, {
+        autoClose: 5000,
+        transition: Bounce,
+      })
     }
-  }, [user, allowedRoles])
+  }, [user, isLoggedIn, userRole, allowedRoles])
 
   if (!token) {
     return <Navigate to="/login" />
   }
 
-  if (user.user && !allowedRoles.includes(userRole)) {
+  if (user && userRole && !allowedRoles.includes(userRole)) {
     return <Navigate to="/" />
   }
 
