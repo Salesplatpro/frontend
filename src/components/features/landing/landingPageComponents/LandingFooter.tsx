@@ -48,7 +48,7 @@ export const LandingFooter = () => {
               title="Try it Free"
               variant="secondary"
               onClick={() => {
-                navigate(paths.talentRegister)
+                navigate(paths.register)
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
             />

@@ -119,7 +119,7 @@ export const AboutUs = () => {
           <LandingButton
             title="Try it Free"
             variant="primary"
-            onClick={() => navigate('/talentRegister')}
+            onClick={() => navigate('/register')}
           />
         </div>
       </div>

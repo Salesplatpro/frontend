@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { BsStars } from 'react-icons/bs'
 import { GoDotFill } from 'react-icons/go'
 
-import imageOne from '../../assets/bgImage1.png'
-import imageTwo from '../../assets/bgImage2.png'
-import imageThree from '../../assets/bgImage3.png'
+import imageOne from '@/assets/bgImage1.png'
+import imageTwo from '@/assets/bgImage2.png'
+import imageThree from '@/assets/bgImage3.png'
+
 import styles from './Carousel.module.scss'
 
 const descriptions = [

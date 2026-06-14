@@ -40,7 +40,7 @@ export const rightNav = [
   },
   {
     name: 'Try it Free',
-    url: paths.talentRegister,
+    url: paths.register,
     variant: 'primary' as ButtonVariant,
   },
 ]

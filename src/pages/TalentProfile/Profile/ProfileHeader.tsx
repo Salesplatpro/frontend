@@ -1,7 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 
-import { RootState } from '../../../redux/store/store'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 // import { getDefaultIcon } from '../../../utils/getDefaultIcon'
 import ProgressBar from '../../../utils/ProgressBar'
@@ -27,7 +27,7 @@ const TalentProfileHeader: React.FC<TalentHeaderType> = ({
   // setProfileImage,
   // handleProfileImageUpload,
 }) => {
-  const user = useSelector((state: RootState) => state.auth.user)
+  const user = useAuthStore((state) => state.user)
 
   // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = event.target.files?.[0]

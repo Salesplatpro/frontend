@@ -2,15 +2,14 @@ import './Job.scss'
 
 import React, { useEffect, useState } from 'react'
 import { MdKeyboardArrowDown } from 'react-icons/md'
-import { useSelector } from 'react-redux'
 import { Bounce } from 'react-toastify'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
 import { Button, DisplayError } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
 import { JobFilter } from './JobFilter'
@@ -42,8 +41,8 @@ interface JobType {
 }
 
 const Job = () => {
-  const user = useSelector((state: RootState) => state.auth)
-  const roleId = user?.user?.profile?.role[0]?._id
+  const user = useAuthStore((state) => state.user)
+  const roleId = user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
   // State for filters

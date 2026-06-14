@@ -86,7 +86,7 @@ export const Features = () => {
           <LandingButton
             title="Try it free"
             variant="primary"
-            onClick={() => navigate(paths.talentRegister)}
+            onClick={() => navigate(paths.register)}
           />
           <LandingButton
             title="Get a Demo"

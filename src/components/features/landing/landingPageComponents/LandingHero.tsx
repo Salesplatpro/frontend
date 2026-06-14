@@ -37,7 +37,7 @@ export const LandingHero = () => {
               title="Try it Free"
               variant="primary"
               onClick={() => {
-                navigate(paths.talentRegister)
+                navigate(paths.register)
                 console.log('try it free')
               }}
             />

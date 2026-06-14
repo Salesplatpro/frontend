@@ -4,21 +4,20 @@ import {
   IoIosArrowUp,
   IoMdNotificationsOutline,
 } from 'react-icons/io'
-import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { talentApi, useFetchProfileQuery } from '../../redux/api/talent'
-import { logout } from '../../redux/features/authSlice/authSlice'
-import { RootState } from '../../redux/store/store'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+
+import { useFetchProfileQuery } from '../../redux/api/talent'
 import { getDefaultIcon } from '../../utils/getDefaultIcon'
 
 export const LoggedInUserBadge: React.FC = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const user = useSelector((state: RootState) => state.auth.user)
+  const user = useAuthStore((state) => state.user)
+  const logout = useAuthStore((state) => state.logout)
   const { data: userProfile, isLoading, error } = useFetchProfileQuery({})
   const userInfo = userProfile?.data?.user
 
@@ -49,8 +48,7 @@ export const LoggedInUserBadge: React.FC = () => {
 
   // Handle logout
   const handleLogout = () => {
-    dispatch(logout())
-    dispatch(talentApi.util.resetApiState())
+    logout()
     navigate('/login')
   }
 
@@ -77,7 +75,10 @@ export const LoggedInUserBadge: React.FC = () => {
             <div className="text-sm text-gray-500">{userInfo?.email || ''}</div>
           </div>
           <img
-            src={userInfo?.picture || getDefaultIcon({ id: user.id, size: 40 })}
+            src={
+              userInfo?.picture ||
+              getDefaultIcon({ id: user?.id || '', size: 40 })
+            }
             alt="Profile"
             className="w-10 h-10 object-cover rounded-full"
           />
