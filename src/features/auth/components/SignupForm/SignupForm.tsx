@@ -45,7 +45,7 @@ const userTypeOptions = [
 ]
 
 type SignupFormProps = {
-  onSuccess: (lastName: string) => void
+  onSuccess: (lastName: string, userType: 'talent' | 'recruiter') => void
 }
 
 export const SignupForm = ({ onSuccess }: SignupFormProps) => {
@@ -56,11 +56,9 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
     try {
       // eslint-disable-next-line no-unused-vars
       const { confirmPassword, userType, ...payload } = values
-      await submitSignup({
-        ...payload,
-        userType: userType as 'talent' | 'recruiter',
-      })
-      onSuccess(values.lastName)
+      const role = userType as 'talent' | 'recruiter'
+      await submitSignup({ ...payload, userType: role })
+      onSuccess(values.lastName, role)
     } catch {
       // error is surfaced via useAuthStore().error
     }

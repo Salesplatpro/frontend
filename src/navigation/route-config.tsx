@@ -45,6 +45,7 @@ import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
 import ProgressView from '@/pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
+import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
 import IndividualJob from '@/pages/TalentProfile/Job/IndividualJob'
 import Job from '@/pages/TalentProfile/Job/Job'
 import Notification from '@/pages/TalentProfile/Notification/NotificationList'
@@ -140,6 +141,10 @@ export const routeConfig: RouteObject[] = [
         path: '',
         element: <TalentProfileSidebar />,
         children: [
+          {
+            index: true,
+            element: <TalentDashboardHome />,
+          },
           {
             path: 'talentProfile',
             element: <TalentProfile />,
