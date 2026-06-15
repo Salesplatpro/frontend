@@ -80,7 +80,7 @@ export const LoggedInUserBadge: React.FC = () => {
               getDefaultIcon({ id: user?.id || '', size: 40 })
             }
             alt="Profile"
-            className="w-10 h-10 object-cover rounded-full"
+            className="w-10 h-10 shrink-0 object-cover rounded-full"
           />
         </div>
       )}
@@ -100,7 +100,7 @@ export const LoggedInUserBadge: React.FC = () => {
       {isDropdownVisible && !isLoading && !error && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 mt-36 w-48 bg-[#4884DF] shadow-lg rounded-md z-10">
+          className="absolute right-0 top-full mt-2 w-48 bg-[#4884DF] shadow-lg rounded-md z-10">
           <div
             className="px-4 py-2  cursor-pointer text-white font-raleway font-medium"
             onClick={handleLogout}>

@@ -34,7 +34,7 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
 
       {/* Dropdown List */}
       {dropdownVisible && (
-        <div className="absolute mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-[200px] overflow-y-auto">
+        <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-[200px] overflow-y-auto">
           {isLoading ? (
             <p className="p-4">Loading jobs...</p>
           ) : error ? (
@@ -45,7 +45,7 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
                 <div
                   key={job._id}
                   onClick={() => handleFilterSelect(job._id)}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm">
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm break-words">
                   {job.role.name}
                 </div>
               ))}
