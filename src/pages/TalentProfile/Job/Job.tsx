@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { Bounce } from 'react-toastify'
 
+import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
@@ -21,11 +22,7 @@ const defaultFilterValues: JobFiltersTypes = {
   remote: false,
   onSite: false,
   hybrid: false,
-  location: {
-    city: { name: '', geoId: null },
-    state: { name: '', geoId: null },
-    country: { name: '', geoId: null },
-  },
+  location: { ...EMPTY_LOCATION },
 }
 
 interface JobType {

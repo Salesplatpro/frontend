@@ -18,17 +18,9 @@ const SearchResult = () => {
     scoutJobId: searchParams.get('scoutJobId') || '',
     role: searchParams.get('role') || '',
     location: {
-      country: {
-        name: searchParams.get('countryName') || '',
-        geoId: searchParams.get('geoId') || null,
-      },
-      state: {
-        name: searchParams.get('stateName') || '',
-        geoId: searchParams.get('geoId') || null,
-      },
-      city: {
-        name: searchParams.get('cityName') || '',
-      },
+      country: { name: searchParams.get('countryName') || '' },
+      state: { name: searchParams.get('stateName') || '' },
+      city: { name: searchParams.get('cityName') || '' },
     },
     experienceLevel: searchParams.get('experienceLevel') || '',
   }

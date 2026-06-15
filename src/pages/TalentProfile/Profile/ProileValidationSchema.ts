@@ -1,57 +1,34 @@
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object({
-  bio: Yup.string().required(
-    'Please provide a short bio to tell us about yourself.',
-  ),
+  bio: Yup.string().max(1000, 'Bio must be 1000 characters or fewer.'),
 
   location: Yup.object({
-    country: Yup.object({
-      name: Yup.string().required('Please select your country.'),
-    }),
-    state: Yup.object({
-      name: Yup.string().required('Please select your state.'),
-    }),
-    city: Yup.object({
-      name: Yup.string().required('Please select your city.'),
-    }),
+    country: Yup.object({ name: Yup.string() }),
+    state: Yup.object({ name: Yup.string() }),
+    city: Yup.object({ name: Yup.string() }),
   }),
 
-  minSalary: Yup.number()
-    .required('Minimum salary is required. Please enter a positive number.')
-    .positive('Minimum salary must be a positive number.'),
+  currency: Yup.string(),
 
-  maxSalary: Yup.number()
-    .required('Maximum salary is required. Please enter a positive number.')
-    .positive('Maximum salary must be a positive number.')
+  minSalary: Yup.string().test(
+    'is-positive-number',
+    'Minimum salary must be a positive number.',
+    (value) => !value || Number(value) > 0,
+  ),
+
+  maxSalary: Yup.string()
+    .test(
+      'is-positive-number',
+      'Maximum salary must be a positive number.',
+      (value) => !value || Number(value) > 0,
+    )
     .test(
       'max-greater-than-min',
       'Maximum salary must be greater than minimum salary.',
       function (value) {
-        return value && this.parent.minSalary
-          ? value > this.parent.minSalary
-          : true
+        if (!value || !this.parent.minSalary) return true
+        return Number(value) > Number(this.parent.minSalary)
       },
-    ),
-
-  experience: Yup.string().required('Please select your experience level.'),
-
-  cv: Yup.mixed()
-    .required('Please upload your CV in PDF or Word format.')
-    .test(
-      'fileSize',
-      'The file is too large. Maximum allowed size is 5MB.',
-      (value) => value && (value as File).size <= 5 * 1024 * 1024, // 5MB
-    )
-    .test(
-      'fileType',
-      'Only PDF, DOC, and DOCX files are allowed.',
-      (value) =>
-        value &&
-        [
-          'application/pdf',
-          'application/msword',
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        ].includes((value as File).type),
     ),
 })

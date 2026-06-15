@@ -7,8 +7,8 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 
-import { useFetchProfileQuery } from '../../redux/api/talent'
 import { getDefaultIcon } from '../../utils/getDefaultIcon'
 
 export const LoggedInUserBadge: React.FC = () => {
@@ -18,8 +18,7 @@ export const LoggedInUserBadge: React.FC = () => {
 
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
-  const { data: userProfile, isLoading, error } = useFetchProfileQuery({})
-  const userInfo = userProfile?.data?.user
+  const { profile: userInfo, isLoading, error } = useProfile()
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
@@ -76,7 +75,7 @@ export const LoggedInUserBadge: React.FC = () => {
           </div>
           <img
             src={
-              userInfo?.picture ||
+              userInfo?.profileImage?.url ||
               getDefaultIcon({ id: user?.id || '', size: 40 })
             }
             alt="Profile"

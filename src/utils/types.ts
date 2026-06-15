@@ -1,24 +1,3 @@
-export interface TalentProfileProps {
-  bio?: string
-  role?: string[]
-  location: {
-    country: any
-    state: any
-    city: any
-    // country: LocationValues
-    // state: LocationValues
-    // city: LocationValues
-  }
-  maxSalary?: string
-  minSalary?: string
-  experience?: string
-  cv?: File | null
-  remote: boolean
-  onSite: boolean
-  hybrid: boolean
-  cvUrl?: string
-}
-
 export interface AllJobTypes {
   currentStage?: string
   status?: string
