@@ -91,10 +91,6 @@ a {
   @apply text-white;
 }
 
-.w-full {
-  width: 100vw;
-}
-
 .wrapper {
   padding: 40px auto;
 }
