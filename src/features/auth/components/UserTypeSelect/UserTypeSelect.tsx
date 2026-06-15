@@ -1,6 +1,8 @@
 import { FieldProps } from 'formik'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
+
+import styles from './UserTypeSelect.module.scss'
 
 interface Option {
   value: string
@@ -18,22 +20,24 @@ export const UserTypeSelect: React.FC<UserTypeSelectProps> = ({
   field,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const selectedOption = options.find((option) => option.value === field.value)
 
   useEffect(() => {
-    // Set the initial selected option based on the field value
-    const initialOption = options.find((option) => option.value === field.value)
-    if (initialOption) {
-      setSelectedOption(initialOption.label)
-    } else {
-      setSelectedOption(null)
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
     }
-  }, [field.value, options])
 
-  const toggleDropdown = () => setIsOpen(!isOpen)
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const toggleDropdown = () => setIsOpen((prev) => !prev)
 
   const handleOptionClick = (option: Option) => {
-    setSelectedOption(option.label)
     setIsOpen(false)
     // Manually set the field value in Formik
     field.onChange({
@@ -45,32 +49,28 @@ export const UserTypeSelect: React.FC<UserTypeSelectProps> = ({
   }
 
   return (
-    <div className="relative inline-block w-full">
-      <div className="mb-2 text-[14px] font-raleway font-medium">{label}</div>
-      <div className="relative">
-        <button
-          type="button"
-          className="w-full px-4 py-2 text-left text-gray-600 bg-white border rounded-lg focus:outline-none"
-          onClick={toggleDropdown}>
-          {selectedOption || 'Choose an option'}
-
-          <span className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <IoIosArrowDown size={18} color="black" />
-          </span>
-        </button>
-        {isOpen && (
-          <div className="absolute w-full mt-2 bg-primary-strong text-white border rounded-lg shadow-lg z-10">
-            {options.map((option) => (
-              <div
-                key={option.value}
-                className="px-4 py-2 hover:bg-primary cursor-pointer"
-                onClick={() => handleOptionClick(option)}>
-                {option.label}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+    <div className={styles.container} ref={containerRef}>
+      <div className={styles.label}>{label}</div>
+      <button type="button" className={styles.trigger} onClick={toggleDropdown}>
+        <span className={selectedOption ? undefined : styles.placeholder}>
+          {selectedOption?.label || 'Choose an option'}
+        </span>
+        <span className={styles.arrow}>
+          <IoIosArrowDown size={18} />
+        </span>
+      </button>
+      {isOpen && (
+        <div className={styles.options}>
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className={styles.option}
+              onClick={() => handleOptionClick(option)}>
+              {option.label}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
