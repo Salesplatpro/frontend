@@ -1,27 +1,4 @@
-export interface LocationOption {
-  name: string
-  geoId: number
-  countryName?: string
-}
-
-export interface LocationProps {
-  locationTitle?: string
-  locationLabel: string
-  geoId?: any
-  selectedName?: any
-  isCountry?: boolean
-  onChange: (geoId: number) => void
-  height?: string
-  customHeight: string
-  bold?: string
-  asterick?: boolean
-  value?: string
-}
-
-export interface LocationValues {
-  name?: string
-  geoId?: number | null
-}
+import { LocationFormValue } from '@/components/forms/LocationSelect'
 
 export interface FormValues {
   jobBrief: string
@@ -30,13 +7,10 @@ export interface FormValues {
   name?: string
   minSalary: string
   maxSalary: string
+  currency: string
   experienceLevel: string
   workMode: string
-  location: {
-    country: LocationValues
-    state: LocationValues
-    city?: LocationValues
-  }
+  location: LocationFormValue
   requirements: string
   skills: string[]
   goals: string[]
@@ -45,13 +19,8 @@ export interface FormValues {
 export interface JobFiltersTypes {
   role?: string
   experienceLevel?: string
-  // remote: boolean
   remote: boolean
   onSite: boolean
   hybrid: boolean
-  location?: {
-    country: LocationValues
-    state: LocationValues
-    city: LocationValues
-  }
+  location: LocationFormValue
 }

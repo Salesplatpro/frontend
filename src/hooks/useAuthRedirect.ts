@@ -11,24 +11,12 @@ export const useAuthRedirect = () => {
 
   useEffect(() => {
     if (!isLoggedIn) return
-    const pendingJob = sessionStorage.getItem('pending_job_application')
-    const redirectAfterLogin = sessionStorage.getItem('redirectAfterLogin')
-
-    if (pendingJob) {
-      sessionStorage.removeItem('pending_job_application')
-      navigate(`/talentDashboard/job/${pendingJob}`)
-    } else if (redirectAfterLogin) {
-      sessionStorage.removeItem('redirectAfterLogin')
-      navigate(redirectAfterLogin)
-    } else {
-      // Default dashboard redirect
-      const dashboardPath =
-        user?.userRole === 'recruiter'
-          ? '/recruiterDashboard/dashboard'
-          : user?.userRole === 'talent'
-          ? '/talentDashboard'
-          : '/adminDashboard/viewcandidates'
-      navigate(dashboardPath)
-    }
+    const dashboardPath =
+      user?.userRole === 'recruiter'
+        ? '/recruiterDashboard/dashboard'
+        : user?.userRole === 'talent'
+        ? '/talentDashboard'
+        : '/adminDashboard/viewcandidates'
+    navigate(dashboardPath)
   }, [isLoggedIn])
 }

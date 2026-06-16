@@ -3,20 +3,26 @@ import React, { useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 
-import Location from '@/components/features/shared/global/Location'
-// import { Spinner } from '@/components/ui/Spinner'
-import CreatableRoleSelect from '@/components/forms/Roles/CreatableRoleSelect'
+import {
+  LocationSelect,
+  resolveLocationFromNames,
+} from '@/components/forms/LocationSelect'
+import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
+import {
+  CURRENCY_OPTIONS,
+  EXPERIENCE_LEVEL_OPTIONS,
+  Select,
+  WORK_MODE_OPTIONS,
+} from '@/components/forms/Select'
 import TextField from '@/components/forms/TextField'
 
 import { useUpdateJobMutation } from '../../../redux/api/recruiter'
-// import { useIndividualJobQuery } from '../../../redux/api/talent'
 import { EditJobType } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import { FormValues } from '../../../utils/jobPostTypes'
 import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
 import { notify } from '../../../utils/toastNotifications'
-import ExperienceLevelSelect from '../PostJobs/ExperienceLevelSelect'
 import { validationSchema } from '../PostJobs/validationSchema'
-import WorkModeSelect from '../PostJobs/WorkModeSelect'
 
 type Props = {
   jobToEdit: EditJobType | null
@@ -27,17 +33,15 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [updateJob] = useUpdateJobMutation()
 
-  const handleUpdateJob = async (values: EditJobType) => {
+  const handleUpdateJob = async (values: FormValues) => {
     setIsSubmitting(true)
     const location = {
-      country: values?.location?.country?.name,
-      state: values?.location?.state?.name,
-      ...(values?.location?.city?.name
-        ? { city: values?.location?.city?.name }
-        : {}),
+      country: values.location.country.name,
+      state: values.location.state.name,
+      ...(values.location.city.name ? { city: values.location.city.name } : {}),
     }
 
-    const { ...submissionValues } = {
+    const submissionValues = {
       ...values,
       location,
     }
@@ -53,21 +57,20 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
     }
   }
 
-  const initialValues: EditJobType = {
+  const initialValues: FormValues = {
     jobBrief: jobToEdit?.jobBrief || '',
-    // @ts-expect-error TODO: fix type error
-    role: jobToEdit?.role?._id || { _id: '', name: '' },
+    role: jobToEdit?.role?._id || '',
     requirements: jobToEdit?.requirements || '',
-    minSalary: jobToEdit?.minSalary || 0,
-    maxSalary: jobToEdit?.maxSalary || 0,
-    workMode: jobToEdit?.workMode || undefined,
+    minSalary: String(jobToEdit?.minSalary ?? ''),
+    maxSalary: String(jobToEdit?.maxSalary ?? ''),
+    currency: jobToEdit?.currency || '',
+    workMode: jobToEdit?.workMode || '',
     experienceLevel: jobToEdit?.experienceLevel || '',
-    // @ts-expect-error TODO: fix type error
-    location: jobToEdit?.location || {
-      country: '',
-      state: '',
-      city: '',
-    },
+    location: resolveLocationFromNames(
+      jobToEdit?.location?.country,
+      jobToEdit?.location?.state,
+      jobToEdit?.location?.city,
+    ),
     skills: jobToEdit?.skills || [],
     goals: jobToEdit?.goals || [],
   }
@@ -87,26 +90,20 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
           {({ values, setFieldValue, errors, touched }) => (
             <Form>
               <div className="mb-4">
-                <LabelWithAsterisk
-                  asterick={true}
-                  name="role"
+                <RoleSelect
                   label="Select Role"
+                  required
+                  name="role"
+                  value={values.role}
+                  onChange={(value) => setFieldValue('role', value)}
+                  creatable
+                  disabled
+                  error={
+                    touched.role && typeof errors.role === 'string'
+                      ? errors.role
+                      : undefined
+                  }
                 />
-                <div className="py-2 pl-0 rounded-lg w-full">
-                  <CreatableRoleSelect
-                    name="role"
-                    value={values.role}
-                    isDisabled={true}
-                    onChange={(value: any) => {
-                      setFieldValue('role', value)
-                      // Update Formik state
-                    }}
-                    customHeight="60px"
-                  />
-                  {errors.role && touched.role ? (
-                    <div className="text-red-500 text-sm">{errors.role}</div>
-                  ) : null}
-                </div>
               </div>
               <TextField
                 label="Job Brief"
@@ -125,72 +122,39 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
               />
 
               <div className="mb-4">
-                <Location
-                  locationTitle="Country"
-                  locationLabel="Country"
-                  geoId={null}
-                  height="54px"
-                  bold="bold"
-                  asterick={true}
-                  selectedName={values?.location?.country}
-                  isCountry={true}
-                  onChange={(geoId) => {
-                    setFieldValue('location.country.geoId', geoId)
-                    setFieldValue('location.state', {
-                      name: '',
-                      geoId: null,
-                    })
-                    setFieldValue('location.city', {
-                      name: '',
-                      geoId: null,
-                    })
+                <LocationSelect
+                  value={values.location}
+                  onChange={(location) => setFieldValue('location', location)}
+                  cityLabel="Region/City (Optional)"
+                  countryRequired
+                  stateRequired
+                  errors={{
+                    country:
+                      touched.location?.country &&
+                      typeof errors.location?.country?.name === 'string'
+                        ? errors.location.country.name
+                        : undefined,
+                    state:
+                      touched.location?.state &&
+                      typeof errors.location?.state?.name === 'string'
+                        ? errors.location.state.name
+                        : undefined,
                   }}
-                  customHeight="60px"
-                />
-                <ErrorMessage
-                  name="location.country.name"
-                  component="div"
-                  className="text-red-500 text-sm"
                 />
               </div>
               <div className="mb-4">
-                <Location
-                  locationTitle="State"
-                  locationLabel="State"
-                  selectedName={values?.location?.state}
-                  geoId={values?.location?.country?.geoId}
-                  asterick={true}
-                  height="54px"
-                  bold="bold"
-                  isCountry={false}
-                  onChange={(geoId) => {
-                    setFieldValue('location.state.geoId', geoId)
-                    setFieldValue('location.city', {
-                      name: '',
-                      geoId: null,
-                    })
-                  }}
-                  customHeight="60px"
-                />
-                <ErrorMessage
-                  name="location.state.name"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-              <div className="mb-4">
-                <Location
-                  locationTitle="City"
-                  locationLabel="Region/City (Optional)"
-                  selectedName={values?.location?.city as string}
-                  geoId={values?.location?.state?.geoId}
-                  height="54px"
-                  bold="bold"
-                  isCountry={false}
-                  onChange={(geoId) => {
-                    setFieldValue('location.city.geoId', geoId)
-                  }}
-                  customHeight="60px"
+                <Select
+                  label="Currency"
+                  required
+                  options={CURRENCY_OPTIONS}
+                  value={values.currency}
+                  onChange={(value) => setFieldValue('currency', value)}
+                  placeholder="Select currency"
+                  error={
+                    touched.currency && typeof errors.currency === 'string'
+                      ? errors.currency
+                      : undefined
+                  }
                 />
               </div>
               <TextField
@@ -209,57 +173,35 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
               />
 
               <div className="mb-4">
-                <LabelWithAsterisk
+                <Select
                   label="Work Mode"
-                  asterick={true}
-                  name="workMode"
-                />
-
-                <Field
-                  name="workMode"
-                  render={({ field, form }: { field: any; form: any }) => (
-                    <WorkModeSelect
-                      value={field.value}
-                      onChange={(value) =>
-                        form.setFieldValue(field.name, value)
-                      } // Set value to Formik field
-                      customHeight="60px"
-                    />
-                  )}
-                />
-
-                <ErrorMessage
-                  name="workMode"
-                  component="div"
-                  className="text-red-500 text-sm"
+                  required
+                  options={WORK_MODE_OPTIONS}
+                  value={values.workMode}
+                  onChange={(value) => setFieldValue('workMode', value)}
+                  placeholder="Select work mode"
+                  error={
+                    touched.workMode && typeof errors.workMode === 'string'
+                      ? errors.workMode
+                      : undefined
+                  }
                 />
               </div>
 
               <div className="mb-4">
-                <LabelWithAsterisk
+                <Select
                   label="Experience Level"
-                  asterick={true}
-                  name="experienceLevel"
-                />
-
-                <Field
-                  name="experienceLevel"
-                  render={({ field, form }: { field: any; form: any }) => (
-                    <ExperienceLevelSelect
-                      value={field.value}
-                      onChange={(value) =>
-                        form.setFieldValue(field.name, value)
-                      }
-                      customHeight="60px"
-                      options={[]}
-                    />
-                  )}
-                />
-
-                <ErrorMessage
-                  name="experienceLevel"
-                  component="div"
-                  className="text-red-500 text-sm"
+                  required
+                  options={EXPERIENCE_LEVEL_OPTIONS}
+                  value={values.experienceLevel}
+                  onChange={(value) => setFieldValue('experienceLevel', value)}
+                  placeholder="Select experience level"
+                  error={
+                    touched.experienceLevel &&
+                    typeof errors.experienceLevel === 'string'
+                      ? errors.experienceLevel
+                      : undefined
+                  }
                 />
               </div>
               {/* skills */}

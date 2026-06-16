@@ -1,5 +1,3 @@
-import { LocationValues } from './jobPostTypes'
-
 type JobLocation = {
   city: string
   state: string
@@ -88,11 +86,12 @@ export interface JobProfileProps {
   goals?: string[]
   remote?: boolean
   location?: {
-    country?: LocationValues
-    city?: LocationValues
-    state?: LocationValues
+    country?: string
+    city?: string
+    state?: string
   }
   experienceLevel?: string
+  currency?: string
 }
 
 export interface EditJobType extends JobProfileProps {

@@ -46,9 +46,13 @@ export const useAuthStore = create<AuthState>()((set) => ({
       import('@/redux/store/store'),
       import('@/redux/api/talent'),
       import('@/redux/api/recruiter'),
-    ]).then(([{ store }, { talentApi }, { recruiterApi }]) => {
-      store.dispatch(talentApi.util.resetApiState())
-      store.dispatch(recruiterApi.util.resetApiState())
-    })
+      import('@/features/profile/store/useProfileStore'),
+    ]).then(
+      ([{ store }, { talentApi }, { recruiterApi }, { useProfileStore }]) => {
+        store.dispatch(talentApi.util.resetApiState())
+        store.dispatch(recruiterApi.util.resetApiState())
+        useProfileStore.getState().clearProfile()
+      },
+    )
   },
 }))

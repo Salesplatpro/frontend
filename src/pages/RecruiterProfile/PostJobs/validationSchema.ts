@@ -8,16 +8,15 @@ export const validationSchema = Yup.object({
   maxSalary: Yup.number()
     .required('Maximum Salary is required')
     .positive('Maximum Salary must be positive'),
+  currency: Yup.string().required('Currency is required'),
   experienceLevel: Yup.string().required('Experience level is required'),
   workMode: Yup.string().required('Work Mode is required'),
   location: Yup.object({
     country: Yup.object({
       name: Yup.string().required('Country is required'),
-      geoId: Yup.number().required('Country ID is required'),
     }),
     state: Yup.object({
       name: Yup.string().required('State is required'),
-      geoId: Yup.number().required('State ID is required'),
     }),
   }),
   requirements: Yup.string().required('Requirements is required'),

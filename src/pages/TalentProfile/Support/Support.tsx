@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
+import { useProfile } from '@/features/profile/hooks/useProfile'
+
 import { Button } from '../../../components'
 import ProfilePic from '../Profile/ProfilePic'
-import useProfile from '../Profile/useProfileHook'
 
 export const Support = () => {
-  // @ts-expect-error TODO: fix type error
-  const { userInfo, updateProfilePics, uploadPic, user } = useProfile()
+  const { profile: userInfo } = useProfile()
   const maxLength = 40
   const [values, setValues] = useState({
     name: `${userInfo?.firstName} ${userInfo?.lastName}`,
@@ -33,12 +33,7 @@ export const Support = () => {
           <h2 className="font-bold md:text-3xl text-xl">Fill Support Form</h2>
         </div>
         <div className="border flex space-x-5 p-5 rounded-2xl border-grey-300 mt-1">
-          <ProfilePic
-            uploadPic={uploadPic}
-            updateProfilePics={updateProfilePics}
-            user={user}
-            userInfo={userInfo}
-          />
+          <ProfilePic />
 
           <div className="w-full">
             <div className="flex justify-between w-full">

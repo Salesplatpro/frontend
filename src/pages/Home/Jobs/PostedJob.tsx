@@ -82,7 +82,6 @@ const PostedJob = () => {
     if (userRole === 'talent') {
       navigate(`/talentDashboard/job/${jobId}`)
     } else if (!isLoggedIn) {
-      sessionStorage.setItem('pending_job_application', jobId ?? '')
       navigate(`/login?from=job_application`)
     }
   }
@@ -201,11 +200,9 @@ const PostedJob = () => {
                 </p>
                 <h5 className="text-grey-900 text-base text-start font-semibold">
                   {jobProfile?.location &&
-                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.country)}{' '}
                   {''}
                   {jobProfile?.location?.city &&
-                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>
               </div>

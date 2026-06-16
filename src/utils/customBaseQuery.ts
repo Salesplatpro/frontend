@@ -30,9 +30,6 @@ export const customBaseQuery: BaseQueryFn<
   const result = await baseQuery(args, api, extraOptions)
 
   if (result.error?.status === 401) {
-    const currentPath = window.location.pathname + window.location.search
-    sessionStorage.setItem('redirectAfterLogin', currentPath)
-
     useAuthStore.getState().logout()
 
     notify('error', 'Session expired. Please log in again.', {

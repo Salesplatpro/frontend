@@ -192,11 +192,9 @@ const IndividualJob = () => {
                 </p>
                 <h5 className="text-grey-900 text-base text-start font-semibold">
                   {jobProfile?.location &&
-                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.country)}
                   {','}{' '}
                   {jobProfile?.location?.city &&
-                    // @ts-expect-error TODO: fix type error
                     capitalizeFirstWord(jobProfile?.location?.city)}
                 </h5>
               </div>

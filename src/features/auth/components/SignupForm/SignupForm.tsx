@@ -39,7 +39,6 @@ const initialValues: SignupFormValues = {
 }
 
 const userTypeOptions = [
-  // { value: '', label: 'Choose an option' },
   { value: 'talent', label: 'Talent' },
   { value: 'recruiter', label: 'Recruiter' },
 ]

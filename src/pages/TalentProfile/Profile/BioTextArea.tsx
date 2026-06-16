@@ -1,8 +1,12 @@
 import { useFormikContext } from 'formik'
 import React from 'react'
 
+import { ProfileFormValues } from '@/features/profile/types'
+
+import styles from './BioTextArea.module.scss'
+
 const BioTextArea = () => {
-  const { values, setFieldValue } = useFormikContext<any>()
+  const { values, setFieldValue } = useFormikContext<ProfileFormValues>()
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
@@ -20,10 +24,9 @@ const BioTextArea = () => {
         value={values.bio}
         onChange={handleChange}
         placeholder="Tell us about yourself"
-        className="w-[100%] px-4 pb-16 rounded-lg border border-grey-300 h-[128px] mt-1 pt-4"
+        className={styles.textarea}
       />
-
-      <p> {values.bio?.length || 0}/1000 </p>
+      <p className={styles.count}>{values.bio?.length || 0}/1000</p>
     </>
   )
 }
