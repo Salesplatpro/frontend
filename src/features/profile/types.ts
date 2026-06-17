@@ -15,6 +15,7 @@ export interface ProfileRole {
 export interface UserProfile {
   bio?: string
   role?: ProfileRole[]
+  roleChangeCount?: number
   location?: ProfileLocation
   experience?: string
   minSalary?: number | string

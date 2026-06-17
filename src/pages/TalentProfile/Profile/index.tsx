@@ -1,7 +1,6 @@
 import { Alert } from '@mui/material'
-import { Field, Form, Formik, FormikHelpers } from 'formik'
-import React, { useEffect, useState } from 'react'
-import { Bounce } from 'react-toastify'
+import { Field, Form, Formik } from 'formik'
+import React, { useEffect } from 'react'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { LocationSelect } from '@/components/forms/LocationSelect'
@@ -14,15 +13,6 @@ import {
 } from '@/components/forms/Select'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
-import { useProfile } from '@/features/profile/hooks/useProfile'
-import { buildProfileFormValues } from '@/features/profile/hooks/useProfileFormValues'
-import { useUpdateProfile } from '@/features/profile/hooks/useUpdateProfile'
-import { useUploadCv } from '@/features/profile/hooks/useUploadCv'
-import { uploadFile } from '@/features/profile/services/profileService'
-import { ProfileFormValues } from '@/features/profile/types'
-import { diffProfileValues } from '@/features/profile/utils/diffProfileValues'
-import { calculateProgress } from '@/utils/calculateProgress'
-import { notify } from '@/utils/toastNotifications'
 
 import BioTextArea from './BioTextArea'
 import CvFile from './CvFile'
@@ -30,66 +20,30 @@ import styles from './Profile.module.scss'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
 import UploadCV from './UploadCV'
+import { useProfileForm } from './useProfileForm'
 
 const TalentProfile = () => {
-  const { profile, isLoading, error } = useProfile()
-  const { updateProfile, isUpdating } = useUpdateProfile()
-  const { uploadCv, isUploading, progress } = useUploadCv()
-  const [cvFileName, setCvFileName] = useState<string | null>(null)
-  const [formProgress, setFormProgress] = useState(0)
-  const [pictureFile, setPictureFile] = useState<File | null>(null)
-  const [picturePreview, setPicturePreview] = useState<string | null>(null)
-
-  const initialValues = buildProfileFormValues(profile)
-
-  useEffect(() => {
-    if (!pictureFile) {
-      setPicturePreview(null)
-      return
-    }
-
-    const url = URL.createObjectURL(pictureFile)
-    setPicturePreview(url)
-    return () => URL.revokeObjectURL(url)
-  }, [pictureFile])
+  const {
+    profile,
+    isLoading,
+    error,
+    isUpdating,
+    isUploading,
+    progress,
+    cvFileName,
+    formProgress,
+    picturePreview,
+    setPictureFile,
+    initialValues,
+    updateFormProgress,
+    handleSubmit,
+    handleCvChange,
+  } = useProfileForm()
 
   if (isLoading) return <Spinner fullPage />
 
   if (error) {
     return <Alert severity="error">Error fetching user profile info</Alert>
-  }
-
-  const handleSubmit = async (
-    values: ProfileFormValues,
-    { setSubmitting, resetForm }: FormikHelpers<ProfileFormValues>,
-  ) => {
-    console.log(values)
-
-    const patch = diffProfileValues(initialValues, values)
-
-    if (pictureFile) {
-      try {
-        const uploaded = await uploadFile(pictureFile)
-        patch.picture = uploaded.data?.fileUrl
-      } catch (error) {
-        notify('error', 'Failed to upload profile picture', {
-          autoClose: 5000,
-          transition: Bounce,
-        })
-        setSubmitting(false)
-        return
-      }
-    }
-
-    if (Object.keys(patch).length > 0) {
-      const success = await updateProfile(patch)
-      if (success) {
-        resetForm({ values })
-        setPictureFile(null)
-      }
-    }
-
-    setSubmitting(false)
   }
 
   return (
@@ -116,9 +70,7 @@ const TalentProfile = () => {
             setFieldValue,
           }) => {
             useEffect(() => {
-              setFormProgress(
-                calculateProgress(values, !!profile?.profile?.cv?.url),
-              )
+              updateFormProgress(values)
             }, [values])
 
             return (
@@ -149,8 +101,15 @@ const TalentProfile = () => {
                     />
                   </div>
                   <div className={styles.field}>
+                    <div className={styles.labelRow}>
+                      <span className={styles.label}>Role</span>
+                      {profile?.profile?.roleChangeCount !== undefined && (
+                        <span className={styles.roleChangeHint}>
+                          {profile.profile.roleChangeCount}/3 changes left
+                        </span>
+                      )}
+                    </div>
                     <RoleMultiSelect
-                      label="Role"
                       name="role"
                       value={values.role}
                       onChange={(value) => setFieldValue('role', value)}
@@ -249,10 +208,7 @@ const TalentProfile = () => {
                       disabled={isUploading}
                       onChange={(event) => {
                         const file = event.currentTarget.files?.[0]
-                        if (file) {
-                          setCvFileName(file.name)
-                          void uploadCv(file)
-                        }
+                        if (file) handleCvChange(file)
                         event.target.value = ''
                       }}
                     />
@@ -279,7 +235,7 @@ const TalentProfile = () => {
                     type="submit"
                     variant="primary"
                     disabled={
-                      (!dirty && !pictureFile) || isSubmitting || isUpdating
+                      (!dirty && !picturePreview) || isSubmitting || isUpdating
                     }
                     loading={isSubmitting || isUpdating}>
                     Save

@@ -52,6 +52,18 @@
   padding-bottom: var(--space-2);
 }
 
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-2);
+}
+
+.roleChangeHint {
+  font-size: var(--text-sm);
+  color: var(--color-primary-hover);
+}
+
 .row {
   display: flex;
   flex-direction: column;
