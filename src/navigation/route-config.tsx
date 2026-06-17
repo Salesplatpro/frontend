@@ -16,6 +16,7 @@ import Pricing from '@/components/features/landing/Pricing'
 import Solutions from '@/components/features/landing/Solutions'
 import ProtectedRoute from '@/components/routing/ProtectedRoute'
 import { LoginPage, SignupPage } from '@/features/auth/pages'
+import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
 import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
@@ -53,7 +54,6 @@ import TalentProfile from '@/pages/TalentProfile/Profile'
 import { Support } from '@/pages/TalentProfile/Support'
 import PersonalityTest from '@/pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from '@/pages/TalentProfile/TalentAssessment/PersonalizedTest'
-import TalentAssessment from '@/pages/TalentProfile/TalentAssessment/TalentAssessment'
 import TalentProfileSidebar from '@/pages/TalentProfile/TalentProfileSidebar'
 import { paths } from '@/paths'
 
@@ -151,7 +151,7 @@ export const routeConfig: RouteObject[] = [
           },
           {
             path: 'talentQuiz',
-            element: <TalentAssessment />,
+            element: <PreAssessmentPage />,
           },
           {
             path: 'job',

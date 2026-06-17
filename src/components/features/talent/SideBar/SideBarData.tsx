@@ -25,7 +25,7 @@ export const sidebarData = [
     name: 'Pre-Assessment test',
     icon: <MdOutlineAssessment size={ICON_SIZE} color={COLOR} />,
 
-    link: '/talentDashboard/TalentQuiz',
+    link: '/talentDashboard/talentQuiz',
   },
   {
     name: 'Jobs',
