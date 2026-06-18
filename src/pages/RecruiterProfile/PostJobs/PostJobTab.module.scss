@@ -1,0 +1,85 @@
+.page {
+  padding: var(--space-4);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-heading);
+  margin: var(--space-1) 0 var(--space-2) 0;
+}
+
+.subheading {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.tabList {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-4);
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: var(--space-8);
+
+  @media (min-width: 768px) {
+    gap: var(--space-10);
+  }
+}
+
+.tabItem {
+  min-width: 180px;
+  padding-top: var(--space-2);
+  border-top: 4px solid transparent;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+  color: var(--color-grey-700);
+
+  @media (min-width: 768px) {
+    min-width: 232px;
+  }
+
+  &.active {
+    border-top-color: var(--color-info);
+    color: var(--color-info);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.tabButton {
+  display: flex;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: inherit;
+  text-align: left;
+  padding: 0;
+  width: 100%;
+  color: inherit;
+}
+
+.tabTitle {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: inherit;
+}
+
+.tabDesc {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.content {
+  margin-top: var(--space-2);
+}
