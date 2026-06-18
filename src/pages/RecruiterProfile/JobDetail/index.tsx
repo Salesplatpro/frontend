@@ -210,7 +210,11 @@ const IndividualJob = () => {
           </div>
         </div>
       </div>
-      <Modal open={isModalOpen} onClose={closeModal} center>
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        center
+        classNames={{ overlay: 'dashboard-modal-overlay' }}>
         <div className="flex flex-col items-center text-center rounded-lg p-6 max-w-[400px] min-w-[280px] mx-auto">
           <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-medium font-raleway">
             Select your preferred social media to share job
