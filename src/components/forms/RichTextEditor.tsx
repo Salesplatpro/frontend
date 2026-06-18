@@ -1,8 +1,9 @@
 import 'react-quill/dist/quill.snow.css'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import ReactQuill from 'react-quill'
-import { Tooltip } from 'react-tooltip'
+
+import styles from './RichTextEditor.module.scss'
 
 interface RichTextEditorProps {
   id?: string
@@ -10,98 +11,79 @@ interface RichTextEditorProps {
   onChange: (value: string) => void
   placeholder?: string
   maxLength?: number
-  className?: string
+  size?: 'compact' | 'standard'
 }
 
-const RichTextEditor = ({
+const TOOLBAR_MODULES = {
+  toolbar: [
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ header: [1, 2, 3, false] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'clean'],
+  ],
+}
+
+const FORMATS = [
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'header',
+  'list',
+  'bullet',
+  'link',
+]
+
+function countWords(html: string): number {
+  const text = html.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ')
+  const words = text.trim().split(/\s+/).filter(Boolean)
+  return words.length
+}
+
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
   id,
   value,
   onChange,
   placeholder,
-  className = '',
-}: RichTextEditorProps) => {
+  maxLength,
+  size = 'standard',
+}) => {
   const quillRef = useRef<ReactQuill | null>(null)
 
-  const modules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'link', 'strike', 'code'], // Basic toolbar
-      [{ header: [1, 2, 3, false] }], // Headers
-      [{ list: 'ordered' }, { list: 'bullet' }], // Lists
-      ['link'], // Insert link
-      ['clean'], // Remove formatting
-    ],
+  const wordCount = value ? countWords(value) : 0
+  const isAtLimit = !!maxLength && wordCount >= maxLength
+
+  const handleChange = (content: string) => {
+    if (maxLength) {
+      const count = countWords(content)
+      if (count > maxLength) return
+    }
+    onChange(content)
   }
 
-  const tooltipIds = [
-    'bold-tooltip',
-    'italic-tooltip',
-    'underline-tooltip',
-    'strike-tooltip',
-    'code-tooltip',
-    'header-tooltip',
-    'list-tooltip',
-    'link-tooltip',
-    'clean-tooltip',
-  ]
-
-  useEffect(() => {
-    if (quillRef.current) {
-      const buttons = document.querySelectorAll('.ql-toolbar button')
-
-      // Tooltip content based on the format
-      const tooltips: { [key: string]: string } = {
-        bold: 'Bold',
-        italic: 'Italic',
-        underline: 'Underline',
-        strike: 'Strikethrough',
-        code: 'Inline Code',
-        header: 'Header',
-        list: 'List',
-        link: 'Insert Link',
-        clean: 'Clear Formatting',
-      }
-
-      // Add tooltips to each toolbar button
-      buttons.forEach((button) => {
-        const format = button.className
-          .split(' ')
-          .find((cls) => cls.startsWith('ql-'))
-          ?.replace('ql-', '')
-
-        if (format) {
-          button.setAttribute('data-tooltip-id', `${format}-tooltip`) // Add tooltip ID
-          button.setAttribute(
-            'data-tooltip-content',
-            tooltips[format] || format,
-          ) // Set tooltip content
-        }
-      })
-    }
-  }, [value])
+  const wrapperClass = [styles.wrapper, styles[size]].filter(Boolean).join(' ')
 
   return (
-    <div
-      id={id}
-      className={`border border-grey-300 rounded-lg w-full focus:outline-none overflow-hidden flex flex-col ${className}`}
-      style={{ height: '500px' }}>
+    <div id={id} className={wrapperClass}>
       <ReactQuill
         ref={quillRef}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder}
-        modules={modules}
-        className="h-full border-none custom-quill"
+        modules={TOOLBAR_MODULES}
+        formats={FORMATS}
+        className="flex-1 border-none custom-quill"
       />
-      {/* Render the ReactTooltip outside of the editor */}
-
-      {tooltipIds.map((tooltipId) => (
-        <Tooltip
-          key={tooltipId}
-          id={tooltipId}
-          place="bottom"
-          className="tooltip-wrap"
-        />
-      ))}
+      {maxLength && (
+        <div className={styles.footer}>
+          <span
+            className={[styles.wordCount, isAtLimit ? styles.atLimit : '']
+              .filter(Boolean)
+              .join(' ')}>
+            {wordCount} / {maxLength} words
+          </span>
+        </div>
+      )}
     </div>
   )
 }
