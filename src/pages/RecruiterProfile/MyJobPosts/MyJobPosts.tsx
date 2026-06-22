@@ -1,7 +1,6 @@
 // import '../../../index.css'
 
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { DisplayError } from '@/components'
 import { Spinner } from '@/components/ui/Spinner'
@@ -13,7 +12,6 @@ import { Pagination } from './Pagination'
 
 export const MyJobPosts = () => {
   const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
-  const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const rowsPerPage = 7
 
@@ -40,13 +38,6 @@ export const MyJobPosts = () => {
             responded.
           </div>
         </div>
-
-        <button
-          className="text-white font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
-            bg-primary-strong rounded-lg"
-          onClick={() => navigate('/recruiterDashboard/postjob')}>
-          Create New
-        </button>
       </div>
       <div>
         <JobsTable data={paginatedJobs} />

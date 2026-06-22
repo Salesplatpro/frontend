@@ -182,6 +182,7 @@ a {
   padding: var(--space-3);
   font-size: 1rem;
   font-family: var(--font-body);
+  font-weight: var(--weight-regular);
   color: var(--color-text-heading);
   line-height: var(--leading-normal);
 
@@ -195,6 +196,46 @@ a {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+/* ── Quill font-family rendering ── */
+.ql-font-raleway {
+  font-family: var(--font-heading);
+}
+.ql-font-poppins {
+  font-family: var(--font-accent);
+}
+.ql-font-serif {
+  font-family: Georgia, serif;
+}
+.ql-font-monospace {
+  font-family: monospace;
+}
+
+/* ── Font picker dropdown labels ── */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='inter']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='inter']::before {
+  content: 'Inter';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='raleway']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='raleway']::before {
+  content: 'Raleway';
+  font-family: var(--font-heading);
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='poppins']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='poppins']::before {
+  content: 'Poppins';
+  font-family: var(--font-accent);
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='serif']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='serif']::before {
+  content: 'Serif';
+  font-family: Georgia, serif;
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='monospace']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='monospace']::before {
+  content: 'Monospace';
+  font-family: monospace;
 }
 
 .rich-text-content {

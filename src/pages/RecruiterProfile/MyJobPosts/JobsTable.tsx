@@ -137,49 +137,67 @@ export const JobsTable = ({ data }: JobsTableType) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((job, index) => (
-            <TableRow key={index}>
-              <TableCell
-                component="th"
-                align={align}
-                sx={tableCellStyle}
-                className="capitalize">
-                <Link
-                  to={`/recruiterDashboard/jobdetail/${job._id}`}
-                  className="block max-w-[280px] text-left truncate text-black font-raleway">
-                  {job.role.name}
-                </Link>
-              </TableCell>
-              <TableCell align={align} sx={tableCellStyle}>
-                <Link
-                  to={`/recruiterDashboard/singleJobPost/${job._id}`}
-                  state={{ jobName: job.role.name, postedAt: job.createdAt }}>
-                  <button className="text-[primary-strong] font-raleway font-semibold text-[16px] leading-[28px] underline">
-                    View ({job.noOfApplicants})
-                  </button>
-                </Link>
-              </TableCell>
-              <TableCell align={align} sx={tableCellStyle}>
-                <p className="whitespace-nowrap">{`${calculateDaysFromCreation(
-                  job.createdAt,
-                )} days ago`}</p>
-              </TableCell>
-              <TableCell align={align} sx={tableCellStyle}>
-                <div className="flex items-center justify-center md:space-x-2">
+          {data?.map((job, index) => {
+            const missingAiConfig = !job.aiConfig
+            return (
+              <TableRow key={index}>
+                <TableCell
+                  component="th"
+                  align={align}
+                  sx={tableCellStyle}
+                  className="capitalize">
                   <Link
                     to={`/recruiterDashboard/jobdetail/${job._id}`}
+                    className="block max-w-[280px] text-left truncate text-black font-raleway">
+                    {job.role.name}
+                  </Link>
+                  {missingAiConfig && (
+                    <span className="inline-block mt-1 text-[11px] font-semibold font-raleway px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-300 whitespace-nowrap">
+                      No AI Config
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell align={align} sx={tableCellStyle}>
+                  <Link
+                    to={`/recruiterDashboard/singleJobPost/${job._id}`}
                     state={{ jobName: job.role.name, postedAt: job.createdAt }}>
-                    <button
-                      className="text-[white] font-raleway font-semibold whitespace-nowrap flex text-[14px] leading-[28px] py-1 px-3 
-                    bg-[primary-strong] rounded-lg">
-                      View Job
+                    <button className="text-[primary-strong] font-raleway font-semibold text-[16px] leading-[28px] underline">
+                      View ({job.noOfApplicants})
                     </button>
                   </Link>
-                  <ShareOptions handleShare={handleShare} jobId={job._id} />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell align={align} sx={tableCellStyle}>
+                  <p className="whitespace-nowrap">{`${calculateDaysFromCreation(
+                    job.createdAt,
+                  )} days ago`}</p>
+                </TableCell>
+                <TableCell align={align} sx={tableCellStyle}>
+                  <div className="flex items-center justify-center md:space-x-2 flex-wrap gap-2">
+                    <Link
+                      to={`/recruiterDashboard/jobdetail/${job._id}`}
+                      state={{
+                        jobName: job.role.name,
+                        postedAt: job.createdAt,
+                      }}>
+                      <button
+                        className="text-[white] font-raleway font-semibold whitespace-nowrap flex text-[14px] leading-[28px] py-1 px-3
+                      bg-[primary-strong] rounded-lg">
+                        View Job
+                      </button>
+                    </Link>
+                    {missingAiConfig && (
+                      <Link to={`/recruiterDashboard/postjob/${job._id}`}>
+                        <button className="font-raleway font-semibold whitespace-nowrap text-[14px] leading-[28px] py-1 px-3 rounded-lg border border-amber-500 text-amber-700 bg-amber-50 hover:bg-amber-100">
+                          Add AI Config
+                        </button>
+                      </Link>
+                    )}
+                    <ShareOptions handleShare={handleShare} jobId={job._id} />
+                  </div>
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
 

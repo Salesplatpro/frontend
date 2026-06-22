@@ -1,9 +1,17 @@
 import 'react-quill/dist/quill.snow.css'
 
+import Quill from 'quill'
 import React, { useRef } from 'react'
 import ReactQuill from 'react-quill'
 
 import styles from './RichTextEditor.module.scss'
+
+// Register custom font families once
+const Font = Quill.import('formats/font') as {
+  whitelist: string[]
+} & typeof Quill
+Font.whitelist = ['inter', 'raleway', 'poppins', 'serif', 'monospace']
+Quill.register(Font, true)
 
 interface RichTextEditorProps {
   id?: string
@@ -16,21 +24,36 @@ interface RichTextEditorProps {
 
 const TOOLBAR_MODULES = {
   toolbar: [
+    [
+      { font: ['inter', 'raleway', 'poppins', 'serif', 'monospace'] },
+      { size: ['small', false, 'large', 'huge'] },
+    ],
     ['bold', 'italic', 'underline', 'strike'],
-    [{ header: [1, 2, 3, false] }],
-    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
     ['link', 'clean'],
   ],
 }
 
 const FORMATS = [
+  'font',
+  'size',
   'bold',
   'italic',
   'underline',
   'strike',
-  'header',
+  'color',
+  'background',
+  'align',
   'list',
   'bullet',
+  'indent',
   'link',
 ]
 
