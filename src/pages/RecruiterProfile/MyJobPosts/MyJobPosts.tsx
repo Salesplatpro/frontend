@@ -33,7 +33,7 @@ export const MyJobPosts = () => {
       <div className={styles.topContainer}>
         <div className={styles.titleDesc}>
           <div className={styles.title}>Job Posts</div>
-          <div className="text-[15px] w-[220px] flex flex-nowrap lg:text-[18px] lg:w-full md:w-full md:text-[16px] sm:w-[350px] sm:text-[16px]">
+          <div className={styles.description}>
             View jobs posted by you and see number of applicants that have
             responded.
           </div>
