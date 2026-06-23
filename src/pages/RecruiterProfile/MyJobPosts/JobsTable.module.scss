@@ -89,6 +89,25 @@ $amber-700: #b45309;
   }
 }
 
+// ── Row status colours ─────────────────────────────────────────────────────
+// Green: job complete (has AI config)
+// Amber: incomplete (no AI config)
+// Red: paused or closed job
+.rowComplete {
+  border-left: 4px solid #16a34a !important;
+  background-color: #f0fdf4 !important;
+}
+
+.rowIncomplete {
+  border-left: 4px solid $amber-500 !important;
+  background-color: $amber-50 !important;
+}
+
+.rowClosed {
+  border-left: 4px solid #dc2626 !important;
+  background-color: #fef2f2 !important;
+}
+
 // ── Share modal ────────────────────────────────────────────────────────────
 .modalContent {
   display: flex;

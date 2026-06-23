@@ -27,6 +27,7 @@ interface DataTableProps<T> {
   isLoading?: boolean
   emptyState?: React.ReactNode
   getRowKey?: (row: T, index: number) => string | number
+  getRowClassName?: (row: T, index: number) => string
   ariaLabel?: string
 }
 
@@ -58,6 +59,7 @@ export function DataTable<T>({
   isLoading,
   emptyState,
   getRowKey,
+  getRowClassName,
   ariaLabel = 'data table',
 }: DataTableProps<T>) {
   const screenWidth = useScreenWidth()
@@ -93,7 +95,11 @@ export function DataTable<T>({
             </TableRow>
           ) : (
             data.map((row, index) => (
-              <StyledTableRow key={getRowKey ? getRowKey(row, index) : index}>
+              <StyledTableRow
+                key={getRowKey ? getRowKey(row, index) : index}
+                className={
+                  getRowClassName ? getRowClassName(row, index) : undefined
+                }>
                 {visibleColumns.map((col) => (
                   <StyledTableCell key={col.key} align={col.align ?? 'center'}>
                     {col.render(row, index)}

@@ -8,7 +8,7 @@ import {
   useField,
   useFormikContext,
 } from 'formik'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { RiDeleteBin6Line } from 'react-icons/ri'
@@ -17,8 +17,13 @@ import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import TextField from '@/components/forms/TextField'
 import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
 import { useAiConfigDraftStore } from '@/features/jobs/store/useAiConfigDraftStore'
-import { useAiConfigMutation } from '@/redux/api/recruiter'
+import {
+  useAiConfigMutation,
+  useGetAiConfigQuery,
+  usePatchAiConfigMutation,
+} from '@/redux/api/recruiter'
 import { notify } from '@/utils/toastNotifications'
 
 import styles from './AiConfig.module.scss'
@@ -39,6 +44,11 @@ interface AiConfigValues {
   personalityEvaluation: string
   uploadedQuestions: string[]
   recruiterGuide: string
+}
+
+type AiConfigProps = {
+  mode?: 'create' | 'edit'
+  aiConfigId?: string
 }
 
 type ToggleFieldProps = { name: string; label: string; tooltipContent: string }
@@ -106,23 +116,67 @@ const DEFAULT_VALUES: AiConfigValues = {
   recruiterGuide: '',
 }
 
-const AiConfig = () => {
+const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   const { jobId } = useParams()
   const navigate = useNavigate()
+  const isEditMode = mode === 'edit'
+
   const [aiConfigMutation] = useAiConfigMutation()
+  const [patchAiConfig] = usePatchAiConfigMutation()
   const { drafts, saveDraft, clearDraft } = useAiConfigDraftStore()
   const { generatedQuestions, generateQuestion, resetQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
 
+  const { data: existingConfig, isLoading: configLoading } =
+    useGetAiConfigQuery(aiConfigId ?? '', { skip: !isEditMode || !aiConfigId })
+
+  // Stable callback for FormObserver — fixes the infinite-loop caused by an
+  // inline arrow that creates a new function reference on every render.
+  const draftSaver = useCallback(
+    (v: unknown) => saveDraft(jobId ?? '', v),
+    [saveDraft, jobId],
+  )
+
+  if (isEditMode && configLoading) return <Spinner fullPage />
+
+  const configData = existingConfig?.data?.config
+
+  const editInitialValues: AiConfigValues | null = configData
+    ? {
+        name: configData.name ?? '',
+        jobId: jobId ?? '',
+        prescreeningAssessment: configData.prescreeningAssessment
+          ? 'true'
+          : 'false',
+        minPrescreeningScore: configData.minPrescreeningScore ?? '',
+        cvSimilarity: configData.cvSimilarity ? 'true' : 'false',
+        minCvSimilarityScore: configData.minCvSimilarityScore ?? '',
+        noOfCvSimilarCandidates: configData.noOfCvSimilarCandidates ?? '',
+        personalizedAssessment: configData.personalizedAssessment
+          ? 'true'
+          : 'false',
+        noPersonalizedQuestions: configData.noPersonalizedQuestions ?? '',
+        personalityEvaluation: configData.personalityEvaluation
+          ? 'true'
+          : 'false',
+        uploadedQuestions: configData.uploadedQuestions?.length
+          ? configData.uploadedQuestions
+          : [''],
+        recruiterGuide: configData.recruiterGuide ?? '',
+      }
+    : null
+
   const savedDraft = drafts[jobId ?? '']
-  const hadDraft = savedDraft != null
-  const initialValues: AiConfigValues =
-    savedDraft != null
-      ? ({
-          ...(savedDraft as AiConfigValues),
-          jobId: jobId ?? '',
-        } as AiConfigValues)
-      : { ...DEFAULT_VALUES, jobId: jobId ?? '' }
+  const hadDraft = !isEditMode && savedDraft != null
+
+  const initialValues: AiConfigValues = isEditMode
+    ? editInitialValues ?? DEFAULT_VALUES
+    : savedDraft != null
+    ? ({
+        ...(savedDraft as AiConfigValues),
+        jobId: jobId ?? '',
+      } as AiConfigValues)
+    : { ...DEFAULT_VALUES, jobId: jobId ?? '' }
 
   const onSubmit = async (
     values: AiConfigValues,
@@ -156,16 +210,23 @@ const AiConfig = () => {
     }
 
     try {
-      await aiConfigMutation(payload).unwrap()
-      clearDraft(jobId ?? '')
-      notify('success', 'AI config saved!')
-      navigate('/recruiterDashboard/myjobposts')
+      if (isEditMode) {
+        await patchAiConfig({ aiConfigId, data: payload }).unwrap()
+        notify('success', 'AI config updated!')
+      } else {
+        await aiConfigMutation(payload).unwrap()
+        clearDraft(jobId ?? '')
+        notify('success', 'AI config saved!')
+        navigate('/recruiterDashboard/myjobposts')
+      }
     } catch (err: unknown) {
       const apiMessage = (err as { data?: { message?: string } })?.data?.message
       notify(
         'error',
         apiMessage ??
-          'Failed to save AI config. Your progress has been saved — please try again.',
+          (isEditMode
+            ? 'Failed to update AI config.'
+            : 'Failed to save AI config. Your progress has been saved — please try again.'),
       )
     } finally {
       setSubmitting(false)
@@ -175,7 +236,9 @@ const AiConfig = () => {
   return (
     <div className={styles.page}>
       <h2 className={styles.heading}>AI Configs</h2>
-      <p className={styles.subheading}>Select your configurations</p>
+      <p className={styles.subheading}>
+        {isEditMode ? 'Edit your configurations' : 'Select your configurations'}
+      </p>
 
       <Formik
         initialValues={initialValues}
@@ -184,7 +247,7 @@ const AiConfig = () => {
         enableReinitialize>
         {({ values, isSubmitting }) => (
           <Form>
-            <FormObserver saveDraft={(v) => saveDraft(jobId ?? '', v)} />
+            {!isEditMode && <FormObserver saveDraft={draftSaver} />}
 
             {hadDraft && (
               <div className={styles.draftBanner}>Draft restored</div>
@@ -353,7 +416,7 @@ const AiConfig = () => {
                 variant="primary"
                 size="lg"
                 loading={isSubmitting}>
-                Save AI Config
+                {isEditMode ? 'Update AI Config' : 'Save AI Config'}
               </Button>
             </div>
           </Form>

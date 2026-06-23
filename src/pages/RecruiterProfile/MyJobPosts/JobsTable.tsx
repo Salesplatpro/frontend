@@ -137,6 +137,12 @@ export const JobsTable = ({ data }: JobsTableType) => {
         data={data}
         getRowKey={(job) => job._id}
         ariaLabel="Job posts table"
+        getRowClassName={(job) => {
+          if (job.status === 'paused' || job.status === 'closed')
+            return styles.rowClosed
+          if (job.aiConfig) return styles.rowComplete
+          return styles.rowIncomplete
+        }}
       />
 
       <Modal
