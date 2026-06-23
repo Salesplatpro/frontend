@@ -161,3 +161,66 @@
   display: flex;
   justify-content: flex-start;
 }
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.toggleLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: #434144;
+  flex: 1;
+}
+
+.toggleRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.toggleTrack {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-border-strong);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.toggleTrackOn {
+  background-color: var(--color-primary);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-white);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.toggleThumbOn {
+  transform: translateX(20px);
+}
+
+.draftBanner {
+  font-size: var(--text-sm);
+  color: var(--color-success);
+  margin-bottom: var(--space-4);
+}
+
+.fieldError {
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+  margin-top: var(--space-1);
+}
