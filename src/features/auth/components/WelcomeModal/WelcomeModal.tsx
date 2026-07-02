@@ -28,7 +28,11 @@ export const WelcomeModal = () => {
   }
 
   return (
-    <Modal open onClose={handleClose} center>
+    <Modal
+      open
+      onClose={handleClose}
+      center
+      classNames={{ overlay: 'dashboard-modal-overlay' }}>
       <div className={styles.content}>
         <img src={CheckMark} alt="checklist" className={styles.checkmark} />
         <Heading level={2}>Welcome onboard {welcomeName}</Heading>

@@ -1,0 +1,226 @@
+%input-base {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-text-heading);
+  background-color: var(--color-white);
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+}
+
+.page {
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-4) 0;
+
+  @media (min-width: 768px) {
+    width: 70%;
+  }
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-heading);
+  margin: var(--space-4) 0 var(--space-1) 0;
+}
+
+.subheading {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-regular);
+  margin: 0 0 var(--space-6) 0;
+}
+
+.sectionHeading {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-regular);
+  color: #434144;
+  padding: var(--space-4) 0;
+  margin: 0;
+  line-height: var(--leading-snug);
+}
+
+.sectionHeadingBold {
+  font-weight: var(--weight-bold);
+}
+
+.configCard {
+  background-color: var(--color-bg-subtle);
+  width: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--color-border);
+  box-sizing: border-box;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--color-grey-700);
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: var(--space-1);
+}
+
+.questionsLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--color-grey-700);
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.questionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.questionItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.questionInput {
+  @extend %input-base;
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: var(--space-2);
+  cursor: pointer;
+  font-size: var(--text-xl);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--color-danger);
+  }
+}
+
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-brand-50);
+  color: var(--color-info);
+  border: 1px solid var(--color-info);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background-color: var(--color-brand-100);
+  }
+}
+
+.actions {
+  margin-top: var(--space-6);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.toggleLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: #434144;
+  flex: 1;
+}
+
+.toggleRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.toggleTrack {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-border-strong);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.toggleTrackOn {
+  background-color: var(--color-primary);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-white);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.toggleThumbOn {
+  transform: translateX(20px);
+}
+
+.draftBanner {
+  font-size: var(--text-sm);
+  color: var(--color-success);
+  margin-bottom: var(--space-4);
+}
+
+.fieldError {
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+  margin-top: var(--space-1);
+}

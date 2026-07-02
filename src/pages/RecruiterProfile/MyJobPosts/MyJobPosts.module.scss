@@ -27,3 +27,25 @@
     font-size: 28px;
   }
 }
+
+.description {
+  font-size: 15px;
+  width: 220px;
+  display: flex;
+  flex-wrap: nowrap;
+
+  @media (min-width: 1024px) {
+    font-size: var(--text-lg);
+    width: 100%;
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    width: 100%;
+    font-size: var(--text-md);
+  }
+
+  @media (min-width: 640px) and (max-width: 767px) {
+    width: 350px;
+    font-size: var(--text-md);
+  }
+}

@@ -42,6 +42,7 @@ export type recruiterJobPostsTypes = {
   updatedAt: string
   __v: number
   aiConfig: string
+  status?: string
 }
 
 export type SingleJobDetails = {

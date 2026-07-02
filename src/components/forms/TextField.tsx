@@ -21,8 +21,6 @@ const TextField = ({
   type,
   MAX_WORDS,
 }: TextFieldProps) => {
-  // const [wordCount, setWordCount] = useState(0)
-
   return (
     <div className="mb-4">
       <LabelWithAsterisk label={label} asterick={asterick} />
@@ -30,17 +28,6 @@ const TextField = ({
         <Field name={name}>
           {({ field }: any) => (
             <div>
-              {/* <textarea
-                {...field}
-                id={name}
-                placeholder={placeholder}
-                maxLength={MAX_WORDS}
-                onChange={(e) => {
-                  field.onChange(e) // <-- Let Formik handle the value
-                  setWordCount(e.target.value.length) // <-- Track word count separately
-                }}
-                className="border border-grey-300 p-4 rounded-lg w-full h-[140px] focus:outline-none"
-              /> */}
               <RichTextEditor
                 id={name}
                 value={field.value}

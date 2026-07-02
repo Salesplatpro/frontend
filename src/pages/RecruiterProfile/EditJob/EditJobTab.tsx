@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { useIndividualJobQuery } from '@/redux/api/talent'
+import { EditJobType } from '@/utils'
+import { notify } from '@/utils/toastNotifications'
 
-import { useIndividualJobQuery } from '../../../redux/api/talent'
-import { EditJobType } from '../../../utils'
-import { notify } from '../../../utils/toastNotifications'
+import tabStyles from '../PostJobs/PostJobTab.module.scss'
 import { EditAiConfig } from './EditAiConfig'
 import { EditJob } from './EditJob'
-// import { useGetAiConfigQuery, usePatchAiConfigMutation } from '../../../redux/api/recruiter'
 
 const tabs = [
   {
     id: '1',
     tab: 'editjobdetails',
-    title: 'Edit Job',
+    title: 'Edit job',
     description: 'Edit job details',
   },
   {
@@ -38,7 +38,7 @@ export const EditJobTab = () => {
       setJobToEdit(data?.data)
     }
     if (error) {
-      notify('error', 'DisplayError loading job post')
+      notify('error', 'Error loading job post')
     }
   }, [data, error])
 
@@ -52,29 +52,36 @@ export const EditJobTab = () => {
   }
 
   return (
-    <div className="p-4">
-      <div>
-        <h2 className="text-grey-900 text-[32px] mt-1 font-bold">Edit Job</h2>
-        Modify existing job needed to land a role with your organization
-        <p className="text-grey-900 text-[20px] font-medium"></p>
-        <div className="mt-8 flex flex-row md:space-x-10 space-x-4 items-center justify-center">
-          {tabs.map((tab, i) => (
-            <div
-              key={i}
-              className={`${
-                activeTab === tab.tab
-                  ? 'border-info border-t-4 text-info'
-                  : 'border-t-4 text-grey-700'
-              } md:min-w-[232px] w-[232px] md:py-2 py-1 text-[14px]`}>
+    <div className={tabStyles.page}>
+      <h2 className={tabStyles.heading}>Edit job</h2>
+      <p className={tabStyles.subheading}>Modify your existing job post</p>
+
+      <div className={tabStyles.tabList} role="tablist">
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.tab
+          const tabItemClass = [
+            tabStyles.tabItem,
+            isActive ? tabStyles.active : '',
+          ]
+            .filter(Boolean)
+            .join(' ')
+
+          return (
+            <div key={tab.id} className={tabItemClass}>
               <button
+                className={tabStyles.tabButton}
                 onClick={() => setActiveTab(tab.tab)}
-                className="flex flex-col w-full text-left">
-                <h5 className="font-bold">{tab.title}</h5>
-                <p>{tab.description}</p>
+                role="tab"
+                aria-selected={isActive}>
+                <span className={tabStyles.tabTitle}>{tab.title}</span>
+                <span className={tabStyles.tabDesc}>{tab.description}</span>
               </button>
             </div>
-          ))}
-        </div>
+          )
+        })}
+      </div>
+
+      <div className={tabStyles.content} role="tabpanel">
         {renderContent()}
       </div>
     </div>

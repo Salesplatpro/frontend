@@ -1,3 +1,12 @@
+/* Shift modal overlay to cover only the main content area (excludes sidebar) */
+.dashboard-modal-overlay {
+  left: 298px !important;
+
+  @media (max-width: 980px) {
+    left: 0 !important;
+  }
+}
+
 .dashboard {
   display: grid;
   grid-template-areas:

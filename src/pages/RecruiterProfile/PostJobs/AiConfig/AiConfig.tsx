@@ -1,87 +1,188 @@
-import { Field, FieldArray, Form, Formik } from 'formik'
-import React from 'react'
+import {
+  ErrorMessage,
+  Field,
+  FieldArray,
+  Form,
+  Formik,
+  FormikHelpers,
+  useField,
+  useFormikContext,
+} from 'formik'
+import React, { useCallback, useEffect } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
-import * as Yup from 'yup'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
-import RadioFieldGroup from '@/components/forms/RadioFieldGroup'
 import TextField from '@/components/forms/TextField'
+import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
+import { useAiConfigDraftStore } from '@/features/jobs/store/useAiConfigDraftStore'
+import {
+  useAiConfigMutation,
+  useGetAiConfigQuery,
+  usePatchAiConfigMutation,
+} from '@/redux/api/recruiter'
+import { notify } from '@/utils/toastNotifications'
 
-import { useAiConfigMutation } from '../../../../redux/api/recruiter'
-import { notify } from '../../../../utils/toastNotifications'
+import styles from './AiConfig.module.scss'
+import { aiConfigValidationSchema } from './aiConfigValidationSchema'
 import QuestionGenerator from './QuestionGenerator'
 import useGeneratedQuestion from './useGeneratedQuestion'
 
-const AiConfig = () => {
+interface AiConfigValues {
+  name: string
+  jobId: string
+  prescreeningAssessment: string
+  minPrescreeningScore: string | number
+  cvSimilarity: string
+  minCvSimilarityScore: string | number
+  noOfCvSimilarCandidates: string | number
+  personalizedAssessment: string
+  noPersonalizedQuestions: string | number
+  personalityEvaluation: string
+  uploadedQuestions: string[]
+  recruiterGuide: string
+}
+
+type AiConfigProps = {
+  mode?: 'create' | 'edit'
+  aiConfigId?: string
+}
+
+type ToggleFieldProps = { name: string; label: string; tooltipContent: string }
+
+const ToggleField = ({ name, label, tooltipContent }: ToggleFieldProps) => {
+  const [field, , helpers] = useField(name)
+  const checked = field.value === 'true'
+  return (
+    <div className={styles.toggleRow}>
+      <p className={styles.toggleLabel}>{label}</p>
+      <div className={styles.toggleRight}>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={checked}
+          className={[
+            styles.toggleTrack,
+            checked ? styles.toggleTrackOn : '',
+          ].join(' ')}
+          onClick={() => helpers.setValue(checked ? 'false' : 'true')}>
+          <span
+            className={[
+              styles.toggleThumb,
+              checked ? styles.toggleThumbOn : '',
+            ].join(' ')}
+          />
+        </button>
+        <span data-tooltip-id={`${name}-tooltip`}>
+          <IoIosInformationCircle fontSize={24} color="#000000" />
+        </span>
+        <ReactTooltip
+          id={`${name}-tooltip`}
+          content={tooltipContent}
+          place="bottom"
+          variant="info"
+        />
+      </div>
+      <ErrorMessage name={name} component="div" className={styles.fieldError} />
+    </div>
+  )
+}
+
+const FormObserver: React.FC<{ saveDraft: (v: unknown) => void }> = ({
+  saveDraft,
+}) => {
+  const { values } = useFormikContext<AiConfigValues>()
+  useEffect(() => {
+    saveDraft(values)
+  }, [values, saveDraft])
+  return null
+}
+
+const DEFAULT_VALUES: AiConfigValues = {
+  name: '',
+  jobId: '',
+  prescreeningAssessment: '',
+  minPrescreeningScore: '',
+  cvSimilarity: '',
+  minCvSimilarityScore: '',
+  noOfCvSimilarCandidates: '',
+  personalizedAssessment: '',
+  noPersonalizedQuestions: '',
+  personalityEvaluation: '',
+  uploadedQuestions: [''],
+  recruiterGuide: '',
+}
+
+const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   const { jobId } = useParams()
-  const [aiConfig] = useAiConfigMutation()
   const navigate = useNavigate()
+  const isEditMode = mode === 'edit'
+
+  const [aiConfigMutation] = useAiConfigMutation()
+  const [patchAiConfig] = usePatchAiConfigMutation()
+  const { drafts, saveDraft, clearDraft } = useAiConfigDraftStore()
   const { generatedQuestions, generateQuestion, resetQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
 
-  const initialValues = {
-    name: '',
-    jobId: jobId || '',
-    prescreeningAssessment: '',
-    minPrescreeningScore: '',
-    cvSimilarity: '',
-    minCvSimilarityScore: '',
-    noOfCvSimilarCandidates: '',
-    personalizedAssessment: '',
-    noPersonalizedQuestions: '',
-    personalityEvaluation: '',
-    uploadedQuestions: [''],
-    recruiterGuide: '',
-  }
+  const { data: existingConfig, isLoading: configLoading } =
+    useGetAiConfigQuery(aiConfigId ?? '', { skip: !isEditMode || !aiConfigId })
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Required'),
+  // Stable callback for FormObserver — fixes the infinite-loop caused by an
+  // inline arrow that creates a new function reference on every render.
+  const draftSaver = useCallback(
+    (v: unknown) => saveDraft(jobId ?? '', v),
+    [saveDraft, jobId],
+  )
 
-    prescreeningAssessment: Yup.string().required('Required'),
-    minPrescreeningScore: Yup.number()
-      .min(0, 'Min score must be at least 0')
-      .when('prescreeningAssessment', (prescreeningAssessment, schema) => {
-        return String(prescreeningAssessment) === 'true'
-          ? schema.required('Required')
-          : schema.notRequired()
-      }),
+  if (isEditMode && configLoading) return <Spinner fullPage />
 
-    cvSimilarity: Yup.string().required('Required'),
-    minCvSimilarityScore: Yup.number()
-      .min(0, 'Min score must be at least 0')
-      .when('cvSimilarity', (cvSimilarity, schema) => {
-        return String(cvSimilarity) === 'true'
-          ? schema.required('Required')
-          : schema.notRequired()
-      }),
+  const configData = existingConfig?.data?.config
 
-    noOfCvSimilarCandidates: Yup.number()
-      .min(0, 'Min number must be at least 0')
-      .when('cvSimilarity', (cvSimilarity, schema) => {
-        return String(cvSimilarity) === 'true'
-          ? schema.required('Required')
-          : schema.notRequired()
-      }),
+  const editInitialValues: AiConfigValues | null = configData
+    ? {
+        name: configData.name ?? '',
+        jobId: jobId ?? '',
+        prescreeningAssessment: configData.prescreeningAssessment
+          ? 'true'
+          : 'false',
+        minPrescreeningScore: configData.minPrescreeningScore ?? '',
+        cvSimilarity: configData.cvSimilarity ? 'true' : 'false',
+        minCvSimilarityScore: configData.minCvSimilarityScore ?? '',
+        noOfCvSimilarCandidates: configData.noOfCvSimilarCandidates ?? '',
+        personalizedAssessment: configData.personalizedAssessment
+          ? 'true'
+          : 'false',
+        noPersonalizedQuestions: configData.noPersonalizedQuestions ?? '',
+        personalityEvaluation: configData.personalityEvaluation
+          ? 'true'
+          : 'false',
+        uploadedQuestions: configData.uploadedQuestions?.length
+          ? configData.uploadedQuestions
+          : [''],
+        recruiterGuide: configData.recruiterGuide ?? '',
+      }
+    : null
 
-    personalizedAssessment: Yup.string().required('Required'),
-    noPersonalizedQuestions: Yup.number()
-      .min(0, 'Min number must be at least 0')
-      .when('personalizedAssessment', (personalizedAssessment, schema) => {
-        return String(personalizedAssessment) === 'true'
-          ? schema.required('Required')
-          : schema.notRequired()
-      }),
+  const savedDraft = drafts[jobId ?? '']
+  const hadDraft = !isEditMode && savedDraft != null
 
-    personalityEvaluation: Yup.string().required('Required'),
+  const initialValues: AiConfigValues = isEditMode
+    ? editInitialValues ?? DEFAULT_VALUES
+    : savedDraft != null
+    ? ({
+        ...(savedDraft as AiConfigValues),
+        jobId: jobId ?? '',
+      } as AiConfigValues)
+    : { ...DEFAULT_VALUES, jobId: jobId ?? '' }
 
-    // recruiterGuide: Yup.string().required('Required'),
-  })
-
-  const handleSubmit = async (values: any, { setSubmitting }: any) => {
-    const cleanedValues = { ...values }
+  const onSubmit = async (
+    values: AiConfigValues,
+    { setSubmitting }: FormikHelpers<AiConfigValues>,
+  ) => {
+    const cleanedValues: Partial<AiConfigValues> = { ...values }
 
     if (values.prescreeningAssessment === 'false') {
       delete cleanedValues.minPrescreeningScore
@@ -96,65 +197,77 @@ const AiConfig = () => {
     if (values.personalityEvaluation === 'false') {
       delete cleanedValues.uploadedQuestions
     }
-    if (values.recruiterGuide === '') {
+    if (!values.recruiterGuide) {
       delete cleanedValues.recruiterGuide
     }
 
-    try {
-      const response = await aiConfig(cleanedValues).unwrap()
-      if ('data' in response && response.data) {
-        notify('success', response.data?.message || 'Submitted successfully', {
-          autoClose: 5000,
-        })
-        navigate(`/recruiterDashboard/jobdetail/${jobId}`)
-        // navigate('/recruiterDashboard/myjobposts')
-      }
-    } catch (error: any) {
-      const errorMessage =
-        error?.data?.message ||
-        error.message ||
-        'An error occurred while processing your request'
+    const payload = {
+      ...cleanedValues,
+      prescreeningAssessment: cleanedValues.prescreeningAssessment === 'true',
+      cvSimilarity: cleanedValues.cvSimilarity === 'true',
+      personalizedAssessment: cleanedValues.personalizedAssessment === 'true',
+      personalityEvaluation: cleanedValues.personalityEvaluation === 'true',
+    }
 
-      notify('error', errorMessage, {
-        autoClose: 5000,
-        transition: Bounce,
-      })
+    try {
+      if (isEditMode) {
+        await patchAiConfig({ aiConfigId, data: payload }).unwrap()
+        notify('success', 'AI config updated!')
+      } else {
+        await aiConfigMutation(payload).unwrap()
+        clearDraft(jobId ?? '')
+        notify('success', 'AI config saved!')
+        navigate('/recruiterDashboard/myjobposts')
+      }
+    } catch (err: unknown) {
+      const apiMessage = (err as { data?: { message?: string } })?.data?.message
+      notify(
+        'error',
+        apiMessage ??
+          (isEditMode
+            ? 'Failed to update AI config.'
+            : 'Failed to save AI config. Your progress has been saved — please try again.'),
+      )
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <div className="md:px-4 py-4 md:w-[70%] w-[100%] mx-auto">
-      <h2 className="text-grey-900 text-[32px] mt-4 font-bold">AI Configs</h2>
-      <p className="text-grey-500 text-[16px] mb-6 font-light">
-        Select your configurations
+    <div className={styles.page}>
+      <h2 className={styles.heading}>AI Configs</h2>
+      <p className={styles.subheading}>
+        {isEditMode ? 'Edit your configurations' : 'Select your configurations'}
       </p>
+
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
+        validationSchema={aiConfigValidationSchema}
+        onSubmit={onSubmit}
+        enableReinitialize>
         {({ values, isSubmitting }) => (
           <Form>
+            {!isEditMode && <FormObserver saveDraft={draftSaver} />}
+
+            {hadDraft && (
+              <div className={styles.draftBanner}>Draft restored</div>
+            )}
+
             <TextField label="Name" name="name" placeholder="Name of Job" />
 
-            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
-              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+            {/* Pre-screening Assessment */}
+            <h3 className={styles.sectionHeading}>
+              <span className={styles.sectionHeadingBold}>
                 Pre-screening assessment
               </span>{' '}
-              (These are the list of questions needed to be answered)
+              Automatically filter candidates with a short initial test before
+              detailed evaluation.
             </h3>
-
-            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
-              <RadioFieldGroup
+            <div className={styles.configCard}>
+              <ToggleField
                 name="prescreeningAssessment"
-                label="Enable Pre-assessment:"
-                options={[
-                  { value: 'true', label: 'True' },
-                  { value: 'false', label: 'False' },
-                ]}
-                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
-                tooltipContent="Automatically screen candidates with a quick initial test before further Evaluation"
+                label="Enable Pre-screening Assessment"
+                tooltipContent="Automatically screen candidates with a quick initial test before further evaluation"
               />
               {values.prescreeningAssessment === 'true' && (
                 <TextField
@@ -166,23 +279,19 @@ const AiConfig = () => {
               )}
             </div>
 
-            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
-              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+            {/* CV Similarity */}
+            <h3 className={styles.sectionHeading}>
+              <span className={styles.sectionHeadingBold}>
                 CV Similarity assessment
               </span>{' '}
-              (These are the list of questions needed to be answered)
+              Rank applicants by how closely their CV matches the job
+              requirements.
             </h3>
-
-            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
-              <RadioFieldGroup
+            <div className={styles.configCard}>
+              <ToggleField
                 name="cvSimilarity"
-                label="Enable CV Similarity:"
-                options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
-                ]}
-                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
-                tooltipContent="Match Candidate's CV against job requirements to find best fit"
+                label="Enable CV Similarity"
+                tooltipContent="Match candidate's CV against job requirements to find the best fit"
               />
               {values.cvSimilarity === 'true' && (
                 <>
@@ -202,22 +311,18 @@ const AiConfig = () => {
               )}
             </div>
 
-            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
-              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+            {/* Personalized Assessment */}
+            <h3 className={styles.sectionHeading}>
+              <span className={styles.sectionHeadingBold}>
                 Personalized assessment
               </span>{' '}
-              (These are the list of questions needed to be answered)
+              Generate role-specific questions tailored to the skills and
+              qualifications required.
             </h3>
-
-            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
-              <RadioFieldGroup
+            <div className={styles.configCard}>
+              <ToggleField
                 name="personalizedAssessment"
-                label="Enable Personalized Assessment:"
-                options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
-                ]}
-                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
+                label="Enable Personalized Assessment"
                 tooltipContent="Generate tailored tests based on job-specific skills and qualifications."
               />
               {values.personalizedAssessment === 'true' && (
@@ -230,23 +335,19 @@ const AiConfig = () => {
               )}
             </div>
 
-            <h3 className="font-raleway font-normal text-[17px] leading-[22px] text-[#434144] py-4">
-              <span className="font-raleway font-bold text-[17px] leading-[16px] text-[#434144]">
+            {/* Personality Evaluation */}
+            <h3 className={styles.sectionHeading}>
+              <span className={styles.sectionHeadingBold}>
                 Personality Evaluation
               </span>{' '}
-              (These are the list of questions needed to be answered)
+              Assess personality traits using MBTI dichotomy pairs to gauge
+              cultural and role fit.
             </h3>
-
-            <div className="bg-[#F5F5F5] w-full p-4 rounded-lg mb-4 border border-[#E7E7E7]">
-              <RadioFieldGroup
+            <div className={styles.configCard}>
+              <ToggleField
                 name="personalityEvaluation"
-                label="Enable Personality Evaluation:"
-                options={[
-                  { value: 'true', label: 'Yes' },
-                  { value: 'false', label: 'No' },
-                ]}
-                icons={<IoIosInformationCircle fontSize={24} color="#000000" />}
-                tooltipContent="Access candidate's personality traits to determine cultural and role fit"
+                label="Enable Personality Evaluation"
+                tooltipContent="Assess candidate's personality traits to determine cultural and role fit"
               />
 
               {values.personalityEvaluation === 'true' && (
@@ -270,37 +371,32 @@ const AiConfig = () => {
                         />
                       ))}
 
-                      <div className="flex flex-col mt-4 mb-4">
-                        <label
-                          htmlFor="personalityQuestion"
-                          className="font-medium mb-1">
-                          Questions:
-                        </label>
-                        <div className="space-y-2">
-                          {values.uploadedQuestions?.map((pQuestion, index) => (
-                            <div
-                              key={index}
-                              className="flex flex-row items-center space-x-1">
+                      <div className={styles.fieldGroup}>
+                        <p className={styles.questionsLabel}>Questions:</p>
+                        <div className={styles.questionsList}>
+                          {values.uploadedQuestions?.map((_, index) => (
+                            <div key={index} className={styles.questionItem}>
                               <Field
                                 name={`uploadedQuestions.${index}`}
-                                className="border border-grey-300 p-4 rounded w-full"
+                                className={styles.questionInput}
+                                placeholder={`Question ${index + 1}`}
                               />
-                              <div
-                                className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
-                                onClick={() => remove(index)}>
+                              <button
+                                type="button"
+                                className={styles.deleteButton}
+                                onClick={() => remove(index)}
+                                aria-label={`Remove question ${index + 1}`}>
                                 <RiDeleteBin6Line />
-                              </div>
+                              </button>
                             </div>
                           ))}
-                          <button
-                            type="button"
-                            className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info"
-                            onClick={() => push('')}>
-                            <span className="flex items-center gap-2">
-                              <FaPlus /> Add Question
-                            </span>
-                          </button>
                         </div>
+                        <button
+                          type="button"
+                          className={styles.addButton}
+                          onClick={() => push('')}>
+                          <FaPlus /> Add Question
+                        </button>
                       </div>
                     </>
                   )}
@@ -314,12 +410,15 @@ const AiConfig = () => {
               placeholder="Enter recruiter guide"
             />
 
-            <button
-              type="submit"
-              className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-              disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting' : 'Submit'}
-            </button>
+            <div className={styles.actions}>
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                loading={isSubmitting}>
+                {isEditMode ? 'Update AI Config' : 'Save AI Config'}
+              </Button>
+            </div>
           </Form>
         )}
       </Formik>

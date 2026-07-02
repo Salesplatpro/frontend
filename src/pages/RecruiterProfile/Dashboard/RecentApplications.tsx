@@ -1,15 +1,7 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { ColumnDef, DataTable } from '../../../components'
 import { calculateDaysFromCreation } from '../../../utils'
 
 interface ApplicationRow {
@@ -23,72 +15,49 @@ interface RecentApplicationsProps {
   infoData: ApplicationRow[]
 }
 
-const tableHeadStyle = {
-  color: 'var(--color-grey-900)',
-  backgroundColor: 'var(--color-grey-50)',
-  fontSize: '16px',
-  fontFamily: 'Raleway, sans-serif',
-  fontWeight: 600,
-}
-
-const tableCellStyle = {
-  color: 'var(--color-grey-900)',
-  fontSize: '16px',
-  fontFamily: 'Raleway, sans-serif',
-  fontWeight: 600,
-}
+const columns: ColumnDef<ApplicationRow>[] = [
+  {
+    key: 'name',
+    header: 'Applicant name',
+    align: 'left',
+    render: (row) => row.applicantName,
+  },
+  {
+    key: 'prescreening',
+    header: 'Pre screening',
+    align: 'center',
+    render: (row) => `${row.prescreeningScore ?? 'nill'}%`,
+  },
+  {
+    key: 'cvMatch',
+    header: 'CV match',
+    align: 'center',
+    render: (row) => `${row.cvSimilarityScore ?? 'nill'}%`,
+  },
+  {
+    key: 'dateApplied',
+    header: 'Date Applied',
+    align: 'center',
+    render: (row) => `${calculateDaysFromCreation(row.dateApplied)} days ago`,
+  },
+]
 
 const RecentApplications: React.FC<RecentApplicationsProps> = ({
   infoData,
-}) => {
-  return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
-        <h4 className="text-lg text-[#000] font-semibold">
-          Recent Applications
-        </h4>
-        <Link to="allapplications" className="text-base text-[primary]">
-          View all
-        </Link>
-      </div>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={tableHeadStyle}>Applicant name</TableCell>
-              <TableCell align="center" sx={tableHeadStyle}>
-                Pre screening
-              </TableCell>
-              <TableCell align="center" sx={tableHeadStyle}>
-                Cv match
-              </TableCell>
-              <TableCell align="center" sx={tableHeadStyle}>
-                Date Applied
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {infoData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row" sx={tableCellStyle}>
-                  {row.applicantName}
-                </TableCell>
-                <TableCell align="center" sx={tableCellStyle}>
-                  {row.prescreeningScore || 'nill'}%
-                </TableCell>
-                <TableCell align="center" sx={tableCellStyle}>
-                  {row.cvSimilarityScore || 'nill'}%
-                </TableCell>
-                <TableCell align="center" sx={tableCellStyle}>
-                  {calculateDaysFromCreation(row.dateApplied)} days ago
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+}) => (
+  <div>
+    <div className="mb-4 flex items-center justify-between">
+      <h4 className="text-lg text-[#000] font-semibold">Recent Applications</h4>
+      <Link to="allapplications" className="text-base text-[primary]">
+        View all
+      </Link>
     </div>
-  )
-}
+    <DataTable
+      columns={columns}
+      data={infoData}
+      ariaLabel="Recent applications"
+    />
+  </div>
+)
 
 export default RecentApplications

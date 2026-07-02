@@ -1,10 +1,11 @@
-import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import { FaPlus } from 'react-icons/fa6'
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import { Link } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
+import { Field, Form, Formik, FormikHelpers, useFormikContext } from 'formik'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
+import {
+  WorkType,
+  WorkTypeCheckboxes,
+} from '@/components/features/jobs/WorkTypeCheckboxes'
 import {
   EMPTY_LOCATION,
   LocationSelect,
@@ -14,89 +15,120 @@ import {
   CURRENCY_OPTIONS,
   EXPERIENCE_LEVEL_OPTIONS,
   Select,
-  WORK_MODE_OPTIONS,
 } from '@/components/forms/Select'
+import { TagInput } from '@/components/forms/TagInput/TagInput'
 import TextField from '@/components/forms/TextField'
+import { Button } from '@/components/ui/Button'
+import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
+import { useJobPostCreationMutation } from '@/redux/api/recruiter'
+import { FormValues } from '@/utils/jobPostTypes'
+import { notify } from '@/utils/toastNotifications'
 
-import { useJobPostCreationMutation } from '../../../redux/api/recruiter'
-import { FormValues } from '../../../utils/jobPostTypes'
-import LabelWithAsterisk from '../../../utils/LabelWithAstericks'
-import { notify } from '../../../utils/toastNotifications'
+import styles from './PostJob.module.scss'
 import { validationSchema } from './validationSchema'
 
-const PostJob: React.FC = () => {
-  const [jobId, setJobId] = useState(null)
-  const [jobPostCreation] = useJobPostCreationMutation()
+type PostJobFormValues = Omit<FormValues, 'workMode'> & { workMode: WorkType[] }
 
-  const initialValues: FormValues = {
-    jobBrief: '',
-    role: '',
-    requirements: '',
-    minSalary: '',
-    maxSalary: '',
-    currency: '',
-    workMode: '',
-    experienceLevel: '',
-    location: { ...EMPTY_LOCATION },
-    skills: [''],
-    goals: [''],
-  }
+const DEFAULT_VALUES: PostJobFormValues = {
+  jobBrief: '',
+  role: '',
+  requirements: '',
+  minSalary: '',
+  maxSalary: '',
+  currency: '',
+  workMode: [],
+  experienceLevel: '',
+  location: { ...EMPTY_LOCATION },
+  skills: [],
+  goals: [],
+}
+
+// Syncs Formik values into the draft store on every change.
+const FormObserver: React.FC<{ saveDraft: (v: unknown) => void }> = ({
+  saveDraft,
+}) => {
+  const { values } = useFormikContext<PostJobFormValues>()
+  useEffect(() => {
+    saveDraft(values)
+  }, [values, saveDraft])
+  return null
+}
+
+const PostJob: React.FC = () => {
+  const navigate = useNavigate()
+  const [jobPostCreation, { isLoading: isSubmitting }] =
+    useJobPostCreationMutation()
+  const { draft, saveDraft, clearDraft } = useJobDraftStore()
+
+  // Restore from persisted draft if one exists, otherwise use defaults.
+  const initialValues: PostJobFormValues =
+    draft != null ? (draft as PostJobFormValues) : DEFAULT_VALUES
 
   const onSubmit = async (
-    values: FormValues,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+    values: PostJobFormValues,
+    { setSubmitting }: FormikHelpers<PostJobFormValues>,
   ) => {
-    const location = {
-      country: values.location.country.name,
-      state: values.location.state.name,
-      ...(values.location.city.name ? { city: values.location.city.name } : {}),
-    }
-    const submissionValues = {
+    const payload = {
       ...values,
-      location,
+      location: {
+        country: values.location.country.name,
+        state: values.location.state.name,
+        ...(values.location.city.name
+          ? { city: values.location.city.name }
+          : {}),
+      },
     }
-    try {
-      const data = await jobPostCreation(submissionValues).unwrap()
-      console.log(data)
-      if (data.status) {
-        notify('success', `Job Post Created successfully`, {
-          autoClose: 5000,
-        })
 
-        setJobId(data?.data._id)
-      } else {
-        notify('error', data.message, {
-          autoClose: 5000,
-          transition: Bounce,
-        })
+    try {
+      const response = await jobPostCreation(payload).unwrap()
+      const jobId: string = response?.data?._id
+
+      if (!jobId) {
+        notify(
+          'error',
+          'Job was created but no ID was returned. Please check My Job Posts and add an AI Config from there.',
+        )
+        return
       }
-    } catch (error) {
-      notify('error', 'Failed to create job post', {
-        autoClose: 5000,
-        transition: Bounce,
-      })
+
+      clearDraft()
+      notify('success', 'Job posted! Now configure your AI settings.')
+      navigate(`/recruiterDashboard/postjob/${jobId}`)
+    } catch (err: unknown) {
+      const apiMessage = (err as { data?: { message?: string } })?.data?.message
+      notify(
+        'error',
+        apiMessage ??
+          'Failed to post job. Your progress has been saved — please try again.',
+      )
+    } finally {
+      setSubmitting(false)
     }
-    setSubmitting(false)
   }
 
   return (
-    <div className="md:px-4 py-4 w-full">
-      <div className="md:w-[70%] mx-auto w-full">
-        <h2 className="text-grey-900 text-[32px] mt-6 font-bold">
-          Job details
-        </h2>
-        <p className="text-grey-500 text-[16px] mb-6 font-light">
-          Tell us about your job
-        </p>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}>
-          {({ values, isSubmitting, setFieldValue, errors, touched }) => (
-            <Form>
-              <div className="mb-4">
+    <div className={styles.page}>
+      <div className={styles.pageHeader}>
+        <div className={styles.pageTitleGroup}>
+          <h2 className={styles.pageHeading}>Job details</h2>
+          <p className={styles.pageSubheading}>Tell us about your job</p>
+        </div>
+      </div>
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+        enableReinitialize>
+        {({ values, setFieldValue, errors, touched }) => (
+          <Form>
+            <FormObserver saveDraft={saveDraft} />
+
+            {/* Section 1: Job Overview */}
+            <section className={styles.formSection}>
+              <div className={styles.fieldGroup}>
                 <RoleSelect
-                  label="Select Role"
+                  label="Role"
                   required
                   name="role"
                   value={values.role}
@@ -109,27 +141,60 @@ const PostJob: React.FC = () => {
                   }
                 />
               </div>
-              <TextField
-                label="Job Brief"
-                asterick={true}
-                name="jobBrief"
-                placeholder="Add Job Brief (600 words max)"
-                type="textarea"
-                MAX_WORDS={600}
-              />
-              <TextField
-                label="Requirements"
-                name="requirements"
-                asterick={true}
-                placeholder="Role requirements"
-                type="textarea"
-              />
 
-              <div className="mb-4">
+              <div className={styles.fieldGroup}>
+                <TextField
+                  label="Job Brief"
+                  asterick
+                  name="jobBrief"
+                  placeholder="Describe the role in up to 600 words"
+                  type="textarea"
+                  MAX_WORDS={600}
+                />
+              </div>
+            </section>
+
+            {/* Section 2: Requirements */}
+            <section className={styles.formSection}>
+              <h3 className={styles.sectionTitle}>Requirements</h3>
+
+              <div className={styles.fieldGroup}>
+                <TextField
+                  label="Job Requirements"
+                  asterick
+                  name="requirements"
+                  placeholder="List the qualifications and skills needed"
+                  type="textarea"
+                />
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <Select
+                  label="Experience Level"
+                  required
+                  options={EXPERIENCE_LEVEL_OPTIONS}
+                  value={values.experienceLevel}
+                  onChange={(value) => setFieldValue('experienceLevel', value)}
+                  placeholder="Select experience level"
+                  error={
+                    touched.experienceLevel &&
+                    typeof errors.experienceLevel === 'string'
+                      ? errors.experienceLevel
+                      : undefined
+                  }
+                />
+              </div>
+            </section>
+
+            {/* Section 3: Location & Work */}
+            <section className={styles.formSection}>
+              <h3 className={styles.sectionTitle}>Location &amp; Work</h3>
+
+              <div className={styles.fieldGroup}>
                 <LocationSelect
                   value={values.location}
                   onChange={(location) => setFieldValue('location', location)}
-                  cityLabel="Region/City (Optional)"
+                  cityLabel="Region / City (Optional)"
                   countryRequired
                   stateRequired
                   errors={{
@@ -146,44 +211,14 @@ const PostJob: React.FC = () => {
                   }}
                 />
               </div>
-              <div className="mb-4">
-                <Select
-                  label="Currency"
-                  required
-                  options={CURRENCY_OPTIONS}
-                  value={values.currency}
-                  onChange={(value) => setFieldValue('currency', value)}
-                  placeholder="Select currency"
-                  error={
-                    touched.currency && typeof errors.currency === 'string'
-                      ? errors.currency
-                      : undefined
-                  }
-                />
-              </div>
-              <TextField
-                label="Minimum Salary"
-                name="minSalary"
-                asterick={true}
-                placeholder="Min Salary"
-                type="text"
-              />
-              <TextField
-                label="Maximum Salary"
-                name="maxSalary"
-                asterick={true}
-                placeholder="Max Salary"
-                type="text"
-              />
 
-              <div className="mb-4">
-                <Select
-                  label="Work Mode"
-                  required
-                  options={WORK_MODE_OPTIONS}
+              <div className={styles.fieldGroup}>
+                <p className={styles.label}>
+                  Work Mode<span className={styles.required}>*</span>
+                </p>
+                <WorkTypeCheckboxes
                   value={values.workMode}
                   onChange={(value) => setFieldValue('workMode', value)}
-                  placeholder="Select work mode"
                   error={
                     touched.workMode && typeof errors.workMode === 'string'
                       ? errors.workMode
@@ -191,129 +226,117 @@ const PostJob: React.FC = () => {
                   }
                 />
               </div>
+            </section>
 
-              <div className="mb-4">
-                <Select
-                  label="Experience Level"
+            {/* Section 4: Compensation */}
+            <section className={styles.formSection}>
+              <h3 className={styles.sectionTitle}>Compensation</h3>
+
+              <div className={styles.compensationRow}>
+                <div className={styles.compensationFieldThird}>
+                  <label className={styles.label} htmlFor="currency-trigger">
+                    Currency<span className={styles.required}>*</span>
+                  </label>
+                  <Select
+                    options={CURRENCY_OPTIONS}
+                    value={values.currency}
+                    onChange={(value) => setFieldValue('currency', value)}
+                    placeholder="Select currency"
+                  />
+                  {touched.currency && errors.currency && (
+                    <div className={styles.errorText}>
+                      {errors.currency as string}
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.compensationFieldThird}>
+                  <label className={styles.label} htmlFor="minSalary">
+                    Min Salary<span className={styles.required}>*</span>
+                  </label>
+                  <Field
+                    id="minSalary"
+                    name="minSalary"
+                    type="text"
+                    placeholder="e.g. 300000"
+                    className={styles.input}
+                  />
+                  {touched.minSalary && errors.minSalary && (
+                    <div className={styles.errorText}>
+                      {errors.minSalary as string}
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.compensationFieldThird}>
+                  <label className={styles.label} htmlFor="maxSalary">
+                    Max Salary<span className={styles.required}>*</span>
+                  </label>
+                  <Field
+                    id="maxSalary"
+                    name="maxSalary"
+                    type="text"
+                    placeholder="e.g. 600000"
+                    className={styles.input}
+                  />
+                  {touched.maxSalary && errors.maxSalary && (
+                    <div className={styles.errorText}>
+                      {errors.maxSalary as string}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* Section 5: Goals & Skills */}
+            <section className={styles.formSection}>
+              <h3 className={styles.sectionTitle}>Goals &amp; Skills</h3>
+
+              <div className={styles.fieldGroup}>
+                <TagInput
+                  label="Required Skills"
                   required
-                  options={EXPERIENCE_LEVEL_OPTIONS}
-                  value={values.experienceLevel}
-                  onChange={(value) => setFieldValue('experienceLevel', value)}
-                  placeholder="Select experience level"
+                  value={values.skills}
+                  onChange={(tags) => setFieldValue('skills', tags)}
+                  placeholder="Type a skill and press Enter"
+                  maxLength={250}
                   error={
-                    touched.experienceLevel &&
-                    typeof errors.experienceLevel === 'string'
-                      ? errors.experienceLevel
+                    touched.skills && typeof errors.skills === 'string'
+                      ? errors.skills
                       : undefined
                   }
                 />
               </div>
-              {/* skills */}
-              <div className="mb-4">
-                <LabelWithAsterisk
-                  asterick={true}
-                  label="Skills"
-                  name="skills"
-                />
-                <FieldArray name="skills">
-                  {({ remove, push }) => (
-                    <div>
-                      {values.skills.map((skill, index) => (
-                        <div
-                          key={index}
-                          className="flex mb-2 items-center space-x-0">
-                          <Field
-                            name={`skills.${index}`}
-                            className="border border-grey-300 p-4 rounded-lg w-full"
-                          />
-                          <div
-                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded-lg"
-                            onClick={() => remove(index)}>
-                            <RiDeleteBin6Line />
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
-                        <span className="flex items-center gap-2">
-                          <FaPlus /> Add Skill
-                        </span>
-                      </button>
-                    </div>
-                  )}
-                </FieldArray>
-                <ErrorMessage
-                  name="skills"
-                  component="div"
-                  className="text-red-500 text-sm"
+
+              <div className={styles.fieldGroup}>
+                <TagInput
+                  label="Top Goals"
+                  required
+                  value={values.goals}
+                  onChange={(tags) => setFieldValue('goals', tags)}
+                  placeholder="Type a goal and press Enter"
+                  maxLength={250}
+                  error={
+                    touched.goals && typeof errors.goals === 'string'
+                      ? errors.goals
+                      : undefined
+                  }
                 />
               </div>
-              {/* Goals */}
-              <div className="mb-4">
-                <LabelWithAsterisk
-                  asterick={true}
-                  name="goals"
-                  label="Top 3 Goals"
-                />
-                <FieldArray name="goals">
-                  {({ remove, push }) => (
-                    <div>
-                      {values.goals.map((goal, index) => (
-                        <div
-                          key={index}
-                          className="flex mb-2 items-center space-x-0">
-                          <Field
-                            name={`goals.${index}`}
-                            className="border border-grey-300 p-4 rounded w-full"
-                          />
-                          <div
-                            className="p-2 text-[20px] text-grey-500 cursor-pointer rounded"
-                            onClick={() => remove(index)}>
-                            <RiDeleteBin6Line />
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        className="px-4 py-2 bg-[#d7e8ff] text-info rounded-3xl border border-info b-2 hover:bg-[#92bfff]"
-                        onClick={() => push('')}>
-                        <span className="flex items-center gap-2">
-                          <FaPlus /> Add Goal
-                        </span>
-                      </button>
-                    </div>
-                  )}
-                </FieldArray>
-                <ErrorMessage
-                  name="goals"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-              <div className="mt-10">
-                {jobId !== null ? (
-                  <Link to={`/recruiterDashboard/postjob/${jobId}`}>
-                    <button className="px-20 py-3 bg-primary-strong text-white rounded hover:bg-blue-700">
-                      Next
-                    </button>
-                  </Link>
-                ) : (
-                  <div>
-                    <button
-                      type="submit"
-                      className="bg-primary-strong text-white py-3 px-20 rounded hover:bg-blue-700 transition duration-300"
-                      disabled={isSubmitting}>
-                      {isSubmitting ? 'Submitting' : 'Submit'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
+            </section>
+
+            <div className={styles.actions}>
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                loading={isSubmitting}>
+                Submit Job
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   )
 }
