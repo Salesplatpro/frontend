@@ -2,7 +2,8 @@ import React from 'react'
 import { MdOutlineArrowBackIosNew } from 'react-icons/md'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+
 import { useFetchRecruiterJobPostDetailsQuery } from '../../../redux/api/recruiter'
 import { calculateDaysFromCreation } from '../../../utils'
 import styles from './SingleJobPost.module.scss'
@@ -24,7 +25,7 @@ export const SingleJobPost = () => {
   }
 
   if (isLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   return (

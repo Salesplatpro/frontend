@@ -1,378 +1,245 @@
 import { Alert } from '@mui/material'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React, { useEffect, useState } from 'react'
+import { Field, Form, Formik } from 'formik'
+import React, { useEffect } from 'react'
 
-import upload from '../../../assets/Featured icon.png'
-// import { handleImageChange } from '../../../utils/HandleImageChange'
-import Location from '../../../components/global/Location'
-import Loading from '../../../components/Loading/Loading'
-import AllRoles from '../../../components/Roles/AllRoles'
-import Worktype from '../../../components/Worktype'
-import { experienceLevel } from '../../../utils'
-import { calculateProgress } from '../../../utils/calculateProgress'
+import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
+import { LocationSelect } from '@/components/forms/LocationSelect'
+import { PhoneNumberInput } from '@/components/forms/PhoneNumberInput'
+import { RoleMultiSelect } from '@/components/forms/Roles/RoleMultiSelect'
+import {
+  CURRENCY_OPTIONS,
+  EXPERIENCE_LEVEL_OPTIONS,
+  Select,
+} from '@/components/forms/Select'
+import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
+
 import BioTextArea from './BioTextArea'
+import CvFile from './CvFile'
+import styles from './Profile.module.scss'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
 import UploadCV from './UploadCV'
-import useProfile from './useProfileHook'
+import { useProfileForm } from './useProfileForm'
 
 const TalentProfile = () => {
   const {
-    userInfo,
-    profileImage,
-    setProfileImage,
-    uploadPic,
-    updateProfilePics,
-
+    profile,
+    isLoading,
+    error,
+    isUpdating,
+    isUploading,
+    progress,
     cvFileName,
-    setCvFileName,
-    handleProfileSubmit,
-    userProfileLoading,
-    userProfileError,
-
-    // refetchProfile,
-    handleProfileImageUpload,
-
+    formProgress,
+    picturePreview,
+    setPictureFile,
     initialValues,
-  } = useProfile()
+    updateFormProgress,
+    handleSubmit,
+    handleCvChange,
+  } = useProfileForm()
 
-  const [progress, setProgress] = useState(0)
+  if (isLoading) return <Spinner fullPage />
 
-  if (userProfileLoading) return <Loading />
-
-  if (userProfileError) {
-    return <Alert severity="error">Error fetching user profile Info</Alert>
+  if (error) {
+    return <Alert severity="error">Error fetching user profile info</Alert>
   }
 
   return (
-    <div className="md:w-[80%] w-full m-auto">
-      <div>
-        <TalentProfileHeader
-          userInfo={userInfo}
-          profileImage={profileImage}
-          setProfileImage={setProfileImage}
-          uploadPic={uploadPic}
-          updateProfilePics={updateProfilePics}
-          progress={progress}
-          handleProfileImageUpload={handleProfileImageUpload}
-        />
-      </div>
-      <div className="border p-4 rounded-2xl border-[#D0D5DD] mt-3 w-[100%]">
+    <div className={styles.page}>
+      <TalentProfileHeader
+        profile={profile}
+        progress={formProgress}
+        picturePreview={picturePreview}
+        onPictureSelect={setPictureFile}
+      />
+
+      <div className={styles.formCard}>
         <Formik
           initialValues={initialValues}
-          validationSchema={!userInfo?.profile ? validationSchema : null}
-          onSubmit={handleProfileSubmit}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
           enableReinitialize>
-          {({ values, isSubmitting, setFieldValue }) => {
+          {({
+            values,
+            errors,
+            touched,
+            dirty,
+            isSubmitting,
+            setFieldValue,
+          }) => {
             useEffect(() => {
-              setProgress(calculateProgress(values))
-            }, [values]) // Update progress on form value change
+              updateFormProgress(values)
+            }, [values])
 
             return (
               <Form>
-                <div>
-                  <label
-                    htmlFor="bio"
-                    className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
+                <div className={styles.fieldGroup}>
+                  <label className={styles.label} htmlFor="bio">
                     Bio
                   </label>
                   <BioTextArea />
-
-                  <ErrorMessage
-                    name="bio"
-                    component="div"
-                    className="text-red-500 text-[14px]"
-                  />
+                  {errors.bio && touched.bio && (
+                    <div className={styles.errorText}>{errors.bio}</div>
+                  )}
                 </div>
 
-                <div className="flex md:flex-row flex-col w-[100%] justify-between mt-12">
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      htmlFor="names"
-                      className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
+                <div className={`${styles.row} ${styles.rowLarge}`}>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="name">
                       Name
                     </label>
-                    <Field
+                    <input
+                      id="name"
                       type="text"
-                      id="names"
-                      name="names"
-                      placeholder="Williamson Paints"
                       readOnly
-                      value={`${userInfo?.firstName} ${userInfo?.lastName}`}
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      value={`${profile?.firstName || ''} ${
+                        profile?.lastName || ''
+                      }`}
+                      className={styles.readonlyInput}
                     />
                   </div>
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      htmlFor="role"
-                      className="text-[16px] text-[#344054] font-raleway pb-2 font-medium">
-                      Role
-                    </label>
-                    <div className=" border-gray-300 h-[44px] mt-1">
-                      <AllRoles
-                        name="role"
-                        value={values.role}
-                        onChange={(value: any) => {
-                          setFieldValue('role', value) // Update Formik state
-                        }}
-                        customHeight=""
-                      />
+                  <div className={styles.field}>
+                    <div className={styles.labelRow}>
+                      <span className={styles.label}>Role</span>
+                      {profile?.profile?.roleChangeCount !== undefined && (
+                        <span className={styles.roleChangeHint}>
+                          {profile.profile.roleChangeCount}/3 changes left
+                        </span>
+                      )}
                     </div>
-                  </div>
-                </div>
-
-                <div className="flex md:flex-row flex-col w-[100%] justify-between lg:mt-6">
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      htmlFor="phoneNumber"
-                      className="text-[16px] text-[#344054] font-medium font-raleway pb-2 ">
-                      Phone number
-                    </label>
-                    <Field
-                      type="text"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      placeholder="08198675757"
-                      value={userInfo?.phone}
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
-                    />
-                    <ErrorMessage
-                      name="phoneNumber"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
-                  </div>
-
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      htmlFor="workTypes"
-                      className="text-[16px] text-[#344054] font-medium font-raleway pb-2">
-                      Work Type
-                    </label>
-                    <Worktype
-                      options={[
-                        { value: 'remote', label: 'Remote' },
-                        { value: 'onSite', label: 'On Site' },
-                        { value: 'hybrid', label: 'Hybrid' },
-                      ]}
-                      initialSelected={{
-                        remote: values.remote,
-                        onSite: values.onSite,
-                        hybrid: values.hybrid,
-                      }}
-                      onSelectionChange={(selected) => {
-                        setFieldValue('remote', selected.remote)
-                        setFieldValue('onSite', selected.onSite)
-                        setFieldValue('hybrid', selected.hybrid)
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex md:flex-row flex-col w-[100%] justify-between lg:mt-6">
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <Location
-                      locationTitle="Country"
-                      locationLabel="Country"
-                      geoId={null}
-                      isCountry={true}
-                      selectedName={values.location.country.name}
-                      customHeight=""
-                      onChange={(geoId) => {
-                        setFieldValue('location.country.geoId', geoId)
-                        setFieldValue('location.state', {
-                          name: '',
-                          geoId: null,
-                        })
-                        setFieldValue('location.city', {
-                          name: '',
-                          geoId: null,
-                        })
-                      }}
-                    />
-                  </div>
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <Location
-                      locationTitle="State"
-                      locationLabel="States/Province"
-                      geoId={values.location.country.geoId}
-                      isCountry={false}
-                      selectedName={values.location.state.name}
-                      customHeight=""
-                      onChange={(geoId) => {
-                        setFieldValue('location.state.geoId', geoId)
-                        setFieldValue('location.city', {
-                          name: '',
-                          geoId: null,
-                        })
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="flex md:flex-row flex-col w-[100%] justify-between lg:mt-6">
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <Location
-                      locationTitle="City"
-                      locationLabel="Region"
-                      geoId={values.location.state.geoId}
-                      isCountry={false}
-                      selectedName={values.location.city.name}
-                      customHeight=""
-                      onChange={(geoId) => {
-                        setFieldValue('location.city.geoId', geoId)
-                      }}
-                    />
-                  </div>
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      className="text-[14px] text-[#344054] font-medium"
-                      htmlFor="experience">
-                      Experience Level
-                    </label>
-                    <Field
-                      as="select"
-                      id="experience"
-                      name="experience"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1">
-                      <option value="">Select experience Level</option>
-                      {Object.values(experienceLevel).map((value) => (
-                        <option key={value} value={value}>
-                          {value}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage
-                      name="experience"
-                      component="div"
-                      className="text-red-500"
+                    <RoleMultiSelect
+                      name="role"
+                      value={values.role}
+                      onChange={(value) => setFieldValue('role', value)}
                     />
                   </div>
                 </div>
 
-                <div className="flex md:flex-row flex-col w-[100%] justify-between lg:mt-6">
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      htmlFor="minSalary"
-                      className="text-[14px] text-[#344054] font-medium">
+                <div className={styles.row}>
+                  <div className={styles.field}>
+                    <PhoneNumberInput name="phone" label="Phone Number" />
+                  </div>
+                  <div className={styles.field}>
+                    <Select
+                      label="Experience Level"
+                      options={EXPERIENCE_LEVEL_OPTIONS}
+                      value={values.experience}
+                      onChange={(value) => setFieldValue('experience', value)}
+                      placeholder="Select experience level"
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.row}>
+                  <div className={styles.fullField}>
+                    <div className={styles.label}>Work Type</div>
+                    <WorkTypeCheckboxes
+                      value={values.workType}
+                      onChange={(value) => setFieldValue('workType', value)}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.row}>
+                  <div className={styles.fullField}>
+                    <LocationSelect
+                      value={values.location}
+                      onChange={(location) =>
+                        setFieldValue('location', location)
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.row}>
+                  <div className={styles.fieldThird}>
+                    <Select
+                      label="Currency"
+                      options={CURRENCY_OPTIONS}
+                      value={values.currency}
+                      onChange={(value) => setFieldValue('currency', value)}
+                      placeholder="Select currency"
+                    />
+                  </div>
+                  <div className={styles.fieldThird}>
+                    <label className={styles.label} htmlFor="minSalary">
                       Min Salary
                     </label>
                     <Field
                       type="text"
                       id="minSalary"
                       name="minSalary"
-                      placeholder="Your minSalary"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      placeholder="Your minimum salary"
+                      className={styles.input}
                     />
-                    <ErrorMessage
-                      name="minSalary"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
+                    {errors.minSalary && touched.minSalary && (
+                      <div className={styles.errorText}>{errors.minSalary}</div>
+                    )}
                   </div>
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label
-                      htmlFor="maxSalary"
-                      className="text-[14px] text-[#344054] font-medium">
+                  <div className={styles.fieldThird}>
+                    <label className={styles.label} htmlFor="maxSalary">
                       Max Salary
                     </label>
                     <Field
                       type="text"
                       id="maxSalary"
                       name="maxSalary"
-                      placeholder="Your Max Salary"
-                      className="w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[44px] mt-1"
+                      placeholder="Your maximum salary"
+                      className={styles.input}
                     />
-                    <ErrorMessage
-                      name="maxSalary"
-                      component="div"
-                      className="text-red-500 text-[14px]"
-                    />
+                    {errors.maxSalary && touched.maxSalary && (
+                      <div className={styles.errorText}>{errors.maxSalary}</div>
+                    )}
                   </div>
                 </div>
 
-                <div className="inline-block lg:mt-6 w-full">
-                  {userInfo.profile?.cv ? (
-                    // If a CV is already uploaded, show the download link
-                    <div className="md:w-[48%] mb-6 lg:md:mb-0 ">
-                      <label
-                        htmlFor="cv"
-                        className="text-[14px] text-[#344054] font-medium">
-                        Current CV
-                      </label>
-                      <div className="relative w-[100%]">
-                        <div>
-                          <a
-                            href={userInfo?.profile.cv}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block text-[#4884DF] mt-1">
-                            {userInfo?.profile?.cv.split('/').pop()}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="inline-block lg:mt-6 w-full">
-                  <div className="md:w-[48%] mb-6 lg:md:mb-0">
-                    <label htmlFor="cv" className="text-[14px] text-[#344054]">
-                      {/* Upload New CV */}
-                      {userInfo?.profile?.cv ? 'Replace CV' : 'Upload CV'}
+                <div className={styles.row}>
+                  <div className={styles.fullField}>
+                    <label className={styles.label} htmlFor="cv">
+                      {profile?.profile?.cv?.url ? 'CV / Resume' : 'Upload CV'}
                     </label>
-                    <div className="relative w-[100%]">
-                      <input
-                        id="cv"
-                        name="cv"
-                        type="file"
-                        onChange={(event) => {
-                          if (event.currentTarget.files) {
-                            const file = event.currentTarget.files[0]
-                            setFieldValue('cv', file)
-                            setCvFileName(file.name) // Update file name state
-                          }
-                        }}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                      <UploadCV cvFileName={cvFileName} upload={upload} />
-                    </div>
-                    <ErrorMessage
-                      name="cv"
-                      component="div"
-                      className="text-red-500 mt-1"
+                    <input
+                      id="cv"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      className={styles.fileInput}
+                      disabled={isUploading}
+                      onChange={(event) => {
+                        const file = event.currentTarget.files?.[0]
+                        if (file) handleCvChange(file)
+                        event.target.value = ''
+                      }}
                     />
+                    {profile?.profile?.cv?.url && !isUploading ? (
+                      <CvFile
+                        fileName={decodeURIComponent(
+                          profile.profile.cv.url.split('/').pop() || 'CV',
+                        )}
+                        url={profile.profile.cv.url}
+                      />
+                    ) : (
+                      <label htmlFor="cv" className={styles.fileInputWrapper}>
+                        <UploadCV
+                          fileName={isUploading ? cvFileName : null}
+                          progress={progress}
+                        />
+                      </label>
+                    )}
                   </div>
                 </div>
 
-                <div className="mt-6 flex justify-end">
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFieldValue('bio', initialValues.bio)
-                        setFieldValue('role', initialValues.role)
-                        setFieldValue('minSalary', initialValues.minSalary)
-                        setFieldValue('maxSalary', initialValues.maxSalary)
-                        setFieldValue('experience', initialValues.experience)
-                        setFieldValue('cv', null)
-                        setCvFileName(null) // Reset CV file name
-                      }}
-                      className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 mr-2">
-                      Cancel
-                    </button>
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
-                      {userInfo?.profile
-                        ? isSubmitting
-                          ? 'Updating...'
-                          : 'Update Profile'
-                        : isSubmitting
-                        ? 'Submitting...'
-                        : 'Save'}
-                    </button>
-                  </>
+                <div className={styles.actions}>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    disabled={
+                      (!dirty && !picturePreview) || isSubmitting || isUpdating
+                    }
+                    loading={isSubmitting || isUpdating}>
+                    Save
+                  </Button>
                 </div>
               </Form>
             )

@@ -10,24 +10,25 @@ import {
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { Spinner } from '@/components/ui/Spinner'
+
 import { Button } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
-import { PageHeaderTitle } from '../../../components/PageHeaderTitle'
 import { useScreenWidth } from '../../../hooks'
 import { useGetRecruiterShortlistQuery } from '../../../redux/api/recruiter'
 import { ResponsiveTableRenderer } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 
 const tableHeadStyle = {
-  color: '#101828',
-  backgroundColor: '#F8F8F8',
+  color: 'var(--color-grey-900)',
+  backgroundColor: 'var(--color-grey-50)',
   fontSize: '18px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
 }
 
 const tableCellStyle = {
-  color: '#101828',
+  color: 'var(--color-grey-900)',
   fontSize: '16px',
   fontFamily: 'Raleway, sans-serif',
   fontWeight: 600,
@@ -45,7 +46,7 @@ export const Shortlist = () => {
         description="View shortlisted talents ready "
       />
       {isLoading ? (
-        <Loading />
+        <Spinner fullPage />
       ) : (
         <div className="flex flex-col space-y-28 max-w-[1005px] ml-10">
           <TableContainer component={Paper}>
@@ -88,7 +89,7 @@ export const Shortlist = () => {
                       <TableCell sx={tableCellStyle}>{item.rank}</TableCell>
                       <TableCell sx={tableCellStyle}>
                         <Link to="">
-                          <Button textType="small" title="Details" />
+                          <Button size="sm">Details</Button>
                         </Link>
                       </TableCell>
                     </TableRow>
@@ -134,7 +135,7 @@ export const Shortlist = () => {
                       </TableCell>
                       <TableCell sx={tableCellStyle}>
                         <Link to="">
-                          <Button textType="small" title="Details" />
+                          <Button size="sm">Details</Button>
                         </Link>
                       </TableCell>
                     </TableRow>

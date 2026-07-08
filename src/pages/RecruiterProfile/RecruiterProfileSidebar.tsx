@@ -5,8 +5,9 @@ import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
 import { Outlet } from 'react-router-dom'
 
+import { sidebarData } from '@/components/features/recruiter/SideBar/sidebarData'
+
 import { SideBar } from '../../components'
-import { sidebarData } from '../../components/RecruiterProfile/SideBar/sidebarData'
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
 const RecruiterProfileSidebar = () => {
@@ -22,6 +23,7 @@ const RecruiterProfileSidebar = () => {
       </div>
       <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
+          // @ts-expect-error TODO: fix type error
           sideBarData={sidebarData}
           handleClick={() => setIsOpen(false)}
         />

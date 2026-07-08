@@ -1,20 +1,21 @@
+import 'react-responsive-modal/styles.css'
+
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { Modal } from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import RichTextDisplay from '../../../components/global/RichTextDisplay'
-import Loading from '../../../components/Loading/Loading'
-import { ShareOptions } from '../../../components/ShareOption/ShareOptions'
-import { useIndividualJobQuery } from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
-import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
-import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
-import { notify } from '../../../utils/toastNotifications'
+import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { Spinner } from '@/components/ui/Spinner'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
+import { useIndividualJobQuery } from '../../../redux/api/talent'
+import { capitalizeFirstWord, JobProfileProps } from '../../../utils'
+import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import { notify } from '../../../utils/toastNotifications'
 
 const PostedJob = () => {
   const { jobId } = useParams<{ jobId: string }>()
@@ -23,11 +24,9 @@ const PostedJob = () => {
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
-  const user = useSelector((state: RootState) => state.auth)
-  const userRole = user?.user?.userRole || ' '
-  const isLoggedIn = !!user?.token
-  console.log(userRole)
-  console.log(isLoggedIn)
+  const { user, token } = useAuthStore()
+  const userRole = user?.userRole || ' '
+  const isLoggedIn = !!token
 
   const [shareLinks, setShareLinks] = useState<{
     facebook: string
@@ -49,7 +48,7 @@ const PostedJob = () => {
     }
   }, [data, error])
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <Spinner fullPage />
 
   const closeModal = () => {
     setIsModalOpen(false)
@@ -82,8 +81,7 @@ const PostedJob = () => {
 
     if (userRole === 'talent') {
       navigate(`/talentDashboard/job/${jobId}`)
-    } else if (!user?.token) {
-      sessionStorage.setItem('pending_job_application', jobId ?? '')
+    } else if (!isLoggedIn) {
       navigate(`/login?from=job_application`)
     }
   }
@@ -128,32 +126,32 @@ const PostedJob = () => {
         <div className="flex md:flex-row flex-col justify-between items-start w-full md:space-x-10 mx-auto md:mt-10 mt-6">
           <div className="w-full text-start">
             <div className="">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your role at {''} {jobProfile?.postedBy?.firstName} {''}{' '}
                 {jobProfile?.postedBy?.lastName}
               </h5>
               <RichTextDisplay
                 content={jobProfile?.jobBrief || ' '}
-                className="text-[#667085] text-base mt-0 text-justify"
+                className="text-grey-500 text-base mt-0 text-justify"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Requirements
               </h5>
               <RichTextDisplay
                 content={jobProfile?.requirements || ' '}
-                className="text-[#667085] text-base mt-0 text-justify"
+                className="text-grey-500 text-base mt-0 text-justify"
               />
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Skills
               </h5>
               {jobProfile?.skills && (
                 <ul className="list-disc ml-5 pl-0">
                   {jobProfile?.skills.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
+                    <li key={i} className="text-grey-500 text-base">
                       {item}
                     </li>
                   ))}
@@ -161,13 +159,13 @@ const PostedJob = () => {
               )}
             </div>
             <div className="mt-4">
-              <h5 className="text-[#101828] text-lg text-start font-semibold">
+              <h5 className="text-grey-900 text-lg text-start font-semibold">
                 Your Goals
               </h5>
               {jobProfile?.goals && (
                 <ul className="list-disc ml-5 pl-0">
                   {jobProfile?.goals.map((item, i) => (
-                    <li key={i} className="text-[#667085] text-base">
+                    <li key={i} className="text-grey-500 text-base">
                       {item}
                     </li>
                   ))}
@@ -189,18 +187,18 @@ const PostedJob = () => {
                 Apply
               </button>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Job Type
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {capitalizeFirstWord(jobProfile?.workMode)}
                 </h5>
               </div>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Location
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {jobProfile?.location &&
                     capitalizeFirstWord(jobProfile?.location?.country)}{' '}
                   {''}
@@ -209,10 +207,10 @@ const PostedJob = () => {
                 </h5>
               </div>
               <div className="mt-4">
-                <p className="text-[#667085] text-sm text-start font-medium">
+                <p className="text-grey-500 text-sm text-start font-medium">
                   Experience Level
                 </p>
-                <h5 className="text-[#101828] text-base text-start font-semibold">
+                <h5 className="text-grey-900 text-base text-start font-semibold">
                   {capitalizeFirstWord(jobProfile?.experienceLevel)}
                 </h5>
               </div>

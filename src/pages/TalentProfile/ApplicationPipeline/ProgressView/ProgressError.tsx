@@ -19,7 +19,7 @@ const ProgressError: React.FC<Props> = ({ error }) => {
         loop={false}
         className="w-28 h-28 lg:w-44 lg:h-44 md:w-36 md:h-36"
       />
-      <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-[#4b4b4b] pt-4">
+      <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-charcoal pt-4">
         {errorMessage}
       </h2>
     </div>

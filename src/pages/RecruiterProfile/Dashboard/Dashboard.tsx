@@ -1,7 +1,9 @@
 import { Alert } from '@mui/material'
 import React from 'react'
 
-import Loading from '../../../components/Loading/Loading'
+import { Spinner } from '@/components/ui/Spinner'
+import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
+
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
 import ApplicationTracker from './ApplicationTracker'
 import RecentApplications from './RecentApplications'
@@ -14,9 +16,21 @@ const Dashboard = () => {
     error: dashboardError,
   } = useFetchDashboardQuery({})
 
-  if (dashboardLoading) return <Loading />
+  if (dashboardLoading)
+    return (
+      <>
+        <Spinner fullPage />
+        <WelcomeModal />
+      </>
+    )
 
-  if (dashboardError) return <Alert severity="error">Error Fetching Data</Alert>
+  if (dashboardError)
+    return (
+      <>
+        <Alert severity="error">Error Fetching Data</Alert>
+        <WelcomeModal />
+      </>
+    )
 
   return (
     <div className="w-[80%] mx-auto mt-10">
@@ -31,6 +45,7 @@ const Dashboard = () => {
       <div className="mt-10 h-[300px]">
         <RecentCompilation />
       </div>
+      <WelcomeModal />
     </div>
   )
 }

@@ -28,14 +28,14 @@ const PricingSwitch: React.FC<PricingSwitchProp> = ({
       <button
         onClick={toggle}
         className={`relative z-10 w-1/2 px-2 py-2 text-[13px] rounded-lg lg:px-3 lg:py-3 lg:text-[18px] md:px-4 md:py-4 md:text-[16px] sm:px-3 sm:py-3 sm:text-[15px] font-inter font-medium text-center cursor-pointer transition-colors duration-300
-        ${isSelected ? 'text-[#4985DF]' : 'text-[#6941C6]'}`}>
+        ${isSelected ? 'text-primary' : 'text-[#6941C6]'}`}>
         Monthly billing
       </button>
 
       <button
         onClick={toggle}
         className={`relative z-10 w-1/2 px-2 py-2 text-[13px] rounded-lg lg:px-3 lg:py-3 lg:text-[18px] md:px-4 md:py-4 md:text-[16px] sm:px-3 sm:py-3 sm:text-[15px] font-inter font-medium text-center cursor-pointer transition-colors duration-300
-        ${!isSelected ? 'text-[#4985DF]' : 'text-[#6941C6]'}`}>
+        ${!isSelected ? 'text-primary' : 'text-[#6941C6]'}`}>
         Annual billing
       </button>
     </div>

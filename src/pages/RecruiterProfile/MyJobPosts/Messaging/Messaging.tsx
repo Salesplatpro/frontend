@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Bounce } from 'react-toastify'
 
-import { OutlineButton, RecruiterButton } from '../../../../components'
+import { Button } from '../../../../components'
 import {
   useGetMessagesSentToTalentQuery,
   useSendTalentMessageMutation,
@@ -81,14 +81,19 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
       </div>
       <div className="w-full flex justify-between">
         <div className="w-1/3">
-          <RecruiterButton
-            buttonTitle={`${isSending ? 'Sending...' : 'Send'}`}
+          <Button
+            variant="primary"
+            size="wide"
+            fullWidth
             onClick={handleSendMessage}
-            disabled={isSending}
-          />
+            disabled={isSending}>
+            {isSending ? 'Sending...' : 'Send'}
+          </Button>
         </div>
         <div className="w-1/3">
-          <OutlineButton buttonTitle="Broadcast" />
+          <Button variant="outline" size="wide" fullWidth>
+            Broadcast
+          </Button>
         </div>
       </div>
     </div>

@@ -1,0 +1,175 @@
+// Amber palette — no design token exists yet; grouped here for future extraction
+$amber-50: #fffbeb;
+$amber-100: #fef3c7;
+$amber-300: #fcd34d;
+$amber-500: #f59e0b;
+$amber-700: #b45309;
+
+// ── Job Title cell ─────────────────────────────────────────────────────────
+.titleCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+// Small amber dot shown when AI config is missing; MUI Tooltip reveals label on hover
+.aiConfigDot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: $amber-500;
+  cursor: default;
+}
+
+.titleLink {
+  display: block;
+  max-width: 260px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-heading);
+  font-family: var(--font-heading);
+  text-transform: capitalize;
+}
+
+// ── Applicants cell ────────────────────────────────────────────────────────
+.applicantsButton {
+  color: var(--color-primary-strong);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+  line-height: 1.75rem;
+  text-decoration: underline;
+}
+
+// ── Date cell ──────────────────────────────────────────────────────────────
+.dateText {
+  white-space: nowrap;
+}
+
+// ── Details / actions cell ─────────────────────────────────────────────────
+.actionsCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.viewJobButton {
+  color: var(--color-text-inverse);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  line-height: 1.75rem;
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--color-primary-strong);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+
+.addAiConfigButton {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  line-height: 1.75rem;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid $amber-500;
+  color: $amber-700;
+  background-color: $amber-50;
+  white-space: nowrap;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background-color: $amber-100;
+  }
+}
+
+// ── Row status colours ─────────────────────────────────────────────────────
+// Green: job complete (has AI config)
+// Amber: incomplete (no AI config)
+// Red: paused or closed job
+.rowComplete {
+  border-left: 4px solid #16a34a !important;
+  background-color: #f0fdf4 !important;
+}
+
+.rowIncomplete {
+  border-left: 4px solid $amber-500 !important;
+  background-color: $amber-50 !important;
+}
+
+.rowClosed {
+  border-left: 4px solid #dc2626 !important;
+  background-color: #fef2f2 !important;
+}
+
+// ── Share modal ────────────────────────────────────────────────────────────
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 400px;
+  min-width: 280px;
+  margin: 0 auto;
+}
+
+.modalTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-heading);
+
+  @media (min-width: 640px) {
+    font-size: var(--text-xl);
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1.375rem; // 22px — between --text-xl and --text-2xl
+  }
+}
+
+.modalOptions {
+  margin-top: var(--space-4);
+  width: 100%;
+}
+
+.shareButton {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  padding: var(--space-3) 0;
+  margin: var(--space-2) 0;
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  background-color: var(--color-bg-page);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  @media (min-width: 640px) {
+    font-size: var(--text-md);
+  }
+
+  @media (min-width: 768px) {
+    font-size: var(--text-lg);
+  }
+
+  &:hover {
+    background-color: var(--color-border);
+  }
+}
+
+.shareIcon {
+  margin-right: var(--space-3);
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}

@@ -1,0 +1,181 @@
+.container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  display: flex;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 21.38px;
+  margin-bottom: 6px;
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: var(--space-1);
+}
+
+.trigger {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  padding-right: var(--space-8);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-text-heading);
+  background-color: var(--color-white);
+  box-sizing: border-box;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+}
+
+.error {
+  border-color: var(--color-danger);
+}
+
+.disabled {
+  background-color: var(--color-bg-subtle);
+  cursor: not-allowed;
+}
+
+.placeholder {
+  color: var(--color-text-muted);
+}
+
+.arrow {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-dropdown);
+  box-sizing: border-box;
+}
+
+.search {
+  width: 100%;
+  height: 36px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-heading);
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.option {
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  color: var(--color-text-heading);
+
+  &:hover {
+    background-color: var(--color-bg-subtle);
+  }
+}
+
+.selectedOption {
+  background-color: var(--color-bg-subtle);
+  font-weight: var(--weight-medium);
+}
+
+.empty {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.errorText {
+  margin-top: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+}
+
+.multiTrigger {
+  height: 44px;
+  padding: 0 var(--space-8) 0 var(--space-3);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  max-width: 160px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-heading);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.tagLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tagMore {
+  flex-shrink: 0;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.tagRemove {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-text-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-danger);
+  }
+}

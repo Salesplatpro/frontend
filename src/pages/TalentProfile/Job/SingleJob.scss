@@ -1,19 +1,19 @@
-.shared {
+%shared {
   display: flex;
   align-items: center;
 }
 
-.shared2 {
+%shared2 {
   display: flex;
   flex-direction: column;
 }
 
 .singlejob-container {
-  background: #f8f8f8;
+  background: var(--color-grey-50);
   padding: 24px 16px;
   border-radius: 10px;
   align-items: flex-start;
-  @extend .shared;
+  @extend %shared;
   gap: 24px;
   box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
 
@@ -24,13 +24,13 @@
 }
 
 .title-container {
-  @extend .shared2;
+  @extend %shared2;
   width: 100%;
   gap: 8px;
 }
 
 .jobTitle {
-  @extend .shared;
+  @extend %shared;
   justify-content: space-between;
   font-weight: normal;
   gap: 16px;
@@ -51,7 +51,7 @@
 }
 
 .category {
-  @extend .shared;
+  @extend %shared;
   width: max-content;
   gap: 6px;
   font-size: 14px;
@@ -63,7 +63,7 @@
 }
 
 .description {
-  color: #667085;
+  color: var(--color-grey-500);
 }
 
 .details-container {
@@ -77,5 +77,5 @@
 }
 
 .jobdetails {
-  @extend .shared;
+  @extend %shared;
 }

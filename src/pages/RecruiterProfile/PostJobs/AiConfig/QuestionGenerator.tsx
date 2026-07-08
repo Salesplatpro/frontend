@@ -1,6 +1,8 @@
 import React from 'react'
 import { FaPlus } from 'react-icons/fa6'
 
+import styles from './QuestionGenerator.module.scss'
+
 type QuestionGeneratorProps = {
   pair: string
   generatedQuestion: string | null
@@ -16,16 +18,12 @@ const QuestionGenerator = ({
   onAddQuestion,
   isLoading,
 }: QuestionGeneratorProps) => (
-  <div className="mb-4">
-    <h3 className="font-semibold text-[14px] text-[#434144] mb-1">
-      Dichotomy Pair {pair}
-    </h3>
+  <div className={styles.container}>
+    <h3 className={styles.pairTitle}>Dichotomy Pair {pair}</h3>
     <button
       type="button"
       onClick={onGenerate}
-      className={`p-2 ${
-        isLoading ? 'bg-gray-500' : 'bg-[#3C6FD4]'
-      } text-white text-[14px] rounded mr-2`}
+      className={styles.generateButton}
       disabled={isLoading}>
       {isLoading
         ? 'Loading...'
@@ -34,15 +32,13 @@ const QuestionGenerator = ({
         : `Generate ${pair}`}
     </button>
     {generatedQuestion && (
-      <div className="bg-white shadow-md p-4 rounded-lg my-3">
-        <p>{generatedQuestion}</p>
+      <div className={styles.previewCard}>
+        <p className={styles.previewText}>{generatedQuestion}</p>
         <button
           type="button"
           onClick={onAddQuestion}
-          className="px-4 mt-2 py-2 bg-[#d7e8ff] text-[#006BFF] rounded-3xl">
-          <span className="flex items-center gap-2">
-            <FaPlus /> Add {pair} Question
-          </span>
+          className={styles.addButton}>
+          <FaPlus /> Add {pair} Question
         </button>
       </div>
     )}

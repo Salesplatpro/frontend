@@ -91,14 +91,6 @@ a {
   @apply text-white;
 }
 
-.w-full {
-  width: 100vw;
-}
-
-.container {
-  /* max-width: 1280px; */
-}
-
 .wrapper {
   padding: 40px auto;
 }
@@ -167,32 +159,83 @@ a {
   }
 }
 
-/* Override ReactQuill default styles */
-.custom-quill-wrapper {
-  border: 1px solid #d0d5dd;
-  border-radius: 8px;
-  padding: 0;
-  overflow: hidden;
-}
-
-/* Remove extra borders inside ReactQuill */
-.ql-toolbar {
-  border-bottom: 1px solid #d0d5dd !important;
-  background: transparent;
-  padding: 0 0 8px 0; /* Only padding bottom */
-  display: flex;
-  justify-content: flex-start;
-}
-
-.ql-container {
+/* ReactQuill — wrapper sizing and border handled by RichTextEditor.module.scss */
+.ql-toolbar.ql-snow {
   border: none !important;
-  height: calc(100% - 42px); /* Subtract toolbar height */
+  border-bottom: 1px solid var(--color-border-strong) !important;
+  background-color: var(--color-bg-subtle);
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-body);
+  flex-shrink: 0;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .ql-editor {
-  padding: 0;
+  min-height: 140px;
+  padding: var(--space-3);
   font-size: 1rem;
-  font-family: inherit;
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-heading);
+  line-height: var(--leading-normal);
+
+  &.ql-blank::before {
+    color: var(--color-text-muted);
+    font-style: normal;
+  }
+}
+
+.custom-quill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ── Quill font-family rendering ── */
+.ql-font-raleway {
+  font-family: var(--font-heading);
+}
+.ql-font-poppins {
+  font-family: var(--font-accent);
+}
+.ql-font-serif {
+  font-family: Georgia, serif;
+}
+.ql-font-monospace {
+  font-family: monospace;
+}
+
+/* ── Font picker dropdown labels ── */
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='inter']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='inter']::before {
+  content: 'Inter';
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='raleway']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='raleway']::before {
+  content: 'Raleway';
+  font-family: var(--font-heading);
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='poppins']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='poppins']::before {
+  content: 'Poppins';
+  font-family: var(--font-accent);
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='serif']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='serif']::before {
+  content: 'Serif';
+  font-family: Georgia, serif;
+}
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value='monospace']::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value='monospace']::before {
+  content: 'Monospace';
+  font-family: monospace;
 }
 
 .rich-text-content {
@@ -228,68 +271,15 @@ a {
   font-family: monospace;
 }
 
-/* Mobile Styles */
 @media (max-width: 768px) {
-  .custom-quill-wrapper {
-    border-radius: 6px; /* Slightly smaller border radius for mobile */
-    padding: 0; /* Remove padding for mobile */
-  }
-
-  .ql-toolbar {
-    border-bottom: 1px solid #d0d5dd !important;
-    background: transparent;
-    padding: 0 0 6px 0; /* Reduced padding on mobile */
-    display: flex;
-    flex-direction: row;
-    /* justify-content: flex-start; */
-    justify-content: center; /* Center toolbar items for mobile */
-  }
-
-  .ql-container {
-    height: 50%; /* Reduce height for mobile to account for smaller toolbar */
-  }
-
-  .ql-editor {
-    font-size: 0.875rem; /* Smaller font size for mobile */
-    padding: 8px; /* Add a bit of padding to make the editor more comfortable on mobile */
-  }
-}
-
-/* Extra small mobile devices (portrait mode) */
-@media (max-width: 480px) {
-  .ql-toolbar {
-    display: flex;
-    flex-direction: row; /* Stack toolbar buttons vertically on smaller screens */
-    justify-content: center;
-    padding: 4px 0; /* More compact toolbar */
-  }
-
-  .ql-container {
-    height: 60%; /* Reduce height for mobile to account for smaller toolbar */
-  }
-
-  .ql-editor {
-    font-size: 0.8rem; /* Even smaller font size for very small devices */
-    padding: 6px; /* More padding for better readability */
-  }
-}
-
-@media (max-width: 400px) {
-  .ql-toolbar {
+  .ql-toolbar.ql-snow {
     flex-wrap: wrap;
-    justify-content: center; /* Center the toolbar icons */
-    padding: 4px 0; /* Slight padding for better spacing */
-    gap: 6px; /* Add space between buttons */
-  }
-
-  .ql-container {
-    height: auto; /* Let content grow naturally */
-    min-height: 150px; /* Minimum readable height */
+    padding: var(--space-2);
   }
 
   .ql-editor {
-    font-size: 0.85rem; /* Slightly smaller text */
-    padding: 6px; /* Better readability */
+    font-size: 0.9rem;
+    min-height: 100px;
   }
 }
 

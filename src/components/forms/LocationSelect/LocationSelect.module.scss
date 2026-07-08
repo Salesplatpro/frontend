@@ -1,0 +1,15 @@
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}

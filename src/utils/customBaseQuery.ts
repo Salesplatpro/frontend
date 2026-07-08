@@ -5,6 +5,8 @@ import {
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react'
 
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+
 import { getToken } from './authUtils'
 import { baseUrl } from './baseConfig'
 import { notify } from './toastNotifications'
@@ -28,11 +30,7 @@ export const customBaseQuery: BaseQueryFn<
   const result = await baseQuery(args, api, extraOptions)
 
   if (result.error?.status === 401) {
-    const currentPath = window.location.pathname + window.location.search
-    sessionStorage.setItem('redirectAfterLogin', currentPath)
-
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    useAuthStore.getState().logout()
 
     notify('error', 'Session expired. Please log in again.', {
       autoClose: 5000,

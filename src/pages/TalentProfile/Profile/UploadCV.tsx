@@ -1,26 +1,35 @@
 import React from 'react'
 
+import upload from '@/assets/Featured icon.png'
+
+import styles from './UploadCV.module.scss'
+
 interface UploadCVProps {
-  cvFileName: string | null
-  upload: string
+  fileName?: string | null
+  progress?: number | null
 }
 
-const UploadCV: React.FC<UploadCVProps> = ({ cvFileName, upload }) => {
+const UploadCV: React.FC<UploadCVProps> = ({ fileName, progress }) => {
   return (
-    <button
-      type="button"
-      className=" w-[100%] p-2 rounded-lg border border-[#D0D5DD] h-[150px] mt-2 bg-white text-[#344054] flex items-center justify-center flex-col">
-      <img src={upload} alt="uploadCv" />
-      {cvFileName ? (
-        <span>{cvFileName}</span>
+    <div className={styles.box}>
+      <img src={upload} alt="" className={styles.icon} />
+      {fileName ? (
+        <span className={styles.fileName}>{fileName}</span>
       ) : (
-        <span className="text-[#001127] font-raleway font-semibold space-y-2">
-          Click to upload{' '}
-          <span className="text-gray-500 font-normal">or drag and drop</span>
-          <p className="text-gray-500 font-light">DOC, PDF</p>
+        <span className={styles.placeholder}>
+          Click to upload <span className={styles.hint}>or drag and drop</span>
+          <p className={styles.subHint}>DOC, PDF</p>
         </span>
       )}
-    </button>
+      {progress != null && (
+        <div className={styles.progress}>
+          <div
+            className={styles.progressBar}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+    </div>
   )
 }
 

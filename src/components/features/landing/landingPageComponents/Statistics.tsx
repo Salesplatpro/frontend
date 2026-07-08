@@ -1,0 +1,66 @@
+import cn from 'classnames'
+import React from 'react'
+
+import { Text } from '@/components/ui/Typography'
+
+import { containerPadding } from './landingData'
+import { SectionHeader } from './SectionHeader'
+import { StatCard } from './StatCard'
+import styles from './styles/Statistics.module.scss'
+
+const stats = [
+  {
+    value: '60%',
+    description: 'Reduction in time to hire',
+  },
+  {
+    value: '70%',
+    description: 'Fewer Unqualified Applicants',
+  },
+  {
+    value: '3x',
+    description: 'Faster screening and matching',
+  },
+  {
+    value: '50%',
+    description: 'Lower Cost per Hire',
+  },
+  {
+    value: '90%',
+    description: 'Hiring Team Satisfaction',
+  },
+]
+
+export const Statistics = () => {
+  return (
+    <div className={cn(styles.container, 'py-24', containerPadding)}>
+      <SectionHeader
+        title={
+          <Text size="fs-md" weight="bold" color="white" className="mb-2">
+            Why Teams Switch to AuxHR
+          </Text>
+        }
+        subTitle={
+          <div>
+            <Text size="fs-3xl" color="white">
+              Let the Numbers Talk.
+            </Text>
+            <Text size="fs-3xl" color="white">
+              AuxHR Doesn’t Just Improve Hiring — It Transforms It
+            </Text>
+          </div>
+        }
+        variant="secondary"
+      />
+      <div className="flex flex-wrap justify-center gap-6">
+        {stats.map((item) => (
+          <StatCard
+            key={item.value}
+            percentage={item.value}
+            description={item.description}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}

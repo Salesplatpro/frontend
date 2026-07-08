@@ -2,9 +2,10 @@ import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { Spinner } from '@/components/ui/Spinner'
+
 import talentdb from '../../../../assets/talentdb.webp'
-import Loading from '../../../../components/Loading/Loading'
-import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
 import { useSearchTalentDbQuery } from '../../../../redux/api/recruiter'
 import { AnalyzedPercentage } from '../AnalyzedPercentage'
 
@@ -17,17 +18,9 @@ const SearchResult = () => {
     scoutJobId: searchParams.get('scoutJobId') || '',
     role: searchParams.get('role') || '',
     location: {
-      country: {
-        name: searchParams.get('countryName') || '',
-        geoId: searchParams.get('geoId') || null,
-      },
-      state: {
-        name: searchParams.get('stateName') || '',
-        geoId: searchParams.get('geoId') || null,
-      },
-      city: {
-        name: searchParams.get('cityName') || '',
-      },
+      country: { name: searchParams.get('countryName') || '' },
+      state: { name: searchParams.get('stateName') || '' },
+      city: { name: searchParams.get('cityName') || '' },
     },
     experienceLevel: searchParams.get('experienceLevel') || '',
   }
@@ -46,7 +39,7 @@ const SearchResult = () => {
   }, [data])
 
   if (isLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   if (error) {
@@ -67,21 +60,21 @@ const SearchResult = () => {
           {talents.map((talent: any, i) => (
             <div
               key={i}
-              className="flex border border-[#E4E7EC] w-full items-start justify-center rounded-lg p-3">
+              className="flex border border-grey-200 w-full items-start justify-center rounded-lg p-3">
               <div className="flex-1 flex space-x-4">
                 <img src={talentdb} alt="" className="w-9 h-9" />
                 <div>
-                  <h2 className="text-[#0D0C22] font-semibold">
+                  <h2 className="text-midnight font-semibold">
                     {talent.firstName} {talent.lastName}
                   </h2>
                   {talent.profile.role.map((item: any) => (
                     <h2
                       key={item.id}
-                      className="text-[#0D0C22] text-sm font-medium">
+                      className="text-midnight text-sm font-medium">
                       {item.name}
                     </h2>
                   ))}
-                  <h2 className="text-[#0D0C22] text-sm font-medium">
+                  <h2 className="text-midnight text-sm font-medium">
                     {talent.profile.experience}
                   </h2>
                 </div>
@@ -90,7 +83,7 @@ const SearchResult = () => {
                 <div className="flex justify-end">
                   <AnalyzedPercentage targetValue={talent.similarity} />
                 </div>
-                <Link to="#" className="text-[#3C6FD4] text-sm">
+                <Link to="#" className="text-primary-strong text-sm">
                   See analysis
                 </Link>
               </div>

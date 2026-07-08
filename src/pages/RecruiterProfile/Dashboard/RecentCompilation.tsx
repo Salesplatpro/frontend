@@ -1,9 +1,10 @@
 import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 
+import FilterByJobs from '@/components/features/jobs/Filter/FilterByJobs'
+import { Spinner } from '@/components/ui/Spinner'
+
 import profilePics from '../../../assets/profilePics2.webp'
-import FilterByJobs from '../../../components/Filter/FilterByJobs'
-import Loading from '../../../components/Loading/Loading'
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
 
 interface CompilationTypes {
@@ -51,7 +52,7 @@ const RecentCompilation = () => {
       {/* Compilation Data */}
       {isLoading ? (
         <div className="flex justify-center items-center h-32">
-          <Loading />
+          <Spinner fullPage />
         </div>
       ) : error ? (
         <Alert severity="error">Error Fetching Data</Alert>
@@ -61,7 +62,7 @@ const RecentCompilation = () => {
             infoData.map((row, index) => (
               <div
                 key={index}
-                className="flex md:flex-row flex-col justify-between gap-8 p-4 bg-[#F8F8F8] rounded-2xl ">
+                className="flex md:flex-row flex-col justify-between gap-8 p-4 bg-grey-50 rounded-2xl ">
                 <div className="flex items-center space-x-4">
                   <img
                     src={profilePics}
@@ -70,7 +71,7 @@ const RecentCompilation = () => {
                   />
                   <div>
                     <p className="text-lg font-semibold">{row.applicantName}</p>
-                    <p className="text-sm font-medium text-[#0D0C22]">
+                    <p className="text-sm font-medium text-midnight">
                       {row.role}
                     </p>
                   </div>

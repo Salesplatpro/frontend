@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ['main', 'development']
+  pull_request:
+    branches: ['main', 'development']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    env:
+      CI: true
+      NODE_ENV: test
+
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🚀 Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: 📚 Install Packages
+        run: yarn install --frozen-lockfile
+
+      - name: 🔒 Check for lockfile synchronization
+        run: git diff --exit-code yarn.lock || (echo "Lockfile is out of sync. Please run 'yarn install' to update it." && exit 1)
+
+      - name: 🕵️ Check for linting issues
+        run: yarn lint:check
+
+      - name: 🔍 Check for type errors
+        run: yarn type-check
+
+      - name: 🧪 Run unit tests
+        run: yarn test run --coverage
+
+      - name: 🏗️ Build
+        run: yarn build

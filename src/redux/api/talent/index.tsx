@@ -5,49 +5,7 @@ import { customBaseQuery } from '../../../utils/customBaseQuery'
 export const talentApi = createApi({
   reducerPath: 'talentApi',
   baseQuery: customBaseQuery,
-  tagTypes: ['Talent'],
   endpoints: (builder) => ({
-    talentCreation: builder.mutation({
-      query: (data) => ({
-        url: `/user/profile`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
-    uploadCv: builder.mutation({
-      query: (formData) => ({
-        url: `/uploads`,
-        method: 'POST',
-        body: formData,
-      }),
-    }),
-    // fetch profile data
-    fetchProfile: builder.query({
-      query: () => ({
-        url: `/user/me`,
-        method: 'GET',
-      }),
-      providesTags: ['Talent'],
-      keepUnusedDataFor: 0,
-    }),
-
-    updateProfilePics: builder.mutation({
-      query: (data) => ({
-        url: `/user/me`,
-        method: 'PATCH',
-        body: data,
-      }),
-      invalidatesTags: ['Talent'],
-    }),
-
-    updateProfile: builder.mutation({
-      query: (data) => ({
-        url: '/user/profile',
-        method: 'PATCH',
-        body: data,
-      }),
-    }),
-
     fetchPretest: builder.query({
       query: (roleId) => ({
         url: `/questions?limit=20&offset=0&questionType=prescreening&roleId=${roleId}`,
@@ -170,11 +128,6 @@ export const talentApi = createApi({
 })
 
 export const {
-  useTalentCreationMutation,
-  useUploadCvMutation,
-  useFetchProfileQuery,
-  useUpdateProfileMutation,
-  useUpdateProfilePicsMutation,
   useFetchPretestQuery,
   usePostPretestMutation,
   useFetchJobQuery,
@@ -182,7 +135,6 @@ export const {
   useIndividualJobQuery,
   useJobPipelineQuery,
   useLazyCvMatchQuery,
-  usePersonalizedTestQuery,
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
   usePersonalityTestQuery,
@@ -191,5 +143,4 @@ export const {
   useGetRoleQuery,
   useGetMessagesQuery,
   usePatchMessageMutation,
-  useGetNotificationsQuery,
 } = talentApi

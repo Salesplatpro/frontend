@@ -1,0 +1,35 @@
+.alert {
+  margin-bottom: var(--space-4);
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.forgotPassword {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-sm);
+  color: var(--color-primary-strong);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.already {
+  margin-top: var(--space-2);
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-sm);
+
+  a {
+    font-weight: var(--weight-medium);
+    color: var(--color-primary-strong);
+  }
+}

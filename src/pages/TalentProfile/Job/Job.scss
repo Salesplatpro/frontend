@@ -1,5 +1,4 @@
 .job-container {
-  //margin-bottom: 20px;
   width: 94%;
   margin: 0 auto;
 }
@@ -11,12 +10,6 @@
 .jobs {
   font-weight: 700;
   font-size: 32px;
-}
-
-.jobs-desc {
-  font-size: 20px;
-  font-weight: 500;
-  color: #101828;
 }
 
 .job-section {
@@ -42,7 +35,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-  border: 1px solid #d0d5dd;
+  border: 1px solid var(--color-grey-300);
   border-radius: 10px;
 }
 

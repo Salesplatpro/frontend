@@ -1,11 +1,14 @@
-import { Field, Form, Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import React from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
-import Location from '../../../../components/global/Location'
-import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
-import AllRoles from '../../../../components/Roles/AllRoles'
-import { experienceLevel } from '../../../../utils'
+import {
+  LocationSelect,
+  resolveLocationFromNames,
+} from '@/components/forms/LocationSelect'
+import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
+import { EXPERIENCE_LEVEL_OPTIONS, Select } from '@/components/forms/Select'
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 
 const SearchTalent = () => {
   const navigate = useNavigate()
@@ -16,48 +19,36 @@ const SearchTalent = () => {
   const initialSearchValues = {
     scoutJobId: searchParams.get('scoutJobId') || scoutJobId.id,
     role: searchParams.get('role') || '',
-    location: {
-      country: {
-        name: searchParams.get('countryName') || '',
-        geoId: searchParams.get('geoId') || null,
-      },
-      state: {
-        name: searchParams.get('stateName') || '',
-        geoId: searchParams.get('geoId') || null,
-      },
-      city: {
-        name: searchParams.get('cityName') || '',
-      },
-    },
+    location: resolveLocationFromNames(
+      searchParams.get('countryName') || undefined,
+      searchParams.get('stateName') || undefined,
+      searchParams.get('cityName') || undefined,
+    ),
     experienceLevel: searchParams.get('experienceLevel') || '',
   }
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: typeof initialSearchValues) => {
     const { scoutJobId, role, location, experienceLevel } = values
+
+    const locationParams = {
+      countryName: location.country.name,
+      stateName: location.state.name,
+      cityName: location.city.name,
+    }
 
     // Set search parameters in URL
     setSearchParams({
-      scoutJobId,
+      scoutJobId: scoutJobId || '',
       role,
-      countryName: location.country.name,
-      countryGeoId: location.country.geoId,
-      stateName: location.state.name,
-      stateGeoId: location.state.geoId,
-      cityName: location.city.name,
-      cityGeoId: location.city.geoId,
+      ...locationParams,
       experienceLevel,
     })
 
     // Navigate to the results page
     const queryParams = new URLSearchParams({
-      scoutJobId,
+      scoutJobId: scoutJobId || '',
       role,
-      countryName: location.country.name,
-      geoId: location.country.geoId,
-      stateName: location.state.name,
-      stateGeoId: location.state.geoId,
-      cityName: location.city.name,
-      cityGeoId: location.city.geoId,
+      ...locationParams,
       experienceLevel,
     }).toString()
 
@@ -76,81 +67,36 @@ const SearchTalent = () => {
         <Formik initialValues={initialSearchValues} onSubmit={onSubmit}>
           {({ setFieldValue, values }) => (
             <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
-              <div>
-                <label
-                  htmlFor="role"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[14px]">
-                  Job Title
-                </label>
-                <div className="border border-[#D0D5DD] py-4 pl-4 rounded-lg w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
-                  <AllRoles
-                    name="role"
-                    value={values.role}
-                    onChange={(e) => setFieldValue('role', e.target.value)}
-                  />
-                </div>
+              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+                <RoleSelect
+                  label="Job Title"
+                  name="role"
+                  value={values.role}
+                  onChange={(value) => setFieldValue('role', value)}
+                  creatable={false}
+                />
               </div>
 
               <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
-                <Location
-                  locationTitle="Country"
-                  locationLabel="Country"
-                  geoId={values.location.country.geoId}
-                  isCountry={true}
-                  onChange={(geoId) => {
-                    setFieldValue('location.country.geoId', geoId)
-                    setFieldValue('location.state', { name: '', geoId: null })
-                    setFieldValue('location.city', { name: '', geoId: null })
-                  }}
-                />
-              </div>
-              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
-                <Location
-                  locationTitle="State"
-                  locationLabel="State/Province"
-                  geoId={values.location.country.geoId}
-                  isCountry={false}
-                  onChange={(geoId) => {
-                    setFieldValue('location.state.geoId', geoId)
-                    setFieldValue('location.city', { name: '', geoId: null })
-                  }}
-                />
-              </div>
-              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
-                <Location
-                  locationTitle="City"
-                  locationLabel="Region"
-                  geoId={values.location.state.geoId}
-                  isCountry={false}
-                  onChange={(geoId) => {
-                    setFieldValue('location.city.geoId', geoId)
-                  }}
+                <LocationSelect
+                  value={values.location}
+                  onChange={(location) => setFieldValue('location', location)}
+                  cityLabel="Region"
                 />
               </div>
 
               <div className="mb-4 w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
-                <label
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[14px]"
-                  htmlFor="experienceLevel">
-                  Experience Level
-                </label>
-                <Field
-                  as="select"
-                  id="experienceLevel"
-                  name="experienceLevel"
-                  required
-                  className="w-full p-2 border border-gray-300 rounded-lg py-4">
-                  <option value="">Select Experience Level</option>
-                  {Object.values(experienceLevel).map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </Field>
+                <Select
+                  label="Experience Level"
+                  options={EXPERIENCE_LEVEL_OPTIONS}
+                  value={values.experienceLevel}
+                  onChange={(value) => setFieldValue('experienceLevel', value)}
+                  placeholder="Select Experience Level"
+                />
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-[#3c6fd4] hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
+                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
                 <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
                   Search
                 </p>

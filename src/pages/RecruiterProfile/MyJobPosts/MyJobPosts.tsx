@@ -1,18 +1,17 @@
-import '../../../index.css'
+// import '../../../index.css'
 
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
-import { DisplayError } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
-import { useFetchRecruiterJobPostQuery } from '../../../redux/api/recruiter'
+import { DisplayError } from '@/components'
+import { Spinner } from '@/components/ui/Spinner'
+import { useFetchRecruiterJobPostQuery } from '@/redux/api/recruiter'
+
 import { JobsTable } from './JobsTable'
 import styles from './MyJobPosts.module.scss'
 import { Pagination } from './Pagination'
 
 export const MyJobPosts = () => {
   const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
-  const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const rowsPerPage = 7
 
@@ -21,7 +20,7 @@ export const MyJobPosts = () => {
   const paginatedJobs = jobs.slice(startIndex, startIndex + rowsPerPage)
 
   if (isLoading) {
-    return <Loading />
+    return <Spinner fullPage />
   }
 
   if (error) {
@@ -34,18 +33,11 @@ export const MyJobPosts = () => {
       <div className={styles.topContainer}>
         <div className={styles.titleDesc}>
           <div className={styles.title}>Job Posts</div>
-          <div className="text-[15px] w-[220px] flex flex-nowrap lg:text-[18px] lg:w-full md:w-full md:text-[16px] sm:w-[350px] sm:text-[16px]">
+          <div className={styles.description}>
             View jobs posted by you and see number of applicants that have
             responded.
           </div>
         </div>
-
-        <button
-          className="text-[#ffffff] font-raleway font-semibold whitespace-nowrap flex lg:text-[14px] leading-[28px] py-1 px-3 
-            bg-[#3C6FD4] rounded-lg"
-          onClick={() => navigate('/recruiterDashboard/postjob')}>
-          Create New
-        </button>
       </div>
       <div>
         <JobsTable data={paginatedJobs} />

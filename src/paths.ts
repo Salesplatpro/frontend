@@ -1,8 +1,7 @@
 export const paths = {
   home: '/',
   login: 'login',
-  signup: 'signup',
-  talentRegister: 'talentRegister',
+  register: 'register',
   solution: 'solution',
   aboutUs: 'about-us',
   faq: 'faq',

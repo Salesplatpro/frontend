@@ -4,10 +4,12 @@ import { IoDocumentTextOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { IsProcessing, RecruiterButton } from '../../../../components'
-import { DocumentUploaderCard2 } from '../../../../components/Cards'
-import { FileDesign } from '../../../../components/Cards/FileDesign'
-import { PageHeaderTitle } from '../../../../components/PageHeaderTitle'
+import { DocumentUploaderCard2 } from '@/components/features/recruiter/Cards'
+import { FileDesign } from '@/components/features/recruiter/Cards/FileDesign'
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { Spinner } from '@/components/ui/Spinner'
+
+import { Button } from '../../../../components'
 import { useUploadCvAndCoverLetterMutation } from '../../../../redux/api/recruiter'
 import {
   addCvCoverLetter,
@@ -129,7 +131,7 @@ export const UploadCvAndCoverLetter = () => {
       : ''
 
   const buttonTitle = isReevaluating ? (
-    <IsProcessing />
+    <Spinner size="sm" />
   ) : moreFilesToProcess ? (
     'Try evaluating again'
   ) : files.length === 1 ? (
@@ -231,21 +233,25 @@ export const UploadCvAndCoverLetter = () => {
               />
             </div>
             <div className="w-1/2 mx-auto -py-20">
-              <RecruiterButton
-                buttonTitle={
-                  files.length > 0 ? 'Add another profile' : 'Add profile'
-                }
-                onClick={handleAddFileToState}
-              />
+              <Button
+                variant="primary"
+                size="wide"
+                fullWidth
+                onClick={handleAddFileToState}>
+                {files.length > 0 ? 'Add another profile' : 'Add profile'}
+              </Button>
             </div>
           </div>
         )}
         {files.length > 0 && (
-          <RecruiterButton
-            buttonTitle={buttonTitle}
+          <Button
+            variant="primary"
+            size="wide"
+            fullWidth
             onClick={handleSubmit}
-            className={displayButton}
-          />
+            className={displayButton}>
+            {buttonTitle}
+          </Button>
         )}
       </div>
     </>

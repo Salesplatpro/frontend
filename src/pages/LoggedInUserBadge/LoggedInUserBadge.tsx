@@ -4,23 +4,21 @@ import {
   IoIosArrowUp,
   IoMdNotificationsOutline,
 } from 'react-icons/io'
-import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { talentApi, useFetchProfileQuery } from '../../redux/api/talent'
-import { logout } from '../../redux/features/authSlice/authSlice'
-import { RootState } from '../../redux/store/store'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { useProfile } from '@/features/profile/hooks/useProfile'
+
 import { getDefaultIcon } from '../../utils/getDefaultIcon'
 
 export const LoggedInUserBadge: React.FC = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const user = useSelector((state: RootState) => state.auth.user)
-  const { data: userProfile, isLoading, error } = useFetchProfileQuery({})
-  const userInfo = userProfile?.data?.user
+  const user = useAuthStore((state) => state.user)
+  const logout = useAuthStore((state) => state.logout)
+  const { profile: userInfo, isLoading, error } = useProfile()
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
@@ -49,8 +47,7 @@ export const LoggedInUserBadge: React.FC = () => {
 
   // Handle logout
   const handleLogout = () => {
-    dispatch(logout())
-    dispatch(talentApi.util.resetApiState())
+    logout()
     navigate('/login')
   }
 
@@ -77,9 +74,12 @@ export const LoggedInUserBadge: React.FC = () => {
             <div className="text-sm text-gray-500">{userInfo?.email || ''}</div>
           </div>
           <img
-            src={userInfo?.picture || getDefaultIcon({ id: user.id, size: 40 })}
+            src={
+              userInfo?.profileImage?.url ||
+              getDefaultIcon({ id: user?.id || '', size: 40 })
+            }
             alt="Profile"
-            className="w-10 h-10 object-cover rounded-full"
+            className="w-10 h-10 shrink-0 object-cover rounded-full"
           />
         </div>
       )}
@@ -99,7 +99,7 @@ export const LoggedInUserBadge: React.FC = () => {
       {isDropdownVisible && !isLoading && !error && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 mt-36 w-48 bg-[#4884DF] shadow-lg rounded-md z-10">
+          className="absolute right-0 top-full mt-2 w-48 bg-[#4884DF] shadow-lg rounded-md z-10">
           <div
             className="px-4 py-2  cursor-pointer text-white font-raleway font-medium"
             onClick={handleLogout}>

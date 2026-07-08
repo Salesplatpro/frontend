@@ -2,14 +2,15 @@ import './Job.scss'
 
 import React, { useEffect, useState } from 'react'
 import { MdKeyboardArrowDown } from 'react-icons/md'
-import { useSelector } from 'react-redux'
 import { Bounce } from 'react-toastify'
 
+import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
+import { Spinner } from '@/components/ui/Spinner'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+
 import { Button, DisplayError } from '../../../components'
-import Loading from '../../../components/Loading/Loading'
 import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
-import { RootState } from '../../../redux/store/store'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
 import { JobFilter } from './JobFilter'
@@ -21,11 +22,7 @@ const defaultFilterValues: JobFiltersTypes = {
   remote: false,
   onSite: false,
   hybrid: false,
-  location: {
-    city: { name: '', geoId: null },
-    state: { name: '', geoId: null },
-    country: { name: '', geoId: null },
-  },
+  location: { ...EMPTY_LOCATION },
 }
 
 interface JobType {
@@ -41,8 +38,8 @@ interface JobType {
 }
 
 const Job = () => {
-  const user = useSelector((state: RootState) => state.auth)
-  const roleId = user?.user?.profile?.role[0]?._id
+  const user = useAuthStore((state) => state.user)
+  const roleId = user?.profile?.role[0]?._id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
   // State for filters
@@ -111,10 +108,10 @@ const Job = () => {
         {screenWidth < 768 && !showFilter ? (
           <div style={{ height: '100px' }}>
             <Button
-              title="Open filters"
               variant="secondary"
-              onClick={() => setShowFilter(!showFilter)}
-            />
+              onClick={() => setShowFilter(!showFilter)}>
+              Open filters
+            </Button>
           </div>
         ) : (
           <JobFilter
@@ -135,7 +132,7 @@ const Job = () => {
           </div>
           <div className="job-listing">
             {isLoading || isFiltering ? (
-              <Loading />
+              <Spinner fullPage />
             ) : jobs.length > 0 ? (
               jobs.map((job, index) => (
                 <SingleJob

@@ -1,0 +1,138 @@
+%input-base {
+  width: 100%;
+  height: 44px;
+  margin-top: var(--space-1);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-text-heading);
+  background-color: var(--color-white);
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+}
+
+.page {
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    width: 80%;
+  }
+}
+
+.formCard {
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  color: var(--color-grey-700);
+  padding-bottom: var(--space-2);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-2);
+}
+
+.roleChangeHint {
+  font-size: var(--text-sm);
+  color: var(--color-primary-hover);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: var(--space-6);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.rowLarge {
+  margin-top: var(--space-12);
+}
+
+.field {
+  width: 100%;
+  margin-bottom: var(--space-6);
+
+  @media (min-width: 768px) {
+    width: 48%;
+    margin-bottom: 0;
+  }
+}
+
+.fullField {
+  width: 100%;
+}
+
+.fieldThird {
+  width: 100%;
+  margin-bottom: var(--space-6);
+
+  @media (min-width: 768px) {
+    width: 31%;
+    margin-bottom: 0;
+  }
+}
+
+.input {
+  @extend %input-base;
+}
+
+.readonlyInput {
+  @extend %input-base;
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.errorText {
+  margin-top: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+}
+
+.fileInputWrapper {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.fileInput {
+  display: none;
+}
+
+.actions {
+  margin-top: var(--space-6);
+  display: flex;
+  justify-content: flex-end;
+}

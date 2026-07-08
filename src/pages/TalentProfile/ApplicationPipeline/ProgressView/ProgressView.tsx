@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
+import { Spinner } from '@/components/ui/Spinner'
+
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import pretestIcon from '../../../../assets/pretestIcon.webp'
-import Loading from '../../../../components/Loading/Loading'
 import {
   useJobPipelineQuery,
   useLazyCvMatchQuery,
@@ -113,7 +114,7 @@ const ProgressView: React.FC = () => {
     console.error('Error:', error)
   }
 
-  if (applicationLoading || cvMatchLoading) return <Loading />
+  if (applicationLoading || cvMatchLoading) return <Spinner fullPage />
 
   if (!jobProgress) return <ProgressError error={applicationError} />
 
@@ -156,7 +157,7 @@ const ProgressView: React.FC = () => {
       <div>
         <button
           onClick={homePage}
-          className="my-14 ml-4 border-2 border-[#3C6FD4] px-[12px] py-[12.3px] rounded-xl cursor-pointer bg-[#3C6FD4] text-white shadow-custom font-raleway leading-[30px] text-[16px] font-medium hover:bg-[#3765c0] hover:text-white">
+          className="my-14 ml-4 border-2 border-primary-strong px-[12px] py-[12.3px] rounded-xl cursor-pointer bg-primary-strong text-white shadow-custom font-raleway leading-[30px] text-[16px] font-medium hover:bg-[#3765c0] hover:text-white">
           Back to Homepage
         </button>
       </div>

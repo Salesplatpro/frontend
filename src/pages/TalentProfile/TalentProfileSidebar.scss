@@ -1,3 +1,12 @@
+/* Shift modal overlay to cover only the main content area (excludes sidebar) */
+.dashboard-modal-overlay {
+  left: 298px !important;
+
+  @media (max-width: 980px) {
+    left: 0 !important;
+  }
+}
+
 .dashboard {
   display: grid;
   grid-template-areas:
@@ -38,30 +47,6 @@
   .menu {
     display: none;
   }
-
-  .employer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 20px;
-    gap: 10px;
-  }
-
-  .employerDetails {
-    display: flex;
-    gap: 8px;
-  }
-
-  .employerName {
-    font-size: 14px;
-    color: #011948;
-    font-weight: bold;
-  }
-
-  .employerType {
-    font-size: 12px;
-    color: #667085;
-  }
 }
 
 @media (max-width: 980px) {
@@ -97,11 +82,6 @@
       color: white;
     }
   }
-  .dashboard-body {
-    width: 100%;
-    margin-left: 0;
-    padding: 0 8px;
-  }
   .outlet {
     margin-top: 1rem;
   }
@@ -118,17 +98,7 @@
       justify-content: center;
       align-items: center;
       color: #4884df;
-      border: 0.5px solid #d0d5dd;
-    }
-
-    .employer {
-      padding-right: 0;
-      gap: 14px;
-      cursor: pointer;
-    }
-
-    .employerDetails {
-      gap: 2px;
+      border: 0.5px solid var(--color-grey-300);
     }
   }
 }
