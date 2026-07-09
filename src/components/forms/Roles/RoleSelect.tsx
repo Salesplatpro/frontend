@@ -30,11 +30,16 @@ export const RoleSelect: React.FC<RoleSelectProps> = ({
 }) => {
   const { data, isLoading } = useGetRoleQuery({})
 
-  const options =
-    data?.data?.map((role: Role) => ({
-      value: String(role._id),
-      label: role.name || '',
-    })) || []
+  const roles: Role[] = Array.isArray(data?.data)
+    ? data.data
+    : Array.isArray(data?.data?.roles)
+    ? data.data.roles
+    : []
+
+  const options = roles.map((role: Role) => ({
+    value: String(role._id),
+    label: role.name || '',
+  }))
 
   return (
     <Select

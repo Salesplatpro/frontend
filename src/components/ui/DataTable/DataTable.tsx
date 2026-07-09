@@ -55,7 +55,7 @@ const StyledTableRow = styled(TableRow)(() => ({
 
 export function DataTable<T>({
   columns,
-  data,
+  data = [],
   isLoading,
   emptyState,
   getRowKey,
