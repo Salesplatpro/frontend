@@ -23,11 +23,21 @@ export function usePreAssessment() {
       setAssessment(res.data.preScreening)
     } catch (err: unknown) {
       const axiosError = err as {
-        response?: { data?: { errorCode?: string; message?: string } }
+        response?: {
+          data?: {
+            errorCode?: string
+            message?: string
+            error?: { code?: string; message?: string }
+          }
+        }
       }
-      const errorCode = axiosError.response?.data?.errorCode
+      const errorCode =
+        axiosError.response?.data?.error?.code ||
+        axiosError.response?.data?.errorCode
       const message =
-        axiosError.response?.data?.message ?? 'Failed to load assessment'
+        axiosError.response?.data?.error?.message ||
+        axiosError.response?.data?.message ||
+        'Failed to load assessment'
       if (
         errorCode === PROFILE_INCOMPLETE_CODE ||
         message?.toLowerCase().includes('profile')

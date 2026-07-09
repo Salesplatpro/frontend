@@ -5,6 +5,7 @@ import { Spinner } from '@/components/ui/Spinner'
 
 import { Button, DisplayError } from '../../components'
 import { useVerifyPaymentMutation } from '../../redux/api/apiSlice'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 import { notify } from '../../utils/toastNotifications'
 
 const VerifyPaymentPage: React.FC = () => {
@@ -31,11 +32,11 @@ const VerifyPaymentPage: React.FC = () => {
           notify('error', response?.message || 'Verification failed')
           navigate('/pricing')
         }
-      } catch (error: any) {
-        const message =
-          error.data?.message ||
-          error?.message ||
-          'Failed to initialize payment. Please try again.'
+      } catch (error) {
+        const message = getErrorMessage(
+          error,
+          'Failed to initialize payment. Please try again.',
+        )
         setError(message)
         notify('error', message)
         // navigate('/')

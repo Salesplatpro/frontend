@@ -18,7 +18,7 @@ export const SingleJobPost = () => {
   const location = useLocation()
   const jobName = location.state?.jobName
   const postedAt = location.state?.postedAt
-  console.log(jobId)
+  const applications = data?.data?.applications ?? []
 
   if (error) {
     return <div>Error loading job details</div>
@@ -38,13 +38,13 @@ export const SingleJobPost = () => {
         <div className={`${styles.title} capitalize font-bold`}>
           {jobName}
           <span className={styles.applicants}>
-            {data?.data?.applications.length || 0}{' '}
-            {data?.data?.applications.length > 1 ? 'applicants' : 'applicant'}
+            {applications.length || 0}{' '}
+            {applications.length > 1 ? 'applicants' : 'applicant'}
           </span>
         </div>
         <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>
       </div>
-      <SingleJobTable applications={data?.data?.applications} />
+      <SingleJobTable applications={applications} />
     </div>
   )
 }

@@ -15,7 +15,11 @@ export const MyJobPosts = () => {
   const [page, setPage] = useState(1)
   const rowsPerPage = 7
 
-  const jobs = data?.data || []
+  const jobs = Array.isArray(data?.data)
+    ? data.data
+    : Array.isArray(data?.data?.jobs)
+    ? data.data.jobs
+    : []
   const startIndex = (page - 1) * rowsPerPage
   const paginatedJobs = jobs.slice(startIndex, startIndex + rowsPerPage)
 

@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/Button'
 import { useUpdateJobMutation } from '@/redux/api/recruiter'
 import { EditJobType } from '@/utils'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { FormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
@@ -81,9 +82,9 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
     try {
       await updateJob({ jobId, data: payload }).unwrap()
       notify('success', 'Job updated successfully')
-    } catch (err: unknown) {
-      const apiMessage = (err as { data?: { message?: string } })?.data?.message
-      notify('error', apiMessage ?? 'Failed to update job')
+    } catch (err) {
+      const apiMessage = getErrorMessage(err, 'Failed to update job')
+      notify('error', apiMessage)
     } finally {
       setSubmitting(false)
     }

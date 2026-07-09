@@ -35,11 +35,11 @@ const Dashboard = () => {
   return (
     <div className="w-[80%] mx-auto mt-10">
       <div>
-        <ApplicationTracker infoData={dashboardData.data.data} />
+        <ApplicationTracker infoData={dashboardData?.data?.data} />
       </div>
       <div className="mt-10">
         <RecentApplications
-          infoData={dashboardData.data.data.recentApplications}
+          infoData={dashboardData?.data?.data?.recentApplications}
         />
       </div>
       <div className="mt-10 h-[300px]">
