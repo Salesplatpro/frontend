@@ -65,7 +65,7 @@ export const PipelineTable = () => {
 
   useEffect(() => {
     if (data) {
-      setAllJobs(data.data.applications)
+      setAllJobs(data.data?.applications ?? [])
     }
   }, [data])
 
