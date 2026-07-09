@@ -24,6 +24,7 @@ import {
   useGetAiConfigQuery,
   usePatchAiConfigMutation,
 } from '@/redux/api/recruiter'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import styles from './AiConfig.module.scss'
@@ -219,15 +220,14 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
         notify('success', 'AI config saved!')
         navigate('/recruiterDashboard/myjobposts')
       }
-    } catch (err: unknown) {
-      const apiMessage = (err as { data?: { message?: string } })?.data?.message
-      notify(
-        'error',
-        apiMessage ??
-          (isEditMode
-            ? 'Failed to update AI config.'
-            : 'Failed to save AI config. Your progress has been saved — please try again.'),
+    } catch (err) {
+      const apiMessage = getErrorMessage(
+        err,
+        isEditMode
+          ? 'Failed to update AI config.'
+          : 'Failed to save AI config. Your progress has been saved — please try again.',
       )
+      notify('error', apiMessage)
     } finally {
       setSubmitting(false)
     }
