@@ -1,6 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 
 import { AUTH_ENDPOINTS } from '@/services/api/endpoints'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import {
@@ -24,8 +25,8 @@ export const useForgotPasswordFlow = () => {
     try {
       const { data } = await requestOtp.trigger(payload)
       return data
-    } catch (err: any) {
-      throw new Error(err?.response?.data?.message || 'Something went wrong.')
+    } catch (err) {
+      throw new Error(getErrorMessage(err, 'Something went wrong.'))
     }
   }
 
@@ -34,10 +35,9 @@ export const useForgotPasswordFlow = () => {
       const { data } = await resetPassword.trigger(payload)
       notify('success', 'Password reset successfully', { autoClose: 5000 })
       return data
-    } catch (err: any) {
+    } catch (err) {
       throw new Error(
-        err?.response?.data?.message ||
-          'Failed to update password. Please try again.',
+        getErrorMessage(err, 'Failed to update password. Please try again.'),
       )
     }
   }

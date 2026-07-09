@@ -21,6 +21,7 @@ import TextField from '@/components/forms/TextField'
 import { Button } from '@/components/ui/Button'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
 import { useJobPostCreationMutation } from '@/redux/api/recruiter'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { FormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
@@ -94,13 +95,12 @@ const PostJob: React.FC = () => {
       clearDraft()
       notify('success', 'Job posted! Now configure your AI settings.')
       navigate(`/recruiterDashboard/postjob/${jobId}`)
-    } catch (err: unknown) {
-      const apiMessage = (err as { data?: { message?: string } })?.data?.message
-      notify(
-        'error',
-        apiMessage ??
-          'Failed to post job. Your progress has been saved — please try again.',
+    } catch (err) {
+      const apiMessage = getErrorMessage(
+        err,
+        'Failed to post job. Your progress has been saved — please try again.',
       )
+      notify('error', apiMessage)
     } finally {
       setSubmitting(false)
     }

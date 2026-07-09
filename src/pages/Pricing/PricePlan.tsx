@@ -7,6 +7,7 @@ import {
   usePaymentInitiateMutation,
   usePricingPlanQuery,
 } from '../../redux/api/apiSlice'
+import { getErrorMessage } from '../../utils/getErrorMessage'
 import { notify } from '../../utils/toastNotifications'
 import PricingBackCard from './PricingBackCard'
 import PricingCard from './PricingCard'
@@ -69,12 +70,12 @@ const PricePlan: React.FC<PricePlanProp> = ({ isFlipped }) => {
       if (link) {
         window.location.href = link
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Payment initialization failed:', error)
-      const message =
-        error.data?.message ||
-        error?.message ||
-        'Failed to initialize payment. Please try again.'
+      const message = getErrorMessage(
+        error,
+        'Failed to initialize payment. Please try again.',
+      )
       notify('error', message)
     } finally {
       setIsLoadingPlanId(null)

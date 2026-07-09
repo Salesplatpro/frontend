@@ -31,11 +31,12 @@ export const EditJobTab = () => {
   const [jobToEdit, setJobToEdit] = useState<EditJobType | null>(null)
 
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
-  const aiConfigId = data?.data?.aiConfig || ''
+  const job = data?.data?.job ?? data?.data
+  const aiConfigId = job?.aiConfig || ''
 
   useEffect(() => {
     if (data) {
-      setJobToEdit(data?.data)
+      setJobToEdit(job)
     }
     if (error) {
       notify('error', 'Error loading job post')

@@ -1,6 +1,7 @@
 import { Bounce } from 'react-toastify'
 import useSWRMutation from 'swr/mutation'
 
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { patchProfile, PROFILE_ENDPOINT } from '../services/profileService'
@@ -21,9 +22,8 @@ export const useUpdateProfile = () => {
       await mutate()
       notify('success', 'Profile updated successfully', { autoClose: 5000 })
       return true
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || 'Failed to update profile'
+    } catch (error) {
+      const message = getErrorMessage(error, 'Failed to update profile')
       notify('error', message, { autoClose: 5000, transition: Bounce })
       return false
     }
