@@ -19,6 +19,7 @@
 
 .sidebar-container {
   grid-area: sidebar;
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: start;

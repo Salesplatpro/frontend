@@ -13,11 +13,9 @@ export const useUploadProfileImage = () => {
   const { trigger, isMutating } = useSWRMutation(
     '/user/me/picture',
     async (_key, { arg: file }: { arg: File }) => {
-      const previousImage = useProfileStore.getState().profile?.profileImage
+      const previousImage = useProfileStore.getState().profile?.profileImageUrl
       const previewUrl = URL.createObjectURL(file)
-      useProfileStore
-        .getState()
-        .patchProfile({ profileImage: { url: previewUrl } })
+      useProfileStore.getState().patchProfile({ profileImageUrl: previewUrl })
 
       try {
         const uploaded = await uploadFile(file)
@@ -27,7 +25,9 @@ export const useUploadProfileImage = () => {
           autoClose: 5000,
         })
       } catch (error) {
-        useProfileStore.getState().patchProfile({ profileImage: previousImage })
+        useProfileStore
+          .getState()
+          .patchProfile({ profileImageUrl: previousImage })
         notify('error', 'Failed to update profile picture', {
           autoClose: 5000,
           transition: Bounce,

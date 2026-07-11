@@ -43,9 +43,7 @@ const TalentProfileSidebar: React.FC = () => {
         <LoggedInUserBadge />
       </div>
 
-      <div
-        className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}
-        style={{ position: 'relative' }}>
+      <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
           sideBarData={currentSidebarData}
           handleClick={() => setIsOpen(false)}
