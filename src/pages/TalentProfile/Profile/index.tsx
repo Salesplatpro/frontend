@@ -103,9 +103,9 @@ const TalentProfile = () => {
                   <div className={styles.field}>
                     <div className={styles.labelRow}>
                       <span className={styles.label}>Role</span>
-                      {profile?.profile?.roleChangeCount !== undefined && (
+                      {profile?.roleChangeCount !== undefined && (
                         <span className={styles.roleChangeHint}>
-                          {profile.profile.roleChangeCount}/3 changes left
+                          {profile.roleChangeCount}/3 changes left
                         </span>
                       )}
                     </div>
@@ -198,7 +198,7 @@ const TalentProfile = () => {
                 <div className={styles.row}>
                   <div className={styles.fullField}>
                     <label className={styles.label} htmlFor="cv">
-                      {profile?.profile?.cv?.url ? 'CV / Resume' : 'Upload CV'}
+                      {profile?.cvUrl ? 'CV / Resume' : 'Upload CV'}
                     </label>
                     <input
                       id="cv"
@@ -212,12 +212,12 @@ const TalentProfile = () => {
                         event.target.value = ''
                       }}
                     />
-                    {profile?.profile?.cv?.url && !isUploading ? (
+                    {profile?.cvUrl && !isUploading ? (
                       <CvFile
                         fileName={decodeURIComponent(
-                          profile.profile.cv.url.split('/').pop() || 'CV',
+                          profile.cvUrl.split('/').pop() || 'CV',
                         )}
-                        url={profile.profile.cv.url}
+                        url={profile.cvUrl}
                       />
                     ) : (
                       <label htmlFor="cv" className={styles.fileInputWrapper}>

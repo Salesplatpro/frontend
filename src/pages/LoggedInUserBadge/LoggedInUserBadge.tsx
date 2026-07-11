@@ -75,7 +75,7 @@ export const LoggedInUserBadge: React.FC = () => {
           </div>
           <img
             src={
-              userInfo?.profileImage?.url ||
+              userInfo?.profileImageUrl ||
               getDefaultIcon({ id: user?.id || '', size: 40 })
             }
             alt="Profile"

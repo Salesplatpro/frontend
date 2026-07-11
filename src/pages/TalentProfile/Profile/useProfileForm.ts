@@ -36,14 +36,14 @@ export const useProfileForm = () => {
   }, [pictureFile])
 
   const updateFormProgress = (values: ProfileFormValues) => {
-    setFormProgress(calculateProgress(values, !!profile?.profile?.cv?.url))
+    setFormProgress(calculateProgress(values, !!profile?.cvUrl))
   }
 
   const handleSubmit = async (
     values: ProfileFormValues,
     { setSubmitting, resetForm }: FormikHelpers<ProfileFormValues>,
   ) => {
-    console.log(values)
+    console.log('[PROFILE_DEBUG] Form Values (before submit):', values)
 
     const patch = diffProfileValues(initialValues, values)
 

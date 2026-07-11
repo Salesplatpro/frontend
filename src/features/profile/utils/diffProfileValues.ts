@@ -13,10 +13,10 @@ export const diffProfileValues = (
     patch.experience = current.experience
   }
   if (current.minSalary !== initial.minSalary) {
-    patch.minSalary = current.minSalary
+    patch.minSalary = current.minSalary ? Number(current.minSalary) : undefined
   }
   if (current.maxSalary !== initial.maxSalary) {
-    patch.maxSalary = current.maxSalary
+    patch.maxSalary = current.maxSalary ? Number(current.maxSalary) : undefined
   }
   if (current.currency !== initial.currency) {
     patch.currency = current.currency
@@ -25,7 +25,7 @@ export const diffProfileValues = (
     current.role.length !== initial.role.length ||
     current.role.some((role) => !initial.role.includes(role))
 
-  if (roleChanged) patch.role = current.role
+  if (roleChanged) patch.roleIds = current.role
 
   const workTypeChanged =
     current.workType.length !== initial.workType.length ||
@@ -39,12 +39,12 @@ export const diffProfileValues = (
     current.location.city.name !== initial.location.city.name
 
   if (locationChanged) {
-    patch.location = {
-      country: current.location.country.name,
-      state: current.location.state.name,
-      city: current.location.city.name,
-    }
+    patch.locationCountry = current.location.country.name
+    patch.locationState = current.location.state.name
+    patch.locationCity = current.location.city.name
   }
+
+  console.log('[PROFILE_DEBUG] Update Payload (diff):', patch)
 
   return patch
 }

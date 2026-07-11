@@ -15,6 +15,7 @@ export const useProfile = () => {
 
   useEffect(() => {
     if (data?.data?.user) {
+      console.log('[PROFILE_DEBUG] Initial/Refetched Profile:', data.data.user)
       setProfile(data.data.user)
     }
   }, [data, setProfile])

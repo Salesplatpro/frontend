@@ -1,39 +1,44 @@
 import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { LocationFormValue } from '@/components/forms/LocationSelect'
 
-export interface ProfileLocation {
-  country?: string
-  state?: string
-  city?: string
-}
-
 export interface ProfileRole {
   _id: string
   name?: string
 }
 
-export interface UserProfile {
-  bio?: string
-  role?: ProfileRole[]
-  roleChangeCount?: number
-  location?: ProfileLocation
-  experience?: string
-  minSalary?: number | string
-  maxSalary?: number | string
-  currency?: string
-  workType?: WorkType[] | null
-  cv?: { url?: string }
-}
-
 export interface ProfileUser {
-  _id?: string
+  id?: string
+  email?: string
   firstName?: string
   lastName?: string
-  email?: string
-  phone?: string
-  profileImage?: { url?: string }
+  middleName?: string | null
+  profileImageUrl?: string | null
+  profileImagePublicId?: string | null
   userRole?: string
-  profile?: UserProfile
+  phone?: string
+  country?: string | null
+  organizationId?: string | null
+  emailVerified?: boolean
+  active?: boolean
+  bio?: string
+  cvUrl?: string | null
+  cvPublicId?: string | null
+  cvUploadedAt?: string | null
+  workType?: WorkType[] | null
+  locationCity?: string | null
+  locationState?: string | null
+  locationCountry?: string | null
+  experience?: string
+  currency?: string
+  maxSalary?: number | string
+  minSalary?: number | string
+  prescreeningScore?: number | null
+  assessmentRetryDate?: string | null
+  roleChangeCount?: number
+  activePreScreeningId?: string | null
+  createdAt?: string
+  updatedAt?: string
+  userRoles?: ProfileRole[]
 }
 
 export interface ProfileApiResponse {
@@ -50,12 +55,14 @@ export interface UploadResponse {
 
 export interface ProfilePatchPayload {
   bio?: string
-  role?: string[]
+  roleIds?: string[]
   phone?: string
-  location?: ProfileLocation
+  locationCity?: string
+  locationState?: string
+  locationCountry?: string
   experience?: string
-  minSalary?: string
-  maxSalary?: string
+  minSalary?: number
+  maxSalary?: number
   currency?: string
   workType?: WorkType[]
   cv?: string

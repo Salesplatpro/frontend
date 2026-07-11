@@ -53,7 +53,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({
 
   const profileImageSrc =
     previewUrl ||
-    profile?.profileImage?.url ||
+    profile?.profileImageUrl ||
     getDefaultIcon({ id: user?.id || '', size: 50 })
 
   return (
