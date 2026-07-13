@@ -15,16 +15,10 @@ export const fetchProfile = () =>
     .get<ProfileApiResponse>(PROFILE_ENDPOINT)
     .then((response) => response.data)
 
-export const patchProfile = (payload: Partial<ProfilePatchPayload>) => {
-  console.log('[PROFILE_DEBUG] Update Payload (request body):', payload)
-
-  return httpClient
+export const patchProfile = (payload: Partial<ProfilePatchPayload>) =>
+  httpClient
     .patch<ProfileApiResponse>(PROFILE_ENDPOINT, payload)
-    .then((response) => {
-      console.log('[PROFILE_DEBUG] Update Response:', response.data)
-      return response.data
-    })
-}
+    .then((response) => response.data)
 
 export const uploadFile = (
   file: File,

@@ -5,7 +5,6 @@ import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { patchProfile, PROFILE_ENDPOINT } from '../services/profileService'
-import { useProfileStore } from '../store/useProfileStore'
 import { ProfilePatchPayload } from '../types'
 import { useProfile } from './useProfile'
 
@@ -21,10 +20,6 @@ export const useUpdateProfile = () => {
     try {
       await trigger(payload)
       await mutate()
-      console.log(
-        '[PROFILE_DEBUG] Cached Profile after mutate:',
-        useProfileStore.getState().profile,
-      )
       notify('success', 'Profile updated successfully', { autoClose: 5000 })
       return true
     } catch (error) {

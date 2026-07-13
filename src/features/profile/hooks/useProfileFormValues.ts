@@ -8,8 +8,6 @@ import { ProfileFormValues, ProfileUser } from '../types'
 export const buildProfileFormValues = (
   user?: ProfileUser | null,
 ): ProfileFormValues => {
-  console.log('[PROFILE_DEBUG] Form Values Mapping - input user:', user)
-
   const formValues = {
     bio: user?.bio || '',
     role: user?.userRoles?.map((role) => role._id) || [],
@@ -28,8 +26,6 @@ export const buildProfileFormValues = (
     currency: user?.currency || '',
     workType: user?.workType || [],
   }
-
-  console.log('[PROFILE_DEBUG] Form Values Mapping - output:', formValues)
 
   return formValues
 }

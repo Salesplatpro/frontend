@@ -44,7 +44,5 @@ export const diffProfileValues = (
     patch.locationCity = current.location.city.name
   }
 
-  console.log('[PROFILE_DEBUG] Update Payload (diff):', patch)
-
   return patch
 }
