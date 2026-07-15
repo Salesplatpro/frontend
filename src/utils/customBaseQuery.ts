@@ -29,12 +29,16 @@ export const customBaseQuery: BaseQueryFn<
 
   const result = await baseQuery(args, api, extraOptions)
 
-  // Only treat this as a session expiry if the failing request actually
-  // carried a token. Requests fired from public routes while logged out
-  // 401 as a matter of course — forcing a logout for those would wipe out
-  // a session established by a login that completed *after* one of those
-  // requests was sent but before it resolved.
-  if (result.error?.status === 401 && token) {
+  // Only treat this as a session expiry if the failing request carried the
+  // CURRENT session's token. Comparing against the live store token (not
+  // just checking that *a* token was sent) matters because a slow request
+  // can be sent with an old/expired token — from a stale localStorage
+  // session or a page visited pre-login — and only resolve after a fresh
+  // login has stored a brand-new token. That stale response would
+  // otherwise still read as "had a token" and log the user straight back
+  // out of the session they just established.
+  const currentToken = useAuthStore.getState().token
+  if (result.error?.status === 401 && token && token === currentToken) {
     useAuthStore.getState().logout()
 
     notify('error', 'Session expired. Please log in again.', {
