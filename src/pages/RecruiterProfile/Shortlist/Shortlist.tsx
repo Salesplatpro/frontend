@@ -51,7 +51,7 @@ export const Shortlist = () => {
         <div className="flex flex-col space-y-28 max-w-[1005px] ml-10">
           <TableContainer component={Paper}>
             <div className="font-medium text-xl p-2">Campaigns</div>
-            {data?.data?.campaigns.length === 0 ? (
+            {!data?.data?.campaigns?.length ? (
               <div className="p-4 text-gray-500 text-center">
                 No campaign yet
               </div>
@@ -101,7 +101,7 @@ export const Shortlist = () => {
 
           <TableContainer component={Paper}>
             <div className="font-medium text-xl p-2">Scouts</div>
-            {data?.data?.scouts.length === 0 ? (
+            {!data?.data?.scouts?.length ? (
               <div className="p-4 text-gray-500 text-center">No scout yet</div>
             ) : (
               <Table aria-label="Application pipeline data">
