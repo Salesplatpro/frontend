@@ -30,12 +30,12 @@
 
   .title {
     color: var(--color-midnight);
-    font-size: 24px;
+    font-size: var(--text-2xl);
     font-weight: 700;
   }
 
   .clear {
-    font-size: 16px;
+    font-size: var(--text-md);
     color: #4884df;
 
     &:hover {

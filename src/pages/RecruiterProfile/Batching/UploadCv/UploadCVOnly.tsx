@@ -36,11 +36,11 @@ export const UploadCVOnly = () => {
         <div className="flex justify-center items-center w-full max-w-4xl bg-grey-50 border border-grey-300 rounded-2xl">
           <div className="flex justify-center items-center w-full flex-col space-y-4 pb-12 pt-1 px-6 relative">
             <div className="flex flex-row pt-3">
-              <h1 className="font-poppins text-grey-900 text-[18px] leading-[22px] lg:text-[20px] font-medium lg:leading-[28px]">
+              <h1 className="font-poppins text-grey-900 text-lg leading-[22px] lg:text-xl font-medium lg:leading-[28px]">
                 {files.length > 0
                   ? files.map((file) => file.name).join(', ')
                   : 'No files selected'}{' '}
-                <span className="font-raleway font-normal text-[17px] leading-[20px] lg:text-[20px] lg:leading-[28px] sm:text-[20px] md:text-[22px] md:leading-[25px] text-grey-900">
+                <span className="font-raleway font-normal text-lg leading-[20px] lg:text-xl lg:leading-[28px] sm:text-xl md:text-2xl md:leading-[25px] text-grey-900">
                   click or drag and drop
                 </span>
               </h1>

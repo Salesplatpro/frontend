@@ -27,7 +27,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         Competency: {category}
       </p>
 
-      <p className="text-[18px] font-semibold text-grey-900 leading-[150%] mb-6">
+      <p className="text-lg font-semibold text-grey-900 leading-[150%] mb-6">
         {question.question}
       </p>
 
@@ -39,7 +39,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
               key={i}
               type="button"
               onClick={() => onSelect(option)}
-              className={`flex items-center gap-3 text-left px-4 py-3 rounded-xl border text-[15px] font-raleway font-medium transition-colors ${
+              className={`flex items-center gap-3 text-left px-4 py-3 rounded-xl border text-sm font-raleway font-medium transition-colors ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
                   : 'border-grey-200 bg-grey-50 text-grey-800 hover:border-blue-300 hover:bg-blue-50'

@@ -240,7 +240,7 @@ const PreAssessmentPage: React.FC = () => {
         <p className="text-xl font-raleway font-medium text-grey-600 mb-8">
           You are about to start your assessment
         </p>
-        <span className="text-[120px] font-bold text-blue-500 leading-none font-raleway">
+        <span className="text-8xl font-bold text-blue-500 leading-none font-raleway">
           {countdown}
         </span>
       </div>

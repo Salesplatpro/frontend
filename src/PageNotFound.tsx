@@ -16,10 +16,10 @@ function PageNotFound() {
     <div>
       <div className="min-h-screen flex justify-evenly items-center flex-col-reverse lg:flex lg:flex-row lg:items-center lg:justify-between  md:flex md:items-center md:justify-evenly md:flex-col-reverse sm:flex sm:items-center sm:justify-evenly sm:flex-col-reverse">
         <div className="w-full flex flex-col space-y-2 lg:space-y-12 md:space-y-7 sm:space-y-6 justify-center items-center">
-          <h1 className="font-raleway font-semibold text-[30px] lg:text-[100px] leading-[24px] md:text-[60px] sm:text-[50px]">
+          <h1 className="font-raleway font-semibold text-3xl lg:text-8xl leading-[24px] md:text-6xl sm:text-5xl">
             404
           </h1>
-          <p className="font-raleway font-medium text-[20px] lg:text-[30px] leading-[150%] md:text-[25px] sm:text-[24px]">
+          <p className="font-raleway font-medium text-xl lg:text-3xl leading-[150%] md:text-2xl sm:text-2xl">
             Oops! Page not found
           </p>
 
@@ -27,10 +27,10 @@ function PageNotFound() {
             onClick={handleBack}
             className="flex items-center justify-center gap-2
              bg-primary border border-primary text-white
-             text-[18px] font-raleway font-semibold rounded-lg
+             text-lg font-raleway font-semibold rounded-lg
              px-4 py-3">
             <RiArrowGoBackLine className="w-5 h-5" />
-            <span className="text-white text-[18px]">Previous Page</span>
+            <span className="text-white text-lg">Previous Page</span>
           </button>
         </div>
 

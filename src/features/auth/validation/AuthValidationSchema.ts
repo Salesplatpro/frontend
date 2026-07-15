@@ -13,9 +13,12 @@ const passwordValidation = () =>
       'Password must contain at least one special character',
     )
 
+const loginPasswordValidation = () =>
+  Yup.string().required('Password is required')
+
 export const loginSchema = Yup.object().shape({
   email: emailValidation(),
-  password: passwordValidation(),
+  password: loginPasswordValidation(),
 })
 
 export const SignUpSchema = Yup.object().shape({

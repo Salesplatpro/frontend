@@ -8,7 +8,7 @@ interface Props {
 
 const LabelWithAsterisk: React.FC<Props> = ({ label, asterick, name }) => {
   return (
-    <label htmlFor={name} className="font-bold text-[14px] text-[#434144]">
+    <label htmlFor={name} className="font-bold text-sm text-[#434144]">
       {label}
       {asterick && <span className="text-red-500 ml-1">*</span>}
     </label>

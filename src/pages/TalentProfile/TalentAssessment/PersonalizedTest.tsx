@@ -131,7 +131,7 @@ const PersonalizedTest: React.FC = () => {
   return (
     <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
       <div className="ml-8">
-        <h2 className="text-[30px] font-raleway text-grey-900 font-bold">
+        <h2 className="text-3xl font-raleway text-grey-900 font-bold">
           Personalized Test
         </h2>
         <p className="text-xl text-grey-900 font-medium mt-3 font-raleway">
@@ -146,8 +146,8 @@ const PersonalizedTest: React.FC = () => {
             {personalizedQuestions.map((question, i) => (
               <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
                 <div className="flex justify-center items-start space-x-3 text-grey-900 font-raleway font-medium">
-                  <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
-                  <h3 className="text-[17px] leading-[150%]">
+                  <h3 className="text-lg leading-[150%]">{i + 1}.</h3>
+                  <h3 className="text-lg leading-[150%]">
                     {question.question}
                   </h3>
                 </div>

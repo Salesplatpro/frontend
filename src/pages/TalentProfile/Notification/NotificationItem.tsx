@@ -46,15 +46,15 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
 
   return (
     <div className="lg:w-[90%] lg:min-h-[180px] rounded-[16px] bg-grey-50 border border-grey-300">
-      <h1 className="text-[16px] px-4 py-3 text-gray-500">
+      <h1 className="text-base px-4 py-3 text-gray-500">
         {calculateDaysFromCreation(createdAt)} Days ago
       </h1>
       <div className="px-6 lg:flex lg:justify-start lg:items-start flex-col space-y-2">
-        <h1 className="font-raleway font-semibold text-[18px] leading-[18px] text-midnight">
+        <h1 className="font-raleway font-semibold text-lg leading-[18px] text-midnight">
           {sender.firstName} {sender.lastName}
         </h1>
 
-        <p className="lg:w-[540px] lg:min-h-[26px] font-raleway font-normal text-[16px] leading-[24px] text-midnight">
+        <p className="lg:w-[540px] lg:min-h-[26px] font-raleway font-normal text-base leading-[24px] text-midnight">
           {displayMessage}
         </p>
 
@@ -68,7 +68,7 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
 
         {isRead && (
           <p
-            className={`font-raleway pb-3 font-semibold text-[14px] ${
+            className={`font-raleway pb-3 font-semibold text-sm ${
               acknowledged ? 'text-green-500' : 'text-red-500'
             }`}>
             {messageStatus}
@@ -79,13 +79,13 @@ const NoticationItem: React.FC<NotificationItemProps> = ({
       {!isRead && (
         <div className="flex justify-end items-center mx-5 lg:mx-8 my-4 space-x-4">
           <button
-            className="lg:w-[100px] rounded-lg flex justify-center items-center font-semibold font-raleway text-[16px] text-primary-strong hover:cursor-pointer py-3"
+            className="lg:w-[100px] rounded-lg flex justify-center items-center font-semibold font-raleway text-base text-primary-strong hover:cursor-pointer py-3"
             onClick={onReject}>
             Reject
           </button>
 
           <button
-            className="w-[110px] text-[14px] lg:w-[151px] h-[44px] rounded-lg bg-primary-strong flex justify-center items-center font-semibold font-raleway lg:text-[16px] text-white hover:bg-[#4b82e1] py-3"
+            className="w-[110px] text-sm lg:w-[151px] h-[44px] rounded-lg bg-primary-strong flex justify-center items-center font-semibold font-raleway lg:text-base text-white hover:bg-[#4b82e1] py-3"
             onClick={onAcknowledge}>
             Acknowledge
           </button>

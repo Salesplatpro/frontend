@@ -28,7 +28,7 @@ const RadioFieldGroup = ({
 }: RadioFieldGroupProps) => {
   return (
     <div className="flex flex-row items-center space-x-4 mb-4">
-      <p className="font-semibold text-[16px] text-[#434144] flex-1">{label}</p>
+      <p className="font-semibold text-base text-[#434144] flex-1">{label}</p>
       {options.map((option) => (
         <label
           key={option.value}

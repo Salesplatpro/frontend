@@ -53,7 +53,7 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
           data-tooltip-id="share-tooltip"
           data-tooltip-content={option.text}
           onClick={option.action}
-          className={`flex cursor-pointer items-center justify-center text-[17px] size-8 ${
+          className={`flex cursor-pointer items-center justify-center text-lg size-8 ${
             i !== 0 ? 'border-l border-gray-300 px-2' : ''
           }`}>
           {option.icon}

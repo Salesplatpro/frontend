@@ -216,7 +216,7 @@ const IndividualJob = () => {
         center
         classNames={{ overlay: 'dashboard-modal-overlay' }}>
         <div className="flex flex-col items-center text-center rounded-lg p-6 max-w-[400px] min-w-[280px] mx-auto">
-          <h2 className="text-[18px] sm:text-[20px] md:text-[22px] font-medium font-raleway">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-medium font-raleway">
             Select your preferred social media to share job
           </h2>
 
@@ -224,7 +224,7 @@ const IndividualJob = () => {
             {shareOptions.map((option, index) => (
               <button
                 key={index}
-                className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-[14px] sm:text-[16px] md:text-[18px] bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
+                className="w-full border-[1px] py-3 my-2 rounded-lg font-raleway text-sm sm:text-base md:text-lg bg-white border-[#E7E7E9] hover:bg-[#e8eaee] flex items-center justify-center"
                 onClick={() => handleRedirectShare(option.link)}>
                 <img
                   src={option.icon}

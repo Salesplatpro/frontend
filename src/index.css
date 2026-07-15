@@ -172,7 +172,7 @@ a {
 .ql-container.ql-snow {
   border: none !important;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: var(--text-md);
   flex: 1;
   overflow-y: auto;
 }
@@ -180,7 +180,7 @@ a {
 .ql-editor {
   min-height: 140px;
   padding: var(--space-3);
-  font-size: 1rem;
+  font-size: var(--text-md);
   font-family: var(--font-body);
   font-weight: var(--weight-regular);
   color: var(--color-text-heading);
@@ -206,10 +206,10 @@ a {
   font-family: var(--font-accent);
 }
 .ql-font-serif {
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
 }
 .ql-font-monospace {
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 /* ── Font picker dropdown labels ── */
@@ -230,12 +230,12 @@ a {
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='serif']::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='serif']::before {
   content: 'Serif';
-  font-family: Georgia, serif;
+  font-family: var(--font-serif);
 }
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='monospace']::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='monospace']::before {
   content: 'Monospace';
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 .rich-text-content {
@@ -268,7 +268,7 @@ a {
   background-color: #f3f4f6;
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
 
 @media (max-width: 768px) {
@@ -278,7 +278,7 @@ a {
   }
 
   .ql-editor {
-    font-size: 0.9rem;
+    font-size: var(--text-sm);
     min-height: 100px;
   }
 }
