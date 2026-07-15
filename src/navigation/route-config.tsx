@@ -27,9 +27,12 @@ import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
 import {
   ApplicationProgress,
+  Chat,
   MyJobPosts,
+  Notification as RecruiterNotification,
   ProcessCV,
   ProcessCvAndCoverLetter,
+  Profile as RecruiterProfilePage,
   Shortlist,
   UploadCvAndCoverLetter,
   UploadCVOnly,
@@ -278,6 +281,18 @@ export const routeConfig: RouteObject[] = [
           {
             path: 'shortlist',
             element: <Shortlist />,
+          },
+          {
+            path: 'notification',
+            element: <RecruiterNotification />,
+          },
+          {
+            path: 'chat',
+            element: <Chat />,
+          },
+          {
+            path: 'profile',
+            element: <RecruiterProfilePage />,
           },
         ],
       },
