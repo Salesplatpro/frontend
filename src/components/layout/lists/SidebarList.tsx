@@ -10,8 +10,7 @@ type SidebarListProps = {
   name: string
   details?: string
   count?: number
-  active: boolean
-  onClick: () => void
+  onClick?: () => void
   link?: string
 }
 
@@ -20,25 +19,44 @@ export const SidebarList = ({
   name,
   details,
   count,
-  active,
   onClick,
   link,
 }: SidebarListProps) => {
-  return (
-    <NavLink
-      to={link || ''}
-      className={`${styles.listContainer} ${active ? styles.active : ''}`}
-      onClick={onClick}>
+  const content = (
+    <>
       <div className={styles.listItem}>
         <div>{icon}</div>
         <div>
-          <div className="font-raleway font-medium text-[16px] leading-[24px]">
+          <div className="font-raleway font-medium text-base leading-[24px]">
             {name}
           </div>
           <div>{details}</div>
         </div>
       </div>
       <CountBadge item={count} />
+    </>
+  )
+
+  // Entries with no destination (e.g. "Profile") can't be route-matched —
+  // render as a plain, never-active row instead of an empty-`to` NavLink,
+  // which would otherwise match every route and always show as active.
+  if (!link) {
+    return (
+      <div className={styles.listContainer} onClick={onClick}>
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <NavLink
+      to={link}
+      end
+      className={({ isActive }) =>
+        `${styles.listContainer} ${isActive ? styles.active : ''}`
+      }
+      onClick={onClick}>
+      {content}
     </NavLink>
   )
 }

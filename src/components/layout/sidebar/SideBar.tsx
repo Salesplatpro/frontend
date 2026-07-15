@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { MdSupport } from 'react-icons/md'
 import { Link } from 'react-router-dom'
@@ -15,7 +15,6 @@ interface sideBarProps {
     count?: number
     link?: string
   }[]
-  unreadCount?: number
   handleClick?: () => void
 }
 
@@ -35,15 +34,6 @@ export const SideBar: React.FC<sideBarProps> = ({
   sideBarData,
   handleClick,
 }) => {
-  const [activeItem, setActiveItem] = useState<string | null>(null)
-
-  const handleItemClick = (type: string, index: number) => {
-    setActiveItem(`${type}-${index}`)
-    if (handleClick) {
-      handleClick()
-    }
-  }
-
   return (
     <div className={styles.sideBarContainer}>
       <div>
@@ -62,8 +52,7 @@ export const SideBar: React.FC<sideBarProps> = ({
                 name={data.name}
                 count={data.count}
                 link={data.link}
-                active={activeItem === `sideBar-${index}`}
-                onClick={() => handleItemClick('sideBar', index)}
+                onClick={handleClick}
               />
             )
           })}
@@ -76,8 +65,7 @@ export const SideBar: React.FC<sideBarProps> = ({
             icon={data.icon}
             name={data.name}
             link={data.link}
-            active={activeItem === `feedback-${index}`}
-            onClick={() => handleItemClick('feedback', index)}
+            onClick={handleClick}
           />
         ))}
       </div>
