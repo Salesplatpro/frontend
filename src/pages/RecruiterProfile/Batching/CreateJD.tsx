@@ -59,10 +59,10 @@ const CreateJD = () => {
   return (
     <div className="py-4 space-y-4">
       <div className="space-y-2">
-        <h1 className="font-raleway text-grey-900 text-[32px] font-bold leading-[37.57px]">
+        <h1 className="font-raleway text-grey-900 text-3xl font-bold leading-[37.57px]">
           Scout
         </h1>
-        <p className="font-raleway font-normal text-[20px] leading-[23.48px] text-grey-900">
+        <p className="font-raleway font-normal text-xl leading-[23.48px] text-grey-900">
           Upload CV in batch for collective AI assessment
         </p>
       </div>
@@ -81,7 +81,7 @@ const CreateJD = () => {
               <div>
                 <label
                   htmlFor="name"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
                   Campaign Name
                 </label>
                 <Field
@@ -95,7 +95,7 @@ const CreateJD = () => {
               <div>
                 <label
                   htmlFor="role"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
                   Job Title (Role)
                 </label>
                 <Field
@@ -117,7 +117,7 @@ const CreateJD = () => {
               <div>
                 <label
                   htmlFor="description"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
                   Description
                 </label>
                 <Field
@@ -132,7 +132,7 @@ const CreateJD = () => {
               <div>
                 <label
                   htmlFor="recruiterGuide"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-[16px]">
+                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
                   Recruiters Guide
                 </label>
                 <Field
@@ -147,7 +147,7 @@ const CreateJD = () => {
                 type="submit"
                 className="w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
                 disabled={isLoading}>
-                <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
+                <p className="text-white font-semibold font-raleway leading-[24px] text-lg">
                   {isLoading ? 'Submitting...' : 'Create'}
                 </p>
               </button>

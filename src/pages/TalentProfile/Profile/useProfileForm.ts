@@ -43,8 +43,6 @@ export const useProfileForm = () => {
     values: ProfileFormValues,
     { setSubmitting, resetForm }: FormikHelpers<ProfileFormValues>,
   ) => {
-    console.log('[PROFILE_DEBUG] Form Values (before submit):', values)
-
     const patch = diffProfileValues(initialValues, values)
 
     if (pictureFile) {

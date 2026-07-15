@@ -19,7 +19,7 @@ const ProgressHeader: React.FC<HeaderProps> = ({
         <h2 className="font-bold md:text-3xl text-xl text-grey-900">
           Progress View
         </h2>
-        <p className="text-[20px] font-normal text-grey-900">
+        <p className="text-xl font-normal text-grey-900">
           Your job application pipeline. Track your progress and see where you
           are in the process.
         </p>
@@ -28,7 +28,7 @@ const ProgressHeader: React.FC<HeaderProps> = ({
         <div className="flex justify-center items-center space-x-3">
           <IoMdInformationCircleOutline size={27} color="#FF9500" />
 
-          <h1 className="font-raleway text-[14px] leading-[20px] lg:text-[20px] lg:leading-[28px] md:text-[18px] md:leading-[20px] sm:text-[16px] font-semibold text-[#FF9500]">
+          <h1 className="font-raleway text-sm leading-[20px] lg:text-xl lg:leading-[28px] md:text-lg md:leading-[20px] sm:text-base font-semibold text-[#FF9500]">
             {jobProgress?.currentStage === 'completed'
               ? 'Application Assessment completed'
               : 'Application Assessment in progress'}

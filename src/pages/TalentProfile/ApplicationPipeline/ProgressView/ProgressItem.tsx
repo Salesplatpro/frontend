@@ -61,7 +61,7 @@ const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
           <div className="w-[56px] h-[56px] bg-[#E7EDF7] rounded-full flex items-center justify-center">
             <img src={progress.icon} alt="" />
           </div>
-          <h6 className="text-[18px] font-medium text-grey-900">
+          <h6 className="text-lg font-medium text-grey-900">
             {progress.title}
           </h6>
         </div>

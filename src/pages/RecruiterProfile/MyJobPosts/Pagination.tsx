@@ -35,13 +35,13 @@ export const Pagination = ({
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className={`flex items-center gap-2 px-3 py-1 rounded text-[14px] font-semibold font-raleway ${
+        className={`flex items-center gap-2 px-3 py-1 rounded text-sm font-semibold font-raleway ${
           currentPage === 1
             ? 'text-gray-400 cursor-not-allowed'
             : 'text-blue-600 hover:bg-blue-100'
         }`}>
         <FaLessThan size={14} />
-        <span className="font-raleway font-medium text-[16px] text-[#4884DF] leading-[100%]">
+        <span className="font-raleway font-medium text-base text-[#4884DF] leading-[100%]">
           Previous
         </span>
       </button>
@@ -64,12 +64,12 @@ export const Pagination = ({
       <button
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className={`flex items-center gap-2 px-3 py-1 rounded text-[14px] font-semibold font-raleway ${
+        className={`flex items-center gap-2 px-3 py-1 rounded text-sm font-semibold font-raleway ${
           currentPage === totalPages
             ? 'text-gray-400 cursor-not-allowed'
             : 'text-blue-600 hover:bg-blue-100'
         }`}>
-        <span className="font-raleway font-medium text-[16px] text-[#4884DF] leading-[100%]">
+        <span className="font-raleway font-medium text-base text-[#4884DF] leading-[100%]">
           Next
         </span>
         <FaGreaterThan size={14} />

@@ -137,8 +137,8 @@ const PersonalityTest: React.FC = () => {
             {personalityQuestions.map((question, i) => (
               <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
                 <div className="flex justify-center items-start space-x-3 text-grey-900 font-raleway font-medium">
-                  <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
-                  <h3 className="text-[17px] leading-[150%]">
+                  <h3 className="text-lg leading-[150%]">{i + 1}.</h3>
+                  <h3 className="text-lg leading-[150%]">
                     {question.question}
                   </h3>
                 </div>

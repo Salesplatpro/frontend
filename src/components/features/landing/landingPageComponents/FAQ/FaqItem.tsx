@@ -24,7 +24,7 @@ const FaqItem: React.FC<FaqsProp> = ({ faqs }) => {
             <button
               onClick={() => setVisible(isOpen ? null : faq.id)}
               className="w-full bg-brand-800 rounded-lg px-3 py-3 flex justify-between items-center">
-              <span className="text-white font-normal font-poppins lg:text-[17px]">
+              <span className="text-white font-normal font-poppins lg:text-lg">
                 {faq.question}
               </span>
 
@@ -40,7 +40,7 @@ const FaqItem: React.FC<FaqsProp> = ({ faqs }) => {
             <CCollapse visible={isOpen}>
               <div className="w-full my-4 border-1 border-primary-strong"></div>
 
-              <div className="p-3 bg-white text-black font-normal font-poppins lg:text-[17px]">
+              <div className="p-3 bg-white text-black font-normal font-poppins lg:text-lg">
                 {faq.answer}
               </div>
             </CCollapse>

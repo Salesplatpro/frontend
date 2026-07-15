@@ -124,7 +124,7 @@ const TalentAssessment = () => {
     <div>
       <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
         <div className="ml-8">
-          <h2 className="text-[30px]  text-grey-900 font-bold">
+          <h2 className="text-3xl  text-grey-900 font-bold">
             Pre-Assessment Test
           </h2>
           <p className="text-xl font-raleway text-grey-900 font-medium my-3">
@@ -139,8 +139,8 @@ const TalentAssessment = () => {
               {questions.map((question, i) => (
                 <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
                   <div className="flex items-center justify-start space-x-3 text-grey-900 font-medium">
-                    <h3 className="text-[18px] leading-[150%]">{i + 1}.</h3>
-                    <h3 className="text-[18px] leading-[150%]">
+                    <h3 className="text-lg leading-[150%]">{i + 1}.</h3>
+                    <h3 className="text-lg leading-[150%]">
                       {question.question}
                     </h3>
                   </div>

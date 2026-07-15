@@ -39,17 +39,17 @@
 .description {
   width: 60%;
   font-weight: 600;
-  font-size: 24px;
-  font-family: 'raleway', sans-serif;
+  font-size: var(--text-2xl);
+  font-family: var(--font-heading);
   line-height: 40px;
   color: #fff;
 }
 
 .author {
   @extend .description;
-  font-size: 20px;
+  font-size: var(--text-xl);
   line-height: 28px;
-  font-family: 'raleway', sans-serif;
+  font-family: var(--font-heading);
 }
 
 .footer {

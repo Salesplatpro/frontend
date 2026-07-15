@@ -1,0 +1,47 @@
+import { httpClient } from '@/features/auth/services/httpClient'
+
+import {
+  AdminRole,
+  AdminRolePayload,
+  Candidate,
+  CandidateFilters,
+} from '../types'
+
+interface ApiEnvelope<T> {
+  status: boolean
+  message: string
+  data: T
+}
+
+export const fetchCandidates = (filters: CandidateFilters = {}) => {
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([, value]) => value !== undefined && value !== '',
+    ),
+  )
+  return httpClient
+    .get<ApiEnvelope<{ users: Candidate[] }>>('/user/profile/', { params })
+    .then((response) => response.data.data.users)
+}
+
+export const fetchRoles = () =>
+  httpClient
+    .get<ApiEnvelope<{ roles: AdminRole[] }>>('/roles', {
+      params: { limit: 1000 },
+    })
+    .then((response) => response.data.data.roles)
+
+export const createRole = (payload: AdminRolePayload) =>
+  httpClient
+    .post<ApiEnvelope<{ role: AdminRole }>>('/roles', payload)
+    .then((response) => response.data.data.role)
+
+export const updateRole = (id: string, payload: AdminRolePayload) =>
+  httpClient
+    .patch<ApiEnvelope<{ role: AdminRole }>>(`/roles/${id}`, payload)
+    .then((response) => response.data.data.role)
+
+export const deleteRole = (id: string) =>
+  httpClient
+    .delete<ApiEnvelope<null>>(`/roles/${id}`)
+    .then((response) => response.data)

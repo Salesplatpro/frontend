@@ -21,13 +21,18 @@ import { LandingPage } from '@/LandingPage'
 import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
+import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
+import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
 import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
 import {
   ApplicationProgress,
+  Chat,
   MyJobPosts,
+  Notification as RecruiterNotification,
   ProcessCV,
   ProcessCvAndCoverLetter,
+  Profile as RecruiterProfilePage,
   Shortlist,
   UploadCvAndCoverLetter,
   UploadCVOnly,
@@ -277,17 +282,39 @@ export const routeConfig: RouteObject[] = [
             path: 'shortlist',
             element: <Shortlist />,
           },
+          {
+            path: 'notification',
+            element: <RecruiterNotification />,
+          },
+          {
+            path: 'chat',
+            element: <Chat />,
+          },
+          {
+            path: 'profile',
+            element: <RecruiterProfilePage />,
+          },
         ],
       },
     ],
   },
   {
     path: '/adminDashboard',
-    element: <AdminProfileSidebar />,
+    element: <ProtectedRoute allowedRoles={['admin']} />,
     children: [
       {
-        path: 'viewcandidates',
-        // element: <ViewTalents />,
+        path: '',
+        element: <AdminProfileSidebar />,
+        children: [
+          {
+            path: 'viewcandidates',
+            element: <ViewCandidates />,
+          },
+          {
+            path: 'roles',
+            element: <AdminRoles />,
+          },
+        ],
       },
     ],
   },

@@ -38,7 +38,7 @@ const TalentProfileSidebar: React.FC = () => {
     <div className="dashboard">
       <div className="dashboard-nav">
         <button className="menu" onClick={() => setIsOpen(!isOpen)}>
-          {!isOpen && <IoMdMenu className="text-[30px]" />}
+          {!isOpen && <IoMdMenu className="text-3xl" />}
         </button>
         <LoggedInUserBadge />
       </div>
@@ -50,7 +50,7 @@ const TalentProfileSidebar: React.FC = () => {
         />
 
         <button className="close" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen && <AiOutlineCloseCircle className="text-[24px]" />}
+          {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
         </button>
 
         {isLocked && (
@@ -63,17 +63,17 @@ const TalentProfileSidebar: React.FC = () => {
                 backgroundColor: 'rgba(255,255,255,0.08)',
                 border: '1.5px solid rgba(255,255,255,0.18)',
               }}>
-              <MdLock className="text-white text-[26px]" />
+              <MdLock className="text-white text-2xl" />
             </div>
 
             <div className="text-center flex flex-col gap-1.5">
               <p
-                className="text-white text-[13px] font-bold font-raleway"
+                className="text-white text-sm font-bold font-raleway"
                 style={{ letterSpacing: '0.01em' }}>
                 Navigation Locked
               </p>
               <p
-                className="font-raleway text-[11px] leading-relaxed"
+                className="font-raleway text-xs leading-relaxed"
                 style={{ color: 'rgba(255,255,255,0.55)' }}>
                 You are currently taking an assessment.
                 <br />

@@ -61,7 +61,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   return (
     <div className="flex flex-col justify-center gap-8">
       <div>
-        <div className="text-[20px] font-medium">Messages</div>
+        <div className="text-xl font-medium">Messages</div>
         <DisplayMessage messages={messages?.data?.messages} />
       </div>
       <div>

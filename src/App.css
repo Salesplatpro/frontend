@@ -7,7 +7,8 @@
 }
 
 body {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
   margin: 0;
   padding: 0;
   overflow-x: hidden;

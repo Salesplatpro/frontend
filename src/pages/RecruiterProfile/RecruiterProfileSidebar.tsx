@@ -17,18 +17,17 @@ const RecruiterProfileSidebar = () => {
     <div className="dashboard">
       <div className="dashboard-nav">
         <button className="menu" onClick={() => setIsOpen(!isOpen)}>
-          {!isOpen && <IoMdMenu className="text-[30px]" />}
+          {!isOpen && <IoMdMenu className="text-3xl" />}
         </button>
         <LoggedInUserBadge />
       </div>
       <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
-          // @ts-expect-error TODO: fix type error
           sideBarData={sidebarData}
           handleClick={() => setIsOpen(false)}
         />
         <button className="close" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen && <AiOutlineCloseCircle className="text-[24px]" />}
+          {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
         </button>
       </div>
       <div className="outlet">

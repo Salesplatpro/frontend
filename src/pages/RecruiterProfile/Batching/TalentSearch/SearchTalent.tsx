@@ -97,7 +97,7 @@ const SearchTalent = () => {
               <button
                 type="submit"
                 className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
-                <p className="text-white font-semibold font-raleway leading-[24px] text-[17px]">
+                <p className="text-white font-semibold font-raleway leading-[24px] text-lg">
                   Search
                 </p>
               </button>

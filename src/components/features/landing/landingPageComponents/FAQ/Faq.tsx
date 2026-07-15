@@ -18,7 +18,7 @@ const Faq = () => {
   return (
     <div className="w-full min-h-screen flex justify-start items-center flex-col">
       <div className="flex justify-center items-center flex-col space-y-5 py-14">
-        <h1 className="font-raleway font-medium text-[20px] lg:text-[40px] lg:leading-[100%] md:text-[35px] md:leading-[60%] sm:text-[27px] sm:leading-[45%] leading-[30%]">
+        <h1 className="font-raleway font-medium text-xl lg:text-4xl lg:leading-[100%] md:text-3xl md:leading-[60%] sm:text-2xl sm:leading-[45%] leading-[30%]">
           Frequently Asked Questions (FAQs)
         </h1>
         <div className="relative">
@@ -40,7 +40,7 @@ const Faq = () => {
         {filteredFaq.length > 0 ? (
           <FaqItem faqs={filteredFaq} />
         ) : (
-          <p className="text-gray-400 font-poppins leading-10 text-[20px] font-medium">
+          <p className="text-gray-400 font-poppins leading-10 text-xl font-medium">
             Not Found
           </p>
         )}

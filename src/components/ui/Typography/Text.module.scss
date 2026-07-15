@@ -15,39 +15,39 @@ $mobile-breakpoint: 480px;
 }
 
 .fs-xs {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .fs-sm {
-  @include responsive-font(14px, 12px, 10px);
+  @include responsive-font(12px, 10px, 9px);
 }
 
 .fs-md {
-  @include responsive-font(16px, 14px, 12px);
+  @include responsive-font(14px, 12px, 10px);
 }
 
 .fs-lg {
-  @include responsive-font(18px, 16px, 14px);
+  @include responsive-font(16px, 14px, 12px);
 }
 
 .fs-xl {
-  @include responsive-font(20px, 18px, 16px);
+  @include responsive-font(18px, 16px, 14px);
 }
 
 .fs-2xl {
-  @include responsive-font(24px, 20px, 18px);
+  @include responsive-font(20px, 18px, 16px);
 }
 
 .fs-3xl {
-  @include responsive-font(32px, 24px, 20px);
+  @include responsive-font(28px, 20px, 18px);
 }
 
 .fs-4xl {
-  @include responsive-font(48px, 32px, 20px);
+  @include responsive-font(42px, 28px, 18px);
 }
 
 .fs-5xl {
-  @include responsive-font(60px, 32px, 24px);
+  @include responsive-font(52px, 28px, 20px);
 }
 
 .default {

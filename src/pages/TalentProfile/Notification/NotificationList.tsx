@@ -179,7 +179,7 @@ const NotificationList: React.FC = () => {
             {modalTitle}
           </h2>
 
-          <p className="text-center font-raleway font-medium text-[16px] lg:text-[18px] py-2 text-midnight">
+          <p className="text-center font-raleway font-medium text-base lg:text-lg py-2 text-midnight">
             {modalMessage}
           </p>
 

@@ -1,0 +1,9 @@
+.chartCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  margin-bottom: var(--space-1);
+}

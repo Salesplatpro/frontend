@@ -1,4 +1,7 @@
 export * from './Batching'
+export * from './Chat'
 export * from './getJobStatus'
 export * from './MyJobPosts'
+export * from './Notification'
+export * from './Profile'
 export * from './Shortlist'

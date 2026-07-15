@@ -21,15 +21,15 @@
 .title {
   color: var(--color-grey-900);
   font-weight: 700;
-  font-size: 32px;
+  font-size: var(--text-3xl);
 
   @media (max-width: 980px) {
-    font-size: 28px;
+    font-size: var(--text-2xl);
   }
 }
 
 .description {
-  font-size: 15px;
+  font-size: var(--text-sm);
   width: 220px;
   display: flex;
   flex-wrap: nowrap;

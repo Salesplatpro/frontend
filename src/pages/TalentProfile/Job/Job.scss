@@ -9,7 +9,7 @@
 
 .jobs {
   font-weight: 700;
-  font-size: 32px;
+  font-size: var(--text-3xl);
 }
 
 .job-section {
@@ -48,7 +48,7 @@
 
 .showing-result {
   font-weight: 700;
-  font-size: 24px;
+  font-size: var(--text-2xl);
 }
 
 .sortby {

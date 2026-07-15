@@ -1,8 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { Heading } from '@/components/ui/Typography'
+
 import { ColumnDef, DataTable } from '../../../components'
 import { calculateDaysFromCreation } from '../../../utils'
+import styles from './RecentApplications.module.scss'
 
 interface ApplicationRow {
   applicantName: string
@@ -46,9 +49,9 @@ const RecentApplications: React.FC<RecentApplicationsProps> = ({
   infoData,
 }) => (
   <div>
-    <div className="mb-4 flex items-center justify-between">
-      <h4 className="text-lg text-[#000] font-semibold">Recent Applications</h4>
-      <Link to="allapplications" className="text-base text-[primary]">
+    <div className={styles.header}>
+      <Heading level={4}>Recent Applications</Heading>
+      <Link to="allapplications" className={styles.viewAll}>
         View all
       </Link>
     </div>

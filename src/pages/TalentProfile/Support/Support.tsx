@@ -38,11 +38,11 @@ export const Support = () => {
           <div className="w-full">
             <div className="flex justify-between w-full">
               <div className="text-grey-900">
-                <p className="text-[20px] font-semibold">{`${userInfo?.firstName} ${userInfo?.lastName}`}</p>
+                <p className="text-xl font-semibold">{`${userInfo?.firstName} ${userInfo?.lastName}`}</p>
               </div>
             </div>
             <hr className="my-2" />
-            <p className="text-[14px] text-grey-500">
+            <p className="text-sm text-grey-500">
               Fill this form with the complaints you have, with correct details.
               And be rest assured we will get back to you as soon as we can.
             </p>

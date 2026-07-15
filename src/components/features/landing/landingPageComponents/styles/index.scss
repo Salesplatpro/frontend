@@ -15,7 +15,7 @@ $hero-text: #3c6fd4;
 
 $landing-star-rating-color: #fec84b;
 
-$landing-base-font-size: 16px;
+$landing-base-font-size: var(--text-md);
 $landing-bold-font-weight: 500;
 
 $large-breakpoint: 1240px;

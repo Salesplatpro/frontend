@@ -36,16 +36,17 @@ export const sidebarData = [
   {
     name: 'Notification',
     icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
-    count: '',
+    link: '/recruiterDashboard/notification',
   },
   {
     name: 'Chat',
     icon: <BsChatDots size={ICON_SIZE} color={COLOR} />,
-    count: '',
+    link: '/recruiterDashboard/chat',
   },
   {
     name: 'Profile',
     icon: <CgProfile size={ICON_SIZE} color={COLOR} />,
+    link: '/recruiterDashboard/profile',
   },
   {
     name: 'Shortlist',

@@ -79,10 +79,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
         <>
           <img className="logo pb-2" src={logo} alt="company" />
           <div>
-            <div className="font-bold font-raleway text-grey-900 text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+            <div className="font-bold font-raleway text-grey-900 text-2xl lg:text-4xl md:text-3xl sm:text-3xl leading-[32px]">
               Forgot password
             </div>
-            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-grey-500 text-center pt-3">
+            <div className="font-normal font-raleway leading-[14px] lg:text-lg lg:leading-[24px] text-grey-500 text-center pt-3">
               Please enter your details
             </div>
           </div>
@@ -127,10 +127,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               alt="checklist"
               className="w-[100px] lg:w-[150px] md:w-[100px]"
             />
-            <div className="font-bold font-raleway text-grey-900 text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+            <div className="font-bold font-raleway text-grey-900 text-2xl lg:text-4xl md:text-3xl sm:text-3xl leading-[32px]">
               Reset Password
             </div>
-            <div className="text-grey-500 font-raleway font-normal text-[16px] leading-[18px] lg:text-[18px] w-[330px] lg:w-[460px] md:w-[440px] sm:w-[360px] text-center lg:leading-[22px] py-2">
+            <div className="text-grey-500 font-raleway font-normal text-base leading-[18px] lg:text-lg w-[330px] lg:w-[460px] md:w-[440px] sm:w-[360px] text-center lg:leading-[22px] py-2">
               Link to reset your password has been sent to the email registered
               to this account {email}
             </div>
@@ -140,7 +140,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             href={`https://mail.google.com/${email}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-[15px] lg:text-[20px] md:text-[17px] sm:text-[16px] bg-primary-strong hover:bg-primary"
+            className="close-modal px-14 lg:px-24 md:px-20 sm:px-16 border-[1px] py-2 my-5 rounded-lg text-white font-raleway font-medium text-center text-sm lg:text-xl md:text-lg sm:text-base bg-primary-strong hover:bg-primary"
             aria-label="Move to confirmation">
             Go to Mail
           </a>
@@ -159,10 +159,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
         <>
           <img className="logo pb-2" src={logo} alt="company" />
           <div className="text-center">
-            <div className="font-bold font-raleway text-grey-900 text-[25px] lg:text-[36px] md:text-[34px] sm:text-[30px] leading-[32px]">
+            <div className="font-bold font-raleway text-grey-900 text-2xl lg:text-4xl md:text-3xl sm:text-3xl leading-[32px]">
               Reset password
             </div>
-            <div className="font-normal font-raleway leading-[14px] lg:text-[18px] lg:leading-[24px] text-grey-500 text-center pt-3">
+            <div className="font-normal font-raleway leading-[14px] lg:text-lg lg:leading-[24px] text-grey-500 text-center pt-3">
               Please enter your new password details
             </div>
           </div>
@@ -211,7 +211,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
             {error ? (
               <Alert variant="error">{error}</Alert>
             ) : (
-              <p className="font-raleway font-normal text-[13px] text-grey-500 leading-[22px]">
+              <p className="font-raleway font-normal text-sm text-grey-500 leading-[22px]">
                 Must be at least 8 charaters.
               </p>
             )}
