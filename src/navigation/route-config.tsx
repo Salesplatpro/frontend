@@ -21,6 +21,8 @@ import { LandingPage } from '@/LandingPage'
 import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
+import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
+import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
 import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
 import {
@@ -283,11 +285,21 @@ export const routeConfig: RouteObject[] = [
   },
   {
     path: '/adminDashboard',
-    element: <AdminProfileSidebar />,
+    element: <ProtectedRoute allowedRoles={['admin']} />,
     children: [
       {
-        path: 'viewcandidates',
-        // element: <ViewTalents />,
+        path: '',
+        element: <AdminProfileSidebar />,
+        children: [
+          {
+            path: 'viewcandidates',
+            element: <ViewCandidates />,
+          },
+          {
+            path: 'roles',
+            element: <AdminRoles />,
+          },
+        ],
       },
     ],
   },
