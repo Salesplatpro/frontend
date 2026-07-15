@@ -29,27 +29,36 @@ interface DataTableProps<T> {
   getRowKey?: (row: T, index: number) => string | number
   getRowClassName?: (row: T, index: number) => string
   ariaLabel?: string
+  /** Prepends an auto-numbered "S/N" column (1, 2, 3, ...) — no data field needed. */
+  showRowNumber?: boolean
+  /** Starting offset for row numbers, e.g. the current page's offset when paginated. */
+  rowNumberOffset?: number
 }
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: 'var(--color-grey-50)',
     color: 'var(--color-grey-900)',
-    fontSize: '16px',
-    fontFamily: 'Raleway, sans-serif',
+    fontSize: 'var(--text-sm)',
+    fontFamily: 'var(--font-heading)',
     fontWeight: 600,
+    borderBottom: '2px solid var(--color-border-strong)',
   },
   [`&.${tableCellClasses.body}`]: {
     color: 'var(--color-grey-900)',
-    fontSize: '16px',
-    fontFamily: 'Raleway, sans-serif',
+    fontSize: 'var(--text-sm)',
+    fontFamily: 'var(--font-body)',
     fontWeight: 500,
+    borderBottom: '1px solid var(--color-border)',
   },
 }))
 
 const StyledTableRow = styled(TableRow)(() => ({
   '&:last-child td, &:last-child th': {
     border: 0,
+  },
+  '&:hover': {
+    backgroundColor: 'var(--color-bg-subtle)',
   },
 }))
 
@@ -61,21 +70,36 @@ export function DataTable<T>({
   getRowKey,
   getRowClassName,
   ariaLabel = 'data table',
+  showRowNumber,
+  rowNumberOffset = 0,
 }: DataTableProps<T>) {
   const screenWidth = useScreenWidth()
-  const visibleColumns = columns.filter(
+  const rowNumberColumn: ColumnDef<T> = {
+    key: '__rowNumber',
+    header: 'S/N',
+    align: 'center',
+    render: (_row, index) => rowNumberOffset + index + 1,
+  }
+  const allColumns = showRowNumber ? [rowNumberColumn, ...columns] : columns
+  const visibleColumns = allColumns.filter(
     (col) => !col.hideBelow || screenWidth > col.hideBelow,
   )
 
   if (isLoading) return <Spinner fullPage />
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        borderRadius: 'var(--radius-lg)',
+        boxShadow: 'var(--shadow-sm)',
+        overflow: 'hidden',
+      }}>
       <Table aria-label={ariaLabel}>
         <TableHead>
           <TableRow>
             {visibleColumns.map((col) => (
-              <StyledTableCell key={col.key} align={col.align ?? 'center'}>
+              <StyledTableCell key={col.key} align={col.align ?? 'left'}>
                 {col.header}
               </StyledTableCell>
             ))}
@@ -101,7 +125,7 @@ export function DataTable<T>({
                   getRowClassName ? getRowClassName(row, index) : undefined
                 }>
                 {visibleColumns.map((col) => (
-                  <StyledTableCell key={col.key} align={col.align ?? 'center'}>
+                  <StyledTableCell key={col.key} align={col.align ?? 'left'}>
                     {col.render(row, index)}
                   </StyledTableCell>
                 ))}
