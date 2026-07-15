@@ -34,7 +34,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           textColor,
           pathColor,
           trailColor,
-          textSize: '25px',
+          textSize: 'var(--text-xl)',
         })}
       />
     </div>

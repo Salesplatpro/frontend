@@ -2,10 +2,14 @@ import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 
 import FilterByJobs from '@/components/features/jobs/Filter/FilterByJobs'
+import { Card } from '@/components/ui/Card'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
+import { Heading, Text } from '@/components/ui/Typography'
 
 import profilePics from '../../../assets/profilePics2.webp'
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
+import styles from './RecentCompilation.module.scss'
 
 interface CompilationTypes {
   applicantName: string
@@ -15,6 +19,18 @@ interface CompilationTypes {
   personalizedAss: string
   mbtiType: string
 }
+
+const METRICS: {
+  key: keyof CompilationTypes
+  label: string
+  isScore?: boolean
+}[] = [
+  { key: 'cvSimilarityScore', label: 'CV Matching', isScore: true },
+  { key: 'prescreeningScore', label: 'Prescreening', isScore: true },
+  { key: 'personalizedAss', label: 'Personalised Ass', isScore: true },
+  { key: 'mbtiType', label: 'Personality Ass' },
+]
+
 const RecentCompilation = () => {
   const [jobId, setJobId] = useState<string | null>(null)
   const [infoData, setInfoData] = useState<CompilationTypes[]>([])
@@ -39,74 +55,53 @@ const RecentCompilation = () => {
   }
 
   return (
-    <div className="py-4">
-      <div className="flex justify-between items-center mb-4">
-        <h4 className="text-lg font-bold">Recent Compilation</h4>
-        <div>
-          <FilterByJobs onFilter={handleFilter} />
-        </div>
+    <div>
+      <div className={styles.header}>
+        <Heading level={4}>Recent Compilation</Heading>
+        <FilterByJobs onFilter={handleFilter} />
       </div>
 
-      {/* Compilation Data */}
       {isLoading ? (
-        <div className="flex justify-center items-center h-32">
-          <Spinner fullPage />
-        </div>
+        <Spinner fullPage />
       ) : error ? (
         <Alert severity="error">Error Fetching Data</Alert>
+      ) : infoData.length === 0 ? (
+        <EmptyState
+          title="No compilations yet"
+          description="Applicant compilations will show up here once available."
+        />
       ) : (
-        <div className="space-y-8">
-          {infoData.length > 0 ? (
-            infoData.map((row, index) => (
-              <div
-                key={index}
-                className="flex md:flex-row flex-col justify-between gap-8 p-4 bg-grey-50 rounded-2xl ">
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={profilePics}
-                    alt="avatar"
-                    className="w-12 h-12 rounded-full"
-                  />
-                  <div>
-                    <p className="text-lg font-semibold">{row.applicantName}</p>
-                    <p className="text-sm font-medium text-midnight">
-                      {row.role}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right section with metrics */}
-                <div className="text-right space-y-2">
-                  <div className="flex justify-between md:w-[200px] w-full">
-                    <span className="text-black">CV Matching</span>
-                    <span className="font-medium">
-                      score {row.cvSimilarityScore || 'nill'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between md:w-[200px] w-full">
-                    <span className="text-black">Prescreening</span>
-                    <span className="font-medium">
-                      score {row.prescreeningScore || 'nill'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between md:w-[200px] w-full">
-                    <span className="text-black">Personalised Ass</span>
-                    <span className="font-medium">
-                      score {row.personalizedAss || 'nill'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between md:w-[200px] w-full">
-                    <span className="text-black">Personality Ass</span>
-                    <span className="font-medium">
-                      {row.mbtiType || 'nill'}
-                    </span>
-                  </div>
+        <div className={styles.list}>
+          {infoData.map((row, index) => (
+            <Card key={index} className={styles.row}>
+              <div className={styles.applicant}>
+                <img src={profilePics} alt="avatar" className={styles.avatar} />
+                <div>
+                  <Text size="fs-md" weight="bolder">
+                    {row.applicantName}
+                  </Text>
+                  <Text size="fs-sm" color="secondary">
+                    {row.role}
+                  </Text>
                 </div>
               </div>
-            ))
-          ) : (
-            <p>No compilations available</p>
-          )}
+
+              <div className={styles.metrics}>
+                {METRICS.map((metric) => (
+                  <div key={metric.key} className={styles.metricRow}>
+                    <Text size="fs-sm" color="secondary">
+                      {metric.label}
+                    </Text>
+                    <Text size="fs-sm" weight="bolder">
+                      {metric.isScore
+                        ? `score ${row[metric.key] || 'nill'}`
+                        : row[metric.key] || 'nill'}
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          ))}
         </div>
       )}
     </div>

@@ -1,60 +1,70 @@
 import React from 'react'
 
+import { Card } from '@/components/ui/Card'
+import { Text } from '@/components/ui/Typography'
+
 import ProgressBar from '../../../utils/ProgressBar'
+import styles from './ApplicationTracker.module.scss'
+import { DashboardStats } from './types'
+
 interface StatsType {
-  infoData: any
+  infoData?: DashboardStats
 }
 
 const ApplicationTracker: React.FC<StatsType> = ({ infoData }) => {
-  const allData = [
+  const tiles = [
     {
-      trackerName: 'Campaigns',
-      amount: infoData?.campaignCount,
-      ratio: true,
-      completionRatio: infoData?.completionRatio,
-      bgColor: '#4884DF',
-      textColor: '#fff',
+      key: 'campaigns',
+      label: 'Campaigns',
+      amount: infoData?.campaignCount ?? 0,
+      showRatio: true,
+      variant: 'primary' as const,
     },
     {
-      trackerName: 'Applications',
-      amount: infoData?.applicationsCount,
-      ratio: false,
-      bgColor: '#F4F6F7',
-      textColor: '#000',
+      key: 'applications',
+      label: 'Applications',
+      amount: infoData?.applicationsCount ?? 0,
+      showRatio: false,
+      variant: 'subtle' as const,
     },
     {
-      trackerName: 'Shortlists',
-      amount: infoData?.shortlistCount,
-      ratio: false,
-      bgColor: '#4884DF',
-      textColor: '#fff',
+      key: 'shortlists',
+      label: 'Shortlists',
+      amount: infoData?.shortlistCount ?? 0,
+      showRatio: false,
+      variant: 'primary' as const,
     },
   ]
 
   return (
-    <div className="flex flex-col items-center md:flex-row justify-between gap-5 ">
-      {allData.map((info, i) => (
-        <div
-          key={i}
-          style={{
-            backgroundColor: info.bgColor,
-            color: info.textColor,
-          }}
-          className="w-[340px] h-[114px] rounded-lg flex justify-between items-center lg:px-10 md:px-7 px-3">
+    <div className={styles.trackerRow}>
+      {tiles.map((tile) => (
+        <Card
+          key={tile.key}
+          className={`${styles.tile} ${styles[tile.variant]}`}>
           <div>
-            <h6 className="text-sm font-extralight">{info.trackerName}</h6>
-            <h6 className="text-lg font-semibold">{info.amount}</h6>
+            <Text
+              size="fs-sm"
+              color={tile.variant === 'primary' ? 'white' : 'secondary'}>
+              {tile.label}
+            </Text>
+            <Text
+              size="fs-2xl"
+              weight="bolder"
+              color={tile.variant === 'primary' ? 'white' : 'secondary'}>
+              {tile.amount}
+            </Text>
           </div>
-          {info.ratio && (
+          {tile.showRatio && (
             <ProgressBar
-              percentage={info.completionRatio}
-              textColor={info.textColor}
-              pathColor="#fff"
-              trailColor="#72A9E8"
+              percentage={infoData?.completionRatio ?? 0}
+              textColor="var(--color-white)"
+              pathColor="var(--color-white)"
+              trailColor="rgba(255,255,255,0.4)"
               size={50}
             />
           )}
-        </div>
+        </Card>
       ))}
     </div>
   )
