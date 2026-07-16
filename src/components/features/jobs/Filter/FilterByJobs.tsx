@@ -8,7 +8,7 @@ interface FilterByJobsProps {
 }
 
 interface Job {
-  _id: string
+  id: string
   role: {
     name: string
   }
@@ -43,8 +43,8 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
             <div className="">
               {jobData?.data?.map((job: Job) => (
                 <div
-                  key={job._id}
-                  onClick={() => handleFilterSelect(job._id)}
+                  key={job.id}
+                  onClick={() => handleFilterSelect(job.id)}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm break-words">
                   {job.role.name}
                 </div>

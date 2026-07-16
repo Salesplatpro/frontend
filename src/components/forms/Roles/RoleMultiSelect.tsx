@@ -35,7 +35,7 @@ export const RoleMultiSelect: React.FC<RoleMultiSelectProps> = ({
     : []
 
   const options = roles.map((role: Role) => ({
-    value: String(role._id),
+    value: String(role.id),
     label: role.name || '',
   }))
 

@@ -6,7 +6,7 @@ export interface AssessmentQuestion {
 }
 
 export interface Assessment {
-  _id: string
+  id: string
   status: 'pending' | 'completed'
   score: number | null
   attemptCount: number

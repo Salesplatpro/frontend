@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
 import { Spinner } from '@/components/ui/Spinner'
-import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import animationData from '../../../assets/Animation - check.json'
 import {
@@ -16,8 +16,8 @@ import { notify } from '../../../utils/toastNotifications'
 import { Question } from '../../../utils/types'
 
 const TalentAssessment = () => {
-  const user = useAuthStore((state) => state.user)
-  const roleId = user?.profile?.role[0]?._id
+  const { profile } = useProfile()
+  const roleId = profile?.userRoles?.[0]?.id
   const location = useLocation()
   const canRetakeAssessment = location.state?.canRetakeAssessment || false
   const { data, error, isLoading } = useFetchPretestQuery(roleId)
@@ -52,7 +52,7 @@ const TalentAssessment = () => {
     return <Alert severity="info">Please complete your profile creation</Alert>
   }
 
-  if (user?.profile?.prescreeningScore && !canRetakeAssessment) {
+  if (profile?.prescreeningScore && !canRetakeAssessment) {
     return (
       <div className="flex justify-center items-center flex-col w-full h-full">
         <div>
@@ -148,8 +148,8 @@ const TalentAssessment = () => {
                   <textarea
                     className="w-full bg-white border border-grey-300 rounded-lg h-[100px] p-3 mt-3"
                     placeholder="Answer here"
-                    name={`answer-${question._id}`}
-                    onChange={(e) => handleChange(e, question._id)}
+                    name={`answer-${question.id}`}
+                    onChange={(e) => handleChange(e, question.id)}
                     required
                   />
                 </div>

@@ -73,7 +73,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
               </Tooltip>
             )}
             <Link
-              to={`/recruiterDashboard/jobdetail/${job._id}`}
+              to={`/recruiterDashboard/jobdetail/${job.id}`}
               className={styles.titleLink}>
               {job.role.name}
             </Link>
@@ -86,7 +86,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         align: 'center',
         render: (job) => (
           <Link
-            to={`/recruiterDashboard/singleJobPost/${job._id}`}
+            to={`/recruiterDashboard/singleJobPost/${job.id}`}
             state={{ jobName: job.role.name, postedAt: job.createdAt }}>
             <button className={styles.applicantsButton}>
               View ({job.noOfApplicants})
@@ -111,18 +111,18 @@ export const JobsTable = ({ data }: JobsTableType) => {
         render: (job) => (
           <div className={styles.actionsCell}>
             <Link
-              to={`/recruiterDashboard/jobdetail/${job._id}`}
+              to={`/recruiterDashboard/jobdetail/${job.id}`}
               state={{ jobName: job.role.name, postedAt: job.createdAt }}>
               <button className={styles.viewJobButton}>View Job</button>
             </Link>
             {!job.aiConfig && (
-              <Link to={`/recruiterDashboard/postjob/${job._id}`}>
+              <Link to={`/recruiterDashboard/postjob/${job.id}`}>
                 <button className={styles.addAiConfigButton}>
                   Add AI Config
                 </button>
               </Link>
             )}
-            <ShareOptions handleShare={handleShare} jobId={job._id} />
+            <ShareOptions handleShare={handleShare} jobId={job.id} />
           </div>
         ),
       },
@@ -135,7 +135,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
       <DataTable
         columns={columns}
         data={data}
-        getRowKey={(job) => job._id}
+        getRowKey={(job) => job.id}
         ariaLabel="Job posts table"
         getRowClassName={(job) => {
           if (job.status === 'paused' || job.status === 'closed')

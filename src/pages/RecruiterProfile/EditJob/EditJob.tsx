@@ -48,7 +48,7 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
 
   const initialValues: EditJobFormValues = {
     jobBrief: jobToEdit?.jobBrief || '',
-    role: jobToEdit?.role?._id || '',
+    role: jobToEdit?.role?.id || '',
     requirements: jobToEdit?.requirements || '',
     minSalary: String(jobToEdit?.minSalary ?? ''),
     maxSalary: String(jobToEdit?.maxSalary ?? ''),

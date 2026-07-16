@@ -2,7 +2,6 @@ export type UserRole = 'talent' | 'recruiter' | 'admin'
 
 export interface AuthUser {
   id?: string
-  _id?: string
   firstName?: string
   lastName?: string
   email?: string

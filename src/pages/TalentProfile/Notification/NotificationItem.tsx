@@ -11,7 +11,7 @@ interface Message {
   content: string
   createdAt: string
   sender: Sender
-  _id: string
+  id: string
   acknowledged: boolean
   isRead: boolean
 }

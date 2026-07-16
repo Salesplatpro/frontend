@@ -23,7 +23,7 @@ const iconColor = ' #4985df'
 export const ApplicationProgress = () => {
   const { applicationId } = useParams()
   const talentId = useFetchApplicantProgressQuery(applicationId ?? '')?.data
-    ?.data?.application?.talent?._id
+    ?.data?.application?.talent?.id
   const [loadingShortlist, setLoadingShortlist] = useState(false)
   const [loadingReject, setLoadingReject] = useState(false)
 

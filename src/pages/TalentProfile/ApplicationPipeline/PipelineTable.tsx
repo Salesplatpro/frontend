@@ -52,7 +52,7 @@ const columns: ColumnDef<AllJobTypes>[] = [
     header: 'Details',
     align: 'left',
     render: (app) => (
-      <Link to={`/talentDashboard/applicationPipeline/${app.job?._id}`}>
+      <Link to={`/talentDashboard/applicationPipeline/${app.job?.id}`}>
         <Button>View More</Button>
       </Link>
     ),
@@ -74,7 +74,7 @@ export const PipelineTable = () => {
       columns={columns}
       data={allJobs}
       isLoading={isLoading}
-      getRowKey={(app) => app._id ?? ''}
+      getRowKey={(app) => app.id ?? ''}
       ariaLabel="Application pipeline"
     />
   )

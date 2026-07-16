@@ -6,7 +6,7 @@ import { Bounce } from 'react-toastify'
 
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Spinner } from '@/components/ui/Spinner'
-import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { Button, DisplayError } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
@@ -26,7 +26,7 @@ const defaultFilterValues: JobFiltersTypes = {
 }
 
 interface JobType {
-  _id: string
+  id: string
   role: { name: string }
   experienceLevel: string
   description: string
@@ -38,8 +38,8 @@ interface JobType {
 }
 
 const Job = () => {
-  const user = useAuthStore((state) => state.user)
-  const roleId = user?.profile?.role[0]?._id
+  const { profile } = useProfile()
+  const roleId = profile?.userRoles?.[0]?.id
   const { data, error, isLoading } = useFetchJobQuery(roleId)
 
   // State for filters
@@ -137,7 +137,7 @@ const Job = () => {
               jobs.map((job, index) => (
                 <SingleJob
                   key={index}
-                  jobId={job?._id}
+                  jobId={job?.id}
                   jobTitle={job.role?.name}
                   jobCategory={job?.experienceLevel}
                   jobDescription={job?.description}

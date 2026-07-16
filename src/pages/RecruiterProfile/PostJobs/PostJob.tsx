@@ -82,7 +82,7 @@ const PostJob: React.FC = () => {
 
     try {
       const response = await jobPostCreation(payload).unwrap()
-      const jobId: string = response?.data?._id
+      const jobId: string = response?.data?.job?.id
 
       if (!jobId) {
         notify(

@@ -61,7 +61,7 @@ const columns: ColumnDef<SingleJobDetails>[] = [
     header: 'Details',
     align: 'center',
     render: (item) => (
-      <Link to={`/recruiterDashboard/singleJobPost/${item.job}/${item._id}`}>
+      <Link to={`/recruiterDashboard/singleJobPost/${item.job}/${item.id}`}>
         <Button size="sm">View Application</Button>
       </Link>
     ),
@@ -72,7 +72,7 @@ export const SingleJobTable = ({ applications }: SingleJobTableProps) => (
   <DataTable
     columns={columns}
     data={applications}
-    getRowKey={(item) => item._id}
+    getRowKey={(item) => item.id}
     ariaLabel="Job applications table"
     emptyState={
       <EmptyState
