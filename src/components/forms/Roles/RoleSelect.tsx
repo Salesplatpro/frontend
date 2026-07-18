@@ -37,7 +37,7 @@ export const RoleSelect: React.FC<RoleSelectProps> = ({
     : []
 
   const options = roles.map((role: Role) => ({
-    value: String(role._id),
+    value: String(role.id),
     label: role.name || '',
   }))
 

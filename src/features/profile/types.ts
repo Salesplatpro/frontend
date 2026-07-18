@@ -2,7 +2,7 @@ import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { LocationFormValue } from '@/components/forms/LocationSelect'
 
 export interface ProfileRole {
-  _id: string
+  id: string
   name?: string
 }
 

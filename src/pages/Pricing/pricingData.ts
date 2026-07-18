@@ -8,7 +8,7 @@ export interface PlanDetails {
 }
 
 export interface Plan {
-  _id: string
+  id: string
   name: string
   amount: number
   interval: 'monthly' | 'annually' | string

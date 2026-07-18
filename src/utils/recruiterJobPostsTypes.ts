@@ -5,13 +5,13 @@ type JobLocation = {
 }
 
 type JobRole = {
-  _id: string
+  id: string
   name: string
   description: string
 }
 
 type JobPostedBy = {
-  _id: string
+  id: string
   email: string
   firstName: string
   lastName: string
@@ -25,7 +25,7 @@ type JobPostedBy = {
 
 export type recruiterJobPostsTypes = {
   location: JobLocation
-  _id: string
+  id: string
   role: JobRole
   postedBy: JobPostedBy
   description: string
@@ -46,17 +46,17 @@ export type recruiterJobPostsTypes = {
 }
 
 export type SingleJobDetails = {
-  _id: string
+  id: string
   job: string
   talent: {
     profile: {
-      _id: string
+      id: string
       bio: string
       experience: string
       maxSalary: number
       minSalary: number
     }
-    _id: string
+    id: string
     email: string
     firstName: string
     lastName: string
@@ -70,7 +70,7 @@ export type SingleJobDetails = {
 
 export interface JobProfileProps {
   role?: {
-    _id: string
+    id: string
     name: string
   }
   title?: string

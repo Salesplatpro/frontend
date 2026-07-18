@@ -8,7 +8,7 @@ import { useCreateJDMutation } from '../../../redux/api/recruiter'
 import { notify } from '../../../utils/toastNotifications'
 
 type RoleType = {
-  _id: string
+  id: string
   name: string
   description: string
 }
@@ -49,7 +49,7 @@ const CreateJD = () => {
         autoClose: 5000,
       })
 
-      navigate(`/recruiterDashboard/scout/${result.data._id}`)
+      navigate(`/recruiterDashboard/scout/${result.data.scoutJob.id}`)
     } catch (error: any) {
       console.error('Error creating Job Description:', error.data.message)
       setError('Error creating Job Description')
@@ -107,7 +107,7 @@ const CreateJD = () => {
                   }>
                   <option value="" label="Select a role" />
                   {fetchedRoles.map((role: RoleType) => (
-                    <option key={role._id} value={role._id}>
+                    <option key={role.id} value={role.id}>
                       {role.name}
                     </option>
                   ))}

@@ -27,7 +27,7 @@ interface Message {
   content: string
   createdAt: string
   sender: Sender
-  _id: string
+  id: string
   acknowledged: boolean
   isRead: boolean
 }
@@ -103,7 +103,7 @@ const NotificationList: React.FC = () => {
 
       setAllMessages((prevMessages) =>
         prevMessages.map((message) =>
-          message._id === selectedMessageId
+          message.id === selectedMessageId
             ? { ...message, acknowledged: isAcknowledging, isRead: true }
             : message,
         ),
@@ -158,12 +158,12 @@ const NotificationList: React.FC = () => {
       <h2 className="text-2xl font-semibold font-raleway text-black">Chat</h2>
       {allMessages.map((message, index) => (
         <NotificationItem
-          key={message._id}
+          key={message.id}
           message={message}
           isExpanded={expandedMessages[index]}
           onToggleExpand={() => toggleReadMore(index)}
-          onAcknowledge={() => handleAcknowledge(message._id)}
-          onReject={() => handleReject(message._id)}
+          onAcknowledge={() => handleAcknowledge(message.id)}
+          onReject={() => handleReject(message.id)}
           truncateLimit={truncateLimit}
           displayMessage={truncateText(
             message.content,

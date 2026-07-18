@@ -15,7 +15,7 @@ interface FormData {
 }
 
 interface Question {
-  _id: string
+  id: string
   question: string
 }
 
@@ -145,8 +145,8 @@ const PersonalityTest: React.FC = () => {
                 <textarea
                   className="w-full bg-white border border-grey-300 rounded-lg h-[93px] p-3 mt-4"
                   placeholder="Type your answer here ..."
-                  name={`answer-${question._id}`}
-                  onChange={(e) => handleChange(e, question._id)}
+                  name={`answer-${question.id}`}
+                  onChange={(e) => handleChange(e, question.id)}
                   required
                 />
               </div>

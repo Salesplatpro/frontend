@@ -5,7 +5,7 @@ export interface AllJobTypes {
   createdAt?: any
   job?: {
     role?: string
-    _id?: string
+    id?: string
     location?: {
       country: string
     }
@@ -16,15 +16,15 @@ export interface AllJobTypes {
   role?: {
     name: string
   }
-  _id?: string
+  id?: string
 }
 
 export interface Role {
-  _id?: number
+  id?: string
   name?: string
 }
 
 export interface Question {
   question: string
-  _id: string
+  id: string
 }

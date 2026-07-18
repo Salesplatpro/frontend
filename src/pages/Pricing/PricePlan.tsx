@@ -90,12 +90,12 @@ const PricePlan: React.FC<PricePlanProp> = ({ isFlipped }) => {
         )
 
         return (
-          <Fragment key={monthlyPlan._id}>
+          <Fragment key={monthlyPlan.id}>
             <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
               <PricingCard
                 item={mapPlanToDetails(monthlyPlan)}
-                onSelect={() => handlePayment(monthlyPlan._id)}
-                isLoading={loadingPlanId === monthlyPlan._id}
+                onSelect={() => handlePayment(monthlyPlan.id)}
+                isLoading={loadingPlanId === monthlyPlan.id}
               />
               <PricingBackCard
                 item={
@@ -104,9 +104,9 @@ const PricePlan: React.FC<PricePlanProp> = ({ isFlipped }) => {
                     : mapPlanToDetails(monthlyPlan)
                 }
                 onSelect={() =>
-                  handlePayment(matchingAnnualPlan?._id || monthlyPlan._id)
+                  handlePayment(matchingAnnualPlan?.id || monthlyPlan.id)
                 }
-                isLoading={loadingPlanId === monthlyPlan._id}
+                isLoading={loadingPlanId === monthlyPlan.id}
               />
             </ReactCardFlip>
           </Fragment>
