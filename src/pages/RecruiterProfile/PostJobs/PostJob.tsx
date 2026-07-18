@@ -1,11 +1,8 @@
 import { Field, Form, Formik, FormikHelpers, useFormikContext } from 'formik'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import {
-  WorkType,
-  WorkTypeCheckboxes,
-} from '@/components/features/jobs/WorkTypeCheckboxes'
+import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
 import {
   EMPTY_LOCATION,
   LocationSelect,
@@ -22,13 +19,11 @@ import { Button } from '@/components/ui/Button'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
 import { useJobPostCreationMutation } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
-import { FormValues } from '@/utils/jobPostTypes'
+import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
 import styles from './PostJob.module.scss'
 import { validationSchema } from './validationSchema'
-
-type PostJobFormValues = Omit<FormValues, 'workMode'> & { workMode: WorkType[] }
 
 const DEFAULT_VALUES: PostJobFormValues = {
   jobBrief: '',
@@ -45,7 +40,7 @@ const DEFAULT_VALUES: PostJobFormValues = {
 }
 
 // Syncs Formik values into the draft store on every change.
-const FormObserver: React.FC<{ saveDraft: (v: unknown) => void }> = ({
+const FormObserver: React.FC<{ saveDraft: (v: PostJobFormValues) => void }> = ({
   saveDraft,
 }) => {
   const { values } = useFormikContext<PostJobFormValues>()
@@ -61,23 +56,22 @@ const PostJob: React.FC = () => {
     useJobPostCreationMutation()
   const { draft, saveDraft, clearDraft } = useJobDraftStore()
 
-  // Restore from persisted draft if one exists, otherwise use defaults.
-  const initialValues: PostJobFormValues =
-    draft != null ? (draft as PostJobFormValues) : DEFAULT_VALUES
+  // Capture once whether a draft existed at mount, so the restored-draft
+  // notice doesn't flicker on/off as the user edits the form.
+  const [hadDraft] = useState(() => draft != null)
+
+  const initialValues: PostJobFormValues = draft ?? DEFAULT_VALUES
 
   const onSubmit = async (
     values: PostJobFormValues,
     { setSubmitting }: FormikHelpers<PostJobFormValues>,
   ) => {
+    const { location, ...rest } = values
     const payload = {
-      ...values,
-      location: {
-        country: values.location.country.name,
-        state: values.location.state.name,
-        ...(values.location.city.name
-          ? { city: values.location.city.name }
-          : {}),
-      },
+      ...rest,
+      locationCountry: location.country.name,
+      ...(location.state.name ? { locationState: location.state.name } : {}),
+      ...(location.city.name ? { locationCity: location.city.name } : {}),
     }
 
     try {
@@ -114,6 +108,12 @@ const PostJob: React.FC = () => {
           <p className={styles.pageSubheading}>Tell us about your job</p>
         </div>
       </div>
+
+      {hadDraft && (
+        <div className={styles.draftNotice}>
+          Restored your unsaved draft from last time.
+        </div>
+      )}
 
       <Formik
         initialValues={initialValues}
@@ -189,24 +189,23 @@ const PostJob: React.FC = () => {
             {/* Section 3: Location & Work */}
             <section className={styles.formSection}>
               <h3 className={styles.sectionTitle}>Location &amp; Work</h3>
+              <p className={styles.sectionNote}>
+                Only Country is required — State/Province and Region/City are
+                optional.
+              </p>
 
               <div className={styles.fieldGroup}>
                 <LocationSelect
                   value={values.location}
                   onChange={(location) => setFieldValue('location', location)}
-                  cityLabel="Region / City (Optional)"
+                  stateLabel="State/Province (Optional)"
+                  cityLabel="Region/City (Optional)"
                   countryRequired
-                  stateRequired
                   errors={{
                     country:
                       touched.location?.country &&
                       typeof errors.location?.country?.name === 'string'
                         ? errors.location.country.name
-                        : undefined,
-                    state:
-                      touched.location?.state &&
-                      typeof errors.location?.state?.name === 'string'
-                        ? errors.location.state.name
                         : undefined,
                   }}
                 />
@@ -234,10 +233,9 @@ const PostJob: React.FC = () => {
 
               <div className={styles.compensationRow}>
                 <div className={styles.compensationFieldThird}>
-                  <label className={styles.label} htmlFor="currency-trigger">
-                    Currency<span className={styles.required}>*</span>
-                  </label>
                   <Select
+                    label="Currency"
+                    required
                     options={CURRENCY_OPTIONS}
                     value={values.currency}
                     onChange={(value) => setFieldValue('currency', value)}
@@ -326,6 +324,9 @@ const PostJob: React.FC = () => {
             </section>
 
             <div className={styles.actions}>
+              <p className={styles.autosaveHint}>
+                Your progress is saved automatically as you go.
+              </p>
               <Button
                 type="submit"
                 variant="primary"

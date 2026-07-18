@@ -149,6 +149,16 @@ const TalentProfile = () => {
                       onChange={(location) =>
                         setFieldValue('location', location)
                       }
+                      stateLabel="State/Province (Optional)"
+                      cityLabel="Region/City (Optional)"
+                      countryRequired
+                      errors={{
+                        country:
+                          touched.location?.country &&
+                          typeof errors.location?.country?.name === 'string'
+                            ? errors.location.country.name
+                            : undefined,
+                      }}
                     />
                   </div>
                 </div>

@@ -1,3 +1,4 @@
+import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { LocationFormValue } from '@/components/forms/LocationSelect'
 
 export interface FormValues {
@@ -14,6 +15,10 @@ export interface FormValues {
   requirements: string
   skills: string[]
   goals: string[]
+}
+
+export type PostJobFormValues = Omit<FormValues, 'workMode'> & {
+  workMode: WorkType[]
 }
 
 export interface JobFiltersTypes {

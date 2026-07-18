@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-// Stored as unknown so this file has no component imports.
-// PostJob.tsx casts the draft back to PostJobFormValues after reading.
-type JobDraftStore = {
-  draft: unknown | null
-  saveDraft: (values: unknown) => void
+import { PostJobFormValues } from '@/utils/jobPostTypes'
+
+interface JobDraftStore {
+  draft: PostJobFormValues | null
+  saveDraft: (values: PostJobFormValues) => void
   clearDraft: () => void
 }
 

@@ -23,13 +23,13 @@ import { useUpdateJobMutation } from '@/redux/api/recruiter'
 import { EditJobType } from '@/utils'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
 import { getErrorMessage } from '@/utils/getErrorMessage'
-import { FormValues } from '@/utils/jobPostTypes'
+import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
 import styles from '../PostJobs/PostJob.module.scss'
 import { validationSchema } from '../PostJobs/validationSchema'
 
-type EditJobFormValues = Omit<FormValues, 'workMode'> & { workMode: WorkType[] }
+type EditJobFormValues = PostJobFormValues
 
 type Props = {
   jobToEdit: EditJobType | null
@@ -68,15 +68,12 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
     values: EditJobFormValues,
     { setSubmitting }: FormikHelpers<EditJobFormValues>,
   ) => {
+    const { location, ...rest } = values
     const payload = {
-      ...values,
-      location: {
-        country: values.location.country.name,
-        state: values.location.state.name,
-        ...(values.location.city.name
-          ? { city: values.location.city.name }
-          : {}),
-      },
+      ...rest,
+      locationCountry: location.country.name,
+      ...(location.state.name ? { locationState: location.state.name } : {}),
+      ...(location.city.name ? { locationCity: location.city.name } : {}),
     }
 
     try {
@@ -173,24 +170,23 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
             {/* Section 3: Location & Work */}
             <section className={styles.formSection}>
               <h3 className={styles.sectionTitle}>Location &amp; Work</h3>
+              <p className={styles.sectionNote}>
+                Only Country is required — State/Province and Region/City are
+                optional.
+              </p>
 
               <div className={styles.fieldGroup}>
                 <LocationSelect
                   value={values.location}
                   onChange={(location) => setFieldValue('location', location)}
-                  cityLabel="Region / City (Optional)"
+                  stateLabel="State/Province (Optional)"
+                  cityLabel="Region/City (Optional)"
                   countryRequired
-                  stateRequired
                   errors={{
                     country:
                       touched.location?.country &&
                       typeof errors.location?.country?.name === 'string'
                         ? errors.location.country.name
-                        : undefined,
-                    state:
-                      touched.location?.state &&
-                      typeof errors.location?.state?.name === 'string'
-                        ? errors.location.state.name
                         : undefined,
                   }}
                 />
@@ -218,10 +214,9 @@ export const EditJob = ({ jobToEdit, jobId }: Props) => {
 
               <div className={styles.compensationRow}>
                 <div className={styles.compensationFieldThird}>
-                  <label className={styles.label} htmlFor="currency-trigger">
-                    Currency<span className={styles.required}>*</span>
-                  </label>
                   <Select
+                    label="Currency"
+                    required
                     options={CURRENCY_OPTIONS}
                     value={values.currency}
                     onChange={(value) => setFieldValue('currency', value)}
