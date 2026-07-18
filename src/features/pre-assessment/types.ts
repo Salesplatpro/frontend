@@ -23,5 +23,5 @@ export interface ApiResponse<T> {
 }
 
 export interface SubmitPayload {
-  answers: Record<string, string>
+  answers: { questionId: string; selectedOption: number }[]
 }
