@@ -58,6 +58,8 @@ const PreAssessmentPage: React.FC = () => {
   const totalSeconds = questions.length * SECONDS_PER_QUESTION
   const isFirst = currentQuestionIndex === 0
   const isLast = currentQuestionIndex === questions.length - 1
+  const allAnswered =
+    questions.length > 0 && questions.every((q) => !!answers[q.questionId])
 
   // Sync the sidebar lock with the current assessment state. Locks when questions are actively
   // being answered; unlocks the moment any exit condition is true (completed, error, loading, etc.).
@@ -144,7 +146,11 @@ const PreAssessmentPage: React.FC = () => {
       }
 
       try {
-        await submitAssessment({ answers })
+        const payloadAnswers = questions.map((q) => ({
+          questionId: q.questionId,
+          selectedOption: q.options.indexOf(answers[q.questionId] ?? ''),
+        }))
+        await submitAssessment({ answers: payloadAnswers })
         // Release immediately on success — do not wait for the sync effect.
         assessmentActiveRef.current = false
         unlock()
@@ -162,7 +168,7 @@ const PreAssessmentPage: React.FC = () => {
         setIsSubmitting(false)
       }
     },
-    [answers, refetch, reset, setAssessmentStarted, unlock],
+    [answers, questions, refetch, reset, setAssessmentStarted, unlock],
   )
 
   const handleAutoSubmit = useCallback(() => {
@@ -324,7 +330,7 @@ const PreAssessmentPage: React.FC = () => {
                     className="px-5 py-2 rounded-lg bg-blue-500 text-white font-raleway font-medium text-sm hover:bg-blue-600 transition-colors">
                     Next ›
                   </button>
-                ) : (
+                ) : allAnswered ? (
                   <button
                     type="button"
                     onClick={() => void handleSubmit(false)}
@@ -332,6 +338,10 @@ const PreAssessmentPage: React.FC = () => {
                     className="px-5 py-2 rounded-lg bg-blue-500 text-white font-raleway font-medium text-sm hover:bg-blue-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
                     Submit Assessment
                   </button>
+                ) : (
+                  <span className="text-sm text-grey-500 font-raleway italic">
+                    Answer all questions to submit
+                  </span>
                 )}
               </div>
             </div>

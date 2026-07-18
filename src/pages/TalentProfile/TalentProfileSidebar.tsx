@@ -4,11 +4,12 @@ import React, { useEffect, useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
 import { MdLock } from 'react-icons/md'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useBlocker } from 'react-router-dom'
 
 import { sidebarData as originalSidebarData } from '@/components/features/talent/SideBar/SideBarData'
 import { SideBar } from '@/components/layout/sidebar/SideBar'
 import { useAssessmentLockStore } from '@/features/pre-assessment/lockStore'
+import { notify } from '@/utils/toastNotifications'
 
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
@@ -23,6 +24,30 @@ const TalentProfileSidebar: React.FC = () => {
     useState(originalSidebarData)
 
   const isLocked = useAssessmentLockStore((s) => s.isLocked)
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isLocked && currentLocation.pathname !== nextLocation.pathname,
+  )
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      notify('info', 'Complete or submit your assessment to continue.', {
+        autoClose: 4000,
+      })
+      blocker.reset()
+    }
+  }, [blocker])
+
+  useEffect(() => {
+    if (!isLocked) return
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [isLocked])
 
   useEffect(() => {
     const updatedData = originalSidebarData.map((item) => {
