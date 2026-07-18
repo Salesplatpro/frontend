@@ -10,7 +10,7 @@ export const validationSchema = Yup.object({
       name: Yup.string().required('Country is required'),
     }),
     state: Yup.object({
-      name: Yup.string().required('State is required'),
+      name: Yup.string(),
     }),
   }),
   workMode: Yup.array()

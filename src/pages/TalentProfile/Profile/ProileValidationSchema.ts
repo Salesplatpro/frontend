@@ -4,7 +4,9 @@ export const validationSchema = Yup.object({
   bio: Yup.string().max(1000, 'Bio must be 1000 characters or fewer.'),
 
   location: Yup.object({
-    country: Yup.object({ name: Yup.string() }),
+    country: Yup.object({
+      name: Yup.string().required('Country is required'),
+    }),
     state: Yup.object({ name: Yup.string() }),
     city: Yup.object({ name: Yup.string() }),
   }),
