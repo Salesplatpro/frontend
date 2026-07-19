@@ -99,7 +99,7 @@ export interface EditJobType extends JobProfileProps {
   status?: JobStatus
 }
 
-export type JobStatus = 'draft' | 'active' | 'closed'
+export type JobStatus = 'draft' | 'active' | 'suspended' | 'closed'
 
 export interface JobAiConfig {
   name: string

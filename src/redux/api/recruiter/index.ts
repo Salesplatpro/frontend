@@ -5,7 +5,7 @@ import { customBaseQuery } from '../../../utils/customBaseQuery'
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
   baseQuery: customBaseQuery,
-  tagTypes: ['Recruiter'],
+  tagTypes: ['Recruiter', 'RecruiterJob'],
   endpoints: (builder) => ({
     jobPostCreation: builder.mutation({
       query: (data) => ({
@@ -13,6 +13,7 @@ export const recruiterApi = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
     fetchDashboard: builder.query({
       query: ({ jobId }: { jobId?: string }) => {
@@ -55,6 +56,20 @@ export const recruiterApi = createApi({
     }),
     fetchRecruiterJobPost: builder.query({
       query: () => '/jobs/me?limit=10&offset=0',
+      providesTags: (result) => {
+        const jobs = Array.isArray(result?.data)
+          ? result.data
+          : Array.isArray(result?.data?.jobs)
+          ? result.data.jobs
+          : []
+        return [
+          ...jobs.map((job: { id: string }) => ({
+            type: 'RecruiterJob' as const,
+            id: job.id,
+          })),
+          { type: 'RecruiterJob' as const, id: 'LIST' },
+        ]
+      },
     }),
     fetchRecruiterJobPostDetails: builder.query({
       query: (jobId: string) => `/jobs/applications/${jobId}`,
@@ -157,12 +172,20 @@ export const recruiterApi = createApi({
         method: 'PATCH',
         body: data,
       }),
+      invalidatesTags: (_result, _error, { jobId }) => [
+        { type: 'RecruiterJob', id: jobId },
+        { type: 'RecruiterJob', id: 'LIST' },
+      ],
     }),
     deleteJob: builder.mutation({
       query: (jobId: string) => ({
         url: `/jobs/${jobId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: (_result, _error, jobId) => [
+        { type: 'RecruiterJob', id: jobId },
+        { type: 'RecruiterJob', id: 'LIST' },
+      ],
     }),
     fetchPersonalityQuestions: builder.query({
       query: (jobId: string) => ({

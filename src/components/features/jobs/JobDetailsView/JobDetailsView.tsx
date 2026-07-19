@@ -8,6 +8,8 @@ import LinkedIn from '@/assets/linkedin logo_icon.svg'
 import Twitter from '@/assets/twitter_new_brand_icon.svg'
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { StatusBadge } from '@/components/ui/Badge'
+import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { capitalizeFirstWord } from '@/utils'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
 
@@ -30,6 +32,7 @@ export interface JobDetailsJob {
   maxSalary?: number
   noOfApplicants?: number
   postedBy?: { firstName?: string; lastName?: string } | null
+  status?: string
 }
 
 interface JobDetailsViewProps {
@@ -97,9 +100,19 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
     <div className={styles.page}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>
-            {job.role?.name ? capitalizeEachWord(job.role.name) : 'Job details'}
-          </h1>
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>
+              {job.role?.name
+                ? capitalizeEachWord(job.role.name)
+                : 'Job details'}
+            </h1>
+            {job.status && (
+              <StatusBadge
+                status={job.status}
+                {...getStatusBadge(job.status)}
+              />
+            )}
+          </div>
           {postedByName && (
             <p className={styles.postedBy}>Posted by {postedByName}</p>
           )}

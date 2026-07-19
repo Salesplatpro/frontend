@@ -24,8 +24,6 @@ export type PostJobFormValues = Omit<FormValues, 'workMode'> & {
 export interface JobFiltersTypes {
   role?: string
   experienceLevel?: string
-  remote: boolean
-  onSite: boolean
-  hybrid: boolean
+  workMode: WorkType[]
   location: LocationFormValue
 }

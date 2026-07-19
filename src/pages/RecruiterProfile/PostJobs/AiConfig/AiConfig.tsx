@@ -165,7 +165,10 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
       } else {
         await aiConfigMutation(payload).unwrap()
         clearDraft(jobId ?? '')
-        notify('success', 'AI config saved!')
+        notify(
+          'success',
+          'AI config saved. Your job is still a draft — publish it from My Job Posts to make it visible to talents.',
+        )
         navigate('/recruiterDashboard/myjobposts')
       }
     } catch (err) {

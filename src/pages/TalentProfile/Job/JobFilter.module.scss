@@ -1,0 +1,165 @@
+.trigger {
+  display: flex;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.badgeWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.badgeOffset {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 24, 40, 0.45);
+  z-index: calc(var(--z-drawer) - 1);
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-drawer);
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow-lg);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: var(--space-5);
+  transform: translateY(100%);
+  transition: transform var(--duration-base) var(--ease-standard);
+
+  &.open {
+    transform: translateY(0);
+  }
+
+  @media (min-width: 768px) {
+    position: sticky;
+    top: var(--space-4);
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none !important;
+    transition: none;
+    width: 280px;
+    flex-shrink: 0;
+    max-height: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    align-self: flex-start;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.closeButton {
+  color: var(--color-text-muted);
+  font-size: var(--text-2xl);
+  line-height: 1;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.field {
+  margin-bottom: var(--space-5);
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+  color: var(--color-text-heading);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  position: sticky;
+  bottom: calc(var(--space-5) * -1);
+  background-color: var(--color-white);
+  margin: 0 calc(var(--space-5) * -1) calc(var(--space-5) * -1);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.clearAll {
+  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+    text-decoration: none;
+  }
+}
+
+// ── Active filter chips ──────────────────────────────────────────────────
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-tint);
+  color: var(--color-primary-strong);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.chipRemove {
+  display: inline-flex;
+  color: var(--color-primary-strong);
+  font-size: var(--text-md);
+  line-height: 1;
+}
+
+.chipClearAll {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-decoration: underline;
+}

@@ -35,6 +35,15 @@ $amber-700: #b45309;
   text-transform: capitalize;
 }
 
+// ── Status cell ────────────────────────────────────────────────────────────
+.statusCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 140px;
+}
+
 // ── Applicants cell ────────────────────────────────────────────────────────
 .applicantsButton {
   color: var(--color-primary-strong);

@@ -76,7 +76,7 @@ const PostJob: React.FC = () => {
       }
 
       clearDraft()
-      notify('success', 'Job posted! Now configure your AI settings.')
+      notify('success', 'Job saved as a draft. Add your AI settings next.')
       navigate(`/recruiterDashboard/postjob/${jobId}`)
     } catch (err) {
       const apiMessage = getErrorMessage(

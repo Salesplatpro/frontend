@@ -1,28 +1,17 @@
-import './Job.scss'
-
 import React, { useEffect, useState } from 'react'
-import { MdKeyboardArrowDown } from 'react-icons/md'
-import { Bounce } from 'react-toastify'
 
-import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { DisplayError } from '@/components/ui/ErrorState'
 import { Spinner } from '@/components/ui/Spinner'
+import { Heading, Text } from '@/components/ui/Typography'
 
 import { Button } from '../../../components'
-import { useScreenWidth } from '../../../hooks'
-import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
+import { useFetchJobsQuery } from '../../../redux/api/talent'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
-import { JobFilter } from './JobFilter'
+import styles from './Job.module.scss'
+import { ActiveFilterChips, defaultFilterValues, JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
-
-const defaultFilterValues: JobFiltersTypes = {
-  role: '',
-  experienceLevel: '',
-  remote: false,
-  onSite: false,
-  hybrid: false,
-  location: { ...EMPTY_LOCATION },
-}
 
 interface JobType {
   id: string
@@ -34,172 +23,102 @@ interface JobType {
   maxSalary: string
 }
 
-// A filter is "active" only once the talent has actually touched a field —
-// used to decide whether the filtered query should run at all.
-const hasActiveFilter = (filters: JobFiltersTypes) =>
-  !!(
-    filters.role ||
-    filters.experienceLevel ||
-    filters.remote ||
-    filters.onSite ||
-    filters.hybrid ||
-    filters.location?.city?.name ||
-    filters.location?.state?.name ||
-    filters.location?.country?.name
-  )
-
 const PAGE_SIZE = 10
 
 const Job = () => {
-  // State for filters
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
-  const [showFilter, setShowFilter] = useState(false)
   const [jobs, setJobs] = useState<JobType[]>([])
   const [offset, setOffset] = useState(0)
   const [hasMore, setHasMore] = useState(false)
-  const screenWidth = useScreenWidth()
-  const isFiltered = hasActiveFilter(filters)
 
-  // All active jobs, regardless of the viewer's own role — the backend has no
-  // role restriction here, this is purely the default (unfiltered) listing.
-  const { data, error, isLoading, isFetching } = useFetchJobQuery(
-    { offset },
-    { skip: isFiltered },
-  )
+  const { data, error, isLoading, isFetching } = useFetchJobsQuery({
+    roleId: filters.role || undefined,
+    experienceLevel: filters.experienceLevel || undefined,
+    workMode: filters.workMode?.length ? filters.workMode.join(',') : undefined,
+    city: filters.location?.city?.name || undefined,
+    state: filters.location?.state?.name || undefined,
+    country: filters.location?.country?.name || undefined,
+    offset,
+  })
 
-  const workModeFilter = [
-    filters.remote && 'remote',
-    filters.onSite && 'onSite',
-    filters.hybrid && 'hybrid',
-  ]
-    .filter(Boolean)
-    .join(',')
-
-  // Fetch filtered jobs based on filters
-  const {
-    data: filteredData,
-    error: filteredError,
-    isLoading: isFiltering,
-    isFetching: isFilterFetching,
-  } = useFilterJobQuery(
-    {
-      roleId: filters.role || '',
-      experienceLevel: filters.experienceLevel || '',
-      workMode: workModeFilter,
-      city: filters.location?.city?.name || '',
-      state: filters.location?.state?.name || '',
-      country: filters.location?.country?.name || '',
-      offset,
-    },
-    {
-      skip: !isFiltered,
-    },
-  )
-
-  // Handle initial/paginated data load
   useEffect(() => {
-    if (data && !isFiltered) {
-      const page: JobType[] = data.data.jobs
-      setJobs((prev) => (offset === 0 ? page : [...prev, ...page]))
-      setHasMore(page.length === PAGE_SIZE)
-    }
+    if (!data) return
+    const page: JobType[] = data.data.jobs
+    setJobs((prev) => (offset === 0 ? page : [...prev, ...page]))
+    setHasMore(page.length === PAGE_SIZE)
+  }, [data, offset])
+
+  useEffect(() => {
     if (error) {
-      notify('error', `Error fetching jobs`, {
-        autoClose: 5000,
-        transition: Bounce,
-      })
+      notify('error', 'Error fetching jobs')
     }
-  }, [data, error, isFiltered])
+  }, [error])
 
-  // Handle filtered/paginated data load
-  useEffect(() => {
-    if (filteredData && isFiltered) {
-      const page: JobType[] = filteredData.data.jobs
-      setJobs((prev) => (offset === 0 ? page : [...prev, ...page]))
-      setHasMore(page.length === PAGE_SIZE)
-    }
-    if (filteredError) {
-      notify('error', 'Error fetching filtered jobs', {
-        autoClose: 5000,
-        transition: Bounce,
-      })
-    }
-  }, [filteredData, filteredError, isFiltered])
-
-  const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
+  const handleFilterApply = (nextFilters: JobFiltersTypes) => {
     setOffset(0)
-    setFilters(filterValues)
+    setFilters(nextFilters)
   }
 
-  const handleLoadMore = () => {
-    setOffset((prev) => prev + PAGE_SIZE)
-  }
+  const handleLoadMore = () => setOffset((prev) => prev + PAGE_SIZE)
 
-  const isInitialLoading = (isLoading || isFiltering) && offset === 0
-  const isLoadingMore = (isFetching || isFilterFetching) && offset > 0
+  const isInitialLoading = isLoading && offset === 0
+  const isLoadingMore = isFetching && offset > 0
 
   return (
-    <div className="job-container">
-      <div className="jobs-title">
-        <div className="jobs">Jobs</div>
-        <div>Find your dream job by searching and applying directly.</div>
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <Heading level={1}>Jobs</Heading>
+        <Text color="primary" className={styles.subtitle}>
+          Find your dream job by searching and applying directly.
+        </Text>
       </div>
-      <div className="job-section">
-        {screenWidth < 768 && !showFilter ? (
-          <div style={{ height: '100px' }}>
-            <Button
-              variant="secondary"
-              onClick={() => setShowFilter(!showFilter)}>
-              Open filters
-            </Button>
+
+      <div className={styles.section}>
+        <JobFilter filters={filters} onApply={handleFilterApply} />
+
+        <div className={styles.listing}>
+          <div className={styles.resultsRow}>
+            <span className={styles.resultsCount}>
+              Showing {jobs.length} result{jobs.length === 1 ? '' : 's'}
+            </span>
           </div>
-        ) : (
-          <JobFilter
-            showFilter={showFilter}
-            setShowFilter={setShowFilter}
-            onFilterSubmit={handleFilterSubmit}
-          />
-        )}
-        <div className="job-listing-container">
-          <div className="sorting">
-            <div className="showing-result">Showing {jobs.length} results</div>
-            <div className="sortby">
-              Sort by: Recent{' '}
-              <span>
-                <MdKeyboardArrowDown />
-              </span>
-            </div>
-          </div>
-          <div className="job-listing">
-            {isInitialLoading ? (
-              <Spinner fullPage />
-            ) : jobs.length > 0 ? (
-              jobs.map((job, index) => (
+
+          <ActiveFilterChips filters={filters} onChange={handleFilterApply} />
+
+          {isInitialLoading ? (
+            <Spinner fullPage />
+          ) : jobs.length > 0 ? (
+            <div className={styles.jobList}>
+              {jobs.map((job) => (
                 <SingleJob
-                  key={index}
-                  jobId={job?.id}
+                  key={job.id}
+                  jobId={job.id}
                   jobTitle={job.role?.name}
-                  jobCategory={job?.experienceLevel}
-                  jobBrief={job?.jobBrief}
-                  jobWorkMode={job?.workMode}
-                  jobCountry={job?.locationCountry ?? undefined}
-                  jobExperience={job?.experienceLevel}
-                  jobSalary={job?.maxSalary}
-                  isFiltering={isFiltering}
-                  isLoading={isLoading}
+                  jobCategory={job.experienceLevel}
+                  jobBrief={job.jobBrief}
+                  jobWorkMode={job.workMode}
+                  jobCountry={job.locationCountry ?? undefined}
+                  jobExperience={job.experienceLevel}
+                  jobSalary={job.maxSalary}
                 />
-              ))
-            ) : (
-              <p className="w-full text-center py-10">No job found</p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : error ? (
+            <DisplayError message="We couldn't load jobs. Please try again." />
+          ) : (
+            <EmptyState
+              title="No jobs found"
+              description="Try adjusting your filters or check back later for new openings."
+            />
+          )}
+
           {!isInitialLoading && hasMore && (
-            <div className="flex justify-center py-6">
+            <div className={styles.loadMore}>
               <Button
                 variant="secondary"
                 onClick={handleLoadMore}
-                disabled={isLoadingMore}>
-                {isLoadingMore ? 'Loading...' : 'Load More'}
+                loading={isLoadingMore}>
+                Load More
               </Button>
             </div>
           )}

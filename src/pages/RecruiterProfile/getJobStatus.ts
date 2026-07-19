@@ -14,6 +14,8 @@ export const getStatusBadge = (status: string) => {
       return { backgroundColor: '#fff8e1', color: '#c99a06' }
     case 'active':
       return { backgroundColor: '#edfeee', color: '#2e9e4f' }
+    case 'suspended':
+      return { backgroundColor: '#fff4e2', color: '#c17600' }
     case 'closed':
       return { backgroundColor: '#fff0ef', color: '#d13438' }
     default:
@@ -24,5 +26,6 @@ export const getStatusBadge = (status: string) => {
 export const JOB_STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft' },
   { value: 'active', label: 'Active' },
+  { value: 'suspended', label: 'Suspended' },
   { value: 'closed', label: 'Closed' },
 ]
