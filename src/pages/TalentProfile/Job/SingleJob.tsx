@@ -11,30 +11,33 @@ import { Spinner } from '@/components/ui/Spinner'
 import { capitalizeFirstWord } from '../../../utils'
 import { JobDetails } from './JobDetails'
 
+const stripHtmlAndTruncate = (html: string, limit: number) => {
+  const text = html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return text.length > limit ? `${text.slice(0, limit)}...` : text
+}
+
 export type SingleJobProps = {
   jobId?: string
   jobTitle?: string
   jobCategory?: string
-  jobDescription?: string
-  jobRemote?: boolean
+  jobBrief?: string
+  jobWorkMode?: string[]
   jobCountry?: string
   jobExperience?: string
   jobSalary?: string
   isFiltering?: boolean
   isLoading?: boolean
-  location?: {
-    city: { name: ''; geoId: null }
-    state: { name: ''; geoId: null }
-    country: { name: ''; geoId: null }
-  }
 }
 
 export const SingleJob = ({
   jobId,
   jobTitle,
   jobCategory,
-  jobDescription,
-  jobRemote,
+  jobBrief,
+  jobWorkMode,
   jobExperience,
   jobCountry,
   jobSalary,
@@ -56,12 +59,16 @@ export const SingleJob = ({
             {capitalizeFirstWord(jobCategory)}
           </span>
         </Link>
-        <div className="description">{jobDescription}</div>
+        {jobBrief && (
+          <div className="description">
+            {stripHtmlAndTruncate(jobBrief, 140)}
+          </div>
+        )}
         <div className="details-container">
           <div className="jobdetails">
             <JobDetails
               location={capitalizeFirstWord(jobCountry || '')}
-              type={jobRemote}
+              type={jobWorkMode?.map(capitalizeFirstWord).join(', ')}
               level={capitalizeFirstWord(jobExperience) || ''}
               salary={jobSalary || ''}
             />

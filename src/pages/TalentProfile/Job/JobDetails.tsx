@@ -1,14 +1,13 @@
 import './JobDetails.scss'
 
 import React from 'react'
-// eslint-disable-next-line no-unused-vars
 import { GoClock, GoLocation } from 'react-icons/go'
 import { IoBagRemoveOutline } from 'react-icons/io5'
 import { TbMoneybag } from 'react-icons/tb'
 
 type JobDetailsProps = {
   location?: string
-  type?: boolean
+  type?: string
   level?: string
   salary?: string
 }
@@ -24,10 +23,10 @@ export const JobDetails = ({
       icon: <GoLocation />,
       detail: location,
     },
-    // {
-    //   icon: <GoClock />,
-    //   detail: type
-    // },
+    {
+      icon: <GoClock />,
+      detail: type,
+    },
     {
       icon: <IoBagRemoveOutline />,
       detail: level,

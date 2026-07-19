@@ -6,7 +6,6 @@ import { Bounce } from 'react-toastify'
 
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Spinner } from '@/components/ui/Spinner'
-import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { Button, DisplayError } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
@@ -29,24 +28,45 @@ interface JobType {
   id: string
   role: { name: string }
   experienceLevel: string
-  description: string
-  remote: boolean
-  location: {
-    country: string
-  }
+  jobBrief: string
+  workMode: string[]
+  locationCountry: string | null
   maxSalary: string
 }
 
+// A filter is "active" only once the talent has actually touched a field —
+// used to decide whether the filtered query should run at all.
+const hasActiveFilter = (filters: JobFiltersTypes) =>
+  !!(
+    filters.role ||
+    filters.experienceLevel ||
+    filters.remote ||
+    filters.onSite ||
+    filters.hybrid ||
+    filters.location?.city?.name ||
+    filters.location?.state?.name ||
+    filters.location?.country?.name
+  )
+
 const Job = () => {
-  const { profile } = useProfile()
-  const roleId = profile?.userRoles?.[0]?.id
-  const { data, error, isLoading } = useFetchJobQuery(roleId)
+  // All active jobs, regardless of the viewer's own role — the backend has no
+  // role restriction here, this is purely the default (unfiltered) listing.
+  const { data, error, isLoading } = useFetchJobQuery(undefined)
 
   // State for filters
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
   const [jobs, setJobs] = useState<JobType[]>([])
   const screenWidth = useScreenWidth()
+  const isFiltered = hasActiveFilter(filters)
+
+  const workModeFilter = [
+    filters.remote && 'remote',
+    filters.onSite && 'onSite',
+    filters.hybrid && 'hybrid',
+  ]
+    .filter(Boolean)
+    .join(',')
 
   // Fetch filtered jobs based on filters
   const {
@@ -57,20 +77,20 @@ const Job = () => {
     {
       roleId: filters.role || '',
       experienceLevel: filters.experienceLevel || '',
-      remote: filters.remote || '',
+      workMode: workModeFilter,
       city: filters.location?.city?.name || '',
       state: filters.location?.state?.name || '',
       country: filters.location?.country?.name || '',
     },
     {
-      skip: !filters.role, // Skip the query if no role is selected
+      skip: !isFiltered,
     },
   )
 
   // Handle initial data load
   useEffect(() => {
-    if (data && !filters.role) {
-      setJobs(data.data)
+    if (data && !isFiltered) {
+      setJobs(data.data.jobs)
     }
     if (error) {
       notify('error', `DisplayError fetching jobs`, {
@@ -78,13 +98,12 @@ const Job = () => {
         transition: Bounce,
       })
     }
-  }, [data, error, filters.role])
+  }, [data, error, isFiltered])
 
   // Handle filtered data load
   useEffect(() => {
-    if (filteredData && filters.role) {
-      setJobs(filteredData.data)
-      console.log(filteredData.data)
+    if (filteredData && isFiltered) {
+      setJobs(filteredData.data.jobs)
     }
     if (filteredError) {
       notify('error', 'DisplayError fetching filtered jobs', {
@@ -92,7 +111,7 @@ const Job = () => {
         transition: Bounce,
       })
     }
-  }, [filteredData, filteredError, filters.role])
+  }, [filteredData, filteredError, isFiltered])
 
   const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
     setFilters(filterValues)
@@ -140,9 +159,9 @@ const Job = () => {
                   jobId={job?.id}
                   jobTitle={job.role?.name}
                   jobCategory={job?.experienceLevel}
-                  jobDescription={job?.description}
-                  jobRemote={job?.remote}
-                  jobCountry={job?.location?.country}
+                  jobBrief={job?.jobBrief}
+                  jobWorkMode={job?.workMode}
+                  jobCountry={job?.locationCountry ?? undefined}
                   jobExperience={job?.experienceLevel}
                   jobSalary={job?.maxSalary}
                   isFiltering={isFiltering}

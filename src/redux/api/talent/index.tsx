@@ -20,18 +20,19 @@ export const talentApi = createApi({
       }),
     }),
     fetchJob: builder.query({
-      query: (roleId) => ({
-        url: `/jobs?roleId=${roleId}&limit=10&offset=0`,
-        method: 'GET',
-      }),
+      query: (roleId?: string) => {
+        let url = `/jobs?limit=10&offset=0`
+        if (roleId) url += `&roleId=${roleId}`
+        return { url, method: 'GET' }
+      },
     }),
     filterJob: builder.query({
-      query: ({ roleId, experienceLevel, remote, city, state, country }) => {
+      query: ({ roleId, experienceLevel, workMode, city, state, country }) => {
         let url = `/jobs?limit=10&offset=0`
 
         if (roleId) url += `&roleId=${roleId}`
         if (experienceLevel) url += `&experienceLevel=${experienceLevel}`
-        if (remote) url += `&remote=${remote}`
+        if (workMode) url += `&workMode=${workMode}`
         if (city) url += `&city=${city}`
         if (state) url += `&state=${state}`
         if (country) url += `&country=${country}`
