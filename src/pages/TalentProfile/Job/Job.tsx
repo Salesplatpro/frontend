@@ -7,7 +7,7 @@ import { Bounce } from 'react-toastify'
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Spinner } from '@/components/ui/Spinner'
 
-import { Button, DisplayError } from '../../../components'
+import { Button } from '../../../components'
 import { useScreenWidth } from '../../../hooks'
 import { useFetchJobQuery, useFilterJobQuery } from '../../../redux/api/talent'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
@@ -48,17 +48,24 @@ const hasActiveFilter = (filters: JobFiltersTypes) =>
     filters.location?.country?.name
   )
 
-const Job = () => {
-  // All active jobs, regardless of the viewer's own role — the backend has no
-  // role restriction here, this is purely the default (unfiltered) listing.
-  const { data, error, isLoading } = useFetchJobQuery(undefined)
+const PAGE_SIZE = 10
 
+const Job = () => {
   // State for filters
   const [filters, setFilters] = useState<JobFiltersTypes>(defaultFilterValues)
   const [showFilter, setShowFilter] = useState(false)
   const [jobs, setJobs] = useState<JobType[]>([])
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(false)
   const screenWidth = useScreenWidth()
   const isFiltered = hasActiveFilter(filters)
+
+  // All active jobs, regardless of the viewer's own role — the backend has no
+  // role restriction here, this is purely the default (unfiltered) listing.
+  const { data, error, isLoading, isFetching } = useFetchJobQuery(
+    { offset },
+    { skip: isFiltered },
+  )
 
   const workModeFilter = [
     filters.remote && 'remote',
@@ -73,6 +80,7 @@ const Job = () => {
     data: filteredData,
     error: filteredError,
     isLoading: isFiltering,
+    isFetching: isFilterFetching,
   } = useFilterJobQuery(
     {
       roleId: filters.role || '',
@@ -81,32 +89,37 @@ const Job = () => {
       city: filters.location?.city?.name || '',
       state: filters.location?.state?.name || '',
       country: filters.location?.country?.name || '',
+      offset,
     },
     {
       skip: !isFiltered,
     },
   )
 
-  // Handle initial data load
+  // Handle initial/paginated data load
   useEffect(() => {
     if (data && !isFiltered) {
-      setJobs(data.data.jobs)
+      const page: JobType[] = data.data.jobs
+      setJobs((prev) => (offset === 0 ? page : [...prev, ...page]))
+      setHasMore(page.length === PAGE_SIZE)
     }
     if (error) {
-      notify('error', `DisplayError fetching jobs`, {
+      notify('error', `Error fetching jobs`, {
         autoClose: 5000,
         transition: Bounce,
       })
     }
   }, [data, error, isFiltered])
 
-  // Handle filtered data load
+  // Handle filtered/paginated data load
   useEffect(() => {
     if (filteredData && isFiltered) {
-      setJobs(filteredData.data.jobs)
+      const page: JobType[] = filteredData.data.jobs
+      setJobs((prev) => (offset === 0 ? page : [...prev, ...page]))
+      setHasMore(page.length === PAGE_SIZE)
     }
     if (filteredError) {
-      notify('error', 'DisplayError fetching filtered jobs', {
+      notify('error', 'Error fetching filtered jobs', {
         autoClose: 5000,
         transition: Bounce,
       })
@@ -114,8 +127,16 @@ const Job = () => {
   }, [filteredData, filteredError, isFiltered])
 
   const handleFilterSubmit = (filterValues: JobFiltersTypes) => {
+    setOffset(0)
     setFilters(filterValues)
   }
+
+  const handleLoadMore = () => {
+    setOffset((prev) => prev + PAGE_SIZE)
+  }
+
+  const isInitialLoading = (isLoading || isFiltering) && offset === 0
+  const isLoadingMore = (isFetching || isFilterFetching) && offset > 0
 
   return (
     <div className="job-container">
@@ -150,7 +171,7 @@ const Job = () => {
             </div>
           </div>
           <div className="job-listing">
-            {isLoading || isFiltering ? (
+            {isInitialLoading ? (
               <Spinner fullPage />
             ) : jobs.length > 0 ? (
               jobs.map((job, index) => (
@@ -169,9 +190,19 @@ const Job = () => {
                 />
               ))
             ) : (
-              <DisplayError message="No job found" />
+              <p className="w-full text-center py-10">No job found</p>
             )}
           </div>
+          {!isInitialLoading && hasMore && (
+            <div className="flex justify-center py-6">
+              <Button
+                variant="secondary"
+                onClick={handleLoadMore}
+                disabled={isLoadingMore}>
+                {isLoadingMore ? 'Loading...' : 'Load More'}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

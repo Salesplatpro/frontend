@@ -63,6 +63,10 @@ export const JobFilter: React.FC<JobFiltersProps> = ({
                   setFieldValue('role', '')
                   setFieldValue('experienceLevel', '')
                   setFieldValue('location', { ...EMPTY_LOCATION })
+                  setFieldValue('remote', false)
+                  setFieldValue('onSite', false)
+                  setFieldValue('hybrid', false)
+                  onFilterSubmit(initialValues)
                   if (screenWidth < 768) {
                     setShowFilter(!showFilter)
                   }

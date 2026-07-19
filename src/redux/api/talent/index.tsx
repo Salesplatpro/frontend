@@ -20,15 +20,23 @@ export const talentApi = createApi({
       }),
     }),
     fetchJob: builder.query({
-      query: (roleId?: string) => {
-        let url = `/jobs?limit=10&offset=0`
-        if (roleId) url += `&roleId=${roleId}`
+      query: (params?: { roleId?: string; offset?: number }) => {
+        let url = `/jobs?limit=10&offset=${params?.offset ?? 0}`
+        if (params?.roleId) url += `&roleId=${params.roleId}`
         return { url, method: 'GET' }
       },
     }),
     filterJob: builder.query({
-      query: ({ roleId, experienceLevel, workMode, city, state, country }) => {
-        let url = `/jobs?limit=10&offset=0`
+      query: ({
+        roleId,
+        experienceLevel,
+        workMode,
+        city,
+        state,
+        country,
+        offset,
+      }) => {
+        let url = `/jobs?limit=10&offset=${offset ?? 0}`
 
         if (roleId) url += `&roleId=${roleId}`
         if (experienceLevel) url += `&experienceLevel=${experienceLevel}`

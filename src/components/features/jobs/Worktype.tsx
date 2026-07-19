@@ -23,6 +23,12 @@ const Worktype: React.FC<WorktypeProps> = ({
   }>(initialSelected)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
+  // Keep in sync with the parent (e.g. a filter form being cleared) —
+  // this is otherwise an uncontrolled component after the initial mount.
+  useEffect(() => {
+    setSelectedValues(initialSelected)
+  }, [initialSelected])
+
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev)
   }

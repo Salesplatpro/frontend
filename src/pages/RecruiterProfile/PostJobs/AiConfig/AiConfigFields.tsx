@@ -62,6 +62,8 @@ const COUNT_FIELD: Record<(typeof DICHOTOMY_PAIRS)[number], CountFieldName> = {
   JP: 'noOfJPQuestions',
 }
 
+export const DICHOTOMY_COUNT_FIELDS = Object.values(COUNT_FIELD)
+
 type ToggleFieldProps = { name: string; label: string; tooltipContent: string }
 
 export const ToggleField = ({
