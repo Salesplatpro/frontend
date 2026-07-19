@@ -25,6 +25,7 @@ import {
   AI_CONFIG_DEFAULT_VALUES,
   AiConfigFields,
   AiConfigFieldValues,
+  DICHOTOMY_COUNT_FIELDS,
 } from '../PostJobs/AiConfig/AiConfigFields'
 import useGeneratedQuestion from '../PostJobs/AiConfig/useGeneratedQuestion'
 import { JobDetailsFields } from '../PostJobs/JobDetailsFields'
@@ -171,6 +172,14 @@ export const EditJobTab = () => {
       delete cleanedAiConfig.noOfSNQuestions
       delete cleanedAiConfig.noOfTFQuestions
       delete cleanedAiConfig.noOfJPQuestions
+    } else {
+      // Each dichotomy pair is independently optional — a blank count means
+      // "skip this pair" and must not be sent as '' (fails backend isInt()).
+      DICHOTOMY_COUNT_FIELDS.forEach((field) => {
+        if (cleanedAiConfig[field] === '' || cleanedAiConfig[field] == null) {
+          delete cleanedAiConfig[field]
+        }
+      })
     }
     if (!aiConfigValues.recruiterGuide) {
       delete cleanedAiConfig.recruiterGuide

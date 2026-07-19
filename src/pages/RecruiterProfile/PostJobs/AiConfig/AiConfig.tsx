@@ -18,6 +18,7 @@ import {
   AI_CONFIG_DEFAULT_VALUES,
   AiConfigFields,
   AiConfigFieldValues,
+  DICHOTOMY_COUNT_FIELDS,
 } from './AiConfigFields'
 import { aiConfigValidationSchema } from './aiConfigValidationSchema'
 import useGeneratedQuestion from './useGeneratedQuestion'
@@ -136,6 +137,14 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
       delete cleanedValues.noOfSNQuestions
       delete cleanedValues.noOfTFQuestions
       delete cleanedValues.noOfJPQuestions
+    } else {
+      // Each dichotomy pair is independently optional — a blank count means
+      // "skip this pair" and must not be sent as '' (fails backend isInt()).
+      DICHOTOMY_COUNT_FIELDS.forEach((field) => {
+        if (cleanedValues[field] === '' || cleanedValues[field] == null) {
+          delete cleanedValues[field]
+        }
+      })
     }
     if (!values.recruiterGuide) {
       delete cleanedValues.recruiterGuide
