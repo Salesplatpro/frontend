@@ -158,6 +158,18 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    deleteJob: builder.mutation({
+      query: (jobId: string) => ({
+        url: `/jobs/${jobId}`,
+        method: 'DELETE',
+      }),
+    }),
+    fetchPersonalityQuestions: builder.query({
+      query: (jobId: string) => ({
+        url: `/questions?questionType=personality&jobId=${jobId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -181,5 +193,7 @@ export const {
   useSendTalentMessageMutation,
   useGetMessagesSentToTalentQuery,
   useUpdateJobMutation,
+  useDeleteJobMutation,
+  useFetchPersonalityQuestionsQuery,
   useGetAiConfigQuery,
 } = recruiterApi

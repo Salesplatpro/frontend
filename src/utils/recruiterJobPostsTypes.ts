@@ -69,37 +69,37 @@ export type SingleJobDetails = {
 }
 
 export interface JobProfileProps {
+  id?: string
   role?: {
     id: string
     name: string
   }
   title?: string
-  description?: string
   postedBy?: {
     firstName?: string
     lastName?: string
   }
-  responsibilities?: string[]
   requirements?: string
   jobBrief?: string
-  workMode?: 'remote' | 'onsite' | 'hybrid'
+  workMode?: string[]
   skills?: string[]
   goals?: string[]
-  remote?: boolean
-  location?: {
-    country?: string
-    city?: string
-    state?: string
-  }
+  locationCountry?: string
+  locationState?: string | null
+  locationCity?: string | null
   experienceLevel?: string
   currency?: string
+  noOfApplicants?: number
 }
 
 export interface EditJobType extends JobProfileProps {
   aiConfig: string
   maxSalary?: number
   minSalary?: number
+  status?: JobStatus
 }
+
+export type JobStatus = 'draft' | 'active' | 'closed'
 
 export interface JobAiConfig {
   name: string
@@ -110,6 +110,10 @@ export interface JobAiConfig {
   noOfCvSimilarCandidates: number
   noPersonalizedQuestions: number
   personalityEvaluation: boolean
+  noOfEIQuestions: number
+  noOfSNQuestions: number
+  noOfTFQuestions: number
+  noOfJPQuestions: number
   personalizedAssessment: boolean
   prescreeningAssessment: boolean
   uploadedQuestions: string[]
