@@ -17,9 +17,22 @@ export const getStatusBadge = (status: string) => {
     case 'suspended':
       return { backgroundColor: '#fff4e2', color: '#c17600' }
     case 'closed':
-      return { backgroundColor: '#fff0ef', color: '#d13438' }
+      return { backgroundColor: '#f3f4f6', color: '#6b7280' }
     default:
       return { backgroundColor: '#edfeee', color: '#76c8bc' }
+  }
+}
+
+export const getStatusDotColor = (status: string) => {
+  switch (status) {
+    case 'active':
+      return '#2e9e4f'
+    case 'closed':
+    case 'suspended':
+      return '#9ca3af'
+    case 'draft':
+    default:
+      return '#c99a06'
   }
 }
 
