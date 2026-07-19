@@ -1,21 +1,7 @@
-import {
-  ErrorMessage,
-  Field,
-  FieldArray,
-  Form,
-  Formik,
-  FormikHelpers,
-  useField,
-  useFormikContext,
-} from 'formik'
+import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
 import React, { useCallback, useEffect } from 'react'
-import { FaPlus } from 'react-icons/fa6'
-import { IoIosInformationCircle } from 'react-icons/io'
-import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Tooltip as ReactTooltip } from 'react-tooltip'
 
-import TextField from '@/components/forms/TextField'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAiConfigDraftStore } from '@/features/jobs/store/useAiConfigDraftStore'
@@ -28,68 +14,21 @@ import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import styles from './AiConfig.module.scss'
+import {
+  AI_CONFIG_DEFAULT_VALUES,
+  AiConfigFields,
+  AiConfigFieldValues,
+} from './AiConfigFields'
 import { aiConfigValidationSchema } from './aiConfigValidationSchema'
-import QuestionGenerator from './QuestionGenerator'
 import useGeneratedQuestion from './useGeneratedQuestion'
 
-interface AiConfigValues {
-  name: string
+interface AiConfigValues extends AiConfigFieldValues {
   jobId: string
-  prescreeningAssessment: string
-  minPrescreeningScore: string | number
-  cvSimilarity: string
-  minCvSimilarityScore: string | number
-  noOfCvSimilarCandidates: string | number
-  personalizedAssessment: string
-  noPersonalizedQuestions: string | number
-  personalityEvaluation: string
-  uploadedQuestions: string[]
-  recruiterGuide: string
 }
 
 type AiConfigProps = {
   mode?: 'create' | 'edit'
   aiConfigId?: string
-}
-
-type ToggleFieldProps = { name: string; label: string; tooltipContent: string }
-
-const ToggleField = ({ name, label, tooltipContent }: ToggleFieldProps) => {
-  const [field, , helpers] = useField(name)
-  const checked = field.value === 'true'
-  return (
-    <div className={styles.toggleRow}>
-      <p className={styles.toggleLabel}>{label}</p>
-      <div className={styles.toggleRight}>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={checked}
-          className={[
-            styles.toggleTrack,
-            checked ? styles.toggleTrackOn : '',
-          ].join(' ')}
-          onClick={() => helpers.setValue(checked ? 'false' : 'true')}>
-          <span
-            className={[
-              styles.toggleThumb,
-              checked ? styles.toggleThumbOn : '',
-            ].join(' ')}
-          />
-        </button>
-        <span data-tooltip-id={`${name}-tooltip`}>
-          <IoIosInformationCircle fontSize={24} color="#000000" />
-        </span>
-        <ReactTooltip
-          id={`${name}-tooltip`}
-          content={tooltipContent}
-          place="bottom"
-          variant="info"
-        />
-      </div>
-      <ErrorMessage name={name} component="div" className={styles.fieldError} />
-    </div>
-  )
 }
 
 const FormObserver: React.FC<{ saveDraft: (v: unknown) => void }> = ({
@@ -103,19 +42,11 @@ const FormObserver: React.FC<{ saveDraft: (v: unknown) => void }> = ({
 }
 
 const DEFAULT_VALUES: AiConfigValues = {
-  name: '',
+  ...AI_CONFIG_DEFAULT_VALUES,
   jobId: '',
-  prescreeningAssessment: '',
-  minPrescreeningScore: '',
-  cvSimilarity: '',
-  minCvSimilarityScore: '',
-  noOfCvSimilarCandidates: '',
-  personalizedAssessment: '',
-  noPersonalizedQuestions: '',
-  personalityEvaluation: '',
-  uploadedQuestions: [''],
-  recruiterGuide: '',
 }
+
+const identity = (key: keyof AiConfigFieldValues) => key
 
 const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   const { jobId } = useParams()
@@ -125,7 +56,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   const [aiConfigMutation] = useAiConfigMutation()
   const [patchAiConfig] = usePatchAiConfigMutation()
   const { drafts, saveDraft, clearDraft } = useAiConfigDraftStore()
-  const { generatedQuestions, generateQuestion, resetQuestion, loadingPairs } =
+  const { questionsByPair, generateQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
 
   const { data: existingConfig, isLoading: configLoading } =
@@ -160,6 +91,10 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
         personalityEvaluation: configData.personalityEvaluation
           ? 'true'
           : 'false',
+        noOfEIQuestions: configData.noOfEIQuestions ?? 3,
+        noOfSNQuestions: configData.noOfSNQuestions ?? 3,
+        noOfTFQuestions: configData.noOfTFQuestions ?? 3,
+        noOfJPQuestions: configData.noOfJPQuestions ?? 3,
         uploadedQuestions: configData.uploadedQuestions?.length
           ? configData.uploadedQuestions
           : [''],
@@ -197,6 +132,10 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
     }
     if (values.personalityEvaluation === 'false') {
       delete cleanedValues.uploadedQuestions
+      delete cleanedValues.noOfEIQuestions
+      delete cleanedValues.noOfSNQuestions
+      delete cleanedValues.noOfTFQuestions
+      delete cleanedValues.noOfJPQuestions
     }
     if (!values.recruiterGuide) {
       delete cleanedValues.recruiterGuide
@@ -245,7 +184,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
         validationSchema={aiConfigValidationSchema}
         onSubmit={onSubmit}
         enableReinitialize>
-        {({ values, isSubmitting }) => (
+        {({ values, errors, setFieldValue, isSubmitting }) => (
           <Form>
             {!isEditMode && <FormObserver saveDraft={draftSaver} />}
 
@@ -253,161 +192,15 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
               <div className={styles.draftBanner}>Draft restored</div>
             )}
 
-            <TextField label="Name" name="name" placeholder="Name of Job" />
-
-            {/* Pre-screening Assessment */}
-            <h3 className={styles.sectionHeading}>
-              <span className={styles.sectionHeadingBold}>
-                Pre-screening assessment
-              </span>{' '}
-              Automatically filter candidates with a short initial test before
-              detailed evaluation.
-            </h3>
-            <div className={styles.configCard}>
-              <ToggleField
-                name="prescreeningAssessment"
-                label="Enable Pre-screening Assessment"
-                tooltipContent="Automatically screen candidates with a quick initial test before further evaluation"
-              />
-              {values.prescreeningAssessment === 'true' && (
-                <TextField
-                  label="Min Pre-assessment Score"
-                  name="minPrescreeningScore"
-                  placeholder="Enter score (%)"
-                  type="number"
-                />
-              )}
-            </div>
-
-            {/* CV Similarity */}
-            <h3 className={styles.sectionHeading}>
-              <span className={styles.sectionHeadingBold}>
-                CV Similarity assessment
-              </span>{' '}
-              Rank applicants by how closely their CV matches the job
-              requirements.
-            </h3>
-            <div className={styles.configCard}>
-              <ToggleField
-                name="cvSimilarity"
-                label="Enable CV Similarity"
-                tooltipContent="Match candidate's CV against job requirements to find the best fit"
-              />
-              {values.cvSimilarity === 'true' && (
-                <>
-                  <TextField
-                    label="Min CV Similarity Score"
-                    name="minCvSimilarityScore"
-                    placeholder="Enter score (%)"
-                    type="number"
-                  />
-                  <TextField
-                    label="Number of Similar CV Candidates"
-                    name="noOfCvSimilarCandidates"
-                    placeholder="Enter number"
-                    type="number"
-                  />
-                </>
-              )}
-            </div>
-
-            {/* Personalized Assessment */}
-            <h3 className={styles.sectionHeading}>
-              <span className={styles.sectionHeadingBold}>
-                Personalized assessment
-              </span>{' '}
-              Generate role-specific questions tailored to the skills and
-              qualifications required.
-            </h3>
-            <div className={styles.configCard}>
-              <ToggleField
-                name="personalizedAssessment"
-                label="Enable Personalized Assessment"
-                tooltipContent="Generate tailored tests based on job-specific skills and qualifications."
-              />
-              {values.personalizedAssessment === 'true' && (
-                <TextField
-                  label="Number of Personalized Questions"
-                  name="noPersonalizedQuestions"
-                  placeholder="Enter number"
-                  type="number"
-                />
-              )}
-            </div>
-
-            {/* Personality Evaluation */}
-            <h3 className={styles.sectionHeading}>
-              <span className={styles.sectionHeadingBold}>
-                Personality Evaluation
-              </span>{' '}
-              Assess personality traits using MBTI dichotomy pairs to gauge
-              cultural and role fit.
-            </h3>
-            <div className={styles.configCard}>
-              <ToggleField
-                name="personalityEvaluation"
-                label="Enable Personality Evaluation"
-                tooltipContent="Assess candidate's personality traits to determine cultural and role fit"
-              />
-
-              {values.personalityEvaluation === 'true' && (
-                <FieldArray name="uploadedQuestions">
-                  {({ remove, push }) => (
-                    <>
-                      {['EI', 'SN', 'TF', 'JP'].map((pair) => (
-                        <QuestionGenerator
-                          key={pair}
-                          pair={pair}
-                          generatedQuestion={generatedQuestions[pair]?.question}
-                          isLoading={loadingPairs[pair]}
-                          onGenerate={() => generateQuestion(pair)}
-                          onAddQuestion={() => {
-                            const question = generatedQuestions[pair]?.question
-                            if (question) {
-                              push(question)
-                              resetQuestion(pair)
-                            }
-                          }}
-                        />
-                      ))}
-
-                      <div className={styles.fieldGroup}>
-                        <p className={styles.questionsLabel}>Questions:</p>
-                        <div className={styles.questionsList}>
-                          {values.uploadedQuestions?.map((_, index) => (
-                            <div key={index} className={styles.questionItem}>
-                              <Field
-                                name={`uploadedQuestions.${index}`}
-                                className={styles.questionInput}
-                                placeholder={`Question ${index + 1}`}
-                              />
-                              <button
-                                type="button"
-                                className={styles.deleteButton}
-                                onClick={() => remove(index)}
-                                aria-label={`Remove question ${index + 1}`}>
-                                <RiDeleteBin6Line />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                        <button
-                          type="button"
-                          className={styles.addButton}
-                          onClick={() => push('')}>
-                          <FaPlus /> Add Question
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </FieldArray>
-              )}
-            </div>
-
-            <TextField
-              label="Recruiter Guide (Optional)"
-              name="recruiterGuide"
-              placeholder="Enter recruiter guide"
+            <AiConfigFields
+              values={values}
+              errors={errors}
+              fieldName={identity}
+              setFieldValue={(key, value) => setFieldValue(key, value)}
+              jobId={jobId}
+              questionsByPair={questionsByPair}
+              loadingPairs={loadingPairs}
+              generateQuestion={generateQuestion}
             />
 
             <div className={styles.actions}>

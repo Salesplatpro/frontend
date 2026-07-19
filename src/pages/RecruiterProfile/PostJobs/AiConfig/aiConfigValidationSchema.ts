@@ -38,4 +38,40 @@ export const aiConfigValidationSchema = Yup.object({
     }),
 
   personalityEvaluation: Yup.string().required('Required'),
+  noOfEIQuestions: Yup.number()
+    .integer('Must be a whole number')
+    .min(1, 'Must be at least 1')
+    .max(20, 'Must be at most 20')
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  noOfSNQuestions: Yup.number()
+    .integer('Must be a whole number')
+    .min(1, 'Must be at least 1')
+    .max(20, 'Must be at most 20')
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  noOfTFQuestions: Yup.number()
+    .integer('Must be a whole number')
+    .min(1, 'Must be at least 1')
+    .max(20, 'Must be at most 20')
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+  noOfJPQuestions: Yup.number()
+    .integer('Must be a whole number')
+    .min(1, 'Must be at least 1')
+    .max(20, 'Must be at most 20')
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
 })

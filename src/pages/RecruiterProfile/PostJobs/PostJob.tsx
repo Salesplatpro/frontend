@@ -1,20 +1,8 @@
-import { Field, Form, Formik, FormikHelpers, useFormikContext } from 'formik'
+import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
-import {
-  EMPTY_LOCATION,
-  LocationSelect,
-} from '@/components/forms/LocationSelect'
-import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
-import {
-  CURRENCY_OPTIONS,
-  EXPERIENCE_LEVEL_OPTIONS,
-  Select,
-} from '@/components/forms/Select'
-import { TagInput } from '@/components/forms/TagInput/TagInput'
-import TextField from '@/components/forms/TextField'
+import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Button } from '@/components/ui/Button'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
 import { useJobPostCreationMutation } from '@/redux/api/recruiter'
@@ -22,6 +10,7 @@ import { getErrorMessage } from '@/utils/getErrorMessage'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
+import { JobDetailsFields } from './JobDetailsFields'
 import styles from './PostJob.module.scss'
 import { validationSchema } from './validationSchema'
 
@@ -124,204 +113,12 @@ const PostJob: React.FC = () => {
           <Form>
             <FormObserver saveDraft={saveDraft} />
 
-            {/* Section 1: Job Overview */}
-            <section className={styles.formSection}>
-              <div className={styles.fieldGroup}>
-                <RoleSelect
-                  label="Role"
-                  required
-                  name="role"
-                  value={values.role}
-                  onChange={(value) => setFieldValue('role', value)}
-                  creatable
-                  error={
-                    touched.role && typeof errors.role === 'string'
-                      ? errors.role
-                      : undefined
-                  }
-                />
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <TextField
-                  label="Job Brief"
-                  asterick
-                  name="jobBrief"
-                  placeholder="Describe the role in up to 600 words"
-                  type="textarea"
-                  MAX_WORDS={600}
-                />
-              </div>
-            </section>
-
-            {/* Section 2: Requirements */}
-            <section className={styles.formSection}>
-              <h3 className={styles.sectionTitle}>Requirements</h3>
-
-              <div className={styles.fieldGroup}>
-                <TextField
-                  label="Job Requirements"
-                  asterick
-                  name="requirements"
-                  placeholder="List the qualifications and skills needed"
-                  type="textarea"
-                />
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <Select
-                  label="Experience Level"
-                  required
-                  options={EXPERIENCE_LEVEL_OPTIONS}
-                  value={values.experienceLevel}
-                  onChange={(value) => setFieldValue('experienceLevel', value)}
-                  placeholder="Select experience level"
-                  error={
-                    touched.experienceLevel &&
-                    typeof errors.experienceLevel === 'string'
-                      ? errors.experienceLevel
-                      : undefined
-                  }
-                />
-              </div>
-            </section>
-
-            {/* Section 3: Location & Work */}
-            <section className={styles.formSection}>
-              <h3 className={styles.sectionTitle}>Location &amp; Work</h3>
-              <p className={styles.sectionNote}>
-                Only Country is required — State/Province and Region/City are
-                optional.
-              </p>
-
-              <div className={styles.fieldGroup}>
-                <LocationSelect
-                  value={values.location}
-                  onChange={(location) => setFieldValue('location', location)}
-                  stateLabel="State/Province (Optional)"
-                  cityLabel="Region/City (Optional)"
-                  countryRequired
-                  errors={{
-                    country:
-                      touched.location?.country &&
-                      typeof errors.location?.country?.name === 'string'
-                        ? errors.location.country.name
-                        : undefined,
-                  }}
-                />
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <p className={styles.label}>
-                  Work Mode<span className={styles.required}>*</span>
-                </p>
-                <WorkTypeCheckboxes
-                  value={values.workMode}
-                  onChange={(value) => setFieldValue('workMode', value)}
-                  error={
-                    touched.workMode && typeof errors.workMode === 'string'
-                      ? errors.workMode
-                      : undefined
-                  }
-                />
-              </div>
-            </section>
-
-            {/* Section 4: Compensation */}
-            <section className={styles.formSection}>
-              <h3 className={styles.sectionTitle}>Compensation</h3>
-
-              <div className={styles.compensationRow}>
-                <div className={styles.compensationFieldThird}>
-                  <Select
-                    label="Currency"
-                    required
-                    options={CURRENCY_OPTIONS}
-                    value={values.currency}
-                    onChange={(value) => setFieldValue('currency', value)}
-                    placeholder="Select currency"
-                  />
-                  {touched.currency && errors.currency && (
-                    <div className={styles.errorText}>
-                      {errors.currency as string}
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.compensationFieldThird}>
-                  <label className={styles.label} htmlFor="minSalary">
-                    Min Salary<span className={styles.required}>*</span>
-                  </label>
-                  <Field
-                    id="minSalary"
-                    name="minSalary"
-                    type="text"
-                    placeholder="e.g. 300000"
-                    className={styles.input}
-                  />
-                  {touched.minSalary && errors.minSalary && (
-                    <div className={styles.errorText}>
-                      {errors.minSalary as string}
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.compensationFieldThird}>
-                  <label className={styles.label} htmlFor="maxSalary">
-                    Max Salary<span className={styles.required}>*</span>
-                  </label>
-                  <Field
-                    id="maxSalary"
-                    name="maxSalary"
-                    type="text"
-                    placeholder="e.g. 600000"
-                    className={styles.input}
-                  />
-                  {touched.maxSalary && errors.maxSalary && (
-                    <div className={styles.errorText}>
-                      {errors.maxSalary as string}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </section>
-
-            {/* Section 5: Goals & Skills */}
-            <section className={styles.formSection}>
-              <h3 className={styles.sectionTitle}>Goals &amp; Skills</h3>
-
-              <div className={styles.fieldGroup}>
-                <TagInput
-                  label="Required Skills"
-                  required
-                  value={values.skills}
-                  onChange={(tags) => setFieldValue('skills', tags)}
-                  placeholder="Type a skill and press Enter"
-                  maxLength={250}
-                  error={
-                    touched.skills && typeof errors.skills === 'string'
-                      ? errors.skills
-                      : undefined
-                  }
-                />
-              </div>
-
-              <div className={styles.fieldGroup}>
-                <TagInput
-                  label="Top Goals"
-                  required
-                  value={values.goals}
-                  onChange={(tags) => setFieldValue('goals', tags)}
-                  placeholder="Type a goal and press Enter"
-                  maxLength={250}
-                  error={
-                    touched.goals && typeof errors.goals === 'string'
-                      ? errors.goals
-                      : undefined
-                  }
-                />
-              </div>
-            </section>
+            <JobDetailsFields
+              values={values}
+              errors={errors}
+              touched={touched}
+              setFieldValue={(key, value) => setFieldValue(key, value)}
+            />
 
             <div className={styles.actions}>
               <p className={styles.autosaveHint}>
