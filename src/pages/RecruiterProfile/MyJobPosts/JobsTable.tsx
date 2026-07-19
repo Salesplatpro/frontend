@@ -161,7 +161,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
               state={{ jobName: job.role.name, postedAt: job.createdAt }}>
               <button className={styles.viewJobButton}>View Job</button>
             </Link>
-            {!job.aiConfig && (
+            {job.status === 'draft' && (
               <Link to={`/recruiterDashboard/postjob/${job.id}`}>
                 <button className={styles.addAiConfigButton}>
                   Add AI Config

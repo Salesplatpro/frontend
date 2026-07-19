@@ -4,16 +4,21 @@ import React, { useState } from 'react'
 
 import { DisplayError } from '@/components'
 import { Spinner } from '@/components/ui/Spinner'
+import { useScreenWidth } from '@/hooks'
 import { useFetchRecruiterJobPostQuery } from '@/redux/api/recruiter'
 
+import { JobsCardList } from './JobsCardList'
 import { JobsTable } from './JobsTable'
 import styles from './MyJobPosts.module.scss'
 import { Pagination } from './Pagination'
+
+const MOBILE_BREAKPOINT = 768
 
 export const MyJobPosts = () => {
   const { data, error, isLoading } = useFetchRecruiterJobPostQuery({})
   const [page, setPage] = useState(1)
   const rowsPerPage = 7
+  const screenWidth = useScreenWidth()
 
   const jobs = Array.isArray(data?.data)
     ? data.data
@@ -44,7 +49,11 @@ export const MyJobPosts = () => {
         </div>
       </div>
       <div>
-        <JobsTable data={paginatedJobs} />
+        {screenWidth < MOBILE_BREAKPOINT ? (
+          <JobsCardList data={paginatedJobs} />
+        ) : (
+          <JobsTable data={paginatedJobs} />
+        )}
         <Pagination
           totalItems={jobs.length}
           itemsPerPage={rowsPerPage}

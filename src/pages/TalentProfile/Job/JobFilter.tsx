@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import { IoClose, IoFilterOutline } from 'react-icons/io5'
+import React from 'react'
+import { IoClose } from 'react-icons/io5'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
 import {
@@ -13,7 +13,6 @@ import {
   Select,
   WORK_MODE_OPTIONS,
 } from '@/components/forms/Select'
-import { CountBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { useGetRoleQuery } from '@/redux/api/talent'
 import { Role } from '@/utils/types'
@@ -38,139 +37,83 @@ export const hasActiveFilter = (filters: JobFiltersTypes) =>
     filters.location?.country?.name
   )
 
-const countActiveFilters = (filters: JobFiltersTypes) =>
-  [
-    !!filters.role,
-    !!filters.experienceLevel,
-    !!filters.workMode?.length,
-    !!(
-      filters.location?.city?.name ||
-      filters.location?.state?.name ||
-      filters.location?.country?.name
-    ),
-  ].filter(Boolean).length
-
 interface JobFilterProps {
   filters: JobFiltersTypes
   onApply: (filters: JobFiltersTypes) => void
 }
 
 export const JobFilter: React.FC<JobFilterProps> = ({ filters, onApply }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const activeCount = countActiveFilters(filters)
-
   const onSubmit = (values: JobFiltersTypes) => {
     onApply(values)
-    setIsOpen(false)
   }
 
   return (
-    <>
-      <button
-        type="button"
-        className={styles.trigger}
-        onClick={() => setIsOpen(true)}
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}>
-        <span className={styles.badgeWrap}>
-          <Button variant="outline" icon={<IoFilterOutline />}>
-            Filters
-          </Button>
-          {activeCount > 0 && (
-            <span className={styles.badgeOffset}>
-              <CountBadge item={activeCount} />
-            </span>
-          )}
-        </span>
-      </button>
+    <div className={styles.panel} aria-label="Filter jobs">
+      <Formik initialValues={filters} enableReinitialize onSubmit={onSubmit}>
+        {({ values, setFieldValue, resetForm }) => (
+          <Form>
+            <div className={styles.header}>
+              <span className={styles.title}>Filters</span>
+            </div>
 
-      {isOpen && (
-        <div
-          className={styles.backdrop}
-          onClick={() => setIsOpen(false)}
-          aria-hidden
-        />
-      )}
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="role">
+                Role
+              </label>
+              <RoleSelect
+                name="role"
+                value={values.role}
+                onChange={(value) => setFieldValue('role', value)}
+                creatable={false}
+              />
+            </div>
 
-      <div
-        className={`${styles.panel} ${isOpen ? styles.open : ''}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Filter jobs">
-        <Formik initialValues={filters} enableReinitialize onSubmit={onSubmit}>
-          {({ values, setFieldValue, resetForm }) => (
-            <Form>
-              <div className={styles.header}>
-                <span className={styles.title}>Filters</span>
-                <button
-                  type="button"
-                  className={styles.closeButton}
-                  aria-label="Close filters"
-                  onClick={() => setIsOpen(false)}>
-                  <IoClose />
-                </button>
-              </div>
+            <div className={styles.field}>
+              <label className={styles.fieldLabel} htmlFor="experienceLevel">
+                Experience Level
+              </label>
+              <Select
+                name="experienceLevel"
+                options={EXPERIENCE_LEVEL_OPTIONS}
+                value={values.experienceLevel}
+                onChange={(value) => setFieldValue('experienceLevel', value)}
+                placeholder="Select experience level"
+              />
+            </div>
 
-              <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="role">
-                  Role
-                </label>
-                <RoleSelect
-                  name="role"
-                  value={values.role}
-                  onChange={(value) => setFieldValue('role', value)}
-                  creatable={false}
-                />
-              </div>
+            <div className={styles.field}>
+              <span className={styles.fieldLabel}>Work Type</span>
+              <WorkTypeCheckboxes
+                value={values.workMode}
+                onChange={(value) => setFieldValue('workMode', value)}
+              />
+            </div>
 
-              <div className={styles.field}>
-                <label className={styles.fieldLabel} htmlFor="experienceLevel">
-                  Experience Level
-                </label>
-                <Select
-                  name="experienceLevel"
-                  options={EXPERIENCE_LEVEL_OPTIONS}
-                  value={values.experienceLevel}
-                  onChange={(value) => setFieldValue('experienceLevel', value)}
-                  placeholder="Select experience level"
-                />
-              </div>
+            <div className={styles.field}>
+              <span className={styles.fieldLabel}>Location</span>
+              <LocationSelect
+                value={values.location}
+                onChange={(value) => setFieldValue('location', value)}
+              />
+            </div>
 
-              <div className={styles.field}>
-                <span className={styles.fieldLabel}>Work Type</span>
-                <WorkTypeCheckboxes
-                  value={values.workMode}
-                  onChange={(value) => setFieldValue('workMode', value)}
-                />
-              </div>
-
-              <div className={styles.field}>
-                <span className={styles.fieldLabel}>Location</span>
-                <LocationSelect
-                  value={values.location}
-                  onChange={(value) => setFieldValue('location', value)}
-                />
-              </div>
-
-              <div className={styles.actions}>
-                <button
-                  type="button"
-                  className={styles.clearAll}
-                  disabled={!hasActiveFilter(values)}
-                  onClick={() => {
-                    resetForm({ values: defaultFilterValues })
-                    onApply(defaultFilterValues)
-                    setIsOpen(false)
-                  }}>
-                  Clear all
-                </button>
-                <Button type="submit">Apply filters</Button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    </>
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={styles.clearAll}
+                disabled={!hasActiveFilter(values)}
+                onClick={() => {
+                  resetForm({ values: defaultFilterValues })
+                  onApply(defaultFilterValues)
+                }}>
+                Clear all
+              </button>
+              <Button type="submit">Apply filters</Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </div>
   )
 }
 
