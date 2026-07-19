@@ -10,6 +10,8 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useIndividualJobQuery } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
 
+import { JobStatusControl } from '../EditJob/JobStatusControl'
+
 const JobDetail = () => {
   const { jobId } = useParams()
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
@@ -51,6 +53,7 @@ const JobDetail = () => {
               {job.noOfApplicants != null ? `(${job.noOfApplicants})` : ''}
             </button>
           </Link>
+          <JobStatusControl jobId={jobId!} status={job.status ?? 'draft'} />
         </>
       }
     />

@@ -19,36 +19,30 @@ export const talentApi = createApi({
         body: testAnswer,
       }),
     }),
-    fetchJob: builder.query({
-      query: (params?: { roleId?: string; offset?: number }) => {
-        let url = `/jobs?limit=10&offset=${params?.offset ?? 0}`
-        if (params?.roleId) url += `&roleId=${params.roleId}`
-        return { url, method: 'GET' }
-      },
-    }),
-    filterJob: builder.query({
-      query: ({
-        roleId,
-        experienceLevel,
-        workMode,
-        city,
-        state,
-        country,
-        offset,
+    fetchJobs: builder.query({
+      query: (params?: {
+        roleId?: string
+        experienceLevel?: string
+        workMode?: string
+        city?: string
+        state?: string
+        country?: string
+        offset?: number
       }) => {
-        let url = `/jobs?limit=10&offset=${offset ?? 0}`
+        const query = new URLSearchParams({
+          limit: '10',
+          offset: String(params?.offset ?? 0),
+        })
 
-        if (roleId) url += `&roleId=${roleId}`
-        if (experienceLevel) url += `&experienceLevel=${experienceLevel}`
-        if (workMode) url += `&workMode=${workMode}`
-        if (city) url += `&city=${city}`
-        if (state) url += `&state=${state}`
-        if (country) url += `&country=${country}`
+        if (params?.roleId) query.set('roleId', params.roleId)
+        if (params?.experienceLevel)
+          query.set('experienceLevel', params.experienceLevel)
+        if (params?.workMode) query.set('workMode', params.workMode)
+        if (params?.city) query.set('city', params.city)
+        if (params?.state) query.set('state', params.state)
+        if (params?.country) query.set('country', params.country)
 
-        return {
-          url,
-          method: 'GET',
-        }
+        return { url: `/jobs?${query.toString()}`, method: 'GET' }
       },
     }),
     individualJob: builder.query({
@@ -139,8 +133,7 @@ export const talentApi = createApi({
 export const {
   useFetchPretestQuery,
   usePostPretestMutation,
-  useFetchJobQuery,
-  useFilterJobQuery,
+  useFetchJobsQuery,
   useIndividualJobQuery,
   useJobPipelineQuery,
   useLazyCvMatchQuery,

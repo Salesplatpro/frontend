@@ -1,15 +1,14 @@
-import './SingleJob.scss'
-
 import React from 'react'
 import { GoDotFill } from 'react-icons/go'
 import { PiBuildingOfficeBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
-import { Spinner } from '@/components/ui/Spinner'
+import { Card } from '@/components/ui/Card'
 
 import { capitalizeFirstWord } from '../../../utils'
 import { JobDetails } from './JobDetails'
+import styles from './SingleJob.module.scss'
 
 const stripHtmlAndTruncate = (html: string, limit: number) => {
   const text = html
@@ -28,8 +27,6 @@ export type SingleJobProps = {
   jobCountry?: string
   jobExperience?: string
   jobSalary?: string
-  isFiltering?: boolean
-  isLoading?: boolean
 }
 
 export const SingleJob = ({
@@ -41,43 +38,37 @@ export const SingleJob = ({
   jobExperience,
   jobCountry,
   jobSalary,
-  isFiltering,
-  isLoading,
 }: SingleJobProps) => {
-  if (isFiltering || isLoading) return <Spinner fullPage />
-
   return (
-    <div className="singlejob-container">
-      <PiBuildingOfficeBold size={36} />
-      <div className="title-container">
-        <Link to={`/talentDashboard/job/${jobId}`} className="jobTitle">
-          <div className="title text-black font-raleway">
-            {capitalizeFirstWord(jobTitle)}
-          </div>
-          <span className="category">
+    <Card className={styles.card}>
+      <PiBuildingOfficeBold size={36} className={styles.icon} />
+      <div className={styles.body}>
+        <Link to={`/talentDashboard/job/${jobId}`} className={styles.titleRow}>
+          <span className={styles.title}>{capitalizeFirstWord(jobTitle)}</span>
+          <span className={styles.category}>
             <GoDotFill color="#2e90fa" />
             {capitalizeFirstWord(jobCategory)}
           </span>
         </Link>
+
         {jobBrief && (
-          <div className="description">
+          <p className={styles.description}>
             {stripHtmlAndTruncate(jobBrief, 140)}
-          </div>
+          </p>
         )}
-        <div className="details-container">
-          <div className="jobdetails">
-            <JobDetails
-              location={capitalizeFirstWord(jobCountry || '')}
-              type={jobWorkMode?.map(capitalizeFirstWord).join(', ')}
-              level={capitalizeFirstWord(jobExperience) || ''}
-              salary={jobSalary || ''}
-            />
-          </div>
+
+        <div className={styles.footer}>
+          <JobDetails
+            location={capitalizeFirstWord(jobCountry || '')}
+            type={jobWorkMode?.map(capitalizeFirstWord).join(', ')}
+            level={capitalizeFirstWord(jobExperience) || ''}
+            salary={jobSalary || ''}
+          />
           <Link to={`/talentDashboard/job/${jobId}`}>
-            <Button>Apply Now</Button>
+            <Button size="sm">Apply Now</Button>
           </Link>
         </div>
       </div>
-    </div>
+    </Card>
   )
 }

@@ -6,6 +6,11 @@ import { Modal } from 'react-responsive-modal'
 import { Link } from 'react-router-dom'
 
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+import { Select } from '@/components/forms/Select'
+import { StatusBadge } from '@/components/ui/Badge'
+import { useUpdateJobMutation } from '@/redux/api/recruiter'
+import { getErrorMessage } from '@/utils/getErrorMessage'
+import { notify } from '@/utils/toastNotifications'
 
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
@@ -15,7 +20,40 @@ import {
   calculateDaysFromCreation,
   recruiterJobPostsTypes,
 } from '../../../utils'
+import { getStatusBadge, JOB_STATUS_OPTIONS } from '../getJobStatus'
 import styles from './JobsTable.module.scss'
+
+type StatusCellProps = {
+  jobId: string
+  status: string
+}
+
+const StatusCell = ({ jobId, status }: StatusCellProps) => {
+  const [updateJob, { isLoading }] = useUpdateJobMutation()
+
+  const handleChange = async (nextStatus: string) => {
+    if (nextStatus === status) return
+    try {
+      await updateJob({ jobId, data: { status: nextStatus } }).unwrap()
+      notify('success', 'Job status updated')
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to update job status'))
+    }
+  }
+
+  return (
+    <div className={styles.statusCell}>
+      <StatusBadge status={status} {...getStatusBadge(status)} />
+      <Select
+        options={JOB_STATUS_OPTIONS}
+        value={status}
+        onChange={(value) => void handleChange(value)}
+        disabled={isLoading}
+        height="34px"
+      />
+    </div>
+  )
+}
 
 type JobsTableType = {
   data: recruiterJobPostsTypes[]
@@ -81,6 +119,14 @@ export const JobsTable = ({ data }: JobsTableType) => {
         ),
       },
       {
+        key: 'status',
+        header: 'Status',
+        align: 'center',
+        render: (job) => (
+          <StatusCell jobId={job.id} status={job.status ?? 'draft'} />
+        ),
+      },
+      {
         key: 'applicants',
         header: 'Applicants',
         align: 'center',
@@ -138,7 +184,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         getRowKey={(job) => job.id}
         ariaLabel="Job posts table"
         getRowClassName={(job) => {
-          if (job.status === 'paused' || job.status === 'closed')
+          if (job.status === 'suspended' || job.status === 'closed')
             return styles.rowClosed
           if (job.aiConfig) return styles.rowComplete
           return styles.rowIncomplete
