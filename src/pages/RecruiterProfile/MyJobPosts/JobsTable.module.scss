@@ -12,17 +12,6 @@ $amber-700: #b45309;
   gap: var(--space-2);
 }
 
-// Small amber dot shown when AI config is missing; MUI Tooltip reveals label on hover
-.aiConfigDot {
-  display: inline-block;
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background-color: $amber-500;
-  cursor: default;
-}
-
 .titleLink {
   display: block;
   max-width: 260px;
@@ -42,6 +31,15 @@ $amber-700: #b45309;
   align-items: center;
   gap: var(--space-2);
   min-width: 140px;
+}
+
+.statusPillButton {
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
 }
 
 // ── Applicants cell ────────────────────────────────────────────────────────
