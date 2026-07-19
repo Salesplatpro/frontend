@@ -1,7 +1,6 @@
 import 'react-responsive-modal/styles.css'
 
-import Tooltip from '@mui/material/Tooltip'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Modal } from 'react-responsive-modal'
 import { Link } from 'react-router-dom'
 
@@ -30,8 +29,25 @@ type StatusCellProps = {
 
 const StatusCell = ({ jobId, status }: StatusCellProps) => {
   const [updateJob, { isLoading }] = useUpdateJobMutation()
+  const [isEditing, setIsEditing] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isEditing) return
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsEditing(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isEditing])
 
   const handleChange = async (nextStatus: string) => {
+    setIsEditing(false)
     if (nextStatus === status) return
     try {
       await updateJob({ jobId, data: { status: nextStatus } }).unwrap()
@@ -42,15 +58,24 @@ const StatusCell = ({ jobId, status }: StatusCellProps) => {
   }
 
   return (
-    <div className={styles.statusCell}>
-      <StatusBadge status={status} {...getStatusBadge(status)} />
-      <Select
-        options={JOB_STATUS_OPTIONS}
-        value={status}
-        onChange={(value) => void handleChange(value)}
-        disabled={isLoading}
-        height="34px"
-      />
+    <div className={styles.statusCell} ref={containerRef}>
+      {isEditing ? (
+        <Select
+          options={JOB_STATUS_OPTIONS}
+          value={status}
+          onChange={(value) => void handleChange(value)}
+          disabled={isLoading}
+          height="34px"
+        />
+      ) : (
+        <button
+          type="button"
+          className={styles.statusPillButton}
+          disabled={isLoading}
+          onClick={() => setIsEditing(true)}>
+          <StatusBadge status={status} {...getStatusBadge(status)} />
+        </button>
+      )}
     </div>
   )
 }
@@ -105,11 +130,6 @@ export const JobsTable = ({ data }: JobsTableType) => {
         align: 'center',
         render: (job) => (
           <div className={styles.titleCell}>
-            {!job.aiConfig && (
-              <Tooltip title="No AI Config" placement="top" arrow>
-                <span className={styles.aiConfigDot} />
-              </Tooltip>
-            )}
             <Link
               to={`/recruiterDashboard/jobdetail/${job.id}`}
               className={styles.titleLink}>
@@ -135,7 +155,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
             to={`/recruiterDashboard/singleJobPost/${job.id}`}
             state={{ jobName: job.role.name, postedAt: job.createdAt }}>
             <button className={styles.applicantsButton}>
-              View ({job.noOfApplicants})
+              {job.noOfApplicants}
             </button>
           </Link>
         ),
