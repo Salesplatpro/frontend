@@ -1,31 +1,38 @@
+import cn from 'classnames'
 import React from 'react'
+import { IoCheckmarkCircle } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 
-import connectorIcon from '../../../../assets/connectorIcon.webp'
-import unconnectorIcon from '../../../../assets/unconnectorIcon.webp'
+import { StatusBadge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+
 import { Application, Progress } from '../../utils/type'
+import styles from './ProgressView.module.scss'
 
 interface Props {
   progress: Progress
   jobProgress: Application
   jobId?: string
+  isLast?: boolean
 }
 
-const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
-  const navigate = useNavigate()
+const awaitingBadge = { backgroundColor: '#f3f4f6', color: '#6b7280' }
+const completedBadge = { backgroundColor: '#edfeee', color: '#1b7b44' }
 
-  const getStatusColor = (status: string): string => {
-    switch (status) {
-      case 'completed':
-        return '#34C759'
-      case 'current':
-        return '#3C6FD4'
-      case 'awaiting':
-        return '#FF3B30'
-      default:
-        return '#E7EDF7'
-    }
-  }
+const takeableTests = [
+  'Pre-Assessment',
+  'Personalized Test',
+  'Personality Test',
+]
+
+const ProgressItem: React.FC<Props> = ({
+  progress,
+  jobProgress,
+  jobId,
+  isLast,
+}) => {
+  const navigate = useNavigate()
 
   const handleNavigate = () => {
     switch (progress.title) {
@@ -49,40 +56,39 @@ const ProgressItem: React.FC<Props> = ({ progress, jobProgress, jobId }) => {
     }
   }
 
+  const isTakeable =
+    progress.status === 'current' && takeableTests.includes(progress.title)
+
   return (
-    <div className="flex lg:space-x-6 space-x-3 items-center">
-      <img
-        src={progress.status === 'completed' ? connectorIcon : unconnectorIcon}
-        alt=""
-        className="w-8"
-      />
-      <div className="p-2 bg-grey-50 rounded-lg flex items-center justify-between w-full">
-        <div className="flex items-center space-x-6">
-          <div className="w-[56px] h-[56px] bg-[#E7EDF7] rounded-full flex items-center justify-center">
+    <div className={styles.itemRow}>
+      <div className={styles.connectorCol}>
+        <div className={cn(styles.dot, styles[`dot-${progress.status}`])}>
+          {progress.status === 'completed' && <IoCheckmarkCircle size={16} />}
+        </div>
+        {!isLast && <div className={styles.connectorLine} />}
+      </div>
+
+      <Card className={styles.itemCard}>
+        <div className={styles.itemInfo}>
+          <div className={styles.itemIcon}>
             <img src={progress.icon} alt="" />
           </div>
-          <h6 className="text-lg font-medium text-grey-900">
-            {progress.title}
-          </h6>
+          <span className={styles.itemTitle}>{progress.title}</span>
         </div>
-        {progress.status === 'current' &&
-        ['Pre-Assessment', 'Personalized Test', 'Personality Test'].includes(
-          progress.title,
-        ) ? (
-          <button
-            onClick={handleNavigate}
-            className="w-[96px] h-[40px] text-white text-base rounded-lg"
-            style={{ backgroundColor: getStatusColor(progress.status) }}>
+
+        {isTakeable ? (
+          <Button size="sm" onClick={handleNavigate}>
             Take Test
-          </button>
+          </Button>
         ) : (
-          <button
-            className="w-[96px] h-[40px] text-white text-base rounded-lg"
-            style={{ backgroundColor: getStatusColor(progress.status) }}>
-            {progress.status === 'completed' ? 'Completed' : 'Awaiting'}
-          </button>
+          <StatusBadge
+            status={progress.status === 'completed' ? 'Completed' : 'Awaiting'}
+            {...(progress.status === 'completed'
+              ? completedBadge
+              : awaitingBadge)}
+          />
         )}
-      </div>
+      </Card>
     </div>
   )
 }

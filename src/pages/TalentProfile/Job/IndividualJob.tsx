@@ -6,14 +6,24 @@ import {
   JobDetailsJob,
   JobDetailsView,
 } from '@/components/features/jobs/JobDetailsView'
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
-import { useIndividualJobQuery } from '@/redux/api/talent'
+import {
+  useAllJobApplicationsQuery,
+  useIndividualJobQuery,
+} from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
+import { AllJobTypes } from '@/utils/types'
 
 const IndividualJob = () => {
   const { jobId } = useParams()
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const job: JobDetailsJob | undefined = data?.data?.job
+
+  const { data: applicationsData } = useAllJobApplicationsQuery({})
+  const isApplied = (
+    applicationsData?.data?.applications as AllJobTypes[] | undefined
+  )?.some((application) => application.job?.id === jobId)
 
   useEffect(() => {
     if (error) {
@@ -33,13 +43,17 @@ const IndividualJob = () => {
       jobId={jobId!}
       job={job}
       action={
-        <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
-          <button
-            type="button"
-            className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 font-raleway font-medium">
-            Apply for this position
-          </button>
-        </Link>
+        isApplied ? (
+          <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
+            <Button fullWidth variant="secondary">
+              Applied ✓
+            </Button>
+          </Link>
+        ) : (
+          <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
+            <Button fullWidth>Apply for this position</Button>
+          </Link>
+        )
       }
     />
   )

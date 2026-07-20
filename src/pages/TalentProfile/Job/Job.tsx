@@ -6,9 +6,13 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Heading, Text } from '@/components/ui/Typography'
 
 import { Button } from '../../../components'
-import { useFetchJobsQuery } from '../../../redux/api/talent'
+import {
+  useAllJobApplicationsQuery,
+  useFetchJobsQuery,
+} from '../../../redux/api/talent'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
+import { AllJobTypes } from '../../../utils/types'
 import styles from './Job.module.scss'
 import { ActiveFilterChips, defaultFilterValues, JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
@@ -40,6 +44,13 @@ const Job = () => {
     country: filters.location?.country?.name || undefined,
     offset,
   })
+
+  const { data: applicationsData } = useAllJobApplicationsQuery({})
+  const appliedJobIds = new Set(
+    (applicationsData?.data?.applications as AllJobTypes[] | undefined)
+      ?.map((application) => application.job?.id)
+      .filter(Boolean),
+  )
 
   useEffect(() => {
     if (!data) return
@@ -100,6 +111,7 @@ const Job = () => {
                   jobCountry={job.locationCountry ?? undefined}
                   jobExperience={job.experienceLevel}
                   jobSalary={job.maxSalary}
+                  isApplied={appliedJobIds.has(job.id)}
                 />
               ))}
             </div>

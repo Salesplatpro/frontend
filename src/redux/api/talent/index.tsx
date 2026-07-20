@@ -5,6 +5,7 @@ import { customBaseQuery } from '../../../utils/customBaseQuery'
 export const talentApi = createApi({
   reducerPath: 'talentApi',
   baseQuery: customBaseQuery,
+  tagTypes: ['Applications'],
   endpoints: (builder) => ({
     fetchPretest: builder.query({
       query: (roleId) => ({
@@ -56,6 +57,10 @@ export const talentApi = createApi({
         url: `/jobs/applications/${jobId}`,
         method: 'PATCH',
       }),
+      onQueryStarted: async (_jobId, { dispatch, queryFulfilled }) => {
+        await queryFulfilled
+        dispatch(talentApi.util.invalidateTags(['Applications']))
+      },
     }),
     cvMatch: builder.query({
       query: (jobId) => ({
@@ -101,6 +106,7 @@ export const talentApi = createApi({
         url: `/user/applications`,
         method: 'GET',
       }),
+      providesTags: ['Applications'],
     }),
     getRole: builder.query({
       query: () => ({

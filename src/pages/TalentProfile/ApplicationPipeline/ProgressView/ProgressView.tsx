@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Bounce } from 'react-toastify'
 
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
@@ -17,6 +18,7 @@ import { Application, Progress } from '../../utils/type'
 import ProgressError from './ProgressError'
 import ProgressHeader from './ProgressHeader'
 import ProgressItem from './ProgressItem'
+import styles from './ProgressView.module.scss'
 
 const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
@@ -135,31 +137,26 @@ const ProgressView: React.FC = () => {
   const progressPercentage = Math.round((completedStages / totalStages) * 100)
 
   return (
-    <div>
+    <div className={styles.page}>
       <ProgressHeader
         progressPercentage={progressPercentage}
         jobProgress={jobProgress}
       />
 
-      <div>
-        <div className="max-w-[788px] space-y-2 mx-auto">
-          {progresses.map((progress, i) => (
-            <ProgressItem
-              key={i}
-              progress={progress}
-              jobProgress={jobProgress}
-              jobId={jobId}
-            />
-          ))}
-        </div>
+      <div className={styles.itemList}>
+        {progresses.map((progress, i) => (
+          <ProgressItem
+            key={i}
+            progress={progress}
+            jobProgress={jobProgress}
+            jobId={jobId}
+            isLast={i === progresses.length - 1}
+          />
+        ))}
       </div>
 
-      <div>
-        <button
-          onClick={homePage}
-          className="my-14 ml-4 border-2 border-primary-strong px-[12px] py-[12.3px] rounded-xl cursor-pointer bg-primary-strong text-white shadow-custom font-raleway leading-[30px] text-base font-medium hover:bg-[#3765c0] hover:text-white">
-          Back to Homepage
-        </button>
+      <div className={styles.footer}>
+        <Button onClick={homePage}>Back to Homepage</Button>
       </div>
     </div>
   )
