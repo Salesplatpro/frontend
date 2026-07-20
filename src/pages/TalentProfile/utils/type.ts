@@ -4,7 +4,6 @@ export interface Application {
     'prescreening' | 'cv_similarity' | 'personalized' | 'personality',
     string
   >
-  talent: string
 }
 
 export interface Progress {

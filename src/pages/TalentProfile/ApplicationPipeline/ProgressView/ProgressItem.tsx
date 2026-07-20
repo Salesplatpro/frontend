@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
-import { Application, Progress } from '../../utils/type'
+import { Progress } from '../../utils/type'
 import styles from './ProgressView.module.scss'
 
 interface Props {
   progress: Progress
-  jobProgress: Application
   jobId?: string
   isLast?: boolean
 }
@@ -26,13 +26,9 @@ const takeableTests = [
   'Personality Test',
 ]
 
-const ProgressItem: React.FC<Props> = ({
-  progress,
-  jobProgress,
-  jobId,
-  isLast,
-}) => {
+const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
   const navigate = useNavigate()
+  const talentId = useAuthStore((state) => state.user)?.id
 
   const handleNavigate = () => {
     switch (progress.title) {
@@ -43,7 +39,7 @@ const ProgressItem: React.FC<Props> = ({
         break
       case 'Personalized Test':
         navigate(
-          `/talentDashboard/applicationPipeline/personalizedTest/${jobId}/${jobProgress.talent}`,
+          `/talentDashboard/applicationPipeline/personalizedTest/${jobId}/${talentId}`,
         )
         break
       case 'Personality Test':
