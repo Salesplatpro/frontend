@@ -52,6 +52,12 @@ export function usePreAssessment() {
   }, [setAssessment])
 
   useEffect(() => {
+    const cached = usePreAssessmentStore.getState().assessment
+    if (cached) {
+      setAssessmentLocal(cached)
+      setIsLoading(false)
+      return
+    }
     void load()
   }, [load])
 

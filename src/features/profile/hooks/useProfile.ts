@@ -11,6 +11,7 @@ export const useProfile = () => {
   const { data, error, isLoading, mutate } = useSWR(
     PROFILE_ENDPOINT,
     fetchProfile,
+    { revalidateIfStale: false, revalidateOnFocus: false },
   )
 
   useEffect(() => {
