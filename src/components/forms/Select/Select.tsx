@@ -19,8 +19,9 @@ export const Select: React.FC<SelectProps> = ({
   disabled,
   height,
   searchable,
+  defaultOpen,
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(!!defaultOpen)
   const [search, setSearch] = useState('')
   const containerRef = useRef<HTMLDivElement>(null)
 

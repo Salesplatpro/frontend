@@ -33,6 +33,8 @@ interface DataTableProps<T> {
   showRowNumber?: boolean
   /** Starting offset for row numbers, e.g. the current page's offset when paginated. */
   rowNumberOffset?: number
+  /** Lets cell content (e.g. an open dropdown) overflow the table's rounded-corner clipping instead of being cut off. */
+  allowOverflow?: boolean
 }
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -72,6 +74,7 @@ export function DataTable<T>({
   ariaLabel = 'data table',
   showRowNumber,
   rowNumberOffset = 0,
+  allowOverflow,
 }: DataTableProps<T>) {
   const screenWidth = useScreenWidth()
   const rowNumberColumn: ColumnDef<T> = {
@@ -93,7 +96,7 @@ export function DataTable<T>({
       sx={{
         borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
-        overflow: 'hidden',
+        overflow: allowOverflow ? 'visible' : 'hidden',
       }}>
       <Table aria-label={ariaLabel}>
         <TableHead>

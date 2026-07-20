@@ -19,6 +19,8 @@ export interface SelectProps {
   height?: string
   /** Adds a text filter input above the option list. */
   searchable?: boolean
+  /** Renders the option list open immediately on mount instead of requiring a click to expand. */
+  defaultOpen?: boolean
 }
 
 export interface MultiSelectProps {
