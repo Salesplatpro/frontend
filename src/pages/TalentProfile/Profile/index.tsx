@@ -213,7 +213,7 @@ const TalentProfile = () => {
                     <input
                       id="cv"
                       type="file"
-                      accept=".pdf,.doc,.docx"
+                      accept=".pdf,.docx"
                       className={styles.fileInput}
                       disabled={isUploading}
                       onChange={(event) => {
