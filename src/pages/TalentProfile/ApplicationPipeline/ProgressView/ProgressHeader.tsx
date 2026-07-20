@@ -1,8 +1,12 @@
 import React from 'react'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 
+import { Card } from '@/components/ui/Card'
+import { Heading, Text } from '@/components/ui/Typography'
+
 import ProgressBar from '../../../../utils/ProgressBar'
 import { Application } from '../../utils/type'
+import styles from './ProgressView.module.scss'
 
 interface HeaderProps {
   progressPercentage: number
@@ -14,35 +18,34 @@ const ProgressHeader: React.FC<HeaderProps> = ({
   jobProgress,
 }) => {
   return (
-    <div>
-      <div className="mt-4 mb-8 px-4">
-        <h2 className="font-bold md:text-3xl text-xl text-grey-900">
-          Progress View
-        </h2>
-        <p className="text-xl font-normal text-grey-900">
-          Your job application pipeline. Track your progress and see where you
-          are in the process.
-        </p>
-      </div>
-      <div className="bg-[#FFF8EF] w-[95%] h-[70px] my-6 ml-4 px-8 py-11 flex justify-between items-center rounded-xl">
-        <div className="flex justify-center items-center space-x-3">
-          <IoMdInformationCircleOutline size={27} color="#FF9500" />
+    <div className={styles.headerSection}>
+      <Heading level={2}>Progress View</Heading>
+      <Text color="secondary" className={styles.headerSubtitle}>
+        Your job application pipeline. Track your progress and see where you are
+        in the process.
+      </Text>
 
-          <h1 className="font-raleway text-sm leading-[20px] lg:text-xl lg:leading-[28px] md:text-lg md:leading-[20px] sm:text-base font-semibold text-[#FF9500]">
+      <Card className={styles.banner}>
+        <div className={styles.bannerMessage}>
+          <IoMdInformationCircleOutline
+            size={24}
+            className={styles.bannerIcon}
+          />
+          <Text weight="bold" className={styles.bannerText}>
             {jobProgress?.currentStage === 'completed'
               ? 'Application Assessment completed'
               : 'Application Assessment in progress'}
-          </h1>
+          </Text>
         </div>
 
         <ProgressBar
           percentage={progressPercentage}
-          textColor="#344054"
-          pathColor="#FF9500"
-          trailColor="#f8ddba"
-          size={60}
+          textColor="var(--color-text-heading)"
+          pathColor="var(--color-warning)"
+          trailColor="var(--color-border)"
+          size={56}
         />
-      </div>
+      </Card>
     </div>
   )
 }

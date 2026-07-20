@@ -27,6 +27,7 @@ export type SingleJobProps = {
   jobCountry?: string
   jobExperience?: string
   jobSalary?: string
+  isApplied?: boolean
 }
 
 export const SingleJob = ({
@@ -38,6 +39,7 @@ export const SingleJob = ({
   jobExperience,
   jobCountry,
   jobSalary,
+  isApplied,
 }: SingleJobProps) => {
   return (
     <Card className={styles.card}>
@@ -64,9 +66,17 @@ export const SingleJob = ({
             level={capitalizeFirstWord(jobExperience) || ''}
             salary={jobSalary || ''}
           />
-          <Link to={`/talentDashboard/job/${jobId}`}>
-            <Button size="sm">Apply Now</Button>
-          </Link>
+          {isApplied ? (
+            <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
+              <Button size="sm" variant="secondary">
+                Applied ✓
+              </Button>
+            </Link>
+          ) : (
+            <Link to={`/talentDashboard/job/${jobId}`}>
+              <Button size="sm">Apply Now</Button>
+            </Link>
+          )}
         </div>
       </div>
     </Card>
