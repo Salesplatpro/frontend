@@ -4,7 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { notify } from '@/utils/toastNotifications'
 
-import { patchProfile, uploadFile } from '../services/profileService'
+import { uploadCv as uploadCvFile } from '../services/profileService'
 import { useProfile } from './useProfile'
 
 export const useUploadCv = () => {
@@ -17,12 +17,11 @@ export const useUploadCv = () => {
       setProgress(0)
 
       try {
-        const uploaded = await uploadFile(file, (event) => {
+        await uploadCvFile(file, (event) => {
           if (event.total) {
             setProgress(Math.round((event.loaded / event.total) * 100))
           }
         })
-        await patchProfile({ cv: uploaded.data?.fileUrl })
         await mutate()
         notify('success', 'CV uploaded successfully', { autoClose: 5000 })
       } catch (error) {
