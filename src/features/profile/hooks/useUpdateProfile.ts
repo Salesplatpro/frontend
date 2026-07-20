@@ -20,6 +20,15 @@ export const useUpdateProfile = () => {
     try {
       await trigger(payload)
       await mutate()
+      if (payload.roleIds !== undefined) {
+        // A role change is the only edit that regenerates the assessment
+        // server-side, so it's the only case where the cached assessment
+        // (see usePreAssessment) needs to be invalidated.
+        void import('@/features/pre-assessment/store').then(
+          ({ usePreAssessmentStore }) =>
+            usePreAssessmentStore.getState().reset(),
+        )
+      }
       notify('success', 'Profile updated successfully', { autoClose: 5000 })
       return true
     } catch (error) {
