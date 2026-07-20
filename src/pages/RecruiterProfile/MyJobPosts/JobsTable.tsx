@@ -66,6 +66,7 @@ const StatusCell = ({ jobId, status }: StatusCellProps) => {
           onChange={(value) => void handleChange(value)}
           disabled={isLoading}
           height="34px"
+          defaultOpen
         />
       ) : (
         <button
@@ -203,6 +204,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         data={data}
         getRowKey={(job) => job.id}
         ariaLabel="Job posts table"
+        allowOverflow
         getRowClassName={(job) => {
           if (job.status === 'suspended' || job.status === 'closed')
             return styles.rowClosed
