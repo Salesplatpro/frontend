@@ -148,7 +148,6 @@ const ProgressView: React.FC = () => {
           <ProgressItem
             key={i}
             progress={progress}
-            jobProgress={jobProgress}
             jobId={jobId}
             isLast={i === progresses.length - 1}
           />

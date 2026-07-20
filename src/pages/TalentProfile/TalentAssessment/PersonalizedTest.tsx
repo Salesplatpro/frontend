@@ -41,12 +41,30 @@ const PersonalizedTest: React.FC = () => {
     answers: {},
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const isValidTalentId = !!talentId && talentId !== 'undefined'
 
   const {
     data: personalizedData,
     error: personalizedError,
     isLoading: personalizedLoading,
-  } = useGeneratePersonalizedTestQuery({ jobId, talentId })
+  } = useGeneratePersonalizedTestQuery(
+    { jobId, talentId },
+    { skip: !jobId || !isValidTalentId },
+  )
+
+  useEffect(() => {
+    if (!isValidTalentId) {
+      notify(
+        'error',
+        'Unable to load your personalized test. Please try again.',
+        {
+          autoClose: 5000,
+          transition: Bounce,
+        },
+      )
+      navigate(`/talentDashboard/applicationPipeline/${jobId}`)
+    }
+  }, [isValidTalentId, jobId, navigate])
 
   // Check if all questions are answered
   const allAnswered =
