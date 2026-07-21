@@ -1,11 +1,6 @@
 import * as Yup from 'yup'
 
-// A blank input means "skip this pair" rather than 0/NaN, so it must bypass
-// min/max checks entirely instead of being coerced into a failing number.
-const emptyToUndefined = (value: number, originalValue: unknown) =>
-  typeof originalValue === 'string' && originalValue.trim() === ''
-    ? undefined
-    : value
+import { emptyToUndefined } from '@/utils/yupHelpers'
 
 export const aiConfigValidationSchema = Yup.object({
   name: Yup.string().required('Required'),
@@ -45,30 +40,42 @@ export const aiConfigValidationSchema = Yup.object({
     }),
 
   personalityEvaluation: Yup.string().required('Required'),
-  // All four MBTI dichotomy pairs are optional, even when personality
-  // evaluation is enabled — a recruiter may only care about some pairs.
+  // All four MBTI dichotomy pairs are required whenever personality
+  // evaluation is enabled — no default count, any positive integer allowed.
   noOfEIQuestions: Yup.number()
     .transform(emptyToUndefined)
     .integer('Must be a whole number')
     .min(1, 'Must be at least 1')
-    .max(20, 'Must be at most 20')
-    .notRequired(),
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   noOfSNQuestions: Yup.number()
     .transform(emptyToUndefined)
     .integer('Must be a whole number')
     .min(1, 'Must be at least 1')
-    .max(20, 'Must be at most 20')
-    .notRequired(),
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   noOfTFQuestions: Yup.number()
     .transform(emptyToUndefined)
     .integer('Must be a whole number')
     .min(1, 'Must be at least 1')
-    .max(20, 'Must be at most 20')
-    .notRequired(),
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   noOfJPQuestions: Yup.number()
     .transform(emptyToUndefined)
     .integer('Must be a whole number')
     .min(1, 'Must be at least 1')
-    .max(20, 'Must be at most 20')
-    .notRequired(),
+    .when('personalityEvaluation', {
+      is: 'true',
+      then: (schema) => schema.required('Required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
 })
