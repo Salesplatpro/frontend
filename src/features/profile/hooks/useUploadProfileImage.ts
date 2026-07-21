@@ -22,14 +22,14 @@ export const useUploadProfileImage = () => {
         await patchProfile({ picture: uploaded.data?.fileUrl })
         await mutate()
         notify('success', 'Profile picture updated successfully', {
-          autoClose: 5000,
+          autoClose: 2000,
         })
       } catch (error) {
         useProfileStore
           .getState()
           .patchProfile({ profileImageUrl: previousImage })
         notify('error', 'Failed to update profile picture', {
-          autoClose: 5000,
+          autoClose: 2000,
           transition: Bounce,
         })
         throw error

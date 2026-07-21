@@ -1,7 +1,5 @@
 import React from 'react'
 
-// import Footer from '../Footer'
-// import Navbar from '../Navbar'
 import BreadCrumb from './BreadCrumb'
 import JobDetailsHeader from './JobDetailsHeader'
 import MajorDetails from './MajorDetails'

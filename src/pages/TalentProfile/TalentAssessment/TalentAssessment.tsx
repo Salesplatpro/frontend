@@ -37,12 +37,11 @@ const TalentAssessment = () => {
 
   useEffect(() => {
     if (data) {
-      setQuestions(data.data)
-      console.log(data.data)
+      setQuestions(data.data.questions)
     }
     if (error) {
       notify('error', 'DisplayError fetching questions', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     }
@@ -94,7 +93,7 @@ const TalentAssessment = () => {
       console.log(formData)
       if (response.status) {
         notify('success', `${response.message}`, {
-          autoClose: 5000,
+          autoClose: 2000,
         })
 
         // toast.success(`${response.message} ${response.data.scorePercent}`)
@@ -103,7 +102,7 @@ const TalentAssessment = () => {
           'error',
           response.message || 'DisplayError submitting question',
           {
-            autoClose: 5000,
+            autoClose: 2000,
             transition: Bounce,
           },
         )
@@ -112,7 +111,7 @@ const TalentAssessment = () => {
       console.log(error)
 
       notify('error', 'DisplayError submitting quiz', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     } finally {

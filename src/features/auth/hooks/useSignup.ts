@@ -35,12 +35,12 @@ export const useSignup = () => {
     try {
       const { data } = await trigger(values)
       setSession(data.data)
-      notify('success', 'Signed up successfully', { autoClose: 5000 })
+      notify('success', 'Signed up successfully', { autoClose: 2000 })
       return data
     } catch (err) {
       const message = getErrorMessage(err, 'An error occurred while signing up')
       setError(message)
-      notify('error', message, { autoClose: 5000, transition: Bounce })
+      notify('error', message, { autoClose: 2000, transition: Bounce })
       throw err
     } finally {
       setSubmitting(false)

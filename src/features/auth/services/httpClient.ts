@@ -25,7 +25,7 @@ httpClient.interceptors.response.use(
     if (error.response?.status === 401 && isCurrentSession) {
       useAuthStore.getState().logout()
       notify('error', 'Session expired. Please log in again.', {
-        autoClose: 5000,
+        autoClose: 2000,
       })
       window.location.href = '/login'
     }

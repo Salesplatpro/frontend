@@ -28,7 +28,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({
 
     if (!file.type.startsWith('image/')) {
       notify('error', 'Only image files are allowed', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
       return
@@ -36,7 +36,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({
 
     if (file.size > 5 * 1024 * 1024) {
       notify('error', 'File size exceeds the 5MB limit', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
       return

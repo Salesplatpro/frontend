@@ -159,7 +159,7 @@ const PreAssessmentPage: React.FC = () => {
         reset()
       } catch {
         notify('error', 'Failed to submit assessment. Please try again.', {
-          autoClose: 5000,
+          autoClose: 2000,
         })
         setAutoSubmitMessage('')
         // Transient error — assessment is still active, keep the lock.
@@ -189,7 +189,7 @@ const PreAssessmentPage: React.FC = () => {
       await refetch()
     } catch {
       notify('error', 'Failed to start retake. Please try again.', {
-        autoClose: 5000,
+        autoClose: 2000,
       })
     } finally {
       setIsRetaking(false)

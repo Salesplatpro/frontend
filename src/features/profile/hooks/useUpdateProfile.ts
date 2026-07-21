@@ -29,11 +29,11 @@ export const useUpdateProfile = () => {
             usePreAssessmentStore.getState().reset(),
         )
       }
-      notify('success', 'Profile updated successfully', { autoClose: 5000 })
+      notify('success', 'Profile updated successfully', { autoClose: 2000 })
       return true
     } catch (error) {
       const message = getErrorMessage(error, 'Failed to update profile')
-      notify('error', message, { autoClose: 5000, transition: Bounce })
+      notify('error', message, { autoClose: 2000, transition: Bounce })
       return false
     }
   }

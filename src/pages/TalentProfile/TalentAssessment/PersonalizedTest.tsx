@@ -58,7 +58,7 @@ const PersonalizedTest: React.FC = () => {
         'error',
         'Unable to load your personalized test. Please try again.',
         {
-          autoClose: 5000,
+          autoClose: 2000,
           transition: Bounce,
         },
       )
@@ -82,7 +82,7 @@ const PersonalizedTest: React.FC = () => {
     }
     if (personalizedError) {
       notify('error', 'DisplayError loading personalized test data', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
 
@@ -117,7 +117,7 @@ const PersonalizedTest: React.FC = () => {
           'success',
           `${response.message} ${response.data.scorePercent}%`,
           {
-            autoClose: 5000,
+            autoClose: 2000,
           },
         )
         console.log(response.data.scorePercent)
@@ -126,7 +126,7 @@ const PersonalizedTest: React.FC = () => {
           'error',
           response.message || 'DisplayError submitting question',
           {
-            autoClose: 5000,
+            autoClose: 2000,
             transition: Bounce,
           },
         )
@@ -134,7 +134,7 @@ const PersonalizedTest: React.FC = () => {
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
       notify('error', 'Error submitting quiz', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     } finally {

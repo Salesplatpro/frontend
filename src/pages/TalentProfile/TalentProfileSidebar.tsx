@@ -33,7 +33,7 @@ const TalentProfileSidebar: React.FC = () => {
   useEffect(() => {
     if (blocker.state === 'blocked') {
       notify('info', 'Complete or submit your assessment to continue.', {
-        autoClose: 4000,
+        autoClose: 2000,
       })
       blocker.reset()
     }
