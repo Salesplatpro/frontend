@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useRef } from 'react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import {
   JobDetailsJob,
@@ -16,6 +16,7 @@ import { notify } from '@/utils/toastNotifications'
 const IndividualJob = () => {
   const { jobId } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const job: JobDetailsJob | undefined = data?.data?.job
   const isApplied = !!job?.hasApplied
@@ -42,6 +43,21 @@ const IndividualJob = () => {
       notify('error', message, { autoClose: 2000 })
     }
   }
+
+  // Shared-link visitors land here with ?autoApply=true right after signup/
+  // login — fire the same apply flow a manual click would, once, then drop
+  // the query param so a refresh doesn't re-trigger it.
+  const autoApplyRequested = searchParams.get('autoApply') === 'true'
+  const autoApplyFired = useRef(false)
+
+  useEffect(() => {
+    if (!autoApplyRequested || autoApplyFired.current || !job || isApplied) {
+      return
+    }
+    autoApplyFired.current = true
+    navigate(`/talentDashboard/job/${jobId}`, { replace: true })
+    handleApply()
+  }, [autoApplyRequested, job, isApplied])
 
   if (isLoading) return <Spinner fullPage />
 

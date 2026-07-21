@@ -40,12 +40,14 @@ export const SignUpSchema = Yup.object().shape({
       /^[a-zA-Z]+$/.test(value || ''),
     ),
 
-  phone: Yup.string()
-    .required('Phone number is required')
-    .test('is-valid-phone', 'Invalid phone number', (value) => {
-      if (!value) return false
+  phone: Yup.string().test(
+    'is-valid-phone',
+    'Invalid phone number',
+    (value) => {
+      if (!value) return true
       return isValidPhoneNumber(value)
-    }),
+    },
+  ),
 
   userType: Yup.string()
     .oneOf(['talent', 'recruiter'], 'Invalid user type')

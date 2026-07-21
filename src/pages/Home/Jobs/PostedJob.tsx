@@ -39,7 +39,7 @@ const PostedJob = () => {
     if (userRole === 'talent') {
       navigate(`/talentDashboard/job/${jobId}`)
     } else if (!isLoggedIn) {
-      navigate(`/login?from=job_application`)
+      navigate(`/login?redirectJobId=${jobId}`)
     }
   }
 
