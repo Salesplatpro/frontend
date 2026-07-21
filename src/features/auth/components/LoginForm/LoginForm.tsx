@@ -1,6 +1,6 @@
 import { useFormik } from 'formik'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { Alert } from '@/components/feedback'
 import { CheckBox, PasswordInput, TextInput } from '@/components/forms'
@@ -22,6 +22,7 @@ const initialValues: LoginRequest = { email: '', password: '' }
 export const LoginForm = ({ onForgotPassword }: LoginFormProps) => {
   const { submitLogin, isLoading } = useLogin()
   const error = useAuthStore((state) => state.error)
+  const location = useLocation()
 
   const formik = useFormik<LoginRequest>({
     initialValues,
@@ -89,7 +90,9 @@ export const LoginForm = ({ onForgotPassword }: LoginFormProps) => {
 
       <div className={styles.already}>
         Don&apos;t have an account?{' '}
-        <Link to={`/${paths.register}`}>Sign up</Link>
+        <Link to={{ pathname: `/${paths.register}`, search: location.search }}>
+          Sign up
+        </Link>
       </div>
     </form>
   )

@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 
 import { Alert } from '@/components/feedback'
 import {
@@ -28,16 +28,6 @@ type SignupFormValues = {
   userType: 'talent' | 'recruiter' | ''
 }
 
-const initialValues: SignupFormValues = {
-  email: '',
-  password: '',
-  confirmPassword: '',
-  firstName: '',
-  lastName: '',
-  phone: '',
-  userType: '',
-}
-
 const userTypeOptions = [
   { value: 'talent', label: 'Talent' },
   { value: 'recruiter', label: 'Recruiter' },
@@ -50,13 +40,32 @@ type SignupFormProps = {
 export const SignupForm = ({ onSuccess }: SignupFormProps) => {
   const { submitSignup, isLoading } = useSignup()
   const error = useAuthStore((state) => state.error)
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
+  // A share-link entry point already implies the visitor is applying as a
+  // talent, so skip asking them to choose a role.
+  const isShareLinkEntry = !!searchParams.get('redirectJobId')
+
+  const initialValues: SignupFormValues = {
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    userType: isShareLinkEntry ? 'talent' : '',
+  }
 
   const handleSubmit = async (values: SignupFormValues) => {
     try {
       // eslint-disable-next-line no-unused-vars
-      const { confirmPassword, userType, ...payload } = values
+      const { confirmPassword, userType, phone, ...payload } = values
       const role = userType as 'talent' | 'recruiter'
-      await submitSignup({ ...payload, userType: role })
+      await submitSignup({
+        ...payload,
+        ...(phone ? { phone } : {}),
+        userType: role,
+      })
       onSuccess(values.lastName, role)
     } catch {
       // error is surfaced via useAuthStore().error
@@ -105,19 +114,21 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
         />
         <ErrorMessage name="email" component="p" className={styles.error} />
 
-        <div className={styles.userType}>
-          <Field
-            name="userType"
-            label="Register as:"
-            component={UserTypeSelect}
-            options={userTypeOptions}
-          />
-          <ErrorMessage
-            name="userType"
-            component="p"
-            className={styles.error}
-          />
-        </div>
+        {!isShareLinkEntry && (
+          <div className={styles.userType}>
+            <Field
+              name="userType"
+              label="Register as:"
+              component={UserTypeSelect}
+              options={userTypeOptions}
+            />
+            <ErrorMessage
+              name="userType"
+              component="p"
+              className={styles.error}
+            />
+          </div>
+        )}
 
         <PhoneNumberInput name="phone" label="Phone Number" />
 
@@ -154,7 +165,10 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
         </Button>
 
         <div className={styles.already}>
-          Already have an account? <Link to={`/${paths.login}`}>Log In</Link>
+          Already have an account?{' '}
+          <Link to={{ pathname: `/${paths.login}`, search: location.search }}>
+            Log In
+          </Link>
         </div>
       </Form>
     </Formik>

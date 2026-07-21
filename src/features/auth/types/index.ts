@@ -31,7 +31,7 @@ export interface TalentRegisterRequest {
   password: string
   firstName: string
   lastName: string
-  phone: string
+  phone?: string
 }
 
 export type RecruiterRegisterRequest = TalentRegisterRequest
