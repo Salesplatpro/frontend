@@ -102,7 +102,9 @@ export const talentApi = createApi({
     }),
     personalityTest: builder.query({
       query: (jobId) => ({
-        url: `/questions?limit=20&offset=0&jobId=${jobId}&questionType=personality`,
+        // No fixed cap on the recruiter-configured question count per
+        // dichotomy pair, so this must fetch well above any realistic total.
+        url: `/questions?limit=200&offset=0&jobId=${jobId}&questionType=personality`,
         method: 'GET',
       }),
     }),
