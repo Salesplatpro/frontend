@@ -4,17 +4,16 @@ export interface AllJobTypes {
   applicationType?: string
   createdAt?: any
   job?: {
-    role?: string
     id?: string
+    role?: {
+      name: string
+    }
+    postedBy?: {
+      firstName: string
+    }
     location?: {
       country: string
     }
-  }
-  postedBy?: {
-    firstName: string
-  }
-  role?: {
-    name: string
   }
   id?: string
 }

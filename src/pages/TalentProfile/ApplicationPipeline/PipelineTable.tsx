@@ -13,13 +13,13 @@ const columns: ColumnDef<AllJobTypes>[] = [
     key: 'jobTitle',
     header: 'Job Title',
     align: 'left',
-    render: (app) => app.role?.name ?? '—',
+    render: (app) => app.job?.role?.name ?? '—',
   },
   {
     key: 'company',
     header: 'Company Name',
     align: 'left',
-    render: (app) => app.postedBy?.firstName ?? '—',
+    render: (app) => app.job?.postedBy?.firstName ?? '—',
   },
   {
     key: 'stage',

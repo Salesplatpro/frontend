@@ -9,23 +9,17 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import {
-  useAllJobApplicationsQuery,
   useApplyToJobMutation,
   useIndividualJobQuery,
 } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
-import { AllJobTypes } from '@/utils/types'
 
 const IndividualJob = () => {
   const { jobId } = useParams()
   const navigate = useNavigate()
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
   const job: JobDetailsJob | undefined = data?.data?.job
-
-  const { data: applicationsData } = useAllJobApplicationsQuery({})
-  const isApplied = (
-    applicationsData?.data?.applications as AllJobTypes[] | undefined
-  )?.some((application) => application.job?.id === jobId)
+  const isApplied = !!job?.hasApplied
 
   const [applyToJob, { isLoading: applying }] = useApplyToJobMutation()
 
