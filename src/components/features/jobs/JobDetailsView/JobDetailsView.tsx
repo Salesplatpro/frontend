@@ -33,6 +33,7 @@ export interface JobDetailsJob {
   noOfApplicants?: number
   postedBy?: { firstName?: string; lastName?: string } | null
   status?: string
+  hasApplied?: boolean
 }
 
 interface JobDetailsViewProps {
