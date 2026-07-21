@@ -52,19 +52,29 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
-    jobPipeline: builder.query({
-      query: (jobId) => ({
+    applyToJob: builder.mutation({
+      query: (jobId: string) => ({
         url: `/jobs/applications/${jobId}`,
         method: 'PATCH',
       }),
-      onQueryStarted: async (_jobId, { dispatch, queryFulfilled }) => {
-        await queryFulfilled
-        dispatch(talentApi.util.invalidateTags(['Applications']))
-      },
+      invalidatesTags: ['Applications'],
+    }),
+    jobApplication: builder.query({
+      query: (applicationId) => ({
+        url: `/applications/${applicationId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Applications'],
     }),
     cvMatch: builder.query({
       query: (jobId) => ({
         url: `/jobs/cv-similarity/${jobId}`,
+        method: 'PATCH',
+      }),
+    }),
+    checkPrescreeningStage: builder.query({
+      query: (jobId) => ({
+        url: `/jobs/prescreening-check/${jobId}`,
         method: 'PATCH',
       }),
     }),
@@ -141,8 +151,10 @@ export const {
   usePostPretestMutation,
   useFetchJobsQuery,
   useIndividualJobQuery,
-  useJobPipelineQuery,
+  useApplyToJobMutation,
+  useJobApplicationQuery,
   useLazyCvMatchQuery,
+  useLazyCheckPrescreeningStageQuery,
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
   usePersonalityTestQuery,

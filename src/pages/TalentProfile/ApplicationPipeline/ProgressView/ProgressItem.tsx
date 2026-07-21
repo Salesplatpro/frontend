@@ -78,7 +78,13 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
           </Button>
         ) : (
           <StatusBadge
-            status={progress.status === 'completed' ? 'Completed' : 'Awaiting'}
+            status={
+              progress.status === 'completed'
+                ? 'Completed'
+                : progress.status === 'current'
+                ? 'Not Started'
+                : 'Locked'
+            }
             {...(progress.status === 'completed'
               ? completedBadge
               : awaitingBadge)}
