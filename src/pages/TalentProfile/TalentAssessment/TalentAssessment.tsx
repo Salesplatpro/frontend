@@ -2,7 +2,6 @@ import { Alert } from '@mui/material'
 import Lottie from 'lottie-react'
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import { Spinner } from '@/components/ui/Spinner'
 import { useProfile } from '@/features/profile/hooks/useProfile'
@@ -42,7 +41,6 @@ const TalentAssessment = () => {
     if (error) {
       notify('error', 'DisplayError fetching questions', {
         autoClose: 2000,
-        transition: Bounce,
       })
     }
   }, [data, error])
@@ -103,7 +101,6 @@ const TalentAssessment = () => {
           response.message || 'DisplayError submitting question',
           {
             autoClose: 2000,
-            transition: Bounce,
           },
         )
       }
@@ -112,7 +109,6 @@ const TalentAssessment = () => {
 
       notify('error', 'DisplayError submitting quiz', {
         autoClose: 2000,
-        transition: Bounce,
       })
     } finally {
       setIsSubmitting(false)

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
@@ -165,7 +164,6 @@ const ProgressView: React.FC = () => {
 
     notify('error', errorMessage, {
       autoClose: 2000,
-      transition: Bounce,
     })
 
     console.error('Error:', error)

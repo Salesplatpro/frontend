@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Bounce } from 'react-toastify'
 
 import { Button } from '../../../../components'
 import {
@@ -38,7 +37,6 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
     if (!sendMessage.content.trim()) {
       notify('error', `DisplayMessage can not be empty`, {
         autoClose: 2000,
-        transition: Bounce,
       })
 
       return

@@ -1,4 +1,3 @@
-import { Bounce } from 'react-toastify'
 import useSWRMutation from 'swr/mutation'
 
 import { AUTH_ENDPOINTS } from '@/services/api/endpoints'
@@ -31,7 +30,7 @@ export const useLogin = () => {
     } catch (err) {
       const message = getErrorMessage(err, 'An error occurred while logging in')
       setError(message)
-      notify('error', message, { autoClose: 2000, transition: Bounce })
+      notify('error', message, { autoClose: 2000 })
       throw err
     } finally {
       setSubmitting(false)

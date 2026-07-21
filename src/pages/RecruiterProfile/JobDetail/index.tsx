@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import {
   JobDetailsJob,
@@ -21,7 +20,6 @@ const JobDetail = () => {
     if (error) {
       notify('error', 'Error loading job post', {
         autoClose: 2000,
-        transition: Bounce,
       })
     }
   }, [error])

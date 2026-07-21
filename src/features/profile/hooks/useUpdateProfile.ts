@@ -1,4 +1,3 @@
-import { Bounce } from 'react-toastify'
 import useSWRMutation from 'swr/mutation'
 
 import { getErrorMessage } from '@/utils/getErrorMessage'
@@ -33,7 +32,7 @@ export const useUpdateProfile = () => {
       return true
     } catch (error) {
       const message = getErrorMessage(error, 'Failed to update profile')
-      notify('error', message, { autoClose: 2000, transition: Bounce })
+      notify('error', message, { autoClose: 2000 })
       return false
     }
   }
