@@ -39,7 +39,6 @@ const QuestionGenerator = ({
             name={`count-${pair}`}
             type="number"
             min={1}
-            max={20}
             value={count}
             onChange={(e) => onCountChange(e.target.value)}
             className={styles.countInput}
@@ -62,7 +61,9 @@ const QuestionGenerator = ({
         type="button"
         onClick={onGenerate}
         className={styles.generateButton}
-        disabled={isLoading}>
+        disabled={
+          isLoading || (!hasGenerated && (!count || Number(count) < 1))
+        }>
         {isLoading ? (
           'Loading...'
         ) : hasGenerated ? (

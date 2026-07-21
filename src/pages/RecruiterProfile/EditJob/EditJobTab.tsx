@@ -122,10 +122,10 @@ export const EditJobTab = () => {
         personalityEvaluation: aiConfig.personalityEvaluation
           ? 'true'
           : 'false',
-        noOfEIQuestions: aiConfig.noOfEIQuestions ?? 3,
-        noOfSNQuestions: aiConfig.noOfSNQuestions ?? 3,
-        noOfTFQuestions: aiConfig.noOfTFQuestions ?? 3,
-        noOfJPQuestions: aiConfig.noOfJPQuestions ?? 3,
+        noOfEIQuestions: aiConfig.noOfEIQuestions ?? '',
+        noOfSNQuestions: aiConfig.noOfSNQuestions ?? '',
+        noOfTFQuestions: aiConfig.noOfTFQuestions ?? '',
+        noOfJPQuestions: aiConfig.noOfJPQuestions ?? '',
         uploadedQuestions: aiConfig.uploadedQuestions?.length
           ? aiConfig.uploadedQuestions
           : [''],
@@ -173,8 +173,9 @@ export const EditJobTab = () => {
       delete cleanedAiConfig.noOfTFQuestions
       delete cleanedAiConfig.noOfJPQuestions
     } else {
-      // Each dichotomy pair is independently optional — a blank count means
-      // "skip this pair" and must not be sent as '' (fails backend isInt()).
+      // Validation requires all four counts when personalityEvaluation is
+      // enabled; this only guards against a stray '' slipping through
+      // (fails backend isInt()) rather than representing an intentional skip.
       DICHOTOMY_COUNT_FIELDS.forEach((field) => {
         if (cleanedAiConfig[field] === '' || cleanedAiConfig[field] == null) {
           delete cleanedAiConfig[field]
