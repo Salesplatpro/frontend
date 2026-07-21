@@ -7,6 +7,7 @@ import { Heading, Text } from '@/components/ui/Typography'
 
 import { Button } from '../../../components'
 import { useFetchJobsQuery } from '../../../redux/api/talent'
+import { formatCompensation } from '../../../utils/formatCompensation'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
 import styles from './Job.module.scss'
@@ -20,7 +21,10 @@ interface JobType {
   jobBrief: string
   workMode: string[]
   locationCountry: string | null
-  maxSalary: string
+  minSalary?: number | null
+  maxSalary?: number | null
+  currency?: string | null
+  compensationPeriod?: string | null
   hasApplied?: boolean
 }
 
@@ -100,7 +104,7 @@ const Job = () => {
                   jobWorkMode={job.workMode}
                   jobCountry={job.locationCountry ?? undefined}
                   jobExperience={job.experienceLevel}
-                  jobSalary={job.maxSalary}
+                  jobSalary={formatCompensation(job)}
                   isApplied={job.hasApplied}
                 />
               ))}

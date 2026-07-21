@@ -5,6 +5,7 @@ import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxe
 import { LocationSelect } from '@/components/forms/LocationSelect'
 import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
 import {
+  COMPENSATION_PERIOD_OPTIONS,
   CURRENCY_OPTIONS,
   EXPERIENCE_LEVEL_OPTIONS,
   Select,
@@ -179,7 +180,7 @@ export const JobDetailsFields = ({
 
         <div className={styles.compensationFieldThird}>
           <label className={styles.label} htmlFor="maxSalary">
-            Max Salary<span className={styles.required}>*</span>
+            Max Salary
           </label>
           <Field
             id="maxSalary"
@@ -191,6 +192,23 @@ export const JobDetailsFields = ({
           {Boolean(touched.maxSalary) &&
             typeof errors.maxSalary === 'string' && (
               <div className={styles.errorText}>{errors.maxSalary}</div>
+            )}
+        </div>
+
+        <div className={styles.compensationFieldThird}>
+          <Select
+            label="Compensation Period"
+            required
+            options={COMPENSATION_PERIOD_OPTIONS}
+            value={values.compensationPeriod}
+            onChange={(value) => setFieldValue('compensationPeriod', value)}
+            placeholder="Select period"
+          />
+          {Boolean(touched.compensationPeriod) &&
+            typeof errors.compensationPeriod === 'string' && (
+              <div className={styles.errorText}>
+                {errors.compensationPeriod}
+              </div>
             )}
         </div>
       </div>

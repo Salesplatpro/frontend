@@ -93,6 +93,7 @@ export const EditJobTab = () => {
     requirements: job.requirements || '',
     minSalary: String(job.minSalary ?? ''),
     maxSalary: String(job.maxSalary ?? ''),
+    compensationPeriod: job.compensationPeriod || 'yearly',
     currency: job.currency || '',
     workMode,
     experienceLevel: job.experienceLevel || '',
@@ -146,10 +147,17 @@ export const EditJobTab = () => {
     { setSubmitting }: FormikHelpers<EditJobFormValues>,
   ) => {
     // Status changes go through JobStatusControl, not this submit.
-    const { location, aiConfig: aiConfigValues, status, ...rest } = values
+    const {
+      location,
+      aiConfig: aiConfigValues,
+      status,
+      maxSalary,
+      ...rest
+    } = values
     void status
     const jobPayload = {
       ...rest,
+      ...(maxSalary ? { maxSalary } : {}),
       locationCountry: location.country.name,
       ...(location.state.name ? { locationState: location.state.name } : {}),
       ...(location.city.name ? { locationCity: location.city.name } : {}),

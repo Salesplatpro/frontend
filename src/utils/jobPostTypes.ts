@@ -8,6 +8,7 @@ export interface FormValues {
   name?: string
   minSalary: string
   maxSalary: string
+  compensationPeriod: string
   currency: string
   experienceLevel: string
   workMode: string

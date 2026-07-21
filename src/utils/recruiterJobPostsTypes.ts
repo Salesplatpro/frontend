@@ -29,8 +29,9 @@ export type recruiterJobPostsTypes = {
   role: JobRole
   postedBy: JobPostedBy
   description: string
-  maxSalary: number
+  maxSalary?: number | null
   minSalary: number
+  compensationPeriod?: string
   experienceLevel: string
   address: string
   remote: boolean
@@ -95,8 +96,9 @@ export interface JobProfileProps {
 
 export interface EditJobType extends JobProfileProps {
   aiConfig: string
-  maxSalary?: number
+  maxSalary?: number | null
   minSalary?: number
+  compensationPeriod?: string
   status?: JobStatus
 }
 
