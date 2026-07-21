@@ -53,7 +53,7 @@ const PersonalityTest: React.FC = () => {
       personalityData?.data?.questions?.length
 
   useEffect(() => {
-    if (personalityData?.data?.questions) {
+    if (Array.isArray(personalityData?.data?.questions)) {
       setPersonalityQuestions(personalityData.data.questions)
     } else if (personalityError) {
       notify('error', 'Error loading personality test data', {
@@ -77,7 +77,6 @@ const PersonalityTest: React.FC = () => {
         [questionId]: value,
       },
     }))
-    console.log(formData.answers)
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -95,7 +94,6 @@ const PersonalityTest: React.FC = () => {
             autoClose: 2000,
           },
         )
-        console.log(response.data.scorePercent)
       } else {
         notify(
           'error',
