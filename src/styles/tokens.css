@@ -131,8 +131,8 @@
   --shadow-glow: 0 4px 200px rgba(60, 111, 212, 0.6);
 
   /* ── Z-index registry ──────────────────────────────────────────────── */
-  /* MUI modals sit at 1300 and react-toastify at 9999 — new layers must
-     slot around them. Never invent ad-hoc z-index values. */
+  /* MUI modals sit at 1300 and sonner's <Toaster/> above everything else —
+     new layers must slot around them. Never invent ad-hoc z-index values. */
   --z-sticky: 100;
   --z-dropdown: 1000;
   --z-drawer: 1200;

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Bounce } from 'react-toastify'
 import useSWRMutation from 'swr/mutation'
 
 import { notify } from '@/utils/toastNotifications'
@@ -27,7 +26,6 @@ export const useUploadCv = () => {
       } catch (error) {
         notify('error', 'Failed to upload CV', {
           autoClose: 2000,
-          transition: Bounce,
         })
         throw error
       } finally {

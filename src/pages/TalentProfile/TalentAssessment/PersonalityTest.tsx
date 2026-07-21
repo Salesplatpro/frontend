@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import { Spinner } from '@/components/ui/Spinner'
 
@@ -58,7 +57,6 @@ const PersonalityTest: React.FC = () => {
     } else if (personalityError) {
       notify('error', 'Error loading personality test data', {
         autoClose: 2000,
-        transition: Bounce,
       })
 
       console.error(personalityError)
@@ -100,7 +98,6 @@ const PersonalityTest: React.FC = () => {
           response.message || 'DisplayError submitting question',
           {
             autoClose: 2000,
-            transition: Bounce,
           },
         )
       }
@@ -110,7 +107,6 @@ const PersonalityTest: React.FC = () => {
 
       notify('error', 'DisplayError submitting quiz', {
         autoClose: 2000,
-        transition: Bounce,
       })
     } finally {
       setIsSubmitting(false)

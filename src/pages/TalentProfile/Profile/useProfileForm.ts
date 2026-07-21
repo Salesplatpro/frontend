@@ -1,6 +1,5 @@
 import { FormikHelpers } from 'formik'
 import { useEffect, useState } from 'react'
-import { Bounce } from 'react-toastify'
 
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { buildProfileFormValues } from '@/features/profile/hooks/useProfileFormValues'
@@ -52,7 +51,6 @@ export const useProfileForm = () => {
       } catch {
         notify('error', 'Failed to upload profile picture', {
           autoClose: 2000,
-          transition: Bounce,
         })
         setSubmitting(false)
         return

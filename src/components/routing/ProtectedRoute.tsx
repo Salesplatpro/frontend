@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { notify } from '@/utils/toastNotifications'
@@ -17,7 +16,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
     if (isLoggedIn && user && userRole && !allowedRoles.includes(userRole)) {
       notify('error', `You don't have access to this page as a ${userRole}`, {
         autoClose: 2000,
-        transition: Bounce,
       })
     }
   }, [user, isLoggedIn, userRole, allowedRoles])

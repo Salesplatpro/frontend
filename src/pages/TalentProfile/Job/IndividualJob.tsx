@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import {
   JobDetailsJob,
@@ -27,7 +26,6 @@ const IndividualJob = () => {
     if (error) {
       notify('error', 'Error loading job post', {
         autoClose: 2000,
-        transition: Bounce,
       })
     }
   }, [error])
@@ -41,7 +39,7 @@ const IndividualJob = () => {
       const message =
         (err as { data?: { message?: string } })?.data?.message ||
         'Failed to apply for this job'
-      notify('error', message, { autoClose: 2000, transition: Bounce })
+      notify('error', message, { autoClose: 2000 })
     }
   }
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Bounce } from 'react-toastify'
 
 import {
   useFetchPersonalityQuestionsQuery,
@@ -57,7 +56,6 @@ const useGeneratedQuestion = (jobId: string | undefined) => {
 
       notify('error', `Error generating ${pair} question`, {
         autoClose: 2000,
-        transition: Bounce,
       })
     } finally {
       setLoadingPairs((prevState) => ({ ...prevState, [pair]: false }))

@@ -1,4 +1,3 @@
-import { Bounce } from 'react-toastify'
 import useSWRMutation from 'swr/mutation'
 
 import { notify } from '@/utils/toastNotifications'
@@ -30,7 +29,6 @@ export const useUploadProfileImage = () => {
           .patchProfile({ profileImageUrl: previousImage })
         notify('error', 'Failed to update profile picture', {
           autoClose: 2000,
-          transition: Bounce,
         })
         throw error
       }

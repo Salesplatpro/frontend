@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Bounce } from 'react-toastify'
 
 import { Spinner } from '@/components/ui/Spinner'
 
@@ -59,7 +58,6 @@ const PersonalizedTest: React.FC = () => {
         'Unable to load your personalized test. Please try again.',
         {
           autoClose: 2000,
-          transition: Bounce,
         },
       )
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
@@ -83,7 +81,6 @@ const PersonalizedTest: React.FC = () => {
     if (personalizedError) {
       notify('error', 'DisplayError loading personalized test data', {
         autoClose: 2000,
-        transition: Bounce,
       })
 
       console.error(personalizedError)
@@ -127,7 +124,6 @@ const PersonalizedTest: React.FC = () => {
           response.message || 'DisplayError submitting question',
           {
             autoClose: 2000,
-            transition: Bounce,
           },
         )
       }
@@ -135,7 +131,6 @@ const PersonalizedTest: React.FC = () => {
     } catch (error) {
       notify('error', 'Error submitting quiz', {
         autoClose: 2000,
-        transition: Bounce,
       })
     } finally {
       setIsSubmitting(false)
