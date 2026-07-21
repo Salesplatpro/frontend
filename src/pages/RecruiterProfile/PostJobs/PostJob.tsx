@@ -20,6 +20,7 @@ const DEFAULT_VALUES: PostJobFormValues = {
   requirements: '',
   minSalary: '',
   maxSalary: '',
+  compensationPeriod: '',
   currency: '',
   workMode: [],
   experienceLevel: '',
@@ -55,9 +56,10 @@ const PostJob: React.FC = () => {
     values: PostJobFormValues,
     { setSubmitting }: FormikHelpers<PostJobFormValues>,
   ) => {
-    const { location, ...rest } = values
+    const { location, maxSalary, ...rest } = values
     const payload = {
       ...rest,
+      ...(maxSalary ? { maxSalary } : {}),
       locationCountry: location.country.name,
       ...(location.state.name ? { locationState: location.state.name } : {}),
       ...(location.city.name ? { locationCity: location.city.name } : {}),

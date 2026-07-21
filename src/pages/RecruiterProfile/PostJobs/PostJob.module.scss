@@ -136,16 +136,18 @@
   width: 100%;
   justify-content: space-between;
   align-items: flex-start;
+  gap: var(--space-4);
   margin-top: var(--space-2);
 
   @media (min-width: 768px) {
     flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 
-/* Used only for the three columns inside compensationRow.
-   position:relative + padding-bottom reserves room for the absolute
-   error text so errors never push siblings around. */
+/* Used for the columns inside compensationRow (currency, min/max salary,
+   compensation period). position:relative + padding-bottom reserves room
+   for the absolute error text so errors never push siblings around. */
 .compensationFieldThird {
   position: relative;
   width: 100%;
@@ -153,7 +155,8 @@
   margin-bottom: var(--space-5);
 
   @media (min-width: 768px) {
-    width: 31%;
+    flex: 1 1 22%;
+    min-width: 160px;
     margin-bottom: 0;
   }
 

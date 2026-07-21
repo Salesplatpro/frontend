@@ -12,6 +12,7 @@ import { StatusBadge } from '@/components/ui/Badge'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { capitalizeFirstWord } from '@/utils'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
+import { formatCompensation } from '@/utils/formatCompensation'
 
 import styles from './JobDetailsView.module.scss'
 
@@ -28,8 +29,9 @@ export interface JobDetailsJob {
   locationCity?: string | null
   experienceLevel?: string
   currency?: string | null
-  minSalary?: number
-  maxSalary?: number
+  minSalary?: number | null
+  maxSalary?: number | null
+  compensationPeriod?: string | null
   noOfApplicants?: number
   postedBy?: { firstName?: string; lastName?: string } | null
   status?: string
@@ -47,12 +49,6 @@ const formatLocation = (job: JobDetailsJob) => {
     .filter(Boolean)
     .map((part) => capitalizeFirstWord(part ?? undefined))
   return parts.length > 0 ? parts.join(', ') : 'Not specified'
-}
-
-const formatSalary = (job: JobDetailsJob) => {
-  if (job.minSalary == null || job.maxSalary == null) return 'Not specified'
-  const currency = job.currency ? `${job.currency} ` : ''
-  return `${currency}${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}`
 }
 
 const JobDetailsView: React.FC<JobDetailsViewProps> = ({
@@ -181,7 +177,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
           </div>
           <div className={styles.summaryItem}>
             <p className={styles.summaryLabel}>Salary</p>
-            <p className={styles.summaryValue}>{formatSalary(job)}</p>
+            <p className={styles.summaryValue}>{formatCompensation(job)}</p>
           </div>
           {job.noOfApplicants != null && (
             <div className={styles.summaryItem}>

@@ -18,3 +18,8 @@ export const CURRENCY_OPTIONS: SelectOption[] = [
   { value: 'GBP', label: 'GBP' },
   { value: 'EUR', label: 'EUR' },
 ]
+
+export const COMPENSATION_PERIOD_OPTIONS: SelectOption[] = [
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'yearly', label: 'Yearly' },
+]

@@ -1,5 +1,7 @@
 import * as Yup from 'yup'
 
+import { emptyToUndefined } from '@/utils/yupHelpers'
+
 export const validationSchema = Yup.object({
   role: Yup.string().required('Role is required'),
   jobBrief: Yup.string().required('Job Brief is required'),
@@ -21,7 +23,8 @@ export const validationSchema = Yup.object({
     .required('Minimum Salary is required')
     .positive('Minimum Salary must be positive'),
   maxSalary: Yup.number()
-    .required('Maximum Salary is required')
+    .transform(emptyToUndefined)
+    .nullable()
     .positive('Maximum Salary must be positive')
     .test(
       'max-greater-than-min',
@@ -32,6 +35,9 @@ export const validationSchema = Yup.object({
         return Number(value) > Number(minSalary)
       },
     ),
+  compensationPeriod: Yup.string()
+    .oneOf(['monthly', 'yearly'], 'Invalid compensation period')
+    .required('Compensation period is required'),
   skills: Yup.array()
     .of(
       Yup.string()
