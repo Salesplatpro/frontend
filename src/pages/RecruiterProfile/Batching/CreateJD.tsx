@@ -46,7 +46,7 @@ const CreateJD = () => {
       const result = await createJD(values).unwrap()
 
       notify('success', result.message, {
-        autoClose: 5000,
+        autoClose: 2000,
       })
 
       navigate(`/recruiterDashboard/scout/${result.data.scoutJob.id}`)

@@ -33,7 +33,7 @@ export const useForgotPasswordFlow = () => {
   const submitResetPassword = async (payload: ResetPasswordRequest) => {
     try {
       const { data } = await resetPassword.trigger(payload)
-      notify('success', 'Password reset successfully', { autoClose: 5000 })
+      notify('success', 'Password reset successfully', { autoClose: 2000 })
       return data
     } catch (err) {
       throw new Error(

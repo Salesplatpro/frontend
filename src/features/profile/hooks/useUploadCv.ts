@@ -23,10 +23,10 @@ export const useUploadCv = () => {
           }
         })
         await mutate()
-        notify('success', 'CV uploaded successfully', { autoClose: 5000 })
+        notify('success', 'CV uploaded successfully', { autoClose: 2000 })
       } catch (error) {
         notify('error', 'Failed to upload CV', {
-          autoClose: 5000,
+          autoClose: 2000,
           transition: Bounce,
         })
         throw error

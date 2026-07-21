@@ -56,7 +56,7 @@ const useGeneratedQuestion = (jobId: string | undefined) => {
       console.error(`Error generating ${pair} question:`, error)
 
       notify('error', `Error generating ${pair} question`, {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     } finally {

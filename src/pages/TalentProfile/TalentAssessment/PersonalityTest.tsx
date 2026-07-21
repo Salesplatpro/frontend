@@ -48,15 +48,16 @@ const PersonalityTest: React.FC = () => {
 
   // Check if all questions are answered
   const personalityAnswered =
-    personalityData?.data?.length > 0 &&
-    Object.keys(formData.answers).length === personalityData?.data?.length
+    personalityData?.data?.questions?.length > 0 &&
+    Object.keys(formData.answers).length ===
+      personalityData?.data?.questions?.length
 
   useEffect(() => {
-    if (personalityData?.data) {
-      setPersonalityQuestions(personalityData.data)
+    if (personalityData?.data?.questions) {
+      setPersonalityQuestions(personalityData.data.questions)
     } else if (personalityError) {
       notify('error', 'Error loading personality test data', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
 
@@ -91,7 +92,7 @@ const PersonalityTest: React.FC = () => {
           'success',
           `${response.message} ${response.data.scorePercent}%`,
           {
-            autoClose: 5000,
+            autoClose: 2000,
           },
         )
         console.log(response.data.scorePercent)
@@ -100,7 +101,7 @@ const PersonalityTest: React.FC = () => {
           'error',
           response.message || 'DisplayError submitting question',
           {
-            autoClose: 5000,
+            autoClose: 2000,
             transition: Bounce,
           },
         )
@@ -110,7 +111,7 @@ const PersonalityTest: React.FC = () => {
       console.error(error)
 
       notify('error', 'DisplayError submitting quiz', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     } finally {

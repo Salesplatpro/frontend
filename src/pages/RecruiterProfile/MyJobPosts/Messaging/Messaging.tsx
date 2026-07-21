@@ -37,7 +37,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   const handleSendMessage = async () => {
     if (!sendMessage.content.trim()) {
       notify('error', `DisplayMessage can not be empty`, {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
 
@@ -51,7 +51,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
       setSendMessage((prevState) => ({ ...prevState, content: '' }))
 
       notify('success', `Message sent successfully`, {
-        autoClose: 5000,
+        autoClose: 2000,
       })
     } catch (error) {
       console.error('Error sending message:', error)

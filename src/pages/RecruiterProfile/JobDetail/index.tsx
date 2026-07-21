@@ -20,7 +20,7 @@ const JobDetail = () => {
   useEffect(() => {
     if (error) {
       notify('error', 'Error loading job post', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     }

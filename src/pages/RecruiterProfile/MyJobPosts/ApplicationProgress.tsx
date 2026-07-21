@@ -85,7 +85,7 @@ export const ApplicationProgress = () => {
         'success',
         `Talent is ${response.data.application.status} successfully`,
         {
-          autoClose: 5000,
+          autoClose: 2000,
         },
       )
     } catch (error) {

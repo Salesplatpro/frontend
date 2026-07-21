@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   useEffect(() => {
     if (isLoggedIn && user && userRole && !allowedRoles.includes(userRole)) {
       notify('error', `You don't have access to this page as a ${userRole}`, {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     }

@@ -26,7 +26,7 @@ const IndividualJob = () => {
   useEffect(() => {
     if (error) {
       notify('error', 'Error loading job post', {
-        autoClose: 5000,
+        autoClose: 2000,
         transition: Bounce,
       })
     }
@@ -41,7 +41,7 @@ const IndividualJob = () => {
       const message =
         (err as { data?: { message?: string } })?.data?.message ||
         'Failed to apply for this job'
-      notify('error', message, { autoClose: 5000, transition: Bounce })
+      notify('error', message, { autoClose: 2000, transition: Bounce })
     }
   }
 

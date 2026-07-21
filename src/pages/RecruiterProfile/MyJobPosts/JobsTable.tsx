@@ -182,7 +182,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
               state={{ jobName: job.role.name, postedAt: job.createdAt }}>
               <button className={styles.viewJobButton}>View Job</button>
             </Link>
-            {job.status === 'draft' && (
+            {job.status === 'draft' && !job.aiConfigId && (
               <Link to={`/recruiterDashboard/postjob/${job.id}`}>
                 <button className={styles.addAiConfigButton}>
                   Add AI Config
@@ -208,7 +208,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         getRowClassName={(job) => {
           if (job.status === 'suspended' || job.status === 'closed')
             return styles.rowClosed
-          if (job.aiConfig) return styles.rowComplete
+          if (job.aiConfigId) return styles.rowComplete
           return styles.rowIncomplete
         }}
       />

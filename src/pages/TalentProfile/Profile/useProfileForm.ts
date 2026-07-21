@@ -51,7 +51,7 @@ export const useProfileForm = () => {
         patch.picture = uploaded.data?.fileUrl
       } catch {
         notify('error', 'Failed to upload profile picture', {
-          autoClose: 5000,
+          autoClose: 2000,
           transition: Bounce,
         })
         setSubmitting(false)

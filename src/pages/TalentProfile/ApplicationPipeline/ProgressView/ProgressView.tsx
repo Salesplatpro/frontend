@@ -135,7 +135,7 @@ const ProgressView: React.FC = () => {
   useEffect(() => {
     if (cvMatchData) {
       notify('success', 'CV Match completed.', {
-        autoClose: 5000,
+        autoClose: 2000,
       })
 
       refetch()
@@ -164,7 +164,7 @@ const ProgressView: React.FC = () => {
       (error?.data as ErrorResponse)?.message || defaultMessage
 
     notify('error', errorMessage, {
-      autoClose: 5000,
+      autoClose: 2000,
       transition: Bounce,
     })
 
