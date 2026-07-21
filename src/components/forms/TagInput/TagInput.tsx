@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useRef, useState } from 'react'
+import React, { ClipboardEvent, KeyboardEvent, useRef, useState } from 'react'
 import { IoClose } from 'react-icons/io5'
 
 import styles from './TagInput.module.scss'
@@ -27,14 +27,22 @@ export const TagInput: React.FC<TagInputProps> = ({
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const addTag = (raw: string) => {
-    const tag = raw.trim()
-    if (!tag) return
-    if (maxLength && tag.length > maxLength) return
-    if (maxTags && value.length >= maxTags) return
-    if (value.includes(tag)) return
-    onChange([...value, tag])
+  const addTags = (raws: string[]) => {
+    let next = value
+    for (const raw of raws) {
+      const tag = raw.trim()
+      if (!tag) continue
+      if (maxLength && tag.length > maxLength) continue
+      if (maxTags && next.length >= maxTags) break
+      if (next.includes(tag)) continue
+      next = [...next, tag]
+    }
+    if (next !== value) onChange(next)
     setInputValue('')
+  }
+
+  const addTag = (raw: string) => {
+    addTags([raw])
   }
 
   const removeTag = (index: number) => {
@@ -48,6 +56,13 @@ export const TagInput: React.FC<TagInputProps> = ({
     } else if (e.key === 'Backspace' && inputValue === '' && value.length > 0) {
       removeTag(value.length - 1)
     }
+  }
+
+  const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
+    const text = e.clipboardData.getData('text')
+    if (!text) return
+    e.preventDefault()
+    addTags(text.split(/[,;\n]+/))
   }
 
   const wrapperClass = [styles.inputWrapper, error ? styles.hasError : '']
@@ -89,6 +104,7 @@ export const TagInput: React.FC<TagInputProps> = ({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
           placeholder={value.length === 0 ? placeholder : ''}
           aria-label={label}
         />
