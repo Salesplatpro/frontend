@@ -4,12 +4,15 @@ import { Bounce } from 'react-toastify'
 
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { AllJobTypes } from '@/utils/types'
 
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import pretestIcon from '../../../../assets/pretestIcon.webp'
 import {
-  useJobPipelineQuery,
+  useAllJobApplicationsQuery,
+  useJobApplicationQuery,
+  useLazyCheckPrescreeningStageQuery,
   useLazyCvMatchQuery,
 } from '../../../../redux/api/talent'
 import { notify } from '../../../../utils/toastNotifications'
@@ -20,6 +23,8 @@ import ProgressHeader from './ProgressHeader'
 import ProgressItem from './ProgressItem'
 import styles from './ProgressView.module.scss'
 
+type StageKey = keyof Application['stages']
+
 const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
     prescreening: { icon: pretestIcon, title: 'Pre-Assessment' },
@@ -28,14 +33,28 @@ const getProgresses = (application: Application): Progress[] => {
     personality: { icon: personalizedIcon, title: 'Personality Test' },
   }
 
+  // `application.stages` is a jsonb map of currentStage -> nextStage. Its key
+  // iteration order is not guaranteed to match the pipeline's actual order, so
+  // reconstruct the true order by walking the chain from its entry stage (the
+  // one key that never appears as another stage's "next") rather than trusting
+  // Object.keys() order.
+  const stages = (application.stages ?? {}) as Record<StageKey, string>
+  const stageKeys = Object.keys(stages) as StageKey[]
+  const values = new Set(Object.values(stages))
+  const entryStage = stageKeys.find((key) => !values.has(key))
+
+  const orderedStages: StageKey[] = []
+  let cursor = entryStage
+  while (cursor && stages[cursor] && stages[cursor] !== 'completed') {
+    orderedStages.push(cursor)
+    cursor = stages[cursor] as StageKey
+  }
+
   const progresses: Progress[] = []
-  const stages = Object.keys(
-    application.stages,
-  ) as (keyof typeof stagesMapping)[]
   const currentStage = application.currentStage
   let currentStageFound = false
 
-  stages.forEach((stage) => {
+  orderedStages.forEach((stage) => {
     if (stagesMapping[stage]) {
       let status
       if (stage === currentStage) {
@@ -63,32 +82,55 @@ const ProgressView: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const { data: applicationsData, error: applicationsError } =
+    useAllJobApplicationsQuery({})
+  const applicationId = (
+    applicationsData?.data?.applications as AllJobTypes[] | undefined
+  )?.find((application) => application.job?.id === jobId)?.id
+
   const {
-    data: applications,
+    data: applicationResp,
     error: applicationError,
     isLoading: applicationLoading,
     refetch,
-  } = useJobPipelineQuery(jobId || '')
+  } = useJobApplicationQuery(applicationId, { skip: !applicationId })
 
   const [
     triggerCvMatch,
     { data: cvMatchData, error: cvMatchError, isLoading: cvMatchLoading },
   ] = useLazyCvMatchQuery()
 
+  const [
+    triggerPrescreeningCheck,
+    {
+      data: prescreeningCheckData,
+      error: prescreeningCheckError,
+      isLoading: prescreeningCheckLoading,
+    },
+  ] = useLazyCheckPrescreeningStageQuery()
+
   useEffect(() => {
-    if (applications) {
-      // toast.success(applications.message)
-      const applicationData = applications.data?.application || null
+    if (applicationResp) {
+      const applicationData = applicationResp.data?.application || null
       setJobProgress(applicationData)
 
       if (applicationData?.currentStage === 'cv_similarity') {
         triggerCvMatch(jobId)
       }
+      if (applicationData?.currentStage === 'prescreening') {
+        triggerPrescreeningCheck(jobId)
+      }
     }
     if (applicationError) {
-      handleError(applicationError, 'Failed to load CV Match data')
+      handleError(applicationError, 'Failed to load application progress')
     }
-  }, [applications, applicationError, jobId, triggerCvMatch])
+  }, [
+    applicationResp,
+    applicationError,
+    jobId,
+    triggerCvMatch,
+    triggerPrescreeningCheck,
+  ])
 
   useEffect(() => {
     if (cvMatchData) {
@@ -104,6 +146,19 @@ const ProgressView: React.FC = () => {
     }
   }, [cvMatchData, cvMatchError, refetch])
 
+  useEffect(() => {
+    if (prescreeningCheckData) {
+      refetch()
+    }
+
+    if (prescreeningCheckError) {
+      handleError(
+        prescreeningCheckError,
+        'Failed to check Pre-Assessment status',
+      )
+    }
+  }, [prescreeningCheckData, prescreeningCheckError, refetch])
+
   const handleError = (error: any, defaultMessage: string) => {
     const errorMessage =
       (error?.data as ErrorResponse)?.message || defaultMessage
@@ -116,9 +171,11 @@ const ProgressView: React.FC = () => {
     console.error('Error:', error)
   }
 
-  if (applicationLoading || cvMatchLoading) return <Spinner fullPage />
+  if (applicationLoading || cvMatchLoading || prescreeningCheckLoading)
+    return <Spinner fullPage />
 
-  if (!jobProgress) return <ProgressError error={applicationError} />
+  if (!jobProgress)
+    return <ProgressError error={applicationError || applicationsError} />
 
   const progresses = getProgresses(jobProgress)
 

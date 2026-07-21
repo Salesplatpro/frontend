@@ -67,11 +67,9 @@ export const SingleJob = ({
             salary={jobSalary || ''}
           />
           {isApplied ? (
-            <Link to={`/talentDashboard/applicationPipeline/${jobId}`}>
-              <Button size="sm" variant="secondary">
-                Applied ✓
-              </Button>
-            </Link>
+            <Button size="sm" variant="secondary" disabled>
+              Applied ✓
+            </Button>
           ) : (
             <Link to={`/talentDashboard/job/${jobId}`}>
               <Button size="sm">Apply Now</Button>
