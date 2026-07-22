@@ -1,12 +1,9 @@
 import { Form, Formik } from 'formik'
-import React from 'react'
-import { IoClose } from 'react-icons/io5'
+import React, { useState } from 'react'
+import { IoChevronDown, IoChevronUp, IoClose, IoRefresh } from 'react-icons/io5'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
-import {
-  EMPTY_LOCATION,
-  LocationSelect,
-} from '@/components/forms/LocationSelect'
+import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
 import {
   EXPERIENCE_LEVEL_OPTIONS,
@@ -19,6 +16,7 @@ import { Role } from '@/utils/types'
 
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import styles from './JobFilter.module.scss'
+import { LocationTabsSelect } from './LocationTabsSelect'
 
 export const defaultFilterValues: JobFiltersTypes = {
   role: '',
@@ -43,6 +41,8 @@ interface JobFilterProps {
 }
 
 export const JobFilter: React.FC<JobFilterProps> = ({ filters, onApply }) => {
+  const [collapsed, setCollapsed] = useState(false)
+
   const onSubmit = (values: JobFiltersTypes) => {
     onApply(values)
   }
@@ -50,68 +50,95 @@ export const JobFilter: React.FC<JobFilterProps> = ({ filters, onApply }) => {
   return (
     <div className={styles.panel} aria-label="Filter jobs">
       <Formik initialValues={filters} enableReinitialize onSubmit={onSubmit}>
-        {({ values, setFieldValue, resetForm }) => (
-          <Form>
-            <div className={styles.header}>
-              <span className={styles.title}>Filters</span>
-            </div>
+        {({ values, setFieldValue, resetForm }) => {
+          const resetAll = () => {
+            resetForm({ values: defaultFilterValues })
+            onApply(defaultFilterValues)
+          }
 
-            <div className={styles.field}>
-              <label className={styles.fieldLabel} htmlFor="role">
-                Role
-              </label>
-              <RoleSelect
-                name="role"
-                value={values.role}
-                onChange={(value) => setFieldValue('role', value)}
-                creatable={false}
-              />
-            </div>
+          return (
+            <Form>
+              <div className={styles.header}>
+                <button
+                  type="button"
+                  className={styles.collapseToggle}
+                  aria-expanded={!collapsed}
+                  aria-label={collapsed ? 'Expand filters' : 'Collapse filters'}
+                  onClick={() => setCollapsed((prev) => !prev)}>
+                  {collapsed ? <IoChevronDown /> : <IoChevronUp />}
+                  <span className={styles.title}>Filters</span>
+                </button>
+                <button
+                  type="button"
+                  className={styles.resetAll}
+                  disabled={!hasActiveFilter(values)}
+                  onClick={resetAll}>
+                  <IoRefresh /> Reset all
+                </button>
+              </div>
 
-            <div className={styles.field}>
-              <label className={styles.fieldLabel} htmlFor="experienceLevel">
-                Experience Level
-              </label>
-              <Select
-                name="experienceLevel"
-                options={EXPERIENCE_LEVEL_OPTIONS}
-                value={values.experienceLevel}
-                onChange={(value) => setFieldValue('experienceLevel', value)}
-                placeholder="Select experience level"
-              />
-            </div>
+              {!collapsed && (
+                <>
+                  <div className={styles.field}>
+                    <label className={styles.fieldLabel} htmlFor="role">
+                      Role
+                    </label>
+                    <RoleSelect
+                      name="role"
+                      value={values.role}
+                      onChange={(value) => setFieldValue('role', value)}
+                      creatable={false}
+                    />
+                  </div>
 
-            <div className={styles.field}>
-              <span className={styles.fieldLabel}>Work Type</span>
-              <WorkTypeCheckboxes
-                value={values.workMode}
-                onChange={(value) => setFieldValue('workMode', value)}
-              />
-            </div>
+                  <div className={styles.field}>
+                    <label
+                      className={styles.fieldLabel}
+                      htmlFor="experienceLevel">
+                      Experience Level
+                    </label>
+                    <Select
+                      name="experienceLevel"
+                      options={EXPERIENCE_LEVEL_OPTIONS}
+                      value={values.experienceLevel}
+                      onChange={(value) =>
+                        setFieldValue('experienceLevel', value)
+                      }
+                      placeholder="Select experience level"
+                    />
+                  </div>
 
-            <div className={styles.field}>
-              <span className={styles.fieldLabel}>Location</span>
-              <LocationSelect
-                value={values.location}
-                onChange={(value) => setFieldValue('location', value)}
-              />
-            </div>
+                  <div className={styles.field}>
+                    <span className={styles.fieldLabel}>Work Type</span>
+                    <WorkTypeCheckboxes
+                      value={values.workMode}
+                      onChange={(value) => setFieldValue('workMode', value)}
+                    />
+                  </div>
 
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={styles.clearAll}
-                disabled={!hasActiveFilter(values)}
-                onClick={() => {
-                  resetForm({ values: defaultFilterValues })
-                  onApply(defaultFilterValues)
-                }}>
-                Clear all
-              </button>
-              <Button type="submit">Apply filters</Button>
-            </div>
-          </Form>
-        )}
+                  <div className={styles.field}>
+                    <span className={styles.fieldLabel}>Location</span>
+                    <LocationTabsSelect
+                      value={values.location}
+                      onChange={(value) => setFieldValue('location', value)}
+                    />
+                  </div>
+
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.clearAll}
+                      disabled={!hasActiveFilter(values)}
+                      onClick={resetAll}>
+                      Clear all
+                    </button>
+                    <Button type="submit">Apply filters</Button>
+                  </div>
+                </>
+              )}
+            </Form>
+          )
+        }}
       </Formik>
     </div>
   )
