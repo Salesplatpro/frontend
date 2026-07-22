@@ -81,6 +81,12 @@ export const recruiterApi = createApi({
         body: data,
       }),
     }),
+    deletePersonalityQuestion: builder.mutation({
+      query: (questionId: string) => ({
+        url: `/questions/${questionId}`,
+        method: 'DELETE',
+      }),
+    }),
     fetchApplicantProgress: builder.query({
       query: (applicantId: string) => `applications/${applicantId}`,
     }),
@@ -205,6 +211,7 @@ export const {
   useFetchRecruiterJobPostQuery,
   useFetchRecruiterJobPostDetailsQuery,
   useGenJpPersonalityMutation,
+  useDeletePersonalityQuestionMutation,
   useFetchApplicantProgressQuery,
   useCreateJDMutation,
   useSearchTalentDbQuery,

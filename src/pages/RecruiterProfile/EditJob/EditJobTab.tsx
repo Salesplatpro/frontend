@@ -56,7 +56,7 @@ export const EditJobTab = () => {
   const [patchAiConfig] = usePatchAiConfigMutation()
   const [createAiConfig] = useAiConfigMutation()
   const { drafts, saveDraft, clearDraft } = useJobEditDraftStore()
-  const { questionsByPair, generateQuestion, loadingPairs } =
+  const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
 
   const draftSaver = useCallback(
@@ -271,6 +271,7 @@ export const EditJobTab = () => {
               questionsByPair={questionsByPair}
               loadingPairs={loadingPairs}
               generateQuestion={generateQuestion}
+              removeQuestion={removeQuestion}
             />
 
             <div className={postJobStyles.actions}>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import {
+  useDeletePersonalityQuestionMutation,
   useFetchPersonalityQuestionsQuery,
   useGenJpPersonalityMutation,
 } from '../../../../redux/api/recruiter'
@@ -17,6 +18,7 @@ const DICHOTOMY_PAIRS = ['EI', 'SN', 'TF', 'JP']
 
 const useGeneratedQuestion = (jobId: string | undefined) => {
   const [genJp] = useGenJpPersonalityMutation()
+  const [deleteQuestion] = useDeletePersonalityQuestionMutation()
   const [questionsByPair, setQuestionsByPair] = useState<QuestionsByPair>({})
   const [loadingPairs, setLoadingPairs] = useState<{ [key: string]: boolean }>(
     {},
@@ -62,10 +64,29 @@ const useGeneratedQuestion = (jobId: string | undefined) => {
     }
   }
 
+  const removeQuestion = async (pair: string, questionId: string) => {
+    const previous = questionsByPair[pair] ?? []
+    setQuestionsByPair((prevState) => ({
+      ...prevState,
+      [pair]: previous.filter((q) => q.id !== questionId),
+    }))
+
+    try {
+      await deleteQuestion(questionId).unwrap()
+    } catch (error) {
+      console.error(`Error removing ${pair} question:`, error)
+      setQuestionsByPair((prevState) => ({ ...prevState, [pair]: previous }))
+      notify('error', `Error removing ${pair} question`, {
+        autoClose: 2000,
+      })
+    }
+  }
+
   return {
     questionsByPair,
     loadingPairs,
     generateQuestion,
+    removeQuestion,
   }
 }
 

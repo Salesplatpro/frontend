@@ -57,7 +57,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   const [aiConfigMutation] = useAiConfigMutation()
   const [patchAiConfig] = usePatchAiConfigMutation()
   const { drafts, saveDraft, clearDraft } = useAiConfigDraftStore()
-  const { questionsByPair, generateQuestion, loadingPairs } =
+  const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
 
   const { data: existingConfig, isLoading: configLoading } =
@@ -213,6 +213,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
               questionsByPair={questionsByPair}
               loadingPairs={loadingPairs}
               generateQuestion={generateQuestion}
+              removeQuestion={removeQuestion}
             />
 
             <div className={styles.actions}>

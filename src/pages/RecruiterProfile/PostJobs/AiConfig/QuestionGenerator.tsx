@@ -1,5 +1,6 @@
 import React from 'react'
 import { FaPlus } from 'react-icons/fa6'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 
 import styles from './QuestionGenerator.module.scss'
 import { PersonalityQuestion } from './useGeneratedQuestion'
@@ -10,6 +11,7 @@ type QuestionGeneratorProps = {
   count: string | number
   onCountChange: (count: string) => void
   onGenerate: () => void
+  onRemove: (questionId: string) => void
   isLoading: boolean
   countError?: string
 }
@@ -20,6 +22,7 @@ const QuestionGenerator = ({
   count,
   onCountChange,
   onGenerate,
+  onRemove,
   isLoading,
   countError,
 }: QuestionGeneratorProps) => {
@@ -51,7 +54,14 @@ const QuestionGenerator = ({
         <ul className={styles.questionsList}>
           {questions.map((q) => (
             <li key={q.id} className={styles.questionItem}>
-              {q.question}
+              <span>{q.question}</span>
+              <button
+                type="button"
+                className={styles.deleteButton}
+                onClick={() => onRemove(q.id)}
+                aria-label="Remove question">
+                <RiDeleteBin6Line />
+              </button>
             </li>
           ))}
         </ul>
