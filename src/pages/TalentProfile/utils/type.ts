@@ -1,5 +1,6 @@
 export interface Application {
   currentStage: string
+  status?: string
   stages: Partial<
     Record<
       'prescreening' | 'cv_similarity' | 'personalized' | 'personality',
