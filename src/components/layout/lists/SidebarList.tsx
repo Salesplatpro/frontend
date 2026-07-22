@@ -12,6 +12,11 @@ type SidebarListProps = {
   count?: number
   onClick?: () => void
   link?: string
+  /** Exact-match the route instead of matching nested child routes too.
+   * Defaults to true; set to false for nav items that own nested routes
+   * (e.g. a list page with a `/:id` detail route) so the item stays
+   * highlighted while the user is on one of those child routes. */
+  end?: boolean
 }
 
 export const SidebarList = ({
@@ -21,6 +26,7 @@ export const SidebarList = ({
   count,
   onClick,
   link,
+  end = true,
 }: SidebarListProps) => {
   const content = (
     <>
@@ -51,7 +57,7 @@ export const SidebarList = ({
   return (
     <NavLink
       to={link}
-      end
+      end={end}
       className={({ isActive }) =>
         `${styles.listContainer} ${isActive ? styles.active : ''}`
       }

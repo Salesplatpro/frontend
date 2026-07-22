@@ -20,6 +20,7 @@ export const sidebarData = [
     name: 'Post a Job',
     icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
     link: '/recruiterDashboard/postjob',
+    end: false,
   },
   {
     name: 'My Job Posts',
@@ -31,6 +32,7 @@ export const sidebarData = [
     name: 'Scout',
     icon: <FiDownload size={ICON_SIZE} color={COLOR} />,
     link: '/recruiterDashboard/scout',
+    end: false,
   },
 
   {

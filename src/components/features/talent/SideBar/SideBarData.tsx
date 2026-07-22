@@ -31,6 +31,7 @@ export const sidebarData = [
     name: 'Jobs',
     icon: <IoBagOutline size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/job',
+    end: false,
   },
 
   {
@@ -48,5 +49,6 @@ export const sidebarData = [
     name: 'Applications pipeline',
     icon: <RiFlowChart size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/applicationPipeline',
+    end: false,
   },
 ]
