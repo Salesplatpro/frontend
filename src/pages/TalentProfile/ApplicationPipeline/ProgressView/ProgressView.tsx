@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
-import { Spinner } from '@/components/ui/Spinner'
 import { AllJobTypes } from '@/utils/types'
 
+import resultIcon from '../../../../assets/CheckIcon.svg'
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import pretestIcon from '../../../../assets/pretestIcon.webp'
@@ -20,6 +20,7 @@ import { Application, Progress } from '../../utils/type'
 import ProgressError from './ProgressError'
 import ProgressHeader from './ProgressHeader'
 import ProgressItem from './ProgressItem'
+import ProgressSkeleton from './ProgressSkeleton'
 import styles from './ProgressView.module.scss'
 
 type StageKey = keyof Application['stages']
@@ -72,6 +73,21 @@ const getProgresses = (application: Application): Progress[] => {
     }
   })
 
+  // Once every assessment stage is done, add a terminal "Result" step that
+  // reflects the recruiter's decision — `application.status` is tracked
+  // independently of `currentStage`/`stages` and was never surfaced here before.
+  if (currentStage === 'completed') {
+    const resultStatus =
+      application.status === 'shortlisted' || application.status === 'rejected'
+        ? application.status
+        : 'awaiting-decision'
+    progresses.push({
+      icon: resultIcon,
+      title: 'Result',
+      status: resultStatus,
+    })
+  }
+
   return progresses
 }
 
@@ -81,8 +97,11 @@ const ProgressView: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { data: applicationsData, error: applicationsError } =
-    useAllJobApplicationsQuery({})
+  const {
+    data: applicationsData,
+    error: applicationsError,
+    isLoading: applicationsLoading,
+  } = useAllJobApplicationsQuery({})
   const applicationId = (
     applicationsData?.data?.applications as AllJobTypes[] | undefined
   )?.find((application) => application.job?.id === jobId)?.id
@@ -169,8 +188,16 @@ const ProgressView: React.FC = () => {
     console.error('Error:', error)
   }
 
-  if (applicationLoading || cvMatchLoading || prescreeningCheckLoading)
-    return <Spinner fullPage />
+  const stillResolvingApplication =
+    applicationsLoading || (!applicationId && !applicationsError)
+
+  if (
+    stillResolvingApplication ||
+    applicationLoading ||
+    cvMatchLoading ||
+    prescreeningCheckLoading
+  )
+    return <ProgressSkeleton />
 
   if (!jobProgress)
     return <ProgressError error={applicationError || applicationsError} />
@@ -185,8 +212,9 @@ const ProgressView: React.FC = () => {
     }
   }
 
-  const completedStages = progresses.filter(
-    (progress) => progress.status === 'completed',
+  const completedStatuses = ['completed', 'shortlisted', 'rejected']
+  const completedStages = progresses.filter((progress) =>
+    completedStatuses.includes(progress.status),
   ).length
   const totalStages = progresses.length
   const progressPercentage = Math.round((completedStages / totalStages) * 100)

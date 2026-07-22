@@ -1,6 +1,6 @@
 import cn from 'classnames'
 import React from 'react'
-import { IoCheckmarkCircle } from 'react-icons/io5'
+import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 
 import { StatusBadge } from '@/components/ui/Badge'
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
+import { getStatusBadge } from '../../../RecruiterProfile/getJobStatus'
 import { Progress } from '../../utils/type'
 import styles from './ProgressView.module.scss'
 
@@ -19,6 +20,20 @@ interface Props {
 
 const awaitingBadge = { backgroundColor: '#f3f4f6', color: '#6b7280' }
 const completedBadge = { backgroundColor: '#edfeee', color: '#1b7b44' }
+
+const STATUS_LABELS: Record<string, string> = {
+  completed: 'Completed',
+  current: 'Not Started',
+  awaiting: 'Locked',
+  shortlisted: 'Shortlisted',
+  rejected: 'Rejected',
+  'awaiting-decision': 'Awaiting Decision',
+}
+
+// Statuses without a dedicated `.dot-{status}` class fall back to the neutral
+// "awaiting" dot styling.
+const dotStatusClass = (status: string) =>
+  styles[`dot-${status}`] ?? styles['dot-awaiting']
 
 const takeableTests = [
   'Pre-Assessment',
@@ -58,8 +73,12 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
   return (
     <div className={styles.itemRow}>
       <div className={styles.connectorCol}>
-        <div className={cn(styles.dot, styles[`dot-${progress.status}`])}>
-          {progress.status === 'completed' && <IoCheckmarkCircle size={16} />}
+        <div className={cn(styles.dot, dotStatusClass(progress.status))}>
+          {(progress.status === 'completed' ||
+            progress.status === 'shortlisted') && (
+            <IoCheckmarkCircle size={16} />
+          )}
+          {progress.status === 'rejected' && <IoCloseCircle size={16} />}
         </div>
         {!isLast && <div className={styles.connectorLine} />}
       </div>
@@ -76,15 +95,15 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
           <Button size="sm" onClick={handleNavigate}>
             Take Test
           </Button>
+        ) : progress.status === 'shortlisted' ||
+          progress.status === 'rejected' ? (
+          <StatusBadge
+            status={STATUS_LABELS[progress.status]}
+            {...getStatusBadge(progress.status)}
+          />
         ) : (
           <StatusBadge
-            status={
-              progress.status === 'completed'
-                ? 'Completed'
-                : progress.status === 'current'
-                ? 'Not Started'
-                : 'Locked'
-            }
+            status={STATUS_LABELS[progress.status] ?? 'Locked'}
             {...(progress.status === 'completed'
               ? completedBadge
               : awaitingBadge)}

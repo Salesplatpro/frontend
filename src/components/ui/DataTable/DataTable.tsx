@@ -25,6 +25,8 @@ interface DataTableProps<T> {
   columns: ColumnDef<T>[]
   data: T[]
   isLoading?: boolean
+  /** Custom placeholder rendered instead of the default full-page spinner while `isLoading` is true. */
+  loadingSkeleton?: React.ReactNode
   emptyState?: React.ReactNode
   getRowKey?: (row: T, index: number) => string | number
   getRowClassName?: (row: T, index: number) => string
@@ -68,6 +70,7 @@ export function DataTable<T>({
   columns,
   data = [],
   isLoading,
+  loadingSkeleton,
   emptyState,
   getRowKey,
   getRowClassName,
@@ -88,7 +91,7 @@ export function DataTable<T>({
     (col) => !col.hideBelow || screenWidth > col.hideBelow,
   )
 
-  if (isLoading) return <Spinner fullPage />
+  if (isLoading) return <>{loadingSkeleton ?? <Spinner fullPage />}</>
 
   return (
     <TableContainer
