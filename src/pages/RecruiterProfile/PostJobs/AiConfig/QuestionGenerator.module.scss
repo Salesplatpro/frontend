@@ -66,6 +66,10 @@
 }
 
 .questionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
   background-color: var(--color-white);
   box-shadow: var(--shadow-sm);
   padding: var(--space-3) var(--space-4);
@@ -74,4 +78,23 @@
   font-size: var(--text-md);
   color: var(--color-text-body);
   line-height: var(--leading-normal);
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: var(--space-2);
+  cursor: pointer;
+  font-size: var(--text-xl);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--color-danger);
+  }
 }
