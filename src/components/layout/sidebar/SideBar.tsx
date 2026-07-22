@@ -14,6 +14,7 @@ interface sideBarProps {
     icon: ReactNode
     count?: number
     link?: string
+    end?: boolean
   }[]
   handleClick?: () => void
 }
@@ -52,6 +53,7 @@ export const SideBar: React.FC<sideBarProps> = ({
                 name={data.name}
                 count={data.count}
                 link={data.link}
+                end={data.end}
                 onClick={handleClick}
               />
             )
