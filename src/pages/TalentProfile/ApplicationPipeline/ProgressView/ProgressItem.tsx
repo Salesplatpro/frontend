@@ -35,11 +35,7 @@ const STATUS_LABELS: Record<string, string> = {
 const dotStatusClass = (status: string) =>
   styles[`dot-${status}`] ?? styles['dot-awaiting']
 
-const takeableTests = [
-  'Pre-Assessment',
-  'Personalized Test',
-  'Personality Test',
-]
+const takeableTests = ['Personalized Test', 'Personality Test']
 
 const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
   const navigate = useNavigate()
@@ -47,11 +43,6 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
 
   const handleNavigate = () => {
     switch (progress.title) {
-      case 'Pre-Assessment':
-        navigate('/talentDashboard/TalentQuiz', {
-          state: { canRetakeAssessment: true },
-        })
-        break
       case 'Personalized Test':
         navigate(
           `/talentDashboard/applicationPipeline/personalizedTest/${jobId}/${talentId}`,
@@ -103,7 +94,9 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
           />
         ) : (
           <StatusBadge
-            status={STATUS_LABELS[progress.status] ?? 'Locked'}
+            status={
+              progress.result ?? STATUS_LABELS[progress.status] ?? 'Locked'
+            }
             {...(progress.status === 'completed'
               ? completedBadge
               : awaitingBadge)}
