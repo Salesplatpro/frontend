@@ -7,7 +7,6 @@ import { AllJobTypes } from '@/utils/types'
 import resultIcon from '../../../../assets/CheckIcon.svg'
 import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
-import pretestIcon from '../../../../assets/pretestIcon.webp'
 import {
   useAllJobApplicationsQuery,
   useJobApplicationQuery,
@@ -27,7 +26,6 @@ type StageKey = keyof Application['stages']
 
 const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
-    prescreening: { icon: pretestIcon, title: 'Pre-Assessment' },
     cv_similarity: { icon: cvmatchIcon, title: 'CV-Matching' },
     personalized: { icon: personalizedIcon, title: 'Personalized Test' },
     personality: { icon: personalizedIcon, title: 'Personality Test' },
@@ -45,7 +43,7 @@ const getProgresses = (application: Application): Progress[] => {
 
   const orderedStages: StageKey[] = []
   let cursor = entryStage
-  while (cursor && stages[cursor] && stages[cursor] !== 'completed') {
+  while (cursor && (cursor as string) !== 'completed') {
     orderedStages.push(cursor)
     cursor = stages[cursor] as StageKey
   }
@@ -54,21 +52,52 @@ const getProgresses = (application: Application): Progress[] => {
   const currentStage = application.currentStage
   let currentStageFound = false
 
+  // Status is computed for every stage in the real chain (including
+  // 'prescreening', which has no display mapping below) so `currentStageFound`
+  // stays accurate — only the push into `progresses` is gated on having a
+  // mapping, keeping Pre-Assessment out of the visible pipeline without
+  // corrupting the completed/awaiting status of the stages after it.
   orderedStages.forEach((stage) => {
-    if (stagesMapping[stage]) {
-      let status
-      if (stage === currentStage) {
-        status = 'current'
-        currentStageFound = true
-      } else if (!currentStageFound) {
-        status = 'completed'
-      } else {
-        status = 'awaiting'
+    let status
+    if (stage === currentStage) {
+      status = 'current'
+      currentStageFound = true
+    } else if (!currentStageFound) {
+      status = 'completed'
+    } else {
+      status = 'awaiting'
+    }
+
+    const mapping = (
+      stagesMapping as Record<string, { icon: string; title: string }>
+    )[stage]
+    if (mapping) {
+      let result: string | null = null
+      if (
+        stage === 'cv_similarity' &&
+        currentStage === 'completed' &&
+        application.cvSimilarityScore != null
+      ) {
+        result = `${Math.round(application.cvSimilarityScore)}% Match`
+      } else if (
+        stage === 'personalized' &&
+        status === 'completed' &&
+        application.personalizedScore != null
+      ) {
+        result = `${Math.round(application.personalizedScore)}% Score`
+      } else if (
+        stage === 'personality' &&
+        status === 'completed' &&
+        application.mbtiType
+      ) {
+        result = application.mbtiType
       }
+
       progresses.push({
-        icon: stagesMapping[stage].icon,
-        title: stagesMapping[stage].title,
+        icon: mapping.icon,
+        title: mapping.title,
         status: status,
+        result,
       })
     }
   })

@@ -7,12 +7,16 @@ export interface Application {
       string
     >
   >
+  cvSimilarityScore: number | null
+  personalizedScore: number | null
+  mbtiType: string | null
 }
 
 export interface Progress {
   icon: string
   title: string
   status: string
+  result?: string | null
 }
 export interface ErrorResponse {
   message?: string
