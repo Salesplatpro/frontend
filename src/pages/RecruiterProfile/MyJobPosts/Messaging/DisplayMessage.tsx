@@ -1,38 +1,35 @@
 import React from 'react'
 
-type MessageProps = {
-  messages?: {
-    acknowledged: boolean
-    application: string
-    content: string
-    conversation: string
-    deleted: boolean
-    isRead: boolean
-    recipient: string
-    sender: string
-  }[]
+import { MessageBubble, MessageBubbleData } from '@/components/ui/MessageBubble'
+
+import styles from './Messaging.module.scss'
+
+type DisplayMessageProps = {
+  messages?: MessageBubbleData[]
+  currentUserId?: string
 }
 
 const DEFAULT_MESSAGE = 'No messages yet.'
 
-export const DisplayMessage = ({ messages }: MessageProps) => {
+export const DisplayMessage = ({
+  messages,
+  currentUserId,
+}: DisplayMessageProps) => {
   const hasMessages = messages && messages.length > 0
 
   return hasMessages ? (
-    <div className="flex flex-col space-y-2">
-      {messages.map((message, index) => (
-        <div
-          key={index}
-          className="max-w-[803px] h-[61px] border border-gray-300 bg-grey-50 rounded-[10px] flex justify-start items-start">
-          <div key={index} className="p-4 text-left">
-            {message.content}
-          </div>
-        </div>
+    <div className={styles.messageList}>
+      {messages.map((message) => (
+        <MessageBubble
+          key={message.id}
+          message={message}
+          currentUserId={currentUserId}
+        />
       ))}
     </div>
   ) : (
-    <div className="max-w-[803px] h-[171px] border border-gray-300 bg-grey-50 rounded-[10px] flex justify-center items-center">
-      <div className="text-center p-4">{DEFAULT_MESSAGE}</div>
+    <div className={styles.emptyMessages}>
+      <div>{DEFAULT_MESSAGE}</div>
     </div>
   )
 }
