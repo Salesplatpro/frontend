@@ -49,25 +49,27 @@ export type recruiterJobPostsTypes = {
 
 export type SingleJobDetails = {
   id: string
-  job: string
+  jobId: string
   talent: {
-    profile: {
-      id: string
-      bio: string
-      experience: string
-      maxSalary: number
-      minSalary: number
-    }
     id: string
     email: string
     firstName: string
     lastName: string
+    bio?: string | null
+    experience?: string | null
+    cvUrl?: string | null
+    prescreeningScore?: number | null
   }
   applicationType: string
   status: string
   createdAt: string
   updatedAt: string
   cvSimilarityScore: number
+  personalizedScore?: number | null
+  rank?: number | null
+  averageScore?: number | null
+  matchVerdict?: 'high' | 'medium' | 'low' | null
+  matchVerdictReasoning?: string | null
 }
 
 export interface JobProfileProps {
