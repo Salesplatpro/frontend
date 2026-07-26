@@ -71,9 +71,6 @@ export const recruiterApi = createApi({
         ]
       },
     }),
-    fetchRecruiterJobPostDetails: builder.query({
-      query: (jobId: string) => `/jobs/applications/${jobId}`,
-    }),
     genJpPersonality: builder.mutation({
       query: (data) => ({
         url: `/questions/personality`,
@@ -87,10 +84,6 @@ export const recruiterApi = createApi({
         method: 'DELETE',
       }),
     }),
-    fetchApplicantProgress: builder.query({
-      query: (applicantId: string) => `applications/${applicantId}`,
-    }),
-
     cvAndCoverLetter: builder.mutation({
       query: (data) => ({
         url: `/cv-batching/cv-and-cover-letter`,
@@ -152,26 +145,6 @@ export const recruiterApi = createApi({
     getRecruiterShortlist: builder.query({
       query: () => `recruiter/shortlist/`,
     }),
-    patchApplicationStatus: builder.mutation({
-      query: ({ id, status }) => ({
-        url: `/applications/${id}/status`,
-        method: 'PATCH',
-        body: status,
-      }),
-    }),
-    sendTalentMessage: builder.mutation({
-      query: ({ data }) => ({
-        url: '/messages',
-        method: 'POST',
-        body: data,
-      }),
-    }),
-    getMessagesSentToTalent: builder.query({
-      query: ({ applicationId }) => ({
-        url: `messages?application=${applicationId}`,
-        method: 'GET',
-      }),
-    }),
     updateJob: builder.mutation({
       query: ({ jobId, data }) => ({
         url: `/jobs/${jobId}`,
@@ -209,19 +182,14 @@ export const {
   useAiConfigMutation,
   usePatchAiConfigMutation,
   useFetchRecruiterJobPostQuery,
-  useFetchRecruiterJobPostDetailsQuery,
   useGenJpPersonalityMutation,
   useDeletePersonalityQuestionMutation,
-  useFetchApplicantProgressQuery,
   useCreateJDMutation,
   useSearchTalentDbQuery,
   useUploadCVOnlyMutation,
   useUploadCvAndCoverLetterMutation,
   useGetCampaignNameQuery,
   useGetRecruiterShortlistQuery,
-  usePatchApplicationStatusMutation,
-  useSendTalentMessageMutation,
-  useGetMessagesSentToTalentQuery,
   useUpdateJobMutation,
   useDeleteJobMutation,
   useFetchPersonalityQuestionsQuery,

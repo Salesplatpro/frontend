@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { GoTasklist } from 'react-icons/go'
 import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 
+import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
+import { VerdictBadge } from '@/components/ui/VerdictBadge'
+import { useApplication } from '@/features/applications/hooks/useApplication'
+import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
 
 import { Button } from '../../../components'
-import {
-  useFetchApplicantProgressQuery,
-  usePatchApplicationStatusMutation,
-} from '../../../redux/api/recruiter'
-import { notify } from '../../../utils/toastNotifications'
+import styles from './ApplicationProgress.module.scss'
 import { EachProgressDetails } from './EachProgressDetails'
 import { getApplicationDetails } from './getApplicationDetails'
 import { Messaging } from './Messaging/Messaging'
@@ -22,15 +22,13 @@ const iconColor = ' #4985df'
 
 export const ApplicationProgress = () => {
   const { applicationId } = useParams()
-  const talentId = useFetchApplicantProgressQuery(applicationId ?? '')?.data
-    ?.data?.application?.talent?.id
-  const [loadingShortlist, setLoadingShortlist] = useState(false)
-  const [loadingReject, setLoadingReject] = useState(false)
-
-  const { data, error, isLoading } = useFetchApplicantProgressQuery(
+  const { data, error, isLoading } = useApplication(applicationId)
+  const { updateStatus, isUpdating } = useUpdateApplicationStatus(
     applicationId ?? '',
   )
-  const [patchApplicationStatus] = usePatchApplicationStatusMutation()
+
+  const application = data?.data?.application
+  const talentId = application?.talent?.id
 
   const {
     firstName,
@@ -42,9 +40,10 @@ export const ApplicationProgress = () => {
     personalizedScore,
     type,
     jodStatus,
+    cvUrl,
+    matchVerdict,
+    matchVerdictReasoning,
   } = getApplicationDetails(data)
-
-  console.log(data)
 
   const progress = [
     {
@@ -71,40 +70,22 @@ export const ApplicationProgress = () => {
   }
 
   const handleStatusUpdate = async (status: 'rejected' | 'shortlisted') => {
-    const setLoading =
-      status === 'rejected' ? setLoadingReject : setLoadingShortlist
-    setLoading(true)
-
-    try {
-      const response = await patchApplicationStatus({
-        id: applicationId,
-        status: { status },
-      }).unwrap()
-
-      notify(
-        'success',
-        `Talent is ${response.data.application.status} successfully`,
-        {
-          autoClose: 2000,
-        },
-      )
-    } catch (error) {
-      console.error('Failed to update status:', error)
-    } finally {
-      setLoading(false)
-    }
+    await updateStatus(status)
   }
 
   if (error) {
-    return <div>Error loading job details</div>
+    return <div className={styles.error}>Error loading job details</div>
   }
 
   if (isLoading) {
     return <Spinner fullPage />
   }
 
+  const verdictPending =
+    application?.currentStage === 'completed' && !matchVerdict
+
   return (
-    <div className="m-auto max-w-[781px] space-y-5">
+    <div className={styles.page}>
       <ProfileCard
         firstName={firstName}
         lastName={lastName}
@@ -112,7 +93,7 @@ export const ApplicationProgress = () => {
         description={bio}
         jobStatus={jodStatus}
       />
-      <div className="flex flex-col space-y-3">
+      <div className={styles.progressList}>
         {progress.map((item, index) => (
           <EachProgressDetails
             key={index}
@@ -127,31 +108,47 @@ export const ApplicationProgress = () => {
           personality={personality.score}
         />
       </div>
-      <div className="text-center">
-        rank: {data?.data?.application?.rank} of{' '}
-        {data?.data?.application?.job?.noOfApplicants} applicants
+      <div className={styles.rankLine}>
+        rank: {application?.rank} of {application?.job?.noOfApplicants}{' '}
+        applicants
       </div>
-      <div className="flex justify-center space-x-2">
-        <div className="w-1/3">
-          <Button
-            variant="outline"
-            size="wide"
-            fullWidth
-            onClick={() => handleStatusUpdate('rejected')}
-            disabled={jodStatus === 'rejected' && true}>
-            {loadingReject ? 'Rejecting...' : 'Reject'}
-          </Button>
+
+      {(matchVerdict || verdictPending) && (
+        <div className={styles.verdictSection}>
+          <VerdictBadge
+            verdict={matchVerdict}
+            reasoning={matchVerdictReasoning}
+            pending={verdictPending}
+          />
         </div>
-        <div className="w-1/3">
-          <Button
-            variant="primary"
-            size="wide"
-            fullWidth
-            onClick={() => handleStatusUpdate('shortlisted')}
-            disabled={jodStatus === 'shortlisted' && true}>
-            {loadingShortlist ? 'Shortlisting...' : 'Shortlist'}
-          </Button>
+      )}
+
+      {cvUrl && (
+        <div className={styles.cvSection}>
+          <CvFile
+            fileName={decodeURIComponent(cvUrl.split('/').pop() || 'CV')}
+            url={cvUrl}
+          />
         </div>
+      )}
+
+      <div className={styles.decisionActions}>
+        <Button
+          variant="outline"
+          size="wide"
+          fullWidth
+          onClick={() => handleStatusUpdate('rejected')}
+          disabled={isUpdating || jodStatus === 'rejected'}>
+          {isUpdating ? 'Rejecting...' : 'Reject'}
+        </Button>
+        <Button
+          variant="primary"
+          size="wide"
+          fullWidth
+          onClick={() => handleStatusUpdate('shortlisted')}
+          disabled={isUpdating || jodStatus === 'shortlisted'}>
+          {isUpdating ? 'Shortlisting...' : 'Shortlist'}
+        </Button>
       </div>
       <div>
         <Messaging applicationId={applicationId} talentId={talentId} />
