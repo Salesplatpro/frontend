@@ -24,7 +24,7 @@ import styles from './ProgressView.module.scss'
 
 type StageKey = keyof Application['stages']
 
-const getProgresses = (application: Application): Progress[] => {
+export const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
     cv_similarity: { icon: cvmatchIcon, title: 'CV-Matching' },
     personalized: { icon: personalizedIcon, title: 'Personalized Test' },
@@ -72,20 +72,11 @@ const getProgresses = (application: Application): Progress[] => {
       stagesMapping as Record<string, { icon: string; title: string }>
     )[stage]
     if (mapping) {
+      // CV-matching and personalized-test scores are never shown to the talent —
+      // only whether the stage is complete. The stage's own status badge already
+      // renders "Completed"; no numeric result is surfaced here for those stages.
       let result: string | null = null
       if (
-        stage === 'cv_similarity' &&
-        currentStage === 'completed' &&
-        application.cvSimilarityScore != null
-      ) {
-        result = `${Math.round(application.cvSimilarityScore)}% Match`
-      } else if (
-        stage === 'personalized' &&
-        status === 'completed' &&
-        application.personalizedScore != null
-      ) {
-        result = `${Math.round(application.personalizedScore)}% Score`
-      } else if (
         stage === 'personality' &&
         status === 'completed' &&
         application.mbtiType
