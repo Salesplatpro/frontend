@@ -6,6 +6,9 @@ export const getStatusBadge = (status: string) => {
       return { backgroundColor: '#fff0ef', color: '#ff6f6d' }
     case 'retake_assessment':
       return { backgroundColor: '#f1f6fe', color: '#5d93e3' }
+    case 'awaiting-decision':
+    case 'awaiting_decision':
+      return { backgroundColor: '#fff4e2', color: '#c17600' }
     case 'shortlisted':
       return { backgroundColor: '#edfeee', color: '#7cc88f' }
     case 'rejected':

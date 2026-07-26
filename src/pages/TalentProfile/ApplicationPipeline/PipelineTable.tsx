@@ -18,6 +18,12 @@ import { getStatusBadge } from '../../RecruiterProfile/getJobStatus'
 
 const SKELETON_ROWS = 5
 
+const STATUS_LABELS: Record<string, string> = {
+  awaiting_decision: 'Awaiting Decision',
+}
+
+const getStatusLabel = (status: string) => STATUS_LABELS[status] ?? status
+
 const columns: ColumnDef<AllJobTypes>[] = [
   {
     key: 'jobTitle',
@@ -45,7 +51,7 @@ const columns: ColumnDef<AllJobTypes>[] = [
     hideBelow: 768,
     render: (app) => (
       <StatusBadge
-        status={app.status ?? 'unknown'}
+        status={getStatusLabel(app.status ?? 'unknown')}
         {...getStatusBadge(app.status ?? 'unknown')}
       />
     ),
