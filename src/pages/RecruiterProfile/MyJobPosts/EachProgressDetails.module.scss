@@ -1,0 +1,57 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.title {
+  width: 50%;
+  font-family: var(--font-body);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-heading);
+}
+
+.divider {
+  width: 1px;
+  height: 34px;
+  background: var(--color-border-strong);
+  border: none;
+}
+
+.value {
+  width: 50%;
+}
+
+.scoreValue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+
+.scoreLabel {
+  font-weight: var(--weight-medium);
+}
+
+.matchValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.matchLabel {
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+}
+
+.plainValue {
+  text-align: right;
+}
+
+.personalityValue {
+  text-align: center;
+  font-weight: var(--weight-medium);
+}

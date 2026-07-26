@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { AnalyzedPercentage } from '../Batching'
+import styles from './EachProgressDetails.module.scss'
 
 type EachProgressProps = {
   title: string
@@ -16,26 +17,26 @@ export const EachProgressDetails = ({
   personality,
 }: EachProgressProps) => {
   return (
-    <div className="border rounded-md flex justify-between items-center px-[30px] py-[21px]">
-      <div className="font-medium w-1/2">{title}</div>
-      <hr className="w-[1px] h-[34px] bg-gray-400 border-none" />
-      <div className=" w-1/2 justify-center">
+    <div className={styles.row}>
+      <div className={styles.title}>{title}</div>
+      <hr className={styles.divider} />
+      <div className={styles.value}>
         {useScore ? (
-          <div className="flex items-center justify-end space-x-4">
+          <div className={styles.scoreValue}>
             {typeof percentage === 'number' ? (
               <>
-                <div className="font-medium">Score:</div>
-                <div className="flex items-center space-x-1">
+                <div className={styles.scoreLabel}>Score:</div>
+                <div className={styles.matchValue}>
                   <AnalyzedPercentage targetValue={percentage} />
-                  <div className="font-light">Match</div>
+                  <div className={styles.matchLabel}>Match</div>
                 </div>
               </>
             ) : (
-              <div>{percentage}</div>
+              <div className={styles.plainValue}>{percentage}</div>
             )}
           </div>
         ) : (
-          <div className="text-center font-medium">{personality}</div>
+          <div className={styles.personalityValue}>{personality}</div>
         )}
       </div>
     </div>
