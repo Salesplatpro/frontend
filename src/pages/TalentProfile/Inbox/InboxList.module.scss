@@ -1,0 +1,79 @@
+.page {
+  width: 90%;
+  margin: var(--space-12) auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-grey-900);
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  max-width: 500px;
+  width: 100%;
+}
+
+.modalTitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  text-align: center;
+  color: var(--color-midnight);
+  margin: 0;
+}
+
+.modalMessage {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-lg);
+  padding: var(--space-2) 0;
+  color: var(--color-midnight);
+}
+
+.confirmButton {
+  width: 100%;
+  padding: var(--space-3) var(--space-8);
+  margin-top: var(--space-2);
+  border-radius: var(--radius-md);
+  border: none;
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-md);
+  background: var(--color-primary-strong);
+  cursor: pointer;
+}
+
+.confirmButton:hover {
+  background: var(--color-primary-hover);
+}
+
+.cancelButton {
+  width: 100%;
+  padding: var(--space-3) var(--space-8);
+  margin-top: var(--space-3);
+  border-radius: var(--radius-md);
+  border: none;
+  background: none;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-md);
+  color: var(--color-primary-strong);
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  text-decoration: underline;
+}

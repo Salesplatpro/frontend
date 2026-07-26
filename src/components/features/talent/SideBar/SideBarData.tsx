@@ -35,13 +35,13 @@ export const sidebarData = [
   },
 
   {
-    name: 'Chat',
+    name: 'Inbox',
     icon: <BsChatDots size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/chat',
   },
 
   {
-    name: 'Notification',
+    name: 'Notifications',
     icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
     link: '/talentDashboard/notification',
   },

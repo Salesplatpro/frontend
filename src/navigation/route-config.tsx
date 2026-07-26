@@ -52,9 +52,10 @@ import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSi
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
 import ProgressView from '@/pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
+import Inbox from '@/pages/TalentProfile/Inbox/InboxList'
 import IndividualJob from '@/pages/TalentProfile/Job/IndividualJob'
 import Job from '@/pages/TalentProfile/Job/Job'
-import Notification from '@/pages/TalentProfile/Notification/NotificationList'
+import Notifications from '@/pages/TalentProfile/Notifications/NotificationsList'
 import TalentProfile from '@/pages/TalentProfile/Profile'
 import { Support } from '@/pages/TalentProfile/Support'
 import PersonalityTest from '@/pages/TalentProfile/TalentAssessment/PersonalityTest'
@@ -168,11 +169,11 @@ export const routeConfig: RouteObject[] = [
           },
           {
             path: 'Chat',
-            // element: <Chat />,
+            element: <Inbox />,
           },
           {
             path: 'Notification',
-            element: <Notification />,
+            element: <Notifications />,
           },
           {
             path: 'job/:jobId',
