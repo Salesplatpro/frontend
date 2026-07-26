@@ -12,10 +12,10 @@ import {
   Select,
 } from '@/components/forms/Select'
 import { Button } from '@/components/ui/Button'
+import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
 
 import BioTextArea from './BioTextArea'
-import CvFile from './CvFile'
 import styles from './Profile.module.scss'
 import TalentProfileHeader from './ProfileHeader'
 import { validationSchema } from './ProileValidationSchema'
@@ -228,6 +228,7 @@ const TalentProfile = () => {
                           profile.cvUrl.split('/').pop() || 'CV',
                         )}
                         url={profile.cvUrl}
+                        replaceInputId="cv"
                       />
                     ) : (
                       <label htmlFor="cv" className={styles.fileInputWrapper}>
