@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-heading);
+  margin-bottom: var(--space-3);
+}
+
+.messageList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 803px;
+}
+
+.emptyMessages {
+  max-width: 803px;
+  min-height: 171px;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+}
+
+.textarea {
+  width: 100%;
+  max-width: 803px;
+  min-height: 120px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-4);
+  max-width: 803px;
+}
+
+.actions > * {
+  flex: 1;
+}

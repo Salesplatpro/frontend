@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
-import { Button } from '../../../../components'
-import {
-  useGetMessagesSentToTalentQuery,
-  useSendTalentMessageMutation,
-} from '../../../../redux/api/recruiter'
-import { notify } from '../../../../utils/toastNotifications'
+import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
+import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
+import { useMessaging } from '@/features/messaging/hooks/useMessaging'
+import { notify } from '@/utils/toastNotifications'
+
 import { DisplayMessage } from './DisplayMessage'
+import styles from './Messaging.module.scss'
 
 interface MessagingProps {
   applicationId?: string
@@ -14,85 +15,73 @@ interface MessagingProps {
 }
 
 export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
-  const [sendMessage, setSendMessage] = useState({
-    content: '',
-    recipient: '',
-    application: applicationId,
-  })
-  const { data: messages } = useGetMessagesSentToTalentQuery({ applicationId })
-
-  const [sendTalentMessage, { isLoading: isSending }] =
-    useSendTalentMessageMutation()
-
-  useEffect(() => {
-    if (talentId) {
-      setSendMessage((prevState) => ({
-        ...prevState,
-        recipient: talentId,
-      }))
-    }
-  }, [talentId])
+  const [content, setContent] = useState('')
+  const { messages, isLoading, sendMessage, isSending, currentUserId } =
+    useMessaging(applicationId, talentId)
+  const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
 
   const handleSendMessage = async () => {
-    if (!sendMessage.content.trim()) {
-      notify('error', `DisplayMessage can not be empty`, {
-        autoClose: 2000,
-      })
-
+    if (!content.trim()) {
+      notify('error', 'Message cannot be empty', { autoClose: 2000 })
       return
     }
     try {
-      await sendTalentMessage({
-        data: sendMessage,
-      }).unwrap()
+      await sendMessage(content)
+      setContent('')
+      notify('success', 'Message sent successfully', { autoClose: 2000 })
+    } catch {
+      notify('error', 'Failed to send message', { autoClose: 2000 })
+    }
+  }
 
-      setSendMessage((prevState) => ({ ...prevState, content: '' }))
+  const handleBroadcast = async () => {
+    if (!content.trim() || !applicationId) {
+      notify('error', 'Message cannot be empty', { autoClose: 2000 })
+      return
+    }
+    if (!window.confirm('Send this message to every applicant on this job?'))
+      return
 
-      notify('success', `Message sent successfully`, {
-        autoClose: 2000,
-      })
-    } catch (error) {
-      console.error('Error sending message:', error)
+    try {
+      await sendBroadcast({ application: applicationId, content })
+      setContent('')
+      notify('success', 'Message sent to every applicant', { autoClose: 2000 })
+    } catch {
+      notify('error', 'Failed to broadcast message', { autoClose: 2000 })
     }
   }
 
   return (
-    <div className="flex flex-col justify-center gap-8">
+    <div className={styles.container}>
       <div>
-        <div className="text-xl font-medium">Messages</div>
-        <DisplayMessage messages={messages?.data?.messages} />
+        <div className={styles.heading}>Messages</div>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <DisplayMessage messages={messages} currentUserId={currentUserId} />
+        )}
       </div>
-      <div>
-        <textarea
-          className="border rounded-[10px] border-gray-300 p-4 resize-none w-full sm:max-w-[803px]"
-          cols={91}
-          rows={5}
-          placeholder="Type here..."
-          value={sendMessage.content}
-          onChange={(e) =>
-            setSendMessage((prevState) => ({
-              ...prevState,
-              content: e.target.value,
-            }))
-          }
-        />
-      </div>
-      <div className="w-full flex justify-between">
-        <div className="w-1/3">
-          <Button
-            variant="primary"
-            size="wide"
-            fullWidth
-            onClick={handleSendMessage}
-            disabled={isSending}>
-            {isSending ? 'Sending...' : 'Send'}
-          </Button>
-        </div>
-        <div className="w-1/3">
-          <Button variant="outline" size="wide" fullWidth>
-            Broadcast
-          </Button>
-        </div>
+      <textarea
+        className={styles.textarea}
+        placeholder="Type here..."
+        value={content}
+        onChange={(event) => setContent(event.target.value)}
+      />
+      <div className={styles.actions}>
+        <Button
+          variant="primary"
+          size="wide"
+          onClick={handleSendMessage}
+          disabled={isSending}>
+          {isSending ? 'Sending...' : 'Send'}
+        </Button>
+        <Button
+          variant="outline"
+          size="wide"
+          onClick={handleBroadcast}
+          disabled={isBroadcasting}>
+          {isBroadcasting ? 'Broadcasting...' : 'Broadcast'}
+        </Button>
       </div>
     </div>
   )
