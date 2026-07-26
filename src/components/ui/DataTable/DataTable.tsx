@@ -1,3 +1,4 @@
+import Checkbox from '@mui/material/Checkbox'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
@@ -6,7 +7,8 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import React from 'react'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import React, { useMemo, useState } from 'react'
 
 import { useScreenWidth } from '../../../hooks'
 import { EmptyState } from '../EmptyState'
@@ -14,11 +16,13 @@ import { Spinner } from '../Spinner'
 
 export interface ColumnDef<T> {
   key: string
-  header: string
+  header: React.ReactNode
   align?: 'left' | 'center' | 'right'
   /** Hide this column when the screen width is at or below this pixel value */
   hideBelow?: number
   render: (row: T, index: number) => React.ReactNode
+  /** Opt a column into client-side sorting — return the raw comparable value for a row. */
+  sortAccessor?: (row: T) => string | number | null | undefined
 }
 
 interface DataTableProps<T> {
@@ -37,6 +41,10 @@ interface DataTableProps<T> {
   rowNumberOffset?: number
   /** Lets cell content (e.g. an open dropdown) overflow the table's rounded-corner clipping instead of being cut off. */
   allowOverflow?: boolean
+  /** Prepends a checkbox column and enables row selection — requires `getRowKey`. */
+  selectedRowKeys?: Set<string | number>
+  onToggleRow?: (key: string | number) => void
+  onToggleAll?: (keys: (string | number)[]) => void
 }
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -66,6 +74,8 @@ const StyledTableRow = styled(TableRow)(() => ({
   },
 }))
 
+type SortDirection = 'asc' | 'desc'
+
 export function DataTable<T>({
   columns,
   data = [],
@@ -78,15 +88,96 @@ export function DataTable<T>({
   showRowNumber,
   rowNumberOffset = 0,
   allowOverflow,
+  selectedRowKeys,
+  onToggleRow,
+  onToggleAll,
 }: DataTableProps<T>) {
   const screenWidth = useScreenWidth()
+  const [sort, setSort] = useState<{
+    key: string
+    direction: SortDirection
+  } | null>(null)
+
+  const sortedData = useMemo(() => {
+    const column = columns.find((col) => col.key === sort?.key)
+    if (!sort || !column?.sortAccessor) return data
+
+    const { sortAccessor } = column
+    const direction = sort.direction === 'asc' ? 1 : -1
+
+    return [...data].sort((a, b) => {
+      const aValue = sortAccessor(a)
+      const bValue = sortAccessor(b)
+      if (aValue == null && bValue == null) return 0
+      if (aValue == null) return 1
+      if (bValue == null) return -1
+      if (aValue < bValue) return -1 * direction
+      if (aValue > bValue) return 1 * direction
+      return 0
+    })
+  }, [data, sort, columns])
+
+  const handleSort = (key: string) => {
+    setSort((prev) => {
+      if (prev?.key !== key) return { key, direction: 'asc' }
+      return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' }
+    })
+  }
+
+  const selectable = Boolean(onToggleRow && getRowKey)
+  const allKeys = useMemo(
+    () =>
+      getRowKey ? sortedData.map((row, index) => getRowKey(row, index)) : [],
+    [sortedData, getRowKey],
+  )
+  const allSelected =
+    selectable &&
+    allKeys.length > 0 &&
+    allKeys.every((key) => selectedRowKeys?.has(key))
+  const someSelected =
+    selectable &&
+    !allSelected &&
+    allKeys.some((key) => selectedRowKeys?.has(key))
+
+  const selectionColumn: ColumnDef<T> | null = selectable
+    ? {
+        key: '__select',
+        header: (
+          <Checkbox
+            size="small"
+            checked={allSelected}
+            indeterminate={someSelected}
+            onChange={() => onToggleAll?.(allSelected ? [] : allKeys)}
+            inputProps={{ 'aria-label': 'Select all rows' }}
+          />
+        ),
+        align: 'center',
+        render: (row, index) => {
+          const key = getRowKey!(row, index)
+          return (
+            <Checkbox
+              size="small"
+              checked={selectedRowKeys?.has(key) ?? false}
+              onChange={() => onToggleRow?.(key)}
+              inputProps={{ 'aria-label': 'Select row' }}
+            />
+          )
+        },
+      }
+    : null
+
   const rowNumberColumn: ColumnDef<T> = {
     key: '__rowNumber',
     header: 'S/N',
     align: 'center',
     render: (_row, index) => rowNumberOffset + index + 1,
   }
-  const allColumns = showRowNumber ? [rowNumberColumn, ...columns] : columns
+
+  const allColumns = [
+    ...(selectionColumn ? [selectionColumn] : []),
+    ...(showRowNumber ? [rowNumberColumn] : []),
+    ...columns,
+  ]
   const visibleColumns = allColumns.filter(
     (col) => !col.hideBelow || screenWidth > col.hideBelow,
   )
@@ -106,13 +197,22 @@ export function DataTable<T>({
           <TableRow>
             {visibleColumns.map((col) => (
               <StyledTableCell key={col.key} align={col.align ?? 'left'}>
-                {col.header}
+                {col.sortAccessor ? (
+                  <TableSortLabel
+                    active={sort?.key === col.key}
+                    direction={sort?.key === col.key ? sort.direction : 'asc'}
+                    onClick={() => handleSort(col.key)}>
+                    {col.header}
+                  </TableSortLabel>
+                ) : (
+                  col.header
+                )}
               </StyledTableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.length === 0 ? (
+          {sortedData.length === 0 ? (
             <TableRow>
               <StyledTableCell colSpan={visibleColumns.length}>
                 {emptyState ?? (
@@ -124,7 +224,7 @@ export function DataTable<T>({
               </StyledTableCell>
             </TableRow>
           ) : (
-            data.map((row, index) => (
+            sortedData.map((row, index) => (
               <StyledTableRow
                 key={getRowKey ? getRowKey(row, index) : index}
                 className={
