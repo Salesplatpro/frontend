@@ -80,9 +80,6 @@ const StyledTableRow = styled(TableRow)(() => ({
 
 type SortDirection = 'asc' | 'desc'
 
-// Shared by DataTable's own sorting and by callers doing controlled sort
-// pre-pagination (sorting must happen before slicing a page, which DataTable
-// itself can't do since it only ever sees the current page's rows).
 export const sortByAccessor = <T,>(
   data: T[],
   accessor: (row: T) => string | number | null | undefined,
