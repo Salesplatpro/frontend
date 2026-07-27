@@ -33,6 +33,25 @@
   cursor: pointer;
 }
 
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  flex: 1;
+}
+
 .bulkBar {
   display: flex;
   align-items: center;
