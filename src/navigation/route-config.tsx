@@ -9,11 +9,11 @@ import {
   Features,
   PrivacyPolicy,
   TermsAndCondition,
-  Testimonials,
 } from '@/components/features/landing/landingPageComponents'
 import Faq from '@/components/features/landing/landingPageComponents/FAQ/Faq'
 import Pricing from '@/components/features/landing/Pricing'
 import Solutions from '@/components/features/landing/Solutions'
+import TestimonialsPage from '@/components/features/landing/TestimonialsPage'
 import ProtectedRoute from '@/components/routing/ProtectedRoute'
 import { LoginPage, SignupPage } from '@/features/auth/pages'
 import PreAssessmentPage from '@/features/pre-assessment/page'
@@ -119,7 +119,7 @@ export const routeConfig: RouteObject[] = [
       },
       {
         path: 'testimonials',
-        element: <Testimonials />,
+        element: <TestimonialsPage />,
       },
       {
         path: 'job',

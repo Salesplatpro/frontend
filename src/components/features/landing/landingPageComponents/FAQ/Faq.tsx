@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { FiSearch } from 'react-icons/fi'
 
 import { faqData } from './FaqData'
@@ -17,6 +18,21 @@ const Faq = () => {
 
   return (
     <div className="w-full min-h-screen flex justify-start items-center flex-col">
+      <Helmet>
+        <title>FAQ — AuxHR</title>
+        <meta
+          name="description"
+          content="Answers to frequently asked questions about AuxHR's recruitment platform."
+        />
+        <link rel="canonical" href="https://auxhr.com/faq" />
+        <meta property="og:title" content="FAQ — AuxHR" />
+        <meta
+          property="og:description"
+          content="Answers to frequently asked questions about AuxHR's recruitment platform."
+        />
+        <meta property="og:url" content="https://auxhr.com/faq" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="flex justify-center items-center flex-col space-y-5 py-14">
         <h1 className="font-raleway font-medium text-xl lg:text-4xl lg:leading-[100%] md:text-3xl md:leading-[60%] sm:text-2xl sm:leading-[45%] leading-[30%]">
           Frequently Asked Questions (FAQs)

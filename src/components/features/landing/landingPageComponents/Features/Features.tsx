@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 
 import aiConfig from '@/assets/aiConfig.png'
@@ -74,6 +75,21 @@ export const Features = () => {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <title>Features — AuxHR</title>
+        <meta
+          name="description"
+          content="Explore AuxHR's AI-powered talent matching, customisable hiring workflows, and recruitment automation features."
+        />
+        <link rel="canonical" href="https://auxhr.com/features" />
+        <meta property="og:title" content="Features — AuxHR" />
+        <meta
+          property="og:description"
+          content="Explore AuxHR's AI-powered talent matching, customisable hiring workflows, and recruitment automation features."
+        />
+        <meta property="og:url" content="https://auxhr.com/features" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className={styles.headingContainer}>
         <Text size="fs-5xl" color="hero" weight="bold">
           AuxHR is your all in one solution for HR and hiring

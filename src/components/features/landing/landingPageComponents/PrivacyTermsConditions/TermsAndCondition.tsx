@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 
 import { Text } from '@/components/ui/Typography'
 
@@ -8,6 +9,24 @@ import styles from './PrivacyPolicy.module.scss'
 export const TermsAndCondition = () => {
   return (
     <div>
+      <Helmet>
+        <title>Terms and Conditions — AuxHR</title>
+        <meta
+          name="description"
+          content="Review AuxHR's terms and conditions for using our platform and services."
+        />
+        <link rel="canonical" href="https://auxhr.com/terms-and-conditions" />
+        <meta property="og:title" content="Terms and Conditions — AuxHR" />
+        <meta
+          property="og:description"
+          content="Review AuxHR's terms and conditions for using our platform and services."
+        />
+        <meta
+          property="og:url"
+          content="https://auxhr.com/terms-and-conditions"
+        />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className={styles.topContent}>
         <Text size="fs-4xl" color="white" weight="bold">
           Terms and Conditions

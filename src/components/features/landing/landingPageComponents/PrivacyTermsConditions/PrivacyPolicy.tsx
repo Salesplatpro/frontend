@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 
 import { Text } from '@/components/ui/Typography'
 
@@ -21,6 +22,21 @@ export const PolicyItem = ({ title, children }: PolicyItemProps) => (
 export const PrivacyPolicy = () => {
   return (
     <div>
+      <Helmet>
+        <title>Privacy Policy — AuxHR</title>
+        <meta
+          name="description"
+          content="Read AuxHR's privacy policy to learn how we collect, use, and protect your data."
+        />
+        <link rel="canonical" href="https://auxhr.com/privacy-policy" />
+        <meta property="og:title" content="Privacy Policy — AuxHR" />
+        <meta
+          property="og:description"
+          content="Read AuxHR's privacy policy to learn how we collect, use, and protect your data."
+        />
+        <meta property="og:url" content="https://auxhr.com/privacy-policy" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className={styles.topContent}>
         <Text size="fs-4xl" color="white" weight="bold">
           Privacy Policy

@@ -1,5 +1,6 @@
 import { Pagination, Stack } from '@mui/material'
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 
 import ResourceImage from '@/assets/resource.png'
 
@@ -16,6 +17,21 @@ export const Resources = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Resources — AuxHR</title>
+        <meta
+          name="description"
+          content="Guides and resources to help you streamline your hiring process with AuxHR."
+        />
+        <link rel="canonical" href="https://auxhr.com/resources" />
+        <meta property="og:title" content="Resources — AuxHR" />
+        <meta
+          property="og:description"
+          content="Guides and resources to help you streamline your hiring process with AuxHR."
+        />
+        <meta property="og:url" content="https://auxhr.com/resources" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="solution-header">
         <div className="content">
           <div className="main-texts">

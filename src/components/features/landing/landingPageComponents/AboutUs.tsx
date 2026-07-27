@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 
 import image from '@/assets/aboutUs.png'
@@ -37,6 +38,21 @@ export const AboutUs = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>About Us — AuxHR</title>
+        <meta
+          name="description"
+          content="Learn about AuxHR's mission to make recruitment faster, smarter, and more human."
+        />
+        <link rel="canonical" href="https://auxhr.com/about-us" />
+        <meta property="og:title" content="About Us — AuxHR" />
+        <meta
+          property="og:description"
+          content="Learn about AuxHR's mission to make recruitment faster, smarter, and more human."
+        />
+        <meta property="og:url" content="https://auxhr.com/about-us" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className={styles.header}>
         <div className="flex flex-col gap-y-4">
           <Text size="fs-4xl" weight="bold" className="font-raleway">
