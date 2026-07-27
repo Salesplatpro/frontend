@@ -45,6 +45,10 @@ interface DataTableProps<T> {
   selectedRowKeys?: Set<string | number>
   onToggleRow?: (key: string | number) => void
   onToggleAll?: (keys: (string | number)[]) => void
+  /** Controlled sort — when provided (with `onSortChange`), an external control (e.g. a toolbar "Sort by" select) drives the same sort as column-header clicks, instead of DataTable's internal state. */
+  sortKey?: string | null
+  sortDirection?: SortDirection
+  onSortChange?: (key: string, direction: SortDirection) => void
 }
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -76,6 +80,27 @@ const StyledTableRow = styled(TableRow)(() => ({
 
 type SortDirection = 'asc' | 'desc'
 
+// Shared by DataTable's own sorting and by callers doing controlled sort
+// pre-pagination (sorting must happen before slicing a page, which DataTable
+// itself can't do since it only ever sees the current page's rows).
+export const sortByAccessor = <T,>(
+  data: T[],
+  accessor: (row: T) => string | number | null | undefined,
+  direction: SortDirection,
+): T[] => {
+  const dir = direction === 'asc' ? 1 : -1
+  return [...data].sort((a, b) => {
+    const aValue = accessor(a)
+    const bValue = accessor(b)
+    if (aValue == null && bValue == null) return 0
+    if (aValue == null) return 1
+    if (bValue == null) return -1
+    if (aValue < bValue) return -1 * dir
+    if (aValue > bValue) return 1 * dir
+    return 0
+  })
+}
+
 export function DataTable<T>({
   columns,
   data = [],
@@ -91,37 +116,39 @@ export function DataTable<T>({
   selectedRowKeys,
   onToggleRow,
   onToggleAll,
+  sortKey,
+  sortDirection,
+  onSortChange,
 }: DataTableProps<T>) {
   const screenWidth = useScreenWidth()
-  const [sort, setSort] = useState<{
+  const [internalSort, setInternalSort] = useState<{
     key: string
     direction: SortDirection
   } | null>(null)
+
+  const isControlled = Boolean(onSortChange)
+  const sort = isControlled
+    ? sortKey
+      ? { key: sortKey, direction: sortDirection ?? 'asc' }
+      : null
+    : internalSort
 
   const sortedData = useMemo(() => {
     const column = columns.find((col) => col.key === sort?.key)
     if (!sort || !column?.sortAccessor) return data
 
-    const { sortAccessor } = column
-    const direction = sort.direction === 'asc' ? 1 : -1
-
-    return [...data].sort((a, b) => {
-      const aValue = sortAccessor(a)
-      const bValue = sortAccessor(b)
-      if (aValue == null && bValue == null) return 0
-      if (aValue == null) return 1
-      if (bValue == null) return -1
-      if (aValue < bValue) return -1 * direction
-      if (aValue > bValue) return 1 * direction
-      return 0
-    })
+    return sortByAccessor(data, column.sortAccessor, sort.direction)
   }, [data, sort, columns])
 
   const handleSort = (key: string) => {
-    setSort((prev) => {
-      if (prev?.key !== key) return { key, direction: 'asc' }
-      return { key, direction: prev.direction === 'asc' ? 'desc' : 'asc' }
-    })
+    const nextDirection: SortDirection =
+      sort?.key === key && sort.direction === 'asc' ? 'desc' : 'asc'
+
+    if (onSortChange) {
+      onSortChange(key, nextDirection)
+    } else {
+      setInternalSort({ key, direction: nextDirection })
+    }
   }
 
   const selectable = Boolean(onToggleRow && getRowKey)
