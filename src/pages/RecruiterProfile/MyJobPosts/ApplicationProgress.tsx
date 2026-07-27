@@ -8,6 +8,7 @@ import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
 import { useApplication } from '@/features/applications/hooks/useApplication'
+import { useRegenerateVerdict } from '@/features/applications/hooks/useRegenerateVerdict'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
 
 import { Button } from '../../../components'
@@ -24,6 +25,9 @@ export const ApplicationProgress = () => {
   const { applicationId } = useParams()
   const { data, error, isLoading } = useApplication(applicationId)
   const { updateStatus, isUpdating } = useUpdateApplicationStatus(
+    applicationId ?? '',
+  )
+  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(
     applicationId ?? '',
   )
 
@@ -120,6 +124,15 @@ export const ApplicationProgress = () => {
             reasoning={matchVerdictReasoning}
             pending={verdictPending}
           />
+          {verdictPending && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => regenerateVerdict()}
+              disabled={isRegenerating}>
+              {isRegenerating ? 'Regenerating...' : 'Regenerate AI Match'}
+            </Button>
+          )}
         </div>
       )}
 
