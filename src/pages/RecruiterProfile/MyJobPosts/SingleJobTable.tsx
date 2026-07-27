@@ -1,13 +1,19 @@
 import React from 'react'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 
 import {
+  Avatar,
   Button,
+  ColumnDef,
+  DataTable,
+  Dropdown,
+  DropdownItem,
   EmptyState,
+  MatchScoreRing,
   StatusBadge,
-  VerdictBadge,
 } from '../../../components'
-import { ColumnDef, DataTable } from '../../../components'
+import { useRegenerateVerdict } from '../../../features/applications/hooks/useRegenerateVerdict'
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
 
@@ -16,6 +22,13 @@ type SingleJobTableProps = {
   selectedRowKeys?: Set<string>
   onToggleRow?: (key: string | number) => void
   onToggleAll?: (keys: (string | number)[]) => void
+  onShortlist: (applicationId: string) => void
+  onReject: (applicationId: string) => void
+  onMessage: (applicationId: string) => void
+  visibleColumnKeys?: string[]
+  sortKey?: string | null
+  sortDirection?: 'asc' | 'desc'
+  onSortChange?: (key: string, direction: 'asc' | 'desc') => void
 }
 
 const getStatusStage = (status: string) => {
@@ -33,35 +46,150 @@ const getStatusStage = (status: string) => {
   }
 }
 
-const columns: ColumnDef<SingleJobDetails>[] = [
+const formatAbsoluteDate = (dateString: string) =>
+  new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+
+// Single source of truth for column labels — shared by the column defs below
+// and the toolbar's "Columns" picker / "Sort by" select, so they can't drift.
+export const COLUMN_LABELS: Record<string, string> = {
+  name: 'Name',
+  stage: 'Stage',
+  status: 'Job Status',
+  cvRanking: 'CV Ranking',
+  aiMatch: 'AI Match',
+  dateApplied: 'Date Applied',
+  details: 'Details',
+}
+
+const MANDATORY_COLUMN_KEYS = ['name', 'details']
+
+export const TOGGLEABLE_COLUMN_KEYS = [
+  'stage',
+  'status',
+  'cvRanking',
+  'aiMatch',
+  'dateApplied',
+]
+
+export const SORTABLE_COLUMN_KEYS = [
+  'name',
+  'status',
+  'cvRanking',
+  'aiMatch',
+  'dateApplied',
+]
+
+interface ApplicantActionsCellProps {
+  item: SingleJobDetails
+  onShortlist: (applicationId: string) => void
+  onReject: (applicationId: string) => void
+  onMessage: (applicationId: string) => void
+}
+
+const ApplicantActionsCell = ({
+  item,
+  onShortlist,
+  onReject,
+  onMessage,
+}: ApplicantActionsCellProps) => {
+  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(item.id)
+
+  const items: DropdownItem[] = [
+    { label: 'Shortlist', onClick: () => onShortlist(item.id) },
+    { label: 'Reject', onClick: () => onReject(item.id) },
+    { label: 'Message', onClick: () => onMessage(item.id) },
+    ...(item.talent.cvUrl
+      ? [
+          {
+            label: 'View CV',
+            onClick: () => window.open(item.talent.cvUrl!, '_blank'),
+          },
+        ]
+      : []),
+    ...(!item.matchVerdict
+      ? [
+          {
+            label: isRegenerating ? 'Regenerating…' : 'Regenerate AI Match',
+            onClick: () => regenerateVerdict(),
+            disabled: isRegenerating,
+          },
+        ]
+      : []),
+  ]
+
+  return (
+    <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+      <Link to={`/recruiterDashboard/singleJobPost/${item.jobId}/${item.id}`}>
+        <Button size="sm">View Application</Button>
+      </Link>
+      <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
+    </div>
+  )
+}
+
+export const buildColumns = ({
+  onShortlist,
+  onReject,
+  onMessage,
+}: {
+  onShortlist: (applicationId: string) => void
+  onReject: (applicationId: string) => void
+  onMessage: (applicationId: string) => void
+}): ColumnDef<SingleJobDetails>[] => [
   {
     key: 'name',
-    header: 'Name',
-    align: 'center',
-    render: (item) => `${item.talent.firstName} ${item.talent.lastName}`,
+    header: COLUMN_LABELS.name,
+    render: (item) => (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <Avatar
+          firstName={item.talent.firstName}
+          lastName={item.talent.lastName}
+        />
+        <div style={{ textAlign: 'left' }}>
+          <div>
+            {item.talent.firstName} {item.talent.lastName}
+          </div>
+          <div
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--color-text-muted)',
+            }}>
+            {item.talent.email}
+          </div>
+        </div>
+      </div>
+    ),
     sortAccessor: (item) => `${item.talent.firstName} ${item.talent.lastName}`,
   },
   {
     key: 'stage',
-    header: 'Stage',
+    header: COLUMN_LABELS.stage,
     align: 'center',
     render: (item) => getStatusStage(item.status),
   },
   {
     key: 'status',
-    header: 'Job Status',
+    header: COLUMN_LABELS.status,
     align: 'center',
     hideBelow: 768,
     render: (item) => (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <StatusBadge status={item.status} {...getStatusBadge(item.status)} />
+        <StatusBadge
+          status={item.status}
+          showDot
+          {...getStatusBadge(item.status)}
+        />
       </div>
     ),
     sortAccessor: (item) => item.status,
   },
   {
     key: 'cvRanking',
-    header: 'CV Ranking',
+    header: COLUMN_LABELS.cvRanking,
     align: 'center',
     hideBelow: 900,
     render: (item) => (item.rank ? `#${item.rank}` : '—'),
@@ -69,12 +197,15 @@ const columns: ColumnDef<SingleJobDetails>[] = [
   },
   {
     key: 'aiMatch',
-    header: 'AI Match',
+    header: COLUMN_LABELS.aiMatch,
     align: 'center',
     hideBelow: 900,
     render: (item) => (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <VerdictBadge verdict={item.matchVerdict ?? null} compact />
+        <MatchScoreRing
+          verdict={item.matchVerdict ?? null}
+          averageScore={item.averageScore ?? null}
+        />
       </div>
     ),
     sortAccessor: (item) => {
@@ -84,20 +215,34 @@ const columns: ColumnDef<SingleJobDetails>[] = [
   },
   {
     key: 'dateApplied',
-    header: 'Date Applied',
+    header: COLUMN_LABELS.dateApplied,
     align: 'center',
     hideBelow: 768,
-    render: (item) => `${calculateDaysFromCreation(item.createdAt)} days ago`,
+    render: (item) => (
+      <div>
+        <div>{calculateDaysFromCreation(item.createdAt)} days ago</div>
+        <div
+          style={{
+            fontSize: 'var(--text-xs)',
+            color: 'var(--color-text-muted)',
+          }}>
+          {formatAbsoluteDate(item.createdAt)}
+        </div>
+      </div>
+    ),
     sortAccessor: (item) => new Date(item.createdAt).getTime(),
   },
   {
     key: 'details',
-    header: 'Details',
+    header: COLUMN_LABELS.details,
     align: 'center',
     render: (item) => (
-      <Link to={`/recruiterDashboard/singleJobPost/${item.jobId}/${item.id}`}>
-        <Button size="sm">View Application</Button>
-      </Link>
+      <ApplicantActionsCell
+        item={item}
+        onShortlist={onShortlist}
+        onReject={onReject}
+        onMessage={onMessage}
+      />
     ),
   },
 ]
@@ -107,20 +252,42 @@ export const SingleJobTable = ({
   selectedRowKeys,
   onToggleRow,
   onToggleAll,
-}: SingleJobTableProps) => (
-  <DataTable
-    columns={columns}
-    data={applications}
-    getRowKey={(item) => item.id}
-    ariaLabel="Job applications table"
-    selectedRowKeys={selectedRowKeys}
-    onToggleRow={onToggleRow}
-    onToggleAll={onToggleAll}
-    emptyState={
-      <EmptyState
-        title="No applications yet"
-        description="Applications for this job will appear here once candidates apply."
-      />
-    }
-  />
-)
+  onShortlist,
+  onReject,
+  onMessage,
+  visibleColumnKeys,
+  sortKey,
+  sortDirection,
+  onSortChange,
+}: SingleJobTableProps) => {
+  const allColumns = buildColumns({ onShortlist, onReject, onMessage })
+  const columns = visibleColumnKeys
+    ? allColumns.filter(
+        (col) =>
+          MANDATORY_COLUMN_KEYS.includes(col.key) ||
+          visibleColumnKeys.includes(col.key),
+      )
+    : allColumns
+
+  return (
+    <DataTable
+      columns={columns}
+      data={applications}
+      getRowKey={(item) => item.id}
+      ariaLabel="Job applications table"
+      selectedRowKeys={selectedRowKeys}
+      onToggleRow={onToggleRow}
+      onToggleAll={onToggleAll}
+      allowOverflow
+      sortKey={sortKey}
+      sortDirection={sortDirection}
+      onSortChange={onSortChange}
+      emptyState={
+        <EmptyState
+          title="No applications yet"
+          description="Applications for this job will appear here once candidates apply."
+        />
+      }
+    />
+  )
+}
