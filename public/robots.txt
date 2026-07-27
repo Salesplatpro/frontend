@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /talentDashboard
+Disallow: /recruiterDashboard
+Disallow: /adminDashboard
+
+Sitemap: https://auxhr.com/sitemap.xml
