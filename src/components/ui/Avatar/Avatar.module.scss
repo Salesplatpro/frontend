@@ -1,0 +1,32 @@
+.avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.brand {
+  background: var(--color-brand-100);
+  color: var(--color-brand-700);
+}
+
+.accent {
+  background: rgba(53, 56, 205, 0.12);
+  color: var(--color-accent);
+}
+
+.warning {
+  background: rgba(181, 71, 8, 0.12);
+  color: var(--color-warning);
+}
+
+.success {
+  background: rgba(27, 123, 68, 0.12);
+  color: var(--color-success);
+}
