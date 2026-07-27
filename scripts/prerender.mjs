@@ -2,12 +2,34 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { mkdirSync, writeFileSync } from 'fs'
 
-import puppeteer from 'puppeteer'
 import { preview } from 'vite'
 
 import { marketingRoutes } from './prerender-routes.mjs'
 
 const distDir = resolve(fileURLToPath(import.meta.url), '../../dist')
+
+// Vercel's build container is missing the shared libraries (libnspr4,
+// libnss3, etc.) that puppeteer's own bundled Chromium needs, so on Vercel
+// we launch @sparticuz/chromium instead, which is built for exactly this
+// kind of restricted serverless/build environment. Locally, plain puppeteer
+// (with its own bundled, host-appropriate Chromium) is simpler and faster.
+async function launchBrowser() {
+  if (process.env.VERCEL) {
+    const { default: chromium } = await import('@sparticuz/chromium')
+    const { default: puppeteerCore } = await import('puppeteer-core')
+    return puppeteerCore.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    })
+  }
+
+  const { default: puppeteer } = await import('puppeteer')
+  return puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  })
+}
 
 async function main() {
   const server = await preview({
@@ -15,10 +37,7 @@ async function main() {
   })
   const baseUrl = server.resolvedUrls.local[0].replace(/\/$/, '')
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  const browser = await launchBrowser()
 
   let hadFailure = false
 
