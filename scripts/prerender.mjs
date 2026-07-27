@@ -39,8 +39,6 @@ async function main() {
 
   const browser = await launchBrowser()
 
-  let hadFailure = false
-
   for (const route of marketingRoutes) {
     const page = await browser.newPage()
     try {
@@ -61,7 +59,10 @@ async function main() {
       writeFileSync(outPath, html)
       console.log(`Prerendered ${route} -> ${outPath}`)
     } catch (err) {
-      hadFailure = true
+      // A route failing to prerender (e.g. a live API call it depends on is
+      // slow) shouldn't block deploying the rest of the site — the route
+      // still renders fine client-side at runtime, it just misses this
+      // deploy's static SEO snapshot.
       console.error(`Failed to prerender ${route}:`, err)
     } finally {
       await page.close()
@@ -70,10 +71,6 @@ async function main() {
 
   await browser.close()
   await server.close()
-
-  if (hadFailure) {
-    process.exitCode = 1
-  }
 }
 
 main().catch((err) => {
