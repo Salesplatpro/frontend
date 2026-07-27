@@ -1,6 +1,16 @@
 .statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   width: fit-content;
   padding: var(--space-1) var(--space-4);
   border-radius: var(--radius-md);
   text-align: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: currentColor;
 }
