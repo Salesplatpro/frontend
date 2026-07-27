@@ -129,6 +129,7 @@ const PersonalizedTest: React.FC = () => {
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
+      console.error(error)
       notify('error', 'Error submitting quiz', {
         autoClose: 2000,
       })
