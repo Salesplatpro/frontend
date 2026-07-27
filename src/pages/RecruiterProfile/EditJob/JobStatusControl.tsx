@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { ConfirmDialog } from '@/components/feedback'
@@ -22,18 +22,28 @@ type JobStatusControlProps = {
 
 export const JobStatusControl = ({ jobId, status }: JobStatusControlProps) => {
   const navigate = useNavigate()
-  const [selectedStatus, setSelectedStatus] = useState(status)
+  const [currentStatus, setCurrentStatus] = useState(status)
   const [updateJob, { isLoading: isUpdatingStatus }] = useUpdateJobMutation()
   const [deleteJob, { isLoading: isDeleting }] = useDeleteJobMutation()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
-  const handleUpdateStatus = async () => {
+  // `status` comes from a query on a different RTK Query API slice than the one
+  // `updateJob` invalidates, so it won't refresh on its own after a save —
+  // `currentStatus` is the optimistic source of truth the Select renders.
+  useEffect(() => {
+    setCurrentStatus(status)
+  }, [status])
+
+  const handleStatusChange = async (nextStatus: string) => {
+    if (nextStatus === currentStatus) return
+    const previousStatus = currentStatus
+    setCurrentStatus(nextStatus)
     try {
-      await updateJob({ jobId, data: { status: selectedStatus } }).unwrap()
+      await updateJob({ jobId, data: { status: nextStatus } }).unwrap()
       notify('success', 'Job status updated')
     } catch (err) {
-      const apiMessage = getErrorMessage(err, 'Failed to update job status')
-      notify('error', apiMessage)
+      setCurrentStatus(previousStatus)
+      notify('error', getErrorMessage(err, 'Failed to update job status'))
     }
   }
 
@@ -56,23 +66,15 @@ export const JobStatusControl = ({ jobId, status }: JobStatusControlProps) => {
           <p className={styles.label}>Job Status</p>
           <Select
             options={JOB_STATUS_OPTIONS}
-            value={selectedStatus}
-            onChange={setSelectedStatus}
+            value={currentStatus}
+            onChange={(value) => void handleStatusChange(value)}
+            disabled={isUpdatingStatus}
           />
         </div>
         <StatusBadge
-          status={selectedStatus}
-          {...getStatusBadge(selectedStatus)}
+          status={currentStatus}
+          {...getStatusBadge(currentStatus)}
         />
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          loading={isUpdatingStatus}
-          disabled={selectedStatus === status}
-          onClick={() => void handleUpdateStatus()}>
-          Update Status
-        </Button>
       </div>
 
       <div className={styles.dangerZone}>

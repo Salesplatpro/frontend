@@ -1,0 +1,63 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
+import { describe, expect, it, vi } from 'vitest'
+
+import { JobStatusControl } from './JobStatusControl'
+
+const { updateJobMock, deleteJobMock } = vi.hoisted(() => ({
+  updateJobMock: vi.fn(),
+  deleteJobMock: vi.fn(),
+}))
+
+vi.mock('@/redux/api/recruiter', () => ({
+  useUpdateJobMutation: () => [updateJobMock, { isLoading: false }],
+  useDeleteJobMutation: () => [deleteJobMock, { isLoading: false }],
+}))
+
+const renderControl = (status = 'suspended') =>
+  render(
+    <MemoryRouter>
+      <JobStatusControl jobId="job-1" status={status} />
+    </MemoryRouter>,
+  )
+
+describe('JobStatusControl', () => {
+  it('does not render a separate "Update Status" button', () => {
+    renderControl()
+    expect(screen.queryByText('Update Status')).toBeNull()
+  })
+
+  it('saves the new status immediately when a different option is selected, with no confirm step', async () => {
+    updateJobMock.mockReturnValue({ unwrap: () => Promise.resolve({}) })
+    renderControl('suspended')
+
+    const select = screen.getByRole('button', { name: /suspended/i })
+    fireEvent.click(select)
+    const activeOption = await screen.findByText('Active')
+    fireEvent.click(activeOption)
+
+    await waitFor(() => {
+      expect(updateJobMock).toHaveBeenCalledWith({
+        jobId: 'job-1',
+        data: { status: 'active' },
+      })
+    })
+  })
+
+  it('reverts to the previous status if the update fails', async () => {
+    updateJobMock.mockReturnValue({
+      unwrap: () => Promise.reject(new Error('nope')),
+    })
+    renderControl('suspended')
+
+    const select = screen.getByRole('button', { name: /suspended/i })
+    fireEvent.click(select)
+    const activeOption = await screen.findByText('Active')
+    fireEvent.click(activeOption)
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /suspended/i })).toBeTruthy()
+    })
+  })
+})
