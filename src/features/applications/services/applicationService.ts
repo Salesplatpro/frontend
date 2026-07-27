@@ -19,6 +19,11 @@ export const updateApplicationStatus = (
     .patch(`${applicationKey(applicationId)}/status`, { status })
     .then((response) => response.data)
 
+export const regenerateVerdict = (applicationId: string) =>
+  httpClient
+    .post(`${applicationKey(applicationId)}/verdict`)
+    .then((response) => response.data)
+
 export const bulkUpdateApplicationStatus = (
   applicationIds: string[],
   status: ApplicationDecision,
