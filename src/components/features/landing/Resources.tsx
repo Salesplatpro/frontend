@@ -23,8 +23,8 @@ export const Resources = () => {
           </div>
           <p className="supporting-text">
             Streamline Your Hiring Process and Make Confident Decisions with
-            SupportPro&apos;s Comprehensive Platform. Check back at intervals
-            for more resources
+            AuxHR&apos;s Comprehensive Platform. Check back at intervals for
+            more resources
           </p>
         </div>
       </div>

@@ -52,7 +52,7 @@ export const LandingHero = () => {
           <Text color="white" size="fs-md" weight="bold">
             Top HR platform by
           </Text>
-          <img src={logo} alt="Support pro and Salesplat" />
+          <img src={logo} alt="AuxHR" />
         </div>
       </div>
       <div className={styles.heroRight}>

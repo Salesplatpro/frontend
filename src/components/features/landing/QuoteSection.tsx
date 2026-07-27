@@ -11,7 +11,7 @@ const QuoteSection = () => {
           <div className="cover">
             <div className="inner">
               <h5>Hire the best talents</h5>
-              <p>Join over 100+ brands already growing with Supportpro</p>
+              <p>Join over 100+ brands already growing with AuxHR</p>
             </div>
             <Link to="/register">
               <button>Start Hiring</button>
