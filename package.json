@@ -4,7 +4,7 @@
   "scripts": {
     "prepare": "husky",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && tsx scripts/generate-sitemap.mjs && tsx scripts/prerender.mjs",
     "serve": "vite preview",
     "type-check": "tsc",
     "test": "vitest",

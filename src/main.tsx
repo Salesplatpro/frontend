@@ -1,7 +1,8 @@
 import './styles/tokens.css'
 
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { hydrateRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 
 import App from './App'
@@ -12,12 +13,13 @@ if (!container) {
   throw new Error('Root container is missing in index.html')
 }
 
-const root = ReactDOM.createRoot(container)
-
-root.render(
+hydrateRoot(
+  container,
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>,
 )
