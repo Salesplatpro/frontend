@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import RichTextEditor from '@/components/forms/RichTextEditor'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
@@ -14,6 +15,8 @@ interface MessagingProps {
   talentId?: string
 }
 
+const isContentEmpty = (html: string) => !html.replace(/<[^>]*>/g, '').trim()
+
 export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   const [content, setContent] = useState('')
   const { messages, isLoading, sendMessage, isSending, currentUserId } =
@@ -21,7 +24,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
 
   const handleSendMessage = async () => {
-    if (!content.trim()) {
+    if (isContentEmpty(content)) {
       notify('error', 'Message cannot be empty', { autoClose: 2000 })
       return
     }
@@ -35,7 +38,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   }
 
   const handleBroadcast = async () => {
-    if (!content.trim() || !applicationId) {
+    if (isContentEmpty(content) || !applicationId) {
       notify('error', 'Message cannot be empty', { autoClose: 2000 })
       return
     }
@@ -61,12 +64,14 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
           <DisplayMessage messages={messages} currentUserId={currentUserId} />
         )}
       </div>
-      <textarea
-        className={styles.textarea}
-        placeholder="Type here..."
-        value={content}
-        onChange={(event) => setContent(event.target.value)}
-      />
+      <div className={styles.editor}>
+        <RichTextEditor
+          value={content}
+          onChange={setContent}
+          placeholder="Type here..."
+          size="compact"
+        />
+      </div>
       <div className={styles.actions}>
         <Button
           variant="primary"

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+
 import styles from './MessageBubble.module.scss'
 
 export interface MessageBubbleData {
@@ -36,7 +38,7 @@ export const MessageBubble = ({
         isOwnMessage ? styles.own : styles.received
       }`}>
       <div className={styles.bubble}>
-        <p className={styles.content}>{message.content}</p>
+        <RichTextDisplay content={message.content} className={styles.content} />
         <span className={styles.timestamp}>
           {formatTimestamp(message.createdAt)}
         </span>
