@@ -1,5 +1,4 @@
 import React from 'react'
-import { BiMessageDetail } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
 import { CiBoxList } from 'react-icons/ci'
@@ -35,11 +34,6 @@ export const sidebarData = [
     end: false,
   },
 
-  {
-    name: 'Notification',
-    icon: <BiMessageDetail size={ICON_SIZE} color={COLOR} />,
-    link: '/recruiterDashboard/notification',
-  },
   {
     name: 'Chat',
     icon: <BsChatDots size={ICON_SIZE} color={COLOR} />,

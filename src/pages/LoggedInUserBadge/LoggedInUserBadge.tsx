@@ -6,10 +6,16 @@ import {
 } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
 
+import { CountBadge } from '@/components/ui/Badge'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { getDefaultIcon } from '../../utils/getDefaultIcon'
+
+const NOTIFICATION_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
+  talent: '/talentDashboard/Notification',
+}
 
 export const LoggedInUserBadge: React.FC = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false)
@@ -19,6 +25,11 @@ export const LoggedInUserBadge: React.FC = () => {
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
   const { profile: userInfo, isLoading, error } = useProfile()
+  const { unReadCount } = useNotifications()
+
+  const notificationRoute = user?.userRole
+    ? NOTIFICATION_ROUTE_BY_ROLE[user.userRole]
+    : undefined
 
   // Toggle dropdown visibility
   const toggleDropdown = () => {
@@ -53,7 +64,18 @@ export const LoggedInUserBadge: React.FC = () => {
 
   return (
     <div className="relative flex items-center space-x-4">
-      <IoMdNotificationsOutline size={24} className="cursor-pointer" />
+      <div
+        className={`relative ${notificationRoute ? 'cursor-pointer' : ''}`}
+        onClick={
+          notificationRoute ? () => navigate(notificationRoute) : undefined
+        }>
+        <IoMdNotificationsOutline size={24} />
+        {!!unReadCount && (
+          <div className="absolute -top-2 -right-2 scale-75">
+            <CountBadge item={unReadCount} />
+          </div>
+        )}
+      </div>
 
       {isLoading ? (
         <div className="flex items-center space-x-2">

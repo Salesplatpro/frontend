@@ -29,7 +29,6 @@ import {
   ApplicationProgress,
   Chat,
   MyJobPosts,
-  Notification as RecruiterNotification,
   ProcessCV,
   ProcessCvAndCoverLetter,
   Profile as RecruiterProfilePage,
@@ -282,10 +281,6 @@ export const routeConfig: RouteObject[] = [
           {
             path: 'shortlist',
             element: <Shortlist />,
-          },
-          {
-            path: 'notification',
-            element: <RecruiterNotification />,
           },
           {
             path: 'chat',
