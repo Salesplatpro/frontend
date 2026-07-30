@@ -30,15 +30,16 @@ import {
   Chat,
   MyJobPosts,
   ProcessCV,
-  ProcessCvAndCoverLetter,
   Profile as RecruiterProfilePage,
   Shortlist,
-  UploadCvAndCoverLetter,
-  UploadCVOnly,
+  UploadCv,
 } from '@/pages/RecruiterProfile'
-import Batching from '@/pages/RecruiterProfile/Batching/Batching'
 import { ChooseMethod } from '@/pages/RecruiterProfile/Batching/ChooseMethod'
 import CreateJD from '@/pages/RecruiterProfile/Batching/CreateJD'
+import {
+  MyScoutJobs,
+  ScoutJobHistory,
+} from '@/pages/RecruiterProfile/Batching/MyScoutJobs'
 import SearchResult from '@/pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
 import SearchTalent from '@/pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import AllApplications from '@/pages/RecruiterProfile/Dashboard/AllApplications'
@@ -224,19 +225,15 @@ export const routeConfig: RouteObject[] = [
           },
           {
             path: 'scout',
-            element: <Batching />,
+            element: <MyScoutJobs />,
+          },
+          {
+            path: 'scout/history/:scoutJobId',
+            element: <ScoutJobHistory />,
           },
           {
             path: 'scout/:id',
             element: <ChooseMethod />,
-          },
-          {
-            path: 'scout/upload-cv-cover-letter/:id',
-            element: <UploadCvAndCoverLetter />,
-          },
-          {
-            path: 'scout/process-cv-cover-letter/:id',
-            element: <ProcessCvAndCoverLetter />,
           },
           {
             path: 'scout/search-talent/:id',
@@ -252,7 +249,7 @@ export const routeConfig: RouteObject[] = [
           },
           {
             path: 'scout/upload-cv/:id',
-            element: <UploadCVOnly />,
+            element: <UploadCv />,
           },
           {
             path: 'scout/process-cv/:id',
