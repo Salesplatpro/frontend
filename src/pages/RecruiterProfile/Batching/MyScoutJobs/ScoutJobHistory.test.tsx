@@ -20,7 +20,9 @@ vi.mock('react-router-dom', async () => {
 vi.mock('@/redux/api/recruiter', () => ({
   useGetScoutJobScoutsQuery: useGetScoutJobScoutsQueryMock,
   useGetCampaignNameQuery: () => ({
-    data: { data: { id: 'sj-1', name: 'Q1 Engineering Scout' } },
+    data: {
+      data: { scoutJob: { id: 'sj-1', name: 'Q1 Engineering Scout' } },
+    },
     isLoading: false,
   }),
 }))
