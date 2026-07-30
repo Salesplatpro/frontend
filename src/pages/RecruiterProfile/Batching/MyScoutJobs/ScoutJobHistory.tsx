@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { ColumnDef, DataTable } from '@/components/ui/DataTable'
+import { ColumnDef, DataTable, sortByAccessor } from '@/components/ui/DataTable'
 import { Tabs } from '@/components/ui/Tabs'
 import { useGetScoutJobScoutsQuery } from '@/redux/api/recruiter'
 
@@ -26,15 +26,31 @@ export const ScoutJobHistory = () => {
     { skip: !scoutJobId },
   )
 
-  const scoutReports: ScoutReportRow[] = Array.isArray(data?.data?.scoutReports)
+  const scoutReportsRaw: ScoutReportRow[] = Array.isArray(
+    data?.data?.scoutReports,
+  )
     ? data.data.scoutReports
     : []
 
+  // Rank highest-scoring CVs first by default so recruiters can see at a
+  // glance which uploaded file performed best.
+  const scoutReports = useMemo(
+    () => sortByAccessor(scoutReportsRaw, (row) => row.evaluationScore, 'desc'),
+    [scoutReportsRaw],
+  )
+
   const columns: ColumnDef<ScoutReportRow>[] = [
     {
+      key: 'rank',
+      header: 'Rank',
+      align: 'center',
+      render: (_row, index) => `#${index + 1}`,
+    },
+    {
       key: 'cvName',
-      header: 'CV',
+      header: 'File Name',
       render: (row) => row.cvName ?? '—',
+      sortAccessor: (row) => row.cvName,
     },
     {
       key: 'batchId',
