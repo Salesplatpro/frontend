@@ -14,7 +14,9 @@ export const PageHeaderTitle = ({
   description,
   title,
 }: PageHeaderTitleProps) => {
-  const { data, isLoading } = useGetCampaignNameQuery(paramsId)
+  const { data, isLoading } = useGetCampaignNameQuery(paramsId, {
+    skip: !paramsId?.id,
+  })
 
   return (
     <div className="pt-2">

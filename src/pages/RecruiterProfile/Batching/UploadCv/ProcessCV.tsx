@@ -1,165 +1,158 @@
-import React, { useRef, useState } from 'react'
-import { AiOutlineCloudUpload } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import {
-  ChooseMethodCard,
-  DocumentUploaderCard,
-} from '@/components/features/recruiter/Cards'
+import { ScoutFileCard } from '@/components/features/recruiter/Cards'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { Spinner } from '@/components/ui/Spinner'
+import { EmptyState } from '@/components/ui/EmptyState'
+import {
+  clearScoutUploads,
+  removeScoutUpload,
+  setScoutBatchResult,
+} from '@/redux/features/filesSlice/fileSlice'
+import { RootState } from '@/redux/store/store'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 
 import { Button } from '../../../../components'
-import { useUploadCVOnlyMutation } from '../../../../redux/api/recruiter'
-import {
-  addFiles,
-  removeFile,
-  saveFileResult,
-} from '../../../../redux/features/filesSlice/fileSlice'
-import { RootState } from '../../../../redux/store/store'
-import { capitalizeFirstWord } from '../../../../utils'
+import { useUploadScoutCvBatchMutation } from '../../../../redux/api/recruiter'
+import { notify } from '../../../../utils/toastNotifications'
 import styles from './ProcessCV.module.scss'
 
-export const details = {
-  description: (
-    <div>
-      <span>Click to upload</span> or drag and drop SVG, PNG, JPG, or GIF (max
-      800px, 400px)
-    </div>
-  ),
-  icon: <AiOutlineCloudUpload size={20} />,
-}
+type BatchFailure = { message: string; fields?: Record<string, string> }
 
 export const ProcessCV = () => {
   const params = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const files = useSelector((state: RootState) => state.file.files)
-  const result = useSelector((state: RootState) => state.file.results)
-  const [handleCvUpload] = useUploadCVOnlyMutation()
   const scoutJobId = params.id ?? ''
-  const [moreFilesToProcess, setMoreFilesToProcess] = useState(false)
-  const [isReevaluating, setIsReevaluating] = useState(false)
-  const [allFilesProcessed, setAllFilesProcessed] = useState(false)
-  // const { data, isLoading } = useGetCampaignNameQuery(params)
 
-  const handleFileUpload = () => {
-    fileInputRef.current?.click()
-  }
+  const uploads = useSelector((state: RootState) => state.file.scoutUploads)
+  const batchResult = useSelector(
+    (state: RootState) => state.file.scoutBatchResult,
+  )
+  const [uploadBatch, { isLoading }] = useUploadScoutCvBatchMutation()
+  const [failure, setFailure] = useState<BatchFailure | null>(null)
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = event.target.files
-    if (selectedFiles) {
-      dispatch(addFiles(Array.from(selectedFiles)))
+  // Persistence is atomic server-side, so there's no meaningful per-file progress to
+  // show mid-request — warn instead of letting an in-flight batch silently vanish.
+  useEffect(() => {
+    if (!isLoading) return
+    const handler = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
     }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [isLoading])
+
+  if (uploads.length === 0 && !batchResult) {
+    return (
+      <EmptyState
+        title="No CVs selected"
+        description="Select CVs to upload before scoring them."
+        action={
+          <Button
+            variant="primary"
+            onClick={() =>
+              navigate(`/recruiterDashboard/scout/upload-cv/${scoutJobId}`)
+            }>
+            Select CVs
+          </Button>
+        }
+      />
+    )
   }
 
   const handleSubmit = async () => {
-    let batchId = ''
-    setIsReevaluating(true)
-
-    for (const [index, file] of files.entries()) {
-      if (result[index]?.result?.status === true) {
-        continue
-      }
-
-      const formData = new FormData()
-      formData.append('scoutJobId', scoutJobId)
-      formData.append('cv', file)
-
-      if (batchId) {
-        formData.append('batchId', batchId)
-      }
-
-      try {
-        const uploadResult = await handleCvUpload(formData).unwrap()
-        if (uploadResult.status === true) {
-          dispatch(saveFileResult({ index, result: uploadResult }))
-
-          if (index === 0) {
-            batchId = uploadResult.data.scout.batchId
-          }
-        } else {
-          setMoreFilesToProcess(true)
-          break
-        }
-      } catch (error) {
-        console.log('Upload Error:', error)
-        setMoreFilesToProcess(true)
-        break
-      }
-
-      setAllFilesProcessed(
-        files.every((_, index) => result[index]?.result?.status === true),
-      )
+    setFailure(null)
+    const formData = new FormData()
+    formData.append('scoutJobId', scoutJobId)
+    uploads.forEach((entry) => formData.append('cv', entry.cv))
+    if (uploads.length > 0 && uploads[0]?.coverLetter) {
+      uploads.forEach((entry) => {
+        if (entry.coverLetter) formData.append('coverLetter', entry.coverLetter)
+      })
     }
 
-    if (allFilesProcessed) {
-      setMoreFilesToProcess(false)
+    try {
+      const result = await uploadBatch(formData).unwrap()
+      dispatch(setScoutBatchResult(result.data))
+      notify('success', 'CVs scored successfully', { autoClose: 2000 })
+    } catch (error) {
+      const message = getErrorMessage(error, 'Some CVs could not be scored')
+      const fields = (
+        error as { data?: { error?: { fields?: Record<string, string> } } }
+      )?.data?.error?.fields
+      setFailure({ message, fields })
+      notify('error', message)
     }
-
-    setIsReevaluating(false)
   }
 
-  const getResultEvaluationScore = (index: number) =>
-    result.length > 0 ? result[index]?.result?.data?.evaluationScore : undefined
+  const failureFor = (fileName: string) => failure?.fields?.[fileName]
 
-  const displayButton =
-    result.length === files.length &&
-    result.every((res) => res !== undefined && res !== null)
-      ? 'hidden'
-      : ''
-
-  const buttonTitle = isReevaluating ? (
-    <Spinner size="sm" />
-  ) : moreFilesToProcess ? (
-    'Try evaluating again'
-  ) : files.length === 1 ? (
-    'Process Document'
-  ) : (
-    'Process Documents'
-  )
+  const resultFor = (index: number) => batchResult?.scoutReports[index]
 
   return (
-    <div>
+    <div className="py-4 space-y-4">
       <PageHeaderTitle
         paramsId={params}
-        description="Upload CV in batch for collective AI assessment"
+        description="Upload CVs in batch for collective AI assessment"
       />
-      <div>
-        <ChooseMethodCard item={details} onClick={handleFileUpload} />
-      </div>
+
+      {failure && (
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+          {failure.message}
+        </div>
+      )}
+
       <div className={styles.uploader}>
-        {files.map((file, index) => (
-          <DocumentUploaderCard
+        {uploads.map((entry, index) => (
+          <ScoutFileCard
             key={index}
-            index={index}
-            fileName={capitalizeFirstWord(file.name)}
-            fileSize={file.size}
-            result={getResultEvaluationScore(index)}
-            onDelete={() => dispatch(removeFile(index))}
+            cv={entry.cv}
+            coverLetter={entry.coverLetter}
+            result={resultFor(index)}
+            failureReason={failureFor(entry.cv.name)}
+            onDelete={
+              batchResult ? undefined : () => dispatch(removeScoutUpload(index))
+            }
           />
         ))}
       </div>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={handleFileChange}
-        multiple
-      />
-      <div>
+
+      {!batchResult ? (
         <Button
           variant="primary"
           size="wide"
           fullWidth
-          disabled={files.length === 0 || isReevaluating}
-          onClick={handleSubmit}
-          className={displayButton}>
-          {buttonTitle}
+          loading={isLoading}
+          disabled={isLoading || uploads.length === 0}
+          onClick={handleSubmit}>
+          {uploads.length === 1 ? 'Score CV' : `Score ${uploads.length} CVs`}
         </Button>
-      </div>
+      ) : (
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            size="wide"
+            fullWidth
+            onClick={() => {
+              dispatch(clearScoutUploads())
+              navigate(`/recruiterDashboard/scout/upload-cv/${scoutJobId}`)
+            }}>
+            Upload Another Batch
+          </Button>
+          <Button
+            variant="primary"
+            size="wide"
+            fullWidth
+            onClick={() => {
+              dispatch(clearScoutUploads())
+              navigate(`/recruiterDashboard/scout/history/${scoutJobId}`)
+            }}>
+            View Scout Job
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

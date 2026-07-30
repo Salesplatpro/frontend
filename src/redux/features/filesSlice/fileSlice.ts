@@ -1,84 +1,62 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface CvCoverLetter {
-  cv: File | null
+export interface ScoutUploadEntry {
+  cv: File
   coverLetter: File | null
 }
 
-interface FileResult {
-  index: number
-  result: any
+export interface ScoutReport {
+  id: string
+  cvName: string | null
+  cvScore: number | null
+  insights: string | null
+  coverLetterName: string | null
+  coverLetterScore: number | null
+  coverLetterInsights: string | null
+  evaluationScore: number | null
+}
+
+export interface ScoutBatchResult {
+  batchId: string
+  scoutReports: ScoutReport[]
 }
 
 interface FileState {
-  files: File[]
-  results: FileResult[]
-  uploads: boolean[]
-  cvCoverLetter: CvCoverLetter[]
-  cvCoverLetterResults: FileResult[]
-  cvCoverLetterUploads: boolean[]
+  scoutUploads: ScoutUploadEntry[]
+  scoutBatchResult: ScoutBatchResult | null
 }
 
 const initialState: FileState = {
-  files: [],
-  results: [],
-  uploads: [],
-  cvCoverLetter: [],
-  cvCoverLetterResults: [],
-  cvCoverLetterUploads: [],
+  scoutUploads: [],
+  scoutBatchResult: null,
 }
 
 const fileSlice = createSlice({
   name: 'file',
   initialState,
   reducers: {
-    setFiles(state, action: PayloadAction<File[]>) {
-      state.files = action.payload
+    setScoutUploads(state, action: PayloadAction<ScoutUploadEntry[]>) {
+      state.scoutUploads = action.payload
+      state.scoutBatchResult = null
     },
-    addFiles(state, action: PayloadAction<File[]>) {
-      state.files = [...state.files, ...action.payload]
+    removeScoutUpload(state, action: PayloadAction<number>) {
+      state.scoutUploads.splice(action.payload, 1)
     },
-    removeFile(state, action: PayloadAction<number>) {
-      state.files.splice(action.payload, 1)
+    setScoutBatchResult(state, action: PayloadAction<ScoutBatchResult>) {
+      state.scoutBatchResult = action.payload
     },
-    saveFileResult: (state, action: PayloadAction<FileResult>) => {
-      const { index, result } = action.payload
-      state.results[index] = { index, result }
-    },
-    markUploadCompleted: (state, action: PayloadAction<number>) => {
-      const index = action.payload
-      state.uploads[index] = true
-    },
-    addCvCoverLetter(state, action: PayloadAction<CvCoverLetter[]>) {
-      state.cvCoverLetter = [...state.cvCoverLetter, ...action.payload]
-    },
-    saveCvCoverLetterResult: (state, action: PayloadAction<FileResult>) => {
-      const { index, result } = action.payload
-      state.cvCoverLetterResults[index] = { index, result }
-    },
-    removeCvCoverLetter(state, action: PayloadAction<number>) {
-      state.cvCoverLetter.splice(action.payload, 1)
-    },
-    markCvCoverLetterUploadCompleted: (
-      state,
-      action: PayloadAction<number>,
-    ) => {
-      const index = action.payload
-      state.cvCoverLetterUploads[index] = true
+    clearScoutUploads(state) {
+      state.scoutUploads = []
+      state.scoutBatchResult = null
     },
   },
 })
 
 export const {
-  setFiles,
-  addFiles,
-  removeFile,
-  saveFileResult,
-  markUploadCompleted,
-  addCvCoverLetter,
-  saveCvCoverLetterResult,
-  markCvCoverLetterUploadCompleted,
-  removeCvCoverLetter,
+  setScoutUploads,
+  removeScoutUpload,
+  setScoutBatchResult,
+  clearScoutUploads,
 } = fileSlice.actions
 
 export default fileSlice.reducer

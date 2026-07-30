@@ -1,2 +1,2 @@
 export * from './ProcessCV'
-export * from './UploadCVOnly'
+export * from './UploadCv'
