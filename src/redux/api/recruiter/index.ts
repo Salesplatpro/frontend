@@ -5,7 +5,7 @@ import { customBaseQuery } from '../../../utils/customBaseQuery'
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
   baseQuery: customBaseQuery,
-  tagTypes: ['Recruiter', 'RecruiterJob'],
+  tagTypes: ['Recruiter', 'RecruiterJob', 'ScoutJob', 'ScoutBatch'],
   endpoints: (builder) => ({
     jobPostCreation: builder.mutation({
       query: (data) => ({
@@ -84,23 +84,18 @@ export const recruiterApi = createApi({
         method: 'DELETE',
       }),
     }),
-    cvAndCoverLetter: builder.mutation({
-      query: (data) => ({
-        url: `/cv-batching/cv-and-cover-letter`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
     createJD: builder.mutation({
       query: (data) => ({
         url: `/scout/jobs`,
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: [{ type: 'ScoutJob', id: 'LIST' }],
     }),
     searchTalentDb: builder.query({
       query: (data) => {
-        const { role, experienceLevel, location, scoutJobId } = data
+        const { role, experienceLevel, location, scoutJobId, limit, offset } =
+          data
 
         const roleId = role || ''
         const experience = experienceLevel || ''
@@ -115,6 +110,8 @@ export const recruiterApi = createApi({
         if (country) queryParams.append('country', country)
         if (state) queryParams.append('state', state)
         if (city) queryParams.append('city', city)
+        if (limit) queryParams.append('limit', String(limit))
+        if (offset) queryParams.append('offset', String(offset))
 
         return {
           url: `/scout/${scoutJobId}/talents?${queryParams.toString()}`,
@@ -122,25 +119,60 @@ export const recruiterApi = createApi({
         }
       },
     }),
-    uploadCVOnly: builder.mutation({
+    uploadScoutCvBatch: builder.mutation({
       query: (data) => ({
-        url: `/scout/cv`,
+        url: `/scout/cv-batch`,
         method: 'POST',
         body: data,
       }),
-    }),
-    uploadCvAndCoverLetter: builder.mutation({
-      query: (data) => ({
-        url: `scout/cv-and-cover-letter`,
-        method: 'POST',
-        body: data,
-      }),
+      invalidatesTags: (_result, _error, data: FormData) => [
+        { type: 'ScoutBatch', id: String(data.get('scoutJobId')) },
+      ],
     }),
     getCampaignName: builder.query({
       query: ({ id }) => ({
         url: `/scout/jobs/${id}`,
         method: 'GET',
       }),
+      providesTags: (_result, _error, { id }) => [{ type: 'ScoutJob', id }],
+    }),
+    getScoutJobs: builder.query({
+      query: ({
+        limit = 20,
+        offset = 0,
+      }: { limit?: number; offset?: number } = {}) => ({
+        url: `/scout/jobs?limit=${limit}&offset=${offset}`,
+        method: 'GET',
+      }),
+      providesTags: (result) => {
+        const scoutJobs = Array.isArray(result?.data?.scoutJobs)
+          ? result.data.scoutJobs
+          : []
+        return [
+          ...scoutJobs.map((job: { id: string }) => ({
+            type: 'ScoutJob' as const,
+            id: job.id,
+          })),
+          { type: 'ScoutJob' as const, id: 'LIST' },
+        ]
+      },
+    }),
+    getScoutJobScouts: builder.query({
+      query: ({
+        scoutJobId,
+        limit = 20,
+        offset = 0,
+      }: {
+        scoutJobId: string
+        limit?: number
+        offset?: number
+      }) => ({
+        url: `/scout/jobs/${scoutJobId}/scouts?limit=${limit}&offset=${offset}`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, { scoutJobId }) => [
+        { type: 'ScoutBatch', id: scoutJobId },
+      ],
     }),
     getRecruiterShortlist: builder.query({
       query: () => `recruiter/shortlist/`,
@@ -186,9 +218,10 @@ export const {
   useDeletePersonalityQuestionMutation,
   useCreateJDMutation,
   useSearchTalentDbQuery,
-  useUploadCVOnlyMutation,
-  useUploadCvAndCoverLetterMutation,
+  useUploadScoutCvBatchMutation,
   useGetCampaignNameQuery,
+  useGetScoutJobsQuery,
+  useGetScoutJobScoutsQuery,
   useGetRecruiterShortlistQuery,
   useUpdateJobMutation,
   useDeleteJobMutation,
