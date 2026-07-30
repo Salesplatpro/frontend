@@ -1,3 +1,2 @@
 export * from './ChooseMethodCard'
-export * from './DocumentUploaderCard'
-export * from './DocumentUploaderCard2'
+export * from './ScoutFileCard'

@@ -1,159 +1,158 @@
-import { Alert } from '@mui/material'
-import { Field, Form, Formik } from 'formik'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import { Form, Formik } from 'formik'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { getRole } from '../../../api/api-communication'
+import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
+import { TextInput } from '@/components/forms/TextInput'
+import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { Card } from '@/components/ui/Card'
+import { getErrorMessage } from '@/utils/getErrorMessage'
+
+import { Button } from '../../../components'
 import { useCreateJDMutation } from '../../../redux/api/recruiter'
 import { notify } from '../../../utils/toastNotifications'
+import { scoutJobValidationSchema } from './validationSchema'
 
-type RoleType = {
-  id: string
+interface ScoutJobFormValues {
   name: string
-  description: string
+  role: string
+  jobBrief: string
+  recruiterGuide: string
+}
+
+const initialValues: ScoutJobFormValues = {
+  name: '',
+  role: '',
+  jobBrief: '',
+  recruiterGuide: '',
 }
 
 const CreateJD = () => {
   const navigate = useNavigate()
-  const [fetchedRoles, setFetchedRoles] = useState<RoleType[]>([])
-  const [error, setError] = useState<string | null>(null) // State for error
   const [createJD, { isLoading }] = useCreateJDMutation()
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await getRole()
-        setFetchedRoles(response.data)
-      } catch (err) {
-        console.error('Error fetching roles:', err)
-        setError('Error fetching roles')
-      }
-    }
-    fetchRoles()
-  }, [])
-
-  const handleRoleChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    setFieldValue: (field: string, value: any) => void,
-  ) => {
-    const selectedRoleId = e.target.value
-    setFieldValue('role', selectedRoleId)
-  }
-
-  const handleSubmit = async (values: any) => {
-    console.log(values)
+  const handleSubmit = async (values: ScoutJobFormValues) => {
     try {
       const result = await createJD(values).unwrap()
-
-      notify('success', result.message, {
-        autoClose: 2000,
-      })
-
+      notify('success', result.message, { autoClose: 2000 })
       navigate(`/recruiterDashboard/scout/${result.data.scoutJob.id}`)
-    } catch (error: any) {
-      console.error('Error creating Job Description:', error.data.message)
-      setError('Error creating Job Description')
+    } catch (error) {
+      notify('error', getErrorMessage(error, 'Error creating scout job'))
     }
   }
 
   return (
     <div className="py-4 space-y-4">
-      <div className="space-y-2">
-        <h1 className="font-raleway text-grey-900 text-3xl font-bold leading-[37.57px]">
-          Scout
-        </h1>
-        <p className="font-raleway font-normal text-xl leading-[23.48px] text-grey-900">
-          Upload CV in batch for collective AI assessment
-        </p>
-      </div>
-      {error && <Alert severity="error">{error} </Alert>}
-      <div className="flex justify-center items-center lg:mx-32 md:mx-24 sm:mx-20 ">
-        <Formik
-          initialValues={{
-            name: '',
-            role: '',
-            description: '',
-            recruiterGuide: '',
-          }}
-          onSubmit={handleSubmit}>
-          {({ setFieldValue, values }) => (
-            <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
-                  Campaign Name
-                </label>
-                <Field
+      <PageHeaderTitle
+        title="New Scout Job"
+        description="Set up a job description to scout and score talent against"
+      />
+      <div className="flex justify-center items-center">
+        <Card className="w-full max-w-2xl p-6 mt-6">
+          <Formik
+            initialValues={initialValues}
+            validationSchema={scoutJobValidationSchema}
+            onSubmit={handleSubmit}>
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+            }) => (
+              <Form className="flex flex-col space-y-4">
+                <TextInput
+                  title="Campaign Name"
+                  label="name"
                   name="name"
-                  type="text"
+                  autoComplete="off"
                   placeholder="Campaign name"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
+                  required
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={
+                    touched.name && typeof errors.name === 'string'
+                      ? errors.name
+                      : undefined
+                  }
                 />
-              </div>
 
-              <div>
-                <label
-                  htmlFor="role"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
-                  Job Title (Role)
-                </label>
-                <Field
-                  as="select"
+                <RoleSelect
+                  label="Job Title (Role)"
                   name="role"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                    handleRoleChange(e, setFieldValue)
-                  }>
-                  <option value="" label="Select a role" />
-                  {fetchedRoles.map((role: RoleType) => (
-                    <option key={role.id} value={role.id}>
-                      {role.name}
-                    </option>
-                  ))}
-                </Field>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="description"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
-                  Description
-                </label>
-                <Field
-                  name="description"
-                  as="textarea"
-                  className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
-                  placeholder="Add Job description here"
-                  rows={4}
+                  value={values.role}
+                  onChange={(value) => setFieldValue('role', value)}
+                  required
+                  creatable={false}
+                  error={
+                    touched.role && typeof errors.role === 'string'
+                      ? errors.role
+                      : undefined
+                  }
                 />
-              </div>
 
-              <div>
-                <label
-                  htmlFor="recruiterGuide"
-                  className="text-[#434144] font-raleway font-bold leading-4 text-base">
-                  Recruiters Guide
-                </label>
-                <Field
-                  name="recruiterGuide"
-                  type="text"
-                  className="w-[320px] lg:w-[674px] h-[54px] md:w-[550px] sm:w-[490px] border border-grey-300 rounded-lg pl-3 mt-2"
-                  placeholder="Enter your preferred guide here"
-                />
-              </div>
+                <div>
+                  <label
+                    htmlFor="jobBrief"
+                    className="text-grey-700 font-raleway font-bold leading-4 text-base">
+                    Job Brief
+                  </label>
+                  <textarea
+                    id="jobBrief"
+                    name="jobBrief"
+                    value={values.jobBrief}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    rows={4}
+                    placeholder="Describe the role you're scouting for"
+                    className="w-full border border-grey-300 rounded-lg p-3 mt-2"
+                  />
+                  {touched.jobBrief && typeof errors.jobBrief === 'string' && (
+                    <div className="text-red-600 text-sm mt-1">
+                      {errors.jobBrief}
+                    </div>
+                  )}
+                </div>
 
-              <button
-                type="submit"
-                className="w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong flex justify-center items-center hover:bg-[#4b82e1] py-3 mt-8"
-                disabled={isLoading}>
-                <p className="text-white font-semibold font-raleway leading-[24px] text-lg">
-                  {isLoading ? 'Submitting...' : 'Create'}
-                </p>
-              </button>
-            </Form>
-          )}
-        </Formik>
+                <div>
+                  <label
+                    htmlFor="recruiterGuide"
+                    className="text-grey-700 font-raleway font-bold leading-4 text-base">
+                    Recruiter&apos;s Guide
+                  </label>
+                  <textarea
+                    id="recruiterGuide"
+                    name="recruiterGuide"
+                    value={values.recruiterGuide}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    rows={3}
+                    placeholder="How should CVs be assessed against this role?"
+                    className="w-full border border-grey-300 rounded-lg p-3 mt-2"
+                  />
+                  {touched.recruiterGuide &&
+                    typeof errors.recruiterGuide === 'string' && (
+                      <div className="text-red-600 text-sm mt-1">
+                        {errors.recruiterGuide}
+                      </div>
+                    )}
+                </div>
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="wide"
+                  fullWidth
+                  loading={isLoading}
+                  disabled={isLoading}>
+                  Create Scout Job
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </Card>
       </div>
     </div>
   )

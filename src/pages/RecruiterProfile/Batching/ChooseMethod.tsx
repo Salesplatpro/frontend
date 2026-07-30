@@ -5,45 +5,60 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { ChooseMethodCard } from '@/components/features/recruiter/Cards'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { Spinner } from '@/components/ui/Spinner'
+import { useGetCampaignNameQuery } from '@/redux/api/recruiter'
 
+import { Button } from '../../../components'
 import styles from './chooseMethod.module.scss'
 
 const description = (
   <div>
-    <span>Click to upload</span> or drag and drop SVG,PNG, JPG or GIF (max
-    800px, 400px)
+    <span>Click to upload</span> or drag and drop PDF or Word documents
   </div>
 )
 
 export const ChooseMethod = () => {
   const params = useParams()
-  console.log(params.id)
   const navigate = useNavigate()
+  const { data, isLoading, isError } = useGetCampaignNameQuery(params, {
+    skip: !params.id,
+  })
+
+  if (isLoading) {
+    return <Spinner fullPage />
+  }
+
+  if (isError || !data?.data) {
+    return (
+      <EmptyState
+        title="Scout job not found"
+        description="This scout job doesn't exist or you don't have access to it."
+        action={
+          <Button
+            variant="primary"
+            onClick={() => navigate('/recruiterDashboard/scout')}>
+            Back to My Scout Jobs
+          </Button>
+        }
+      />
+    )
+  }
 
   const chooseMethodArray = [
     {
       id: 1,
-      name: 'Upload CV',
+      name: 'Upload CVs',
       description,
       icon: <AiOutlineCloudUpload size={20} />,
       link: `/recruiterDashboard/scout/upload-cv/${params.id}`,
-      toolTip: false,
     },
     {
       id: 2,
-      name: 'Upload CV and Cover letter',
-      description,
-      icon: <AiOutlineCloudUpload size={20} />,
-      link: `/recruiterDashboard/scout/upload-cv-cover-letter/${params.id}`,
-      toolTip: true,
-    },
-    {
-      id: 3,
       name: 'Search Talent DB',
       icon: <CiSearch size={20} />,
       description: <span>Search here</span>,
       link: `/recruiterDashboard/scout/search-talent/${params.id}`,
-      toolTip: false,
     },
   ]
 
@@ -51,12 +66,12 @@ export const ChooseMethod = () => {
     <div className={styles.topContainer}>
       <PageHeaderTitle
         paramsId={params}
-        description="Upload cv in batch for collective AI assesment"
+        description="Choose how you'd like to scout talent for this job"
       />
       <div className={styles.parent}>
-        {chooseMethodArray.map((item, index) => (
+        {chooseMethodArray.map((item) => (
           <ChooseMethodCard
-            key={index}
+            key={item.id}
             item={item}
             onClick={() => navigate(item.link)}
           />
