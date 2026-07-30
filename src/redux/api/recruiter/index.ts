@@ -174,6 +174,16 @@ export const recruiterApi = createApi({
         { type: 'ScoutBatch', id: scoutJobId },
       ],
     }),
+    deleteScoutJob: builder.mutation({
+      query: (scoutJobId: string) => ({
+        url: `/scout/jobs/${scoutJobId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (_result, _error, scoutJobId) => [
+        { type: 'ScoutJob', id: scoutJobId },
+        { type: 'ScoutJob', id: 'LIST' },
+      ],
+    }),
     getRecruiterShortlist: builder.query({
       query: () => `recruiter/shortlist/`,
     }),
@@ -222,6 +232,7 @@ export const {
   useGetCampaignNameQuery,
   useGetScoutJobsQuery,
   useGetScoutJobScoutsQuery,
+  useDeleteScoutJobMutation,
   useGetRecruiterShortlistQuery,
   useUpdateJobMutation,
   useDeleteJobMutation,

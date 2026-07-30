@@ -1,11 +1,19 @@
 import React, { useState } from 'react'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components'
+import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { ColumnDef, DataTable } from '@/components/ui/DataTable'
+import { Dropdown, DropdownItem } from '@/components/ui/Dropdown'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { useGetScoutJobsQuery } from '@/redux/api/recruiter'
+import {
+  useDeleteScoutJobMutation,
+  useGetScoutJobsQuery,
+} from '@/redux/api/recruiter'
+import { getErrorMessage } from '@/utils/getErrorMessage'
+import { notify } from '@/utils/toastNotifications'
 
 import { Pagination } from '../../MyJobPosts/Pagination'
 
@@ -18,19 +26,66 @@ interface ScoutJobRow {
 
 const ROWS_PER_PAGE = 10
 
+const ActionsCell = ({
+  row,
+  onDelete,
+}: {
+  row: ScoutJobRow
+  onDelete: (row: ScoutJobRow) => void
+}) => {
+  const navigate = useNavigate()
+
+  const items: DropdownItem[] = [
+    {
+      label: 'View History',
+      onClick: () => navigate(`/recruiterDashboard/scout/history/${row.id}`),
+    },
+    {
+      label: 'Delete',
+      onClick: () => onDelete(row),
+    },
+  ]
+
+  return (
+    <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+      <Button
+        variant="primary"
+        size="sm"
+        onClick={() => navigate(`/recruiterDashboard/scout/${row.id}`)}>
+        Scout
+      </Button>
+      <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
+    </div>
+  )
+}
+
 export const MyScoutJobs = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
+  const [jobToDelete, setJobToDelete] = useState<ScoutJobRow | null>(null)
   const { data, isLoading, isError } = useGetScoutJobsQuery({
     limit: 100,
     offset: 0,
   })
+  const [deleteScoutJob, { isLoading: isDeleting }] =
+    useDeleteScoutJobMutation()
 
   const scoutJobs: ScoutJobRow[] = Array.isArray(data?.data?.scoutJobs)
     ? data.data.scoutJobs
     : []
   const startIndex = (page - 1) * ROWS_PER_PAGE
   const paginatedJobs = scoutJobs.slice(startIndex, startIndex + ROWS_PER_PAGE)
+
+  const handleDelete = async () => {
+    if (!jobToDelete) return
+    try {
+      await deleteScoutJob(jobToDelete.id).unwrap()
+      notify('success', 'Scout campaign deleted')
+      setJobToDelete(null)
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to delete scout campaign'))
+    }
+  }
 
   const columns: ColumnDef<ScoutJobRow>[] = [
     {
@@ -55,24 +110,7 @@ export const MyScoutJobs = () => {
       key: 'actions',
       header: '',
       align: 'right',
-      render: (row) => (
-        <div className="flex gap-2 justify-end">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              navigate(`/recruiterDashboard/scout/history/${row.id}`)
-            }>
-            View
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => navigate(`/recruiterDashboard/scout/${row.id}`)}>
-            Scout
-          </Button>
-        </div>
-      ),
+      render: (row) => <ActionsCell row={row} onDelete={setJobToDelete} />,
     },
   ]
 
@@ -114,6 +152,7 @@ export const MyScoutJobs = () => {
             data={paginatedJobs}
             isLoading={isLoading}
             getRowKey={(row) => row.id}
+            allowOverflow
           />
           <Pagination
             totalItems={scoutJobs.length}
@@ -123,6 +162,19 @@ export const MyScoutJobs = () => {
           />
         </>
       )}
+
+      <ConfirmDialog
+        open={Boolean(jobToDelete)}
+        title="Delete this scout campaign?"
+        message={`Deleting "${
+          jobToDelete?.name ?? ''
+        }" will permanently remove this campaign along with all uploaded CVs and scores. This cannot be undone.`}
+        confirmLabel="Delete Campaign"
+        variant="danger"
+        isConfirming={isDeleting}
+        onConfirm={() => void handleDelete()}
+        onCancel={() => setJobToDelete(null)}
+      />
     </div>
   )
 }
