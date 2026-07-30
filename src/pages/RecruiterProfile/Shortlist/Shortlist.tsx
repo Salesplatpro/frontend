@@ -1,151 +1,87 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { Spinner } from '@/components/ui/Spinner'
+import { Button } from '@/components/ui/Button'
+import { ColumnDef, DataTable } from '@/components/ui/DataTable'
 
-import { Button } from '../../../components'
-import { useScreenWidth } from '../../../hooks'
 import { useGetRecruiterShortlistQuery } from '../../../redux/api/recruiter'
-import { ResponsiveTableRenderer } from '../../../utils'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
 
-const tableHeadStyle = {
-  color: 'var(--color-grey-900)',
-  backgroundColor: 'var(--color-grey-50)',
-  fontSize: 'var(--text-lg)',
-  fontFamily: 'var(--font-heading)',
-  fontWeight: 600,
-}
-
-const tableCellStyle = {
-  color: 'var(--color-grey-900)',
-  fontSize: 'var(--text-md)',
-  fontFamily: 'var(--font-heading)',
-  fontWeight: 600,
+interface ShortlistedApplication {
+  id: string
+  jobId: string
+  status: string
+  createdAt: string
+  role?: { name: string } | null
+  talent: { firstName: string; lastName: string }
 }
 
 export const Shortlist = () => {
-  const alignHeader = 'left'
-  const screenWidth = useScreenWidth()
   const { data, isLoading } = useGetRecruiterShortlistQuery({})
 
+  const applications: ShortlistedApplication[] = Array.isArray(
+    data?.data?.applications,
+  )
+    ? data.data.applications
+    : []
+
+  const columns: ColumnDef<ShortlistedApplication>[] = [
+    {
+      key: 'role',
+      header: 'Role',
+      render: (row) => capitalizeEachWord(row.role?.name ?? 'Unknown role'),
+      sortAccessor: (row) => row.role?.name,
+    },
+    {
+      key: 'talent',
+      header: 'Talent Name',
+      render: (row) => `${row.talent.firstName} ${row.talent.lastName}`,
+      sortAccessor: (row) => `${row.talent.firstName} ${row.talent.lastName}`,
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      hideBelow: 768,
+      render: (row) => capitalizeEachWord(row.status.replace(/_/g, ' ')),
+    },
+    {
+      key: 'createdAt',
+      header: 'Shortlisted On',
+      hideBelow: 640,
+      render: (row) => new Date(row.createdAt).toLocaleDateString(),
+      sortAccessor: (row) => row.createdAt,
+    },
+    {
+      key: 'actions',
+      header: '',
+      align: 'center',
+      render: (row) => (
+        <Link to={`/recruiterDashboard/singleJobPost/${row.jobId}/${row.id}`}>
+          <Button size="sm">Details</Button>
+        </Link>
+      ),
+    },
+  ]
+
   return (
-    <div className="flex flex-col space-y-12">
+    <div className="flex flex-col space-y-6">
       <PageHeaderTitle
         title="Shortlist"
-        description="View shortlisted talents ready "
+        description="View shortlisted talents ready for the next stage"
       />
-      {isLoading ? (
-        <Spinner fullPage />
-      ) : (
-        <div className="flex flex-col space-y-28 max-w-[1005px] ml-10">
-          <TableContainer component={Paper}>
-            <div className="font-medium text-xl p-2">Campaigns</div>
-            {!data?.data?.campaigns?.length ? (
-              <div className="p-4 text-gray-500 text-center">
-                No campaign yet
-              </div>
-            ) : (
-              <Table aria-label="Campaigns">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align={alignHeader} sx={tableHeadStyle}>
-                      Title
-                    </TableCell>
-                    <TableCell align={alignHeader} sx={tableHeadStyle}>
-                      Talent Name
-                    </TableCell>
-                    <ResponsiveTableRenderer
-                      screenWidth={screenWidth}
-                      breakpoint={768}>
-                      <TableCell align={alignHeader} sx={tableHeadStyle}>
-                        Rank
-                      </TableCell>
-                    </ResponsiveTableRenderer>
-                    <TableCell align="center" sx={tableHeadStyle}>
-                      Details
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data?.data?.campaigns.map((item: any, index: number) => (
-                    <TableRow key={index}>
-                      <TableCell sx={tableCellStyle}>
-                        {capitalizeEachWord(item.job?.role?.name)}
-                      </TableCell>
-                      <TableCell sx={tableCellStyle}>
-                        {item.talent.firstName} {item.talent.lastName}
-                      </TableCell>
-                      <TableCell sx={tableCellStyle}>{item.rank}</TableCell>
-                      <TableCell sx={tableCellStyle}>
-                        <Link to="">
-                          <Button size="sm">Details</Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </TableContainer>
-
-          <TableContainer component={Paper}>
-            <div className="font-medium text-xl p-2">Scouts</div>
-            {!data?.data?.scouts?.length ? (
-              <div className="p-4 text-gray-500 text-center">No scout yet</div>
-            ) : (
-              <Table aria-label="Application pipeline data">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align={alignHeader} sx={tableHeadStyle}>
-                      Title
-                    </TableCell>
-                    <TableCell align={alignHeader} sx={tableHeadStyle}>
-                      Talent Name
-                    </TableCell>
-                    <ResponsiveTableRenderer
-                      screenWidth={screenWidth}
-                      breakpoint={768}>
-                      <TableCell align={alignHeader} sx={tableHeadStyle}>
-                        Score
-                      </TableCell>
-                    </ResponsiveTableRenderer>
-                    <TableCell align="center" sx={tableHeadStyle}>
-                      Details
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data?.data?.scouts.map((item: any, index: number) => (
-                    <TableRow key={index}>
-                      <TableCell sx={tableCellStyle}>no title</TableCell>
-                      <TableCell sx={tableCellStyle}>{item.cvName}</TableCell>
-                      <TableCell sx={tableCellStyle}>
-                        {item.evaluationScore}%
-                      </TableCell>
-                      <TableCell sx={tableCellStyle}>
-                        <Link to="">
-                          <Button size="sm">Details</Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </TableContainer>
-        </div>
-      )}
+      <DataTable
+        columns={columns}
+        data={applications}
+        isLoading={isLoading}
+        getRowKey={(row) => row.id}
+        ariaLabel="Shortlisted applications"
+        emptyState={
+          <div className="p-4 text-gray-500 text-center">
+            No shortlisted applications yet
+          </div>
+        }
+      />
     </div>
   )
 }
