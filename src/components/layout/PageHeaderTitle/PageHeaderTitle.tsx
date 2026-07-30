@@ -25,7 +25,7 @@ export const PageHeaderTitle = ({
           ? title
           : isLoading
           ? ''
-          : `${data?.data?.name || 'Unknown'} scouting`}{' '}
+          : `${data?.data?.scoutJob?.name || 'Unknown'} scouting`}{' '}
       </Heading>
       <Text as="p" size="fs-xl" color="secondary">
         {description}
