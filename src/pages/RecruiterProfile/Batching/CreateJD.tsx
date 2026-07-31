@@ -46,6 +46,7 @@ const CreateJD = () => {
       <PageHeaderTitle
         title="New Scout Job"
         description="Set up a job description to scout and score talent against"
+        onBack={() => navigate(-1)}
       />
       <div className="flex justify-center items-center">
         <Card className="w-full max-w-2xl p-6 mt-6">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -13,6 +13,7 @@ import { AnalyzedPercentage } from '../AnalyzedPercentage'
 const PAGE_SIZE = 20
 
 const SearchResult = () => {
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const param = useParams()
   const [page, setPage] = useState(1)
@@ -51,6 +52,7 @@ const SearchResult = () => {
       <PageHeaderTitle
         paramsId={param}
         description="Find qualified talents by searching"
+        onBack={() => navigate(-1)}
       />
       {talents.length === 0 ? (
         <EmptyState

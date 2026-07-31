@@ -96,6 +96,7 @@ export const ProcessCV = () => {
       <PageHeaderTitle
         paramsId={params}
         description="Upload CVs in batch for collective AI assessment"
+        onBack={() => navigate(-1)}
       />
 
       {failure && (

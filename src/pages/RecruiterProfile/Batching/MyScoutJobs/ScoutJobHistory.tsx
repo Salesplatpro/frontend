@@ -79,6 +79,7 @@ export const ScoutJobHistory = () => {
       <PageHeaderTitle
         paramsId={{ id: scoutJobId }}
         description="Scouting history for this job"
+        onBack={() => navigate(-1)}
       />
 
       <Tabs
