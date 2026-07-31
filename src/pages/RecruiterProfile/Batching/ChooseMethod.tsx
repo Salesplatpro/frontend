@@ -67,6 +67,7 @@ export const ChooseMethod = () => {
       <PageHeaderTitle
         paramsId={params}
         description="Choose how you'd like to scout talent for this job"
+        onBack={() => navigate(-1)}
       />
       <div className={styles.parent}>
         {chooseMethodArray.map((item) => (

@@ -99,6 +99,7 @@ export const UploadCv = () => {
       <PageHeaderTitle
         paramsId={params}
         description="Upload CVs in batch for collective AI assessment"
+        onBack={() => navigate(-1)}
       />
 
       <Card className="p-6 space-y-4">

@@ -62,6 +62,7 @@ const SearchTalent = () => {
       <PageHeaderTitle
         paramsId={scoutJobId}
         description="Find qualified talents by searching"
+        onBack={() => navigate(-1)}
       />
       <div className="flex justify-center items-center mx-auto md:w-[60%] w-full ">
         <Formik initialValues={initialSearchValues} onSubmit={onSubmit}>
