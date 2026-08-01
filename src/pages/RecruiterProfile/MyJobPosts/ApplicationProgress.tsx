@@ -47,6 +47,10 @@ export const ApplicationProgress = () => {
     cvUrl,
     matchVerdict,
     matchVerdictReasoning,
+    matchRecommendation,
+    matchStrengths,
+    matchWeaknesses,
+    matchRisks,
   } = getApplicationDetails(data)
 
   const progress = [
@@ -122,6 +126,10 @@ export const ApplicationProgress = () => {
           <VerdictBadge
             verdict={matchVerdict}
             reasoning={matchVerdictReasoning}
+            strengths={matchStrengths}
+            weaknesses={matchWeaknesses}
+            risks={matchRisks}
+            recommendation={matchRecommendation}
             pending={verdictPending}
           />
           {verdictPending && (
@@ -129,8 +137,8 @@ export const ApplicationProgress = () => {
               variant="outline"
               size="sm"
               onClick={() => regenerateVerdict()}
-              disabled={isRegenerating}>
-              {isRegenerating ? 'Regenerating...' : 'Regenerate AI Match'}
+              loading={isRegenerating}>
+              Regenerate AI Match
             </Button>
           )}
         </div>
@@ -151,16 +159,18 @@ export const ApplicationProgress = () => {
           size="wide"
           fullWidth
           onClick={() => handleStatusUpdate('rejected')}
-          disabled={isUpdating || jodStatus === 'rejected'}>
-          {isUpdating ? 'Rejecting...' : 'Reject'}
+          loading={isUpdating}
+          disabled={jodStatus === 'rejected'}>
+          Reject
         </Button>
         <Button
           variant="primary"
           size="wide"
           fullWidth
           onClick={() => handleStatusUpdate('shortlisted')}
-          disabled={isUpdating || jodStatus === 'shortlisted'}>
-          {isUpdating ? 'Shortlisting...' : 'Shortlist'}
+          loading={isUpdating}
+          disabled={jodStatus === 'shortlisted'}>
+          Shortlist
         </Button>
       </div>
       <div>

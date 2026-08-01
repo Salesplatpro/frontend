@@ -15,5 +15,9 @@ export const getApplicationDetails = (data: any) => {
     cvUrl: talent.cvUrl || null,
     matchVerdict: application.matchVerdict || null,
     matchVerdictReasoning: application.matchVerdictReasoning || null,
+    matchRecommendation: application.matchRecommendation || null,
+    matchStrengths: application.matchStrengths || null,
+    matchWeaknesses: application.matchWeaknesses || null,
+    matchRisks: application.matchRisks || null,
   }
 }

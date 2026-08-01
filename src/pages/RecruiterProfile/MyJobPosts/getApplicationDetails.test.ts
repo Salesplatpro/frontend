@@ -21,6 +21,10 @@ describe('getApplicationDetails', () => {
           status: 'awaiting_decision',
           matchVerdict: 'high',
           matchVerdictReasoning: 'Strong alignment with the role.',
+          matchRecommendation: 'hire',
+          matchStrengths: ['Strong TypeScript background.'],
+          matchWeaknesses: ['No leadership experience.'],
+          matchRisks: ['May need ramp-up time.'],
         },
       },
     }
@@ -40,6 +44,10 @@ describe('getApplicationDetails', () => {
       cvUrl: 'https://res.cloudinary.com/test/cv.pdf',
       matchVerdict: 'high',
       matchVerdictReasoning: 'Strong alignment with the role.',
+      matchRecommendation: 'hire',
+      matchStrengths: ['Strong TypeScript background.'],
+      matchWeaknesses: ['No leadership experience.'],
+      matchRisks: ['May need ramp-up time.'],
     })
   })
 
@@ -68,5 +76,9 @@ describe('getApplicationDetails', () => {
     expect(result.prescreeningScore).toBe('No pre-assessment test')
     expect(result.cvUrl).toBeNull()
     expect(result.matchVerdict).toBeNull()
+    expect(result.matchRecommendation).toBeNull()
+    expect(result.matchStrengths).toBeNull()
+    expect(result.matchWeaknesses).toBeNull()
+    expect(result.matchRisks).toBeNull()
   })
 })

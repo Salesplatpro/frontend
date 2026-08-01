@@ -5,7 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Button } from '@/components/ui/Button'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
-import { useJobPostCreationMutation } from '@/redux/api/recruiter'
+import {
+  useGenerateJobContentMutation,
+  useJobPostCreationMutation,
+} from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
@@ -44,6 +47,8 @@ const PostJob: React.FC = () => {
   const navigate = useNavigate()
   const [jobPostCreation, { isLoading: isSubmitting }] =
     useJobPostCreationMutation()
+  const [generateJobContent, { isLoading: isGeneratingWithAI }] =
+    useGenerateJobContentMutation()
   const { draft, saveDraft, clearDraft } = useJobDraftStore()
 
   // Capture once whether a draft existed at mount, so the restored-draft
@@ -91,6 +96,42 @@ const PostJob: React.FC = () => {
     }
   }
 
+  const handleGenerateWithAI = async (
+    values: PostJobFormValues,
+    setFieldValue: (key: keyof PostJobFormValues, value: unknown) => void,
+  ) => {
+    try {
+      const response = await generateJobContent({
+        role: values.role,
+        experienceLevel: values.experienceLevel || undefined,
+        keywords: values.skills,
+      }).unwrap()
+      const content = response?.data?.content
+      if (!content) return
+
+      setFieldValue('jobBrief', content.jobBrief)
+      setFieldValue('requirements', content.requirements)
+      if (Array.isArray(content.skills) && content.skills.length > 0) {
+        setFieldValue('skills', content.skills)
+      }
+      if (Array.isArray(content.goals) && content.goals.length > 0) {
+        setFieldValue('goals', content.goals)
+      }
+      notify(
+        'success',
+        'Job content generated — feel free to edit before submitting.',
+      )
+    } catch (err) {
+      notify(
+        'error',
+        getErrorMessage(
+          err,
+          'Failed to generate job content. Please try again.',
+        ),
+      )
+    }
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.pageHeader}>
@@ -120,6 +161,10 @@ const PostJob: React.FC = () => {
               errors={errors}
               touched={touched}
               setFieldValue={(key, value) => setFieldValue(key, value)}
+              onGenerateWithAI={() =>
+                handleGenerateWithAI(values, setFieldValue)
+              }
+              isGeneratingWithAI={isGeneratingWithAI}
             />
 
             <div className={styles.actions}>
