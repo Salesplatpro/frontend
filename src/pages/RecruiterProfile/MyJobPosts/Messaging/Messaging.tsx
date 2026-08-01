@@ -77,15 +77,15 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
           variant="primary"
           size="wide"
           onClick={handleSendMessage}
-          disabled={isSending}>
-          {isSending ? 'Sending...' : 'Send'}
+          loading={isSending}>
+          Send
         </Button>
         <Button
           variant="outline"
           size="wide"
           onClick={handleBroadcast}
-          disabled={isBroadcasting}>
-          {isBroadcasting ? 'Broadcasting...' : 'Broadcast'}
+          loading={isBroadcasting}>
+          Broadcast
         </Button>
       </div>
     </div>

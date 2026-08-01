@@ -11,6 +11,7 @@ import {
   DropdownItem,
   EmptyState,
   MatchScoreRing,
+  Spinner,
   StatusBadge,
 } from '../../../components'
 import { useRegenerateVerdict } from '../../../features/applications/hooks/useRegenerateVerdict'
@@ -25,6 +26,8 @@ type SingleJobTableProps = {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
+  /** Application id currently being updated (e.g. via a row-level shortlist/reject) — shows a spinner in that row's actions cell instead of a static disabled state. */
+  loadingRowId?: string | null
   visibleColumnKeys?: string[]
   sortKey?: string | null
   sortDirection?: 'asc' | 'desc'
@@ -88,6 +91,7 @@ interface ApplicantActionsCellProps {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
+  isLoading?: boolean
 }
 
 const ApplicantActionsCell = ({
@@ -95,8 +99,17 @@ const ApplicantActionsCell = ({
   onShortlist,
   onReject,
   onMessage,
+  isLoading,
 }: ApplicantActionsCellProps) => {
   const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(item.id)
+
+  if (isLoading || isRegenerating) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Spinner size="sm" />
+      </div>
+    )
+  }
 
   const items: DropdownItem[] = [
     { label: 'Shortlist', onClick: () => onShortlist(item.id) },
@@ -113,9 +126,8 @@ const ApplicantActionsCell = ({
     ...(!item.matchVerdict
       ? [
           {
-            label: isRegenerating ? 'Regenerating…' : 'Regenerate AI Match',
+            label: 'Regenerate AI Match',
             onClick: () => regenerateVerdict(),
-            disabled: isRegenerating,
           },
         ]
       : []),
@@ -135,10 +147,12 @@ export const buildColumns = ({
   onShortlist,
   onReject,
   onMessage,
+  loadingRowId,
 }: {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
+  loadingRowId?: string | null
 }): ColumnDef<SingleJobDetails>[] => [
   {
     key: 'name',
@@ -242,6 +256,7 @@ export const buildColumns = ({
         onShortlist={onShortlist}
         onReject={onReject}
         onMessage={onMessage}
+        isLoading={item.id === loadingRowId}
       />
     ),
   },
@@ -255,12 +270,18 @@ export const SingleJobTable = ({
   onShortlist,
   onReject,
   onMessage,
+  loadingRowId,
   visibleColumnKeys,
   sortKey,
   sortDirection,
   onSortChange,
 }: SingleJobTableProps) => {
-  const allColumns = buildColumns({ onShortlist, onReject, onMessage })
+  const allColumns = buildColumns({
+    onShortlist,
+    onReject,
+    onMessage,
+    loadingRowId,
+  })
   const columns = visibleColumnKeys
     ? allColumns.filter(
         (col) =>

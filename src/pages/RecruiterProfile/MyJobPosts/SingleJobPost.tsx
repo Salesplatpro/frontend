@@ -1,10 +1,10 @@
 import 'react-responsive-modal/styles.css'
 
 import React, { useMemo, useState } from 'react'
-import { MdOutlineArrowBackIosNew } from 'react-icons/md'
 import Modal from 'react-responsive-modal'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
+import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { sortByAccessor } from '@/components/ui/DataTable'
 import { Spinner } from '@/components/ui/Spinner'
@@ -87,13 +87,13 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50]
 export const SingleJobPost = () => {
   const { jobId } = useParams()
   const { data, error, isLoading, mutate } = useJobApplications(jobId)
-  const navigate = useNavigate()
   const location = useLocation()
   const jobName = location.state?.jobName
   const postedAt = location.state?.postedAt
   const applications = data?.data?.applications ?? []
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<Set<string>>(new Set())
+  const [loadingRowId, setLoadingRowId] = useState<string | null>(null)
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
   const [messageContent, setMessageContent] = useState('')
 
@@ -150,12 +150,15 @@ export const SingleJobPost = () => {
     applicationId: string,
     status: 'shortlisted' | 'rejected',
   ) => {
+    setLoadingRowId(applicationId)
     try {
       await bulkUpdateStatus({ applicationIds: [applicationId], status })
       notify('success', `Talent is ${status}`, { autoClose: 2000 })
       await mutate()
     } catch {
       notify('error', 'Failed to update talent status', { autoClose: 2000 })
+    } finally {
+      setLoadingRowId(null)
     }
   }
 
@@ -261,10 +264,7 @@ export const SingleJobPost = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.backButton} onClick={() => navigate(-1)}>
-        <MdOutlineArrowBackIosNew />
-        <div>Back</div>
-      </div>
+      <BackButton />
       <div className={styles.topContainer}>
         <div className={styles.title}>
           {jobName}
@@ -308,14 +308,14 @@ export const SingleJobPost = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  disabled={isBulkUpdating}
+                  loading={isBulkUpdating}
                   onClick={() => handleBulkStatus('rejected')}>
                   Reject
                 </Button>
                 <Button
                   variant="primary"
                   size="sm"
-                  disabled={isBulkUpdating}
+                  loading={isBulkUpdating}
                   onClick={() => handleBulkStatus('shortlisted')}>
                   Shortlist
                 </Button>
@@ -349,6 +349,7 @@ export const SingleJobPost = () => {
             onShortlist={(id) => handleRowStatus(id, 'shortlisted')}
             onReject={(id) => handleRowStatus(id, 'rejected')}
             onMessage={handleRowMessage}
+            loadingRowId={loadingRowId}
             visibleColumnKeys={visibleColumnKeys}
             sortKey={sortKey}
             sortDirection={sortDirection}
@@ -392,9 +393,9 @@ export const SingleJobPost = () => {
             </Button>
             <Button
               variant="primary"
-              disabled={isBroadcasting}
+              loading={isBroadcasting}
               onClick={handleSendBulkMessage}>
-              {isBroadcasting ? 'Sending...' : 'Send'}
+              Send
             </Button>
           </div>
         </div>
