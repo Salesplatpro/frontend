@@ -1,7 +1,7 @@
 import React from 'react'
 import { BsChatDots } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
-import { CiBoxList } from 'react-icons/ci'
+import { CiBoxList, CiSearch } from 'react-icons/ci'
 import { FiDownload } from 'react-icons/fi'
 import { MdWorkOutline } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
@@ -31,6 +31,12 @@ export const sidebarData = [
     name: 'Scout',
     icon: <FiDownload size={ICON_SIZE} color={COLOR} />,
     link: '/recruiterDashboard/scout',
+    end: false,
+  },
+  {
+    name: 'Talent Search',
+    icon: <CiSearch size={ICON_SIZE} color={COLOR} />,
+    link: '/recruiterDashboard/talent-search',
     end: false,
   },
 

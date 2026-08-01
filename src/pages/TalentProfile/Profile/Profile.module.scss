@@ -80,6 +80,15 @@
   margin-top: var(--space-12);
 }
 
+/* Lets the 4-column salary row (see .salaryField) wrap onto a second line
+   at narrower desktop widths instead of squeezing every column. */
+.salaryRow {
+  @media (min-width: 768px) {
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+}
+
 .field {
   width: 100%;
   margin-bottom: var(--space-6);
@@ -100,6 +109,20 @@
 
   @media (min-width: 768px) {
     width: 31%;
+    margin-bottom: 0;
+  }
+}
+
+/* Four flexible columns (currency, min/max salary, compensation period) that
+   wrap onto a new line at narrow widths instead of being squeezed like
+   .fieldThird, which was designed for exactly 3 columns. */
+.salaryField {
+  width: 100%;
+  margin-bottom: var(--space-6);
+
+  @media (min-width: 768px) {
+    flex: 1 1 22%;
+    min-width: 160px;
     margin-bottom: 0;
   }
 }

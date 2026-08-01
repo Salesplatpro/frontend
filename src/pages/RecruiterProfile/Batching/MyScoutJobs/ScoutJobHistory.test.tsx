@@ -94,7 +94,7 @@ describe('ScoutJobHistory (persisted batch results for a scout job)', () => {
     fireEvent.click(screen.getByText('Search Talent'))
 
     expect(navigateMock).toHaveBeenCalledWith(
-      '/recruiterDashboard/scout/search-talent/sj-1',
+      '/recruiterDashboard/talent-search',
     )
   })
 })

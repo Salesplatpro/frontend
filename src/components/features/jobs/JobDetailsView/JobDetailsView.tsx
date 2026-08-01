@@ -8,6 +8,7 @@ import LinkedIn from '@/assets/linkedin logo_icon.svg'
 import Twitter from '@/assets/twitter_new_brand_icon.svg'
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { BackButton } from '@/components/ui/BackButton'
 import { StatusBadge } from '@/components/ui/Badge'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { capitalizeFirstWord } from '@/utils'
@@ -95,6 +96,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
 
   return (
     <div className={styles.page}>
+      <BackButton />
       <div className={styles.header}>
         <div>
           <div className={styles.titleRow}>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { AiOutlineCloudUpload } from 'react-icons/ai'
-import { CiSearch } from 'react-icons/ci'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { ChooseMethodCard } from '@/components/features/recruiter/Cards'
@@ -52,13 +51,6 @@ export const ChooseMethod = () => {
       description,
       icon: <AiOutlineCloudUpload size={20} />,
       link: `/recruiterDashboard/scout/upload-cv/${params.id}`,
-    },
-    {
-      id: 2,
-      name: 'Search Talent DB',
-      icon: <CiSearch size={20} />,
-      description: <span>Search here</span>,
-      link: `/recruiterDashboard/scout/search-talent/${params.id}`,
     },
   ]
 

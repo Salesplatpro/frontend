@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik'
 import React from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import {
   LocationSelect,
@@ -12,12 +12,10 @@ import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 
 const SearchTalent = () => {
   const navigate = useNavigate()
-  const scoutJobId = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
   // Initialize form values from URL params
   const initialSearchValues = {
-    scoutJobId: searchParams.get('scoutJobId') || scoutJobId.id,
     role: searchParams.get('role') || '',
     location: resolveLocationFromNames(
       searchParams.get('countryName') || undefined,
@@ -28,7 +26,7 @@ const SearchTalent = () => {
   }
 
   const onSubmit = async (values: typeof initialSearchValues) => {
-    const { scoutJobId, role, location, experienceLevel } = values
+    const { role, location, experienceLevel } = values
 
     const locationParams = {
       countryName: location.country.name,
@@ -38,7 +36,6 @@ const SearchTalent = () => {
 
     // Set search parameters in URL
     setSearchParams({
-      scoutJobId: scoutJobId || '',
       role,
       ...locationParams,
       experienceLevel,
@@ -46,21 +43,18 @@ const SearchTalent = () => {
 
     // Navigate to the results page
     const queryParams = new URLSearchParams({
-      scoutJobId: scoutJobId || '',
       role,
       ...locationParams,
       experienceLevel,
     }).toString()
 
-    navigate(
-      `/recruiterDashboard/scout/search-results/${scoutJobId}?${queryParams}`,
-    )
+    navigate(`/recruiterDashboard/talent-search/results?${queryParams}`)
   }
 
   return (
     <div className="py-4 space-y-4">
       <PageHeaderTitle
-        paramsId={scoutJobId}
+        title="Talent Search"
         description="Find qualified talents by searching"
         onBack={() => navigate(-1)}
       />

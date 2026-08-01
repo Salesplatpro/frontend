@@ -15,6 +15,13 @@ export const recruiterApi = createApi({
       }),
       invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
+    generateJobContent: builder.mutation({
+      query: (data) => ({
+        url: `/jobs/generate`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
     fetchDashboard: builder.query({
       query: ({ jobId }: { jobId?: string }) => {
         const baseUrl = '/recruiter/dashboard'
@@ -94,8 +101,7 @@ export const recruiterApi = createApi({
     }),
     searchTalentDb: builder.query({
       query: (data) => {
-        const { role, experienceLevel, location, scoutJobId, limit, offset } =
-          data
+        const { role, experienceLevel, location, limit, offset } = data
 
         const roleId = role || ''
         const experience = experienceLevel || ''
@@ -114,7 +120,7 @@ export const recruiterApi = createApi({
         if (offset) queryParams.append('offset', String(offset))
 
         return {
-          url: `/scout/${scoutJobId}/talents?${queryParams.toString()}`,
+          url: `/scout/talents?${queryParams.toString()}`,
           method: 'GET',
         }
       },
@@ -219,6 +225,7 @@ export const recruiterApi = createApi({
 
 export const {
   useJobPostCreationMutation,
+  useGenerateJobContentMutation,
   useFetchDashboardQuery,
   useFetchAllApplicationsQuery,
   useAiConfigMutation,

@@ -7,6 +7,7 @@ import { LocationSelect } from '@/components/forms/LocationSelect'
 import { PhoneNumberInput } from '@/components/forms/PhoneNumberInput'
 import { RoleMultiSelect } from '@/components/forms/Roles/RoleMultiSelect'
 import {
+  COMPENSATION_PERIOD_OPTIONS,
   CURRENCY_OPTIONS,
   EXPERIENCE_LEVEL_OPTIONS,
   Select,
@@ -163,8 +164,8 @@ const TalentProfile = () => {
                   </div>
                 </div>
 
-                <div className={styles.row}>
-                  <div className={styles.fieldThird}>
+                <div className={`${styles.row} ${styles.salaryRow}`}>
+                  <div className={styles.salaryField}>
                     <Select
                       label="Currency"
                       options={CURRENCY_OPTIONS}
@@ -173,7 +174,7 @@ const TalentProfile = () => {
                       placeholder="Select currency"
                     />
                   </div>
-                  <div className={styles.fieldThird}>
+                  <div className={styles.salaryField}>
                     <label className={styles.label} htmlFor="minSalary">
                       Min Salary
                     </label>
@@ -188,7 +189,7 @@ const TalentProfile = () => {
                       <div className={styles.errorText}>{errors.minSalary}</div>
                     )}
                   </div>
-                  <div className={styles.fieldThird}>
+                  <div className={styles.salaryField}>
                     <label className={styles.label} htmlFor="maxSalary">
                       Max Salary
                     </label>
@@ -202,6 +203,17 @@ const TalentProfile = () => {
                     {errors.maxSalary && touched.maxSalary && (
                       <div className={styles.errorText}>{errors.maxSalary}</div>
                     )}
+                  </div>
+                  <div className={styles.salaryField}>
+                    <Select
+                      label="Compensation Period"
+                      options={COMPENSATION_PERIOD_OPTIONS}
+                      value={values.compensationPeriod}
+                      onChange={(value) =>
+                        setFieldValue('compensationPeriod', value)
+                      }
+                      placeholder="Select period"
+                    />
                   </div>
                 </div>
 

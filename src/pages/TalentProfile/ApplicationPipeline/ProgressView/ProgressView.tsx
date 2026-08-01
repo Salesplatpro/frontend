@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { AllJobTypes } from '@/utils/types'
 
@@ -220,7 +221,12 @@ const ProgressView: React.FC = () => {
     return <ProgressSkeleton />
 
   if (!jobProgress)
-    return <ProgressError error={applicationError || applicationsError} />
+    return (
+      <div className={styles.page}>
+        <BackButton />
+        <ProgressError error={applicationError || applicationsError} />
+      </div>
+    )
 
   const progresses = getProgresses(jobProgress)
 
@@ -241,6 +247,7 @@ const ProgressView: React.FC = () => {
 
   return (
     <div className={styles.page}>
+      <BackButton />
       <ProgressHeader
         progressPercentage={progressPercentage}
         jobProgress={jobProgress}

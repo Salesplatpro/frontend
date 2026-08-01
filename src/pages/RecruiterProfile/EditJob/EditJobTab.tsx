@@ -7,6 +7,7 @@ import {
   EMPTY_LOCATION,
   resolveLocationFromNames,
 } from '@/components/forms/LocationSelect'
+import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useJobEditDraftStore } from '@/features/jobs/store/useJobEditDraftStore'
@@ -234,6 +235,7 @@ export const EditJobTab = () => {
 
   return (
     <div className={tabStyles.page}>
+      <BackButton />
       <h2 className={tabStyles.heading}>
         Edit {capitalizeEachWord(job.role?.name)} Job
       </h2>

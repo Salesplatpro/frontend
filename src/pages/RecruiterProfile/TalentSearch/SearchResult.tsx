@@ -1,25 +1,22 @@
 import React, { useState } from 'react'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
 
-import talentdb from '../../../../assets/talentdb.webp'
-import { Button, DisplayError } from '../../../../components'
-import { useSearchTalentDbQuery } from '../../../../redux/api/recruiter'
-import { AnalyzedPercentage } from '../AnalyzedPercentage'
+import talentdb from '../../../assets/talentdb.webp'
+import { Button, DisplayError } from '../../../components'
+import { useSearchTalentDbQuery } from '../../../redux/api/recruiter'
 
 const PAGE_SIZE = 20
 
 const SearchResult = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const param = useParams()
   const [page, setPage] = useState(1)
 
   const searchValues = {
-    scoutJobId: searchParams.get('scoutJobId') || '',
     role: searchParams.get('role') || '',
     location: {
       country: { name: searchParams.get('countryName') || '' },
@@ -50,7 +47,7 @@ const SearchResult = () => {
   return (
     <div>
       <PageHeaderTitle
-        paramsId={param}
+        title="Talent Search"
         description="Find qualified talents by searching"
         onBack={() => navigate(-1)}
       />
@@ -65,7 +62,7 @@ const SearchResult = () => {
             {talents.map((talent: any, i: number) => (
               <div
                 key={talent.id ?? i}
-                className="flex border border-grey-200 w-full items-start justify-center rounded-lg p-3">
+                className="flex border border-grey-200 w-full items-center rounded-lg p-3">
                 <div className="flex-1 flex space-x-4">
                   <img src={talentdb} alt="" className="w-9 h-9" />
                   <div>
@@ -83,14 +80,6 @@ const SearchResult = () => {
                       {talent.profile?.experience}
                     </h2>
                   </div>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <div className="flex justify-end">
-                    <AnalyzedPercentage targetValue={talent.similarity ?? 0} />
-                  </div>
-                  <Link to="#" className="text-primary-strong text-sm">
-                    See analysis
-                  </Link>
                 </div>
               </div>
             ))}

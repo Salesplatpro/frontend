@@ -13,6 +13,8 @@ export const validationSchema = Yup.object({
 
   currency: Yup.string(),
 
+  compensationPeriod: Yup.string(),
+
   minSalary: Yup.string().test(
     'is-positive-number',
     'Minimum salary must be a positive number.',

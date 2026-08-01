@@ -72,7 +72,7 @@ describe('ChooseMethod (scout job ownership guard)', () => {
     expect(navigateMock).toHaveBeenCalledWith('/recruiterDashboard/scout')
   })
 
-  it('renders exactly two method cards (upload CVs, search talent) once ownership is confirmed', () => {
+  it('renders only the Upload CVs card once ownership is confirmed (Talent Search moved to its own sidebar page)', () => {
     useGetCampaignNameQueryMock.mockReturnValue({
       isLoading: false,
       isError: false,
@@ -81,7 +81,7 @@ describe('ChooseMethod (scout job ownership guard)', () => {
     renderAt('sj-1')
 
     expect(screen.getByText('Upload CVs')).toBeTruthy()
-    expect(screen.getByText('Search Talent DB')).toBeTruthy()
+    expect(screen.queryByText('Search Talent DB')).toBeNull()
   })
 
   it('navigates to the upload flow when the Upload CVs card is clicked', () => {
