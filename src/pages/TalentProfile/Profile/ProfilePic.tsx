@@ -69,7 +69,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({
         className={styles.changeButton}
         onClick={() => document.getElementById('profileImage')?.click()}
         disabled={isUploading}>
-        Change Image
+        {isUploading ? 'Uploading...' : 'Change Image'}
       </button>
     </div>
   )
