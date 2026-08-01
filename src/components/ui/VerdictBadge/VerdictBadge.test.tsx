@@ -46,4 +46,47 @@ describe('VerdictBadge', () => {
     expect(screen.getByText(/Strong CV match/)).toBeTruthy()
     expect(screen.getByText('Hide reasoning')).toBeTruthy()
   })
+
+  it('shows itemized strengths/weaknesses/risks and the recommendation instead of a single paragraph when evidence is available', () => {
+    render(
+      <VerdictBadge
+        verdict="high"
+        reasoning="Strong CV match and consistent scores."
+        strengths={['Five years of TypeScript experience per the CV.']}
+        weaknesses={['No leadership experience mentioned.']}
+        risks={['May need ramp-up time on this stack.']}
+        recommendation="hire"
+      />,
+    )
+
+    fireEvent.click(screen.getByText('Why?'))
+
+    expect(screen.getByText('Recommend: Hire')).toBeTruthy()
+    expect(
+      screen.getByText('Five years of TypeScript experience per the CV.'),
+    ).toBeTruthy()
+    expect(screen.getByText('No leadership experience mentioned.')).toBeTruthy()
+    expect(
+      screen.getByText('May need ramp-up time on this stack.'),
+    ).toBeTruthy()
+    // The old single-paragraph reasoning is superseded by the itemized lists.
+    expect(
+      screen.queryByText('Strong CV match and consistent scores.'),
+    ).toBeNull()
+  })
+
+  it('falls back to the plain reasoning paragraph for older verdicts with no itemized evidence', () => {
+    render(
+      <VerdictBadge
+        verdict="medium"
+        reasoning="Decent match based on available scores."
+      />,
+    )
+
+    fireEvent.click(screen.getByText('Why?'))
+
+    expect(
+      screen.getByText('Decent match based on available scores.'),
+    ).toBeTruthy()
+  })
 })

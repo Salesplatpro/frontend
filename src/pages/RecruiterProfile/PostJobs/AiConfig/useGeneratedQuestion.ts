@@ -44,10 +44,10 @@ const useGeneratedQuestion = (jobId: string | undefined) => {
     setQuestionsByPair(grouped)
   }, [data])
 
-  const generateQuestion = async (pair: string) => {
+  const generateQuestion = async (pair: string, count?: number) => {
     setLoadingPairs((prevState) => ({ ...prevState, [pair]: true }))
     try {
-      const result = await genJp({ jobId, dichotomyPair: pair }).unwrap()
+      const result = await genJp({ jobId, dichotomyPair: pair, count }).unwrap()
       const newQuestions: PersonalityQuestion[] = result?.data?.questions ?? []
       setQuestionsByPair((prevState) => ({
         ...prevState,

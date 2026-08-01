@@ -70,6 +70,10 @@ export type SingleJobDetails = {
   averageScore?: number | null
   matchVerdict?: 'high' | 'medium' | 'low' | null
   matchVerdictReasoning?: string | null
+  matchRecommendation?: 'hire' | 'interview_further' | 'no_hire' | null
+  matchStrengths?: string[] | null
+  matchWeaknesses?: string[] | null
+  matchRisks?: string[] | null
 }
 
 export interface JobProfileProps {

@@ -120,7 +120,7 @@ type AiConfigFieldsProps = {
   jobId: string | undefined
   questionsByPair: Record<string, PersonalityQuestion[]>
   loadingPairs: Record<string, boolean>
-  generateQuestion: (pair: string) => void
+  generateQuestion: (pair: string, count?: number) => void
   removeQuestion: (pair: string, questionId: string) => void
 }
 
@@ -241,7 +241,14 @@ export const AiConfigFields = ({
               count={values[COUNT_FIELD[pair]]}
               onCountChange={(count) => setFieldValue(COUNT_FIELD[pair], count)}
               isLoading={loadingPairs[pair]}
-              onGenerate={() => generateQuestion(pair)}
+              onGenerate={() => {
+                const rawCount = values[COUNT_FIELD[pair]]
+                const count =
+                  rawCount === '' || rawCount == null
+                    ? undefined
+                    : Number(rawCount)
+                generateQuestion(pair, count)
+              }}
               onRemove={(questionId) => removeQuestion(pair, questionId)}
               countError={
                 typeof errors[COUNT_FIELD[pair]] === 'string'

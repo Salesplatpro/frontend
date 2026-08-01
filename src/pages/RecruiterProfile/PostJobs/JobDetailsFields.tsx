@@ -12,6 +12,7 @@ import {
 } from '@/components/forms/Select'
 import { TagInput } from '@/components/forms/TagInput/TagInput'
 import TextField from '@/components/forms/TextField'
+import { Button } from '@/components/ui/Button'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 
 import styles from './PostJob.module.scss'
@@ -29,6 +30,8 @@ type JobDetailsFieldsProps = {
   touched: FormikTouchedLike
   setFieldValue: (key: keyof PostJobFormValues, value: unknown) => void
   roleDisabled?: boolean
+  onGenerateWithAI?: () => void
+  isGeneratingWithAI?: boolean
 }
 
 export const JobDetailsFields = ({
@@ -37,6 +40,8 @@ export const JobDetailsFields = ({
   touched,
   setFieldValue,
   roleDisabled,
+  onGenerateWithAI,
+  isGeneratingWithAI,
 }: JobDetailsFieldsProps) => (
   <>
     {/* Section 1: Job Overview */}
@@ -57,6 +62,26 @@ export const JobDetailsFields = ({
           }
         />
       </div>
+
+      {onGenerateWithAI && (
+        <div className={styles.fieldGroup}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            loading={isGeneratingWithAI}
+            disabled={!values.role}
+            onClick={onGenerateWithAI}>
+            Generate with AI
+          </Button>
+          {!values.role && (
+            <p className={styles.sectionNote}>
+              Select a role above to generate a job brief, requirements, skills,
+              and goals.
+            </p>
+          )}
+        </div>
+      )}
 
       <div className={styles.fieldGroup}>
         <TextField
