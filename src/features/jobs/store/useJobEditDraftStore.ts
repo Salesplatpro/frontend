@@ -7,6 +7,7 @@ type JobEditDraftStore = {
   drafts: Record<string, unknown>
   saveDraft: (jobId: string, values: unknown) => void
   clearDraft: (jobId: string) => void
+  clearAllDrafts: () => void
 }
 
 export const useJobEditDraftStore = create<JobEditDraftStore>()(
@@ -21,6 +22,7 @@ export const useJobEditDraftStore = create<JobEditDraftStore>()(
           delete next[jobId]
           return { drafts: next }
         }),
+      clearAllDrafts: () => set({ drafts: {} }),
     }),
     { name: 'job-edit-draft' },
   ),

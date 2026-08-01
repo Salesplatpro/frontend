@@ -10,14 +10,24 @@ interface CandidatesState {
   filters: CandidateFilters
   setFilters: (filters: CandidateFilters) => void
   fetchCandidates: () => Promise<void>
+  reset: () => void
 }
+
+const initialFilters: CandidateFilters = { limit: 50, offset: 0 }
 
 export const useCandidatesStore = create<CandidatesState>()((set, get) => ({
   candidates: [],
   isLoading: false,
   error: null,
-  filters: { limit: 50, offset: 0 },
+  filters: initialFilters,
   setFilters: (filters) => set({ filters }),
+  reset: () =>
+    set({
+      candidates: [],
+      isLoading: false,
+      error: null,
+      filters: initialFilters,
+    }),
   fetchCandidates: async () => {
     set({ isLoading: true, error: null })
     try {

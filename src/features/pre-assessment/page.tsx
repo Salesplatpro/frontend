@@ -42,6 +42,7 @@ const PreAssessmentPage: React.FC = () => {
 
   const [countdown, setCountdown] = useState(COUNTDOWN_FROM)
   const [isCountingDown, setIsCountingDown] = useState(false)
+  const [isWaitingForQuestions, setIsWaitingForQuestions] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRetaking, setIsRetaking] = useState(false)
   const [autoSubmitMessage, setAutoSubmitMessage] = useState('')
@@ -55,6 +56,9 @@ const PreAssessmentPage: React.FC = () => {
   const { lock, unlock } = useAssessmentLockStore()
 
   const questions = assessment?.questions ?? []
+  // Real questions may not exist yet for a brand-new talent — the initial
+  // response is a stub while generation runs server-side (fire-and-forget).
+  const isReadyToStart = questions.length > 0 && !assessment?.generating
   const totalSeconds = questions.length * SECONDS_PER_QUESTION
   const isFirst = currentQuestionIndex === 0
   const isLast = currentQuestionIndex === questions.length - 1
@@ -106,20 +110,33 @@ const PreAssessmentPage: React.FC = () => {
       assessment?.status === 'pending' &&
       !assessmentStarted &&
       !countdownCompleted &&
-      !isCountingDown
+      !isCountingDown &&
+      !isWaitingForQuestions
     ) {
       setIsCountingDown(true)
     }
-  }, [assessment, assessmentStarted, countdownCompleted, isCountingDown])
+  }, [
+    assessment,
+    assessmentStarted,
+    countdownCompleted,
+    isCountingDown,
+    isWaitingForQuestions,
+  ])
 
   useEffect(() => {
     if (!isCountingDown) return
 
     if (countdown <= 0) {
       setIsCountingDown(false)
-      setStartedAt(Date.now())
-      setCountdownCompleted(true)
-      setAssessmentStarted(true)
+      if (isReadyToStart) {
+        setStartedAt(Date.now())
+        setCountdownCompleted(true)
+        setAssessmentStarted(true)
+      } else {
+        // Questions aren't ready yet (still generating) — keep the user in a
+        // waiting state instead of falling through to a blank screen.
+        setIsWaitingForQuestions(true)
+      }
       return
     }
 
@@ -128,6 +145,23 @@ const PreAssessmentPage: React.FC = () => {
   }, [
     isCountingDown,
     countdown,
+    isReadyToStart,
+    setStartedAt,
+    setCountdownCompleted,
+    setAssessmentStarted,
+  ])
+
+  // Once generation finishes while we're waiting, transition straight into
+  // the assessment.
+  useEffect(() => {
+    if (!isWaitingForQuestions || !isReadyToStart) return
+    setIsWaitingForQuestions(false)
+    setStartedAt(Date.now())
+    setCountdownCompleted(true)
+    setAssessmentStarted(true)
+  }, [
+    isWaitingForQuestions,
+    isReadyToStart,
     setStartedAt,
     setCountdownCompleted,
     setAssessmentStarted,
@@ -249,6 +283,17 @@ const PreAssessmentPage: React.FC = () => {
         <span className="text-8xl font-bold text-blue-500 leading-none font-raleway">
           {countdown}
         </span>
+      </div>
+    )
+  }
+
+  if (isWaitingForQuestions) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+        <Spinner />
+        <p className="text-grey-700 font-raleway font-medium">
+          Still preparing your assessment questions...
+        </p>
       </div>
     )
   }
@@ -444,7 +489,7 @@ const PreAssessmentPage: React.FC = () => {
     )
   }
 
-  return null
+  return <Spinner fullPage />
 }
 
 export default PreAssessmentPage

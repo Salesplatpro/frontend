@@ -7,6 +7,7 @@ type AiConfigDraftStore = {
   drafts: Record<string, unknown>
   saveDraft: (jobId: string, values: unknown) => void
   clearDraft: (jobId: string) => void
+  clearAllDrafts: () => void
 }
 
 export const useAiConfigDraftStore = create<AiConfigDraftStore>()(
@@ -21,6 +22,7 @@ export const useAiConfigDraftStore = create<AiConfigDraftStore>()(
           delete next[jobId]
           return { drafts: next }
         }),
+      clearAllDrafts: () => set({ drafts: {} }),
     }),
     { name: 'ai-config-draft' },
   ),

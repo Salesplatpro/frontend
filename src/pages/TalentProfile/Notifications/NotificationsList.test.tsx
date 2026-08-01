@@ -56,6 +56,30 @@ describe('NotificationsList', () => {
     expect(screen.queryByText('Reject')).toBeNull()
   })
 
+  it('renders a concise title prominently above the longer message body', () => {
+    useNotificationsMock.mockReturnValue({
+      isLoading: false,
+      mutate: vi.fn(),
+      notifications: [
+        {
+          id: 'n1',
+          userId: 'talent-1',
+          title: 'Shortlisted for Backend Developer',
+          message:
+            "Great news! You've been shortlisted for Backend Developer. Watch your inbox — the recruiter will be in touch soon.",
+          isRead: false,
+          deleted: false,
+          createdAt: new Date().toISOString(),
+        },
+      ],
+    })
+    useMarkNotificationReadMock.mockReturnValue({ markAsRead: markAsReadFn })
+
+    render(<NotificationsList />)
+
+    expect(screen.getByText('Shortlisted for Backend Developer')).toBeTruthy()
+  })
+
   it('marks an unread notification as read when clicked', () => {
     const mutate = vi.fn()
     useNotificationsMock.mockReturnValue({

@@ -14,6 +14,8 @@ export interface Assessment {
   questions: AssessmentQuestion[]
   generatedAt: string
   roles: string[]
+  /** True while questions are still being generated server-side (fire-and-forget). */
+  generating?: boolean
 }
 
 export interface ApiResponse<T> {

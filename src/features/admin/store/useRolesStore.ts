@@ -24,12 +24,14 @@ interface RolesState {
   createRole: (payload: AdminRolePayload) => Promise<boolean>
   updateRole: (id: string, payload: AdminRolePayload) => Promise<boolean>
   deleteRole: (id: string) => Promise<boolean>
+  reset: () => void
 }
 
 export const useRolesStore = create<RolesState>()((set, get) => ({
   roles: [],
   isLoading: false,
   error: null,
+  reset: () => set({ roles: [], isLoading: false, error: null }),
   fetchRoles: async () => {
     set({ isLoading: true, error: null })
     try {

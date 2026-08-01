@@ -37,11 +37,20 @@
   background: var(--color-primary-tint);
 }
 
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+  line-height: var(--leading-normal);
+}
+
 .message {
   margin: 0;
   font-family: var(--font-body);
-  font-size: var(--text-md);
-  color: var(--color-text-heading);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   line-height: var(--leading-normal);
 }
 
