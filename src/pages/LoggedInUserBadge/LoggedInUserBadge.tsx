@@ -56,10 +56,10 @@ export const LoggedInUserBadge: React.FC = () => {
     }
   }, [isDropdownVisible])
 
-  // Handle logout
+  // Handle logout — logout() itself redirects to /login via a full page
+  // reload once all caches/stores are cleared.
   const handleLogout = () => {
     logout()
-    navigate('/login')
   }
 
   return (

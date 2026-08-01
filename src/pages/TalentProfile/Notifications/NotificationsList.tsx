@@ -38,6 +38,9 @@ const NotificationsList: React.FC = () => {
             notification.isRead ? '' : styles.unread
           }`}
           onClick={() => handleOpen(notification.id, notification.isRead)}>
+          {notification.title && (
+            <p className={styles.title}>{notification.title}</p>
+          )}
           <p className={styles.message}>{notification.message}</p>
           <span className={styles.timestamp}>
             {calculateDaysFromCreation(notification.createdAt)} days ago

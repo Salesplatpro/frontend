@@ -98,4 +98,48 @@ describe('InboxItem', () => {
     )
     expect(screen.getByText('Read More')).toBeTruthy()
   })
+
+  it('renders rich-text HTML content as formatted markup, not literal tags, once expanded', () => {
+    const htmlMessage = {
+      ...baseMessage,
+      content: '<p>Please review the <strong>attached offer</strong>.</p>',
+    }
+
+    render(
+      <InboxItem
+        message={htmlMessage}
+        isExpanded
+        onToggleExpand={vi.fn()}
+        onAcknowledge={vi.fn()}
+        onReject={vi.fn()}
+        truncateLimit={120}
+        displayMessage={htmlMessage.content}
+      />,
+    )
+
+    expect(screen.getByText('attached offer').tagName).toBe('STRONG')
+    expect(screen.queryByText(/<strong>/)).toBeNull()
+  })
+
+  it('shows plain, untagged text in the collapsed preview for HTML content', () => {
+    const htmlMessage = {
+      ...baseMessage,
+      content: '<p>Please review the <strong>attached offer</strong>.</p>',
+    }
+
+    render(
+      <InboxItem
+        message={htmlMessage}
+        isExpanded={false}
+        onToggleExpand={vi.fn()}
+        onAcknowledge={vi.fn()}
+        onReject={vi.fn()}
+        truncateLimit={120}
+        displayMessage="Please review the attached offer."
+      />,
+    )
+
+    expect(screen.getByText('Please review the attached offer.')).toBeTruthy()
+    expect(screen.queryByText(/<strong>/)).toBeNull()
+  })
 })

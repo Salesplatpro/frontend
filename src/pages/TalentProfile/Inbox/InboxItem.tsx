@@ -1,5 +1,7 @@
 import React from 'react'
 
+import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+
 import { calculateDaysFromCreation } from '../../../utils'
 import styles from './InboxItem.module.scss'
 
@@ -54,7 +56,11 @@ export const InboxItem: React.FC<InboxItemProps> = ({
           {sender.firstName} {sender.lastName}
         </div>
 
-        <p className={styles.content}>{displayMessage}</p>
+        {isExpanded ? (
+          <RichTextDisplay content={content} className={styles.content} />
+        ) : (
+          <p className={styles.content}>{displayMessage}</p>
+        )}
 
         {content.length > truncateLimit && (
           <button

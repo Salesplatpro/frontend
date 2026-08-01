@@ -9,7 +9,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useAcknowledgeMessage } from '@/features/messaging/hooks/useAcknowledgeMessage'
 import { useTalentMessages } from '@/features/messaging/hooks/useTalentMessages'
 
-import { truncateText } from '../../../utils/truncateTexts'
+import { stripHtml, truncateText } from '../../../utils/truncateTexts'
 import { InboxItem } from './InboxItem'
 import styles from './InboxList.module.scss'
 
@@ -111,11 +111,11 @@ const InboxList: React.FC = () => {
           onAcknowledge={() => handleAcknowledge(message.id)}
           onReject={() => handleReject(message.id)}
           truncateLimit={truncateLimit}
-          displayMessage={truncateText(
-            message.content,
-            truncateLimit,
-            expandedMessages[index] ?? false,
-          )}
+          displayMessage={
+            expandedMessages[index]
+              ? message.content
+              : truncateText(stripHtml(message.content), truncateLimit, false)
+          }
         />
       ))}
 

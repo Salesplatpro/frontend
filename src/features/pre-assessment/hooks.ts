@@ -13,43 +13,46 @@ export function usePreAssessment() {
 
   const setAssessment = usePreAssessmentStore((s) => s.setAssessment)
 
-  const load = useCallback(async () => {
-    setIsLoading(true)
-    setFetchError(null)
-    setIsProfileIncomplete(false)
-    try {
-      const res = await fetchAssessment()
-      setAssessmentLocal(res.data.preScreening)
-      setAssessment(res.data.preScreening)
-    } catch (err: unknown) {
-      const axiosError = err as {
-        response?: {
-          data?: {
-            errorCode?: string
-            message?: string
-            error?: { code?: string; message?: string }
+  const load = useCallback(
+    async (opts?: { silent?: boolean }) => {
+      if (!opts?.silent) setIsLoading(true)
+      setFetchError(null)
+      setIsProfileIncomplete(false)
+      try {
+        const res = await fetchAssessment()
+        setAssessmentLocal(res.data.preScreening)
+        setAssessment(res.data.preScreening)
+      } catch (err: unknown) {
+        const axiosError = err as {
+          response?: {
+            data?: {
+              errorCode?: string
+              message?: string
+              error?: { code?: string; message?: string }
+            }
           }
         }
+        const errorCode =
+          axiosError.response?.data?.error?.code ||
+          axiosError.response?.data?.errorCode
+        const message =
+          axiosError.response?.data?.error?.message ||
+          axiosError.response?.data?.message ||
+          'Failed to load assessment'
+        if (
+          errorCode === PROFILE_INCOMPLETE_CODE ||
+          message?.toLowerCase().includes('profile')
+        ) {
+          setIsProfileIncomplete(true)
+        } else {
+          setFetchError(message)
+        }
+      } finally {
+        if (!opts?.silent) setIsLoading(false)
       }
-      const errorCode =
-        axiosError.response?.data?.error?.code ||
-        axiosError.response?.data?.errorCode
-      const message =
-        axiosError.response?.data?.error?.message ||
-        axiosError.response?.data?.message ||
-        'Failed to load assessment'
-      if (
-        errorCode === PROFILE_INCOMPLETE_CODE ||
-        message?.toLowerCase().includes('profile')
-      ) {
-        setIsProfileIncomplete(true)
-      } else {
-        setFetchError(message)
-      }
-    } finally {
-      setIsLoading(false)
-    }
-  }, [setAssessment])
+    },
+    [setAssessment],
+  )
 
   useEffect(() => {
     const cached = usePreAssessmentStore.getState().assessment
@@ -60,6 +63,31 @@ export function usePreAssessment() {
     }
     void load()
   }, [load])
+
+  // For a brand-new talent, the first response is a stub with no questions
+  // yet while generation runs server-side (fire-and-forget). Poll silently
+  // until real questions arrive, instead of leaving the UI stuck on an empty
+  // question list once the countdown/loading state ends.
+  useEffect(() => {
+    if (!assessment?.generating) return
+
+    const POLL_INTERVAL_MS = 3000
+    const MAX_WAIT_MS = 60000
+    const startedAt = Date.now()
+
+    const id = setInterval(() => {
+      if (Date.now() - startedAt >= MAX_WAIT_MS) {
+        clearInterval(id)
+        setFetchError(
+          'Your assessment is taking longer than expected to generate. Please refresh the page in a moment.',
+        )
+        return
+      }
+      void load({ silent: true })
+    }, POLL_INTERVAL_MS)
+
+    return () => clearInterval(id)
+  }, [assessment?.generating, load])
 
   return {
     assessment,
