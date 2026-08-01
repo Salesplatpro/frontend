@@ -40,8 +40,6 @@ import {
   MyScoutJobs,
   ScoutJobHistory,
 } from '@/pages/RecruiterProfile/Batching/MyScoutJobs'
-import SearchResult from '@/pages/RecruiterProfile/Batching/TalentSearch/SearchResult'
-import SearchTalent from '@/pages/RecruiterProfile/Batching/TalentSearch/SearchTalent'
 import AllApplications from '@/pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from '@/pages/RecruiterProfile/Dashboard/Dashboard'
 import { EditJobTab } from '@/pages/RecruiterProfile/EditJob'
@@ -49,6 +47,8 @@ import JobDetail from '@/pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from '@/pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
+import SearchResult from '@/pages/RecruiterProfile/TalentSearch/SearchResult'
+import SearchTalent from '@/pages/RecruiterProfile/TalentSearch/SearchTalent'
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
 import ProgressView from '@/pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
@@ -236,11 +236,11 @@ export const routeConfig: RouteObject[] = [
             element: <ChooseMethod />,
           },
           {
-            path: 'scout/search-talent/:id',
+            path: 'talent-search',
             element: <SearchTalent />,
           },
           {
-            path: 'scout/search-results/:id',
+            path: 'talent-search/results',
             element: <SearchResult />,
           },
           {

@@ -6,6 +6,22 @@ export interface ProfileRole {
   name?: string
 }
 
+export interface ProfileOrganization {
+  id: string
+  name: string
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  industry?: string | null
+  website?: string | null
+}
+
+export interface ProfileCompletion {
+  percentage: number
+  isProfileComplete: boolean
+  canProceedToPlatform: boolean
+}
+
 export interface ProfileUser {
   id?: string
   email?: string
@@ -32,6 +48,7 @@ export interface ProfileUser {
   currency?: string
   maxSalary?: number | string
   minSalary?: number | string
+  compensationPeriod?: string
   prescreeningScore?: number | null
   assessmentRetryDate?: string | null
   roleChangeCount?: number
@@ -39,6 +56,8 @@ export interface ProfileUser {
   createdAt?: string
   updatedAt?: string
   userRoles?: ProfileRole[]
+  organization?: ProfileOrganization | null
+  profileCompletion?: ProfileCompletion
 }
 
 export interface ProfileApiResponse {
@@ -64,6 +83,7 @@ export interface ProfilePatchPayload {
   minSalary?: number
   maxSalary?: number
   currency?: string
+  compensationPeriod?: string
   workType?: WorkType[]
   cv?: string
   picture?: string
@@ -78,5 +98,6 @@ export interface ProfileFormValues {
   minSalary: string
   maxSalary: string
   currency: string
+  compensationPeriod: string
   workType: WorkType[]
 }

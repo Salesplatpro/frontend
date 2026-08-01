@@ -1,5 +1,6 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+
+import { BackButton } from '@/components/ui/BackButton'
 
 import { ColumnDef, DataTable, DisplayError } from '../../../components'
 import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
@@ -46,15 +47,15 @@ const columns: ColumnDef<ApplicationRow>[] = [
 ]
 
 const AllApplications: React.FC = () => {
-  const navigate = useNavigate()
   const { data, isLoading, error } = useFetchAllApplicationsQuery({})
   const applications: ApplicationRow[] = data?.data?.applications ?? []
 
   if (error) return <DisplayError message="Error loading applications" />
 
   return (
-    <div className="lg:w-[90%] mx-auto">
-      <div className="mb-4 flex items-center justify-between mt-8">
+    <div className="lg:w-[90%] mx-auto mt-8">
+      <BackButton />
+      <div className="mb-4 flex items-center justify-between mt-4">
         <h4 className="text-lg text-[#000] font-semibold">Applications</h4>
       </div>
       <DataTable
@@ -63,12 +64,6 @@ const AllApplications: React.FC = () => {
         isLoading={isLoading}
         ariaLabel="All applications"
       />
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="px-2 py-2 w-[185px] h-[48px] bg-blue-500 text-white font-raleway text-lg font-medium rounded hover:bg-blue-700 mt-6">
-        Back
-      </button>
     </div>
   )
 }

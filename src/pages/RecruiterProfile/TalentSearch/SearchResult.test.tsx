@@ -9,32 +9,31 @@ const { useSearchTalentDbQueryMock } = vi.hoisted(() => ({
   useSearchTalentDbQueryMock: vi.fn(),
 }))
 
-vi.mock('../../../../redux/api/recruiter', () => ({
+vi.mock('../../../redux/api/recruiter', () => ({
   useSearchTalentDbQuery: useSearchTalentDbQueryMock,
   useGetCampaignNameQuery: () => ({ data: undefined, isLoading: false }),
 }))
 
-const talent = (id: string, similarity: number) => ({
+const talent = (id: string) => ({
   id,
   firstName: 'Ada',
   lastName: 'Lovelace',
-  similarity,
   profile: {
     role: [{ id: 'r1', name: 'Software Engineer' }],
     experience: '4-6 years',
   },
 })
 
-const renderAt = (search = '?scoutJobId=sj-1&role=role-1') =>
+const renderAt = (search = '?role=role-1') =>
   render(
-    <MemoryRouter initialEntries={[`/scout/search-results/sj-1${search}`]}>
+    <MemoryRouter initialEntries={[`/talent-search/results${search}`]}>
       <Routes>
-        <Route path="/scout/search-results/:id" element={<SearchResult />} />
+        <Route path="/talent-search/results" element={<SearchResult />} />
       </Routes>
     </MemoryRouter>,
   )
 
-describe('SearchResult (talent DB search — Path A)', () => {
+describe('SearchResult (standalone Talent Search page)', () => {
   it('shows a spinner while loading', () => {
     useSearchTalentDbQueryMock.mockReturnValue({
       data: undefined,
@@ -79,9 +78,9 @@ describe('SearchResult (talent DB search — Path A)', () => {
     expect(screen.getByText('No talents fit this description')).toBeTruthy()
   })
 
-  it('renders matched talents with their similarity score', () => {
+  it('renders matched talents without requiring any scout job context', () => {
     useSearchTalentDbQueryMock.mockReturnValue({
-      data: { data: { talents: [talent('t1', 91)] } },
+      data: { data: { talents: [talent('t1')] } },
       isLoading: false,
       isFetching: false,
       error: undefined,
@@ -90,11 +89,13 @@ describe('SearchResult (talent DB search — Path A)', () => {
 
     expect(screen.getByText('Ada Lovelace')).toBeTruthy()
     expect(screen.getByText('Software Engineer')).toBeTruthy()
+    const lastCallArgs = useSearchTalentDbQueryMock.mock.calls.at(-1)?.[0]
+    expect(lastCallArgs).not.toHaveProperty('scoutJobId')
   })
 
   it('disables Previous on the first page and disables Next when a page is short of a full page', () => {
     useSearchTalentDbQueryMock.mockReturnValue({
-      data: { data: { talents: [talent('t1', 91)] } },
+      data: { data: { talents: [talent('t1')] } },
       isLoading: false,
       isFetching: false,
       error: undefined,
@@ -112,7 +113,7 @@ describe('SearchResult (talent DB search — Path A)', () => {
   })
 
   it('advances to the next page — requesting a new offset — when a full page of results is returned', () => {
-    const fullPage = Array.from({ length: 20 }, (_, i) => talent(`t${i}`, 50))
+    const fullPage = Array.from({ length: 20 }, (_, i) => talent(`t${i}`))
     useSearchTalentDbQueryMock.mockReturnValue({
       data: { data: { talents: fullPage } },
       isLoading: false,

@@ -24,6 +24,7 @@ export const buildProfileFormValues = (
     minSalary: user?.minSalary != null ? String(user.minSalary) : '',
     maxSalary: user?.maxSalary != null ? String(user.maxSalary) : '',
     currency: user?.currency || '',
+    compensationPeriod: user?.compensationPeriod || '',
     workType: user?.workType || [],
   }
 

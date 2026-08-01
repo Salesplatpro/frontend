@@ -94,7 +94,7 @@ export const ScoutJobHistory = () => {
         activeKey={activeTab}
         onChange={(key) => {
           if (key === 'search') {
-            navigate(`/recruiterDashboard/scout/search-talent/${scoutJobId}`)
+            navigate('/recruiterDashboard/talent-search')
             return
           }
           setActiveTab(key)

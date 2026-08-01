@@ -21,6 +21,9 @@ export const diffProfileValues = (
   if (current.currency !== initial.currency) {
     patch.currency = current.currency
   }
+  if (current.compensationPeriod !== initial.compensationPeriod) {
+    patch.compensationPeriod = current.compensationPeriod
+  }
   const roleChanged =
     current.role.length !== initial.role.length ||
     current.role.some((role) => !initial.role.includes(role))
