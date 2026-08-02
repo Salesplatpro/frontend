@@ -3,47 +3,15 @@ import { Link } from 'react-router-dom'
 
 import { Heading } from '@/components/ui/Typography'
 
-import { ColumnDef, DataTable } from '../../../components'
-import { calculateDaysFromCreation } from '../../../utils'
+import { DataTable } from '../../../components'
+import { ApplicationColumnRow, buildApplicationColumns } from './columns'
 import styles from './RecentApplications.module.scss'
 
-interface ApplicationRow {
-  applicantName: string
-  prescreeningScore?: number
-  cvSimilarityScore?: number
-  dateApplied: string
-}
-
 interface RecentApplicationsProps {
-  infoData: ApplicationRow[]
+  infoData: ApplicationColumnRow[]
 }
 
-const columns: ColumnDef<ApplicationRow>[] = [
-  {
-    key: 'name',
-    header: 'Applicant name',
-    align: 'left',
-    render: (row) => row.applicantName,
-  },
-  {
-    key: 'prescreening',
-    header: 'Pre screening',
-    align: 'center',
-    render: (row) => `${row.prescreeningScore ?? 'nill'}%`,
-  },
-  {
-    key: 'cvMatch',
-    header: 'CV match',
-    align: 'center',
-    render: (row) => `${row.cvSimilarityScore ?? 'nill'}%`,
-  },
-  {
-    key: 'dateApplied',
-    header: 'Date Applied',
-    align: 'center',
-    render: (row) => `${calculateDaysFromCreation(row.dateApplied)} days ago`,
-  },
-]
+const columns = buildApplicationColumns()
 
 const RecentApplications: React.FC<RecentApplicationsProps> = ({
   infoData,

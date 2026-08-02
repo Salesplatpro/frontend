@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { BackButton } from '@/components/ui/BackButton'
+import {
+  DataTable,
+  sortByAccessor,
+  TableToolbar,
+} from '@/components/ui/DataTable'
+import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
 
-import { ColumnDef, DataTable, DisplayError } from '../../../components'
+import { DisplayError } from '../../../components'
 import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
-import { calculateDaysFromCreation } from '../../../utils'
+import { ApplicationColumnRow, buildApplicationColumns } from './columns'
 
-interface ApplicationRow {
+interface RawApplicationRow {
   talent?: {
     firstName: string
     lastName: string
@@ -18,37 +24,66 @@ interface ApplicationRow {
   createdAt: string
 }
 
-const columns: ColumnDef<ApplicationRow>[] = [
-  {
-    key: 'name',
-    header: 'Applicant name',
-    align: 'left',
-    render: (row) =>
-      `${row.talent?.firstName ?? ''} ${row.talent?.lastName ?? ''}`.trim(),
-  },
-  {
-    key: 'prescreening',
-    header: 'Pre screening',
-    align: 'center',
-    render: (row) => `${row.talent?.profile.prescreeningScore ?? 'nill'}%`,
-  },
-  {
-    key: 'cvMatch',
-    header: 'CV match',
-    align: 'center',
-    render: (row) => `${row.cvSimilarityScore ?? 'nill'}%`,
-  },
-  {
-    key: 'dateApplied',
-    header: 'Date Applied',
-    align: 'center',
-    render: (row) => `${calculateDaysFromCreation(row.createdAt)} days ago`,
-  },
-]
+const toColumnRow = (row: RawApplicationRow): ApplicationColumnRow => ({
+  applicantName: `${row.talent?.firstName ?? ''} ${
+    row.talent?.lastName ?? ''
+  }`.trim(),
+  prescreeningScore: row.talent?.profile.prescreeningScore,
+  cvSimilarityScore: row.cvSimilarityScore,
+  dateApplied: row.createdAt,
+})
+
+type SortDirection = 'asc' | 'desc'
+
+interface ApplicationsFilterValues {
+  search: string
+}
+
+const defaultApplicationsFilters: ApplicationsFilterValues = { search: '' }
+
+const APPLICATIONS_FILTER_FIELDS: FilterFieldConfig<ApplicationsFilterValues>[] =
+  [
+    {
+      type: 'search',
+      key: 'search',
+      label: 'Search',
+      placeholder: 'Search by applicant name',
+    },
+  ]
+
+const columns = buildApplicationColumns()
 
 const AllApplications: React.FC = () => {
   const { data, isLoading, error } = useFetchAllApplicationsQuery({})
-  const applications: ApplicationRow[] = data?.data?.applications ?? []
+  const [filters, setFilters] = useState<ApplicationsFilterValues>(
+    defaultApplicationsFilters,
+  )
+  const [sortKey, setSortKey] = useState('dateApplied')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+
+  const applicationsRaw: RawApplicationRow[] = data?.data?.applications ?? []
+  const applicationRows = applicationsRaw.map(toColumnRow)
+
+  const query = filters.search.trim().toLowerCase()
+  const filteredApplications = query
+    ? applicationRows.filter((row) =>
+        row.applicantName.toLowerCase().includes(query),
+      )
+    : applicationRows
+
+  const sortColumn = columns.find((col) => col.key === sortKey)
+  const applications = sortColumn?.sortAccessor
+    ? sortByAccessor(
+        filteredApplications,
+        sortColumn.sortAccessor,
+        sortDirection,
+      )
+    : filteredApplications
+
+  const handleSortChange = (key: string, direction: SortDirection) => {
+    setSortKey(key)
+    setSortDirection(direction)
+  }
 
   if (error) return <DisplayError message="Error loading applications" />
 
@@ -58,12 +93,32 @@ const AllApplications: React.FC = () => {
       <div className="mb-4 flex items-center justify-between mt-4">
         <h4 className="text-lg text-[#000] font-semibold">Applications</h4>
       </div>
-      <DataTable
-        columns={columns}
-        data={applications}
-        isLoading={isLoading}
-        ariaLabel="All applications"
-      />
+      <div className="flex flex-col md:flex-row gap-5 items-start">
+        <FilterPanel
+          fields={APPLICATIONS_FILTER_FIELDS}
+          filters={filters}
+          defaultFilters={defaultApplicationsFilters}
+          onApply={setFilters}
+          ariaLabel="Filter applications"
+        />
+        <div className="flex flex-col gap-3 min-w-0 flex-1">
+          <TableToolbar
+            columns={columns}
+            resultsCount={applications.length}
+            visibleColumnKeys={[]}
+            onToggleColumn={() => {}}
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+          />
+          <DataTable
+            columns={columns}
+            data={applications}
+            isLoading={isLoading}
+            ariaLabel="All applications"
+          />
+        </div>
+      </div>
     </div>
   )
 }
