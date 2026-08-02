@@ -1,12 +1,14 @@
 import 'react-responsive-modal/styles.css'
 
 import React, { useMemo, useState } from 'react'
+import { DateRange } from 'react-day-picker'
 import Modal from 'react-responsive-modal'
 import { useLocation, useParams } from 'react-router-dom'
 
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
-import { sortByAccessor } from '@/components/ui/DataTable'
+import { sortByAccessor, TableToolbar } from '@/components/ui/DataTable'
+import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
 import { Spinner } from '@/components/ui/Spinner'
 import { Tabs } from '@/components/ui/Tabs'
 import { useBulkUpdateApplicationStatus } from '@/features/applications/hooks/useBulkUpdateApplicationStatus'
@@ -15,20 +17,81 @@ import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMess
 import { notify } from '@/utils/toastNotifications'
 
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
-import {
-  ApplicantFilters,
-  ApplicantFiltersValues,
-  defaultApplicantFilters,
-} from './ApplicantFilters'
 import { Pagination } from './Pagination'
 import styles from './SingleJobPost.module.scss'
-import {
-  buildColumns,
-  SingleJobTable,
-  SORTABLE_COLUMN_KEYS,
-  TOGGLEABLE_COLUMN_KEYS,
-} from './SingleJobTable'
-import { Toolbar } from './Toolbar'
+import { buildColumns, SingleJobTable } from './SingleJobTable'
+
+export type CvRankingTier = 'all' | 'top3' | 'top5' | 'top10' | 'unranked'
+export type AiMatchLevel =
+  | 'all'
+  | 'any'
+  | 'high'
+  | 'medium'
+  | 'low'
+  | 'unavailable'
+
+export interface ApplicantFiltersValues {
+  search: string
+  cvRankingTier: CvRankingTier
+  aiMatchLevel: AiMatchLevel
+  dateRange?: DateRange
+}
+
+const defaultApplicantFilters: ApplicantFiltersValues = {
+  search: '',
+  cvRankingTier: 'all',
+  aiMatchLevel: 'all',
+  dateRange: undefined,
+}
+
+const APPLICANT_FILTER_FIELDS: FilterFieldConfig<ApplicantFiltersValues>[] = [
+  {
+    type: 'search',
+    key: 'search',
+    label: 'Search',
+    placeholder: 'Search by name or email',
+  },
+  {
+    type: 'select',
+    key: 'cvRankingTier',
+    label: 'CV Ranking',
+    offValue: 'all',
+    options: [
+      { label: 'All Rankings', value: 'all' },
+      { label: 'Top 3', value: 'top3' },
+      { label: 'Top 5', value: 'top5' },
+      { label: 'Top 10', value: 'top10' },
+      { label: 'Not Yet Ranked', value: 'unranked' },
+    ],
+  },
+  {
+    type: 'select',
+    key: 'aiMatchLevel',
+    label: 'AI Match',
+    offValue: 'all',
+    options: [
+      { label: 'All Match Levels', value: 'all' },
+      { label: 'Strong', value: 'high' },
+      { label: 'Good', value: 'medium' },
+      { label: 'Weak', value: 'low' },
+      { label: 'Not Available', value: 'unavailable' },
+    ],
+    pills: [
+      { label: 'With AI Match', value: 'any' },
+      { label: 'No AI Match', value: 'unavailable' },
+    ],
+  },
+  {
+    type: 'dateRange',
+    key: 'dateRange',
+    label: 'Date Applied',
+    quickRanges: [
+      { label: 'Today', days: 0 },
+      { label: 'This Week', days: 7 },
+      { label: 'This Month', days: 30 },
+    ],
+  },
+]
 
 type StatusTab = 'all' | 'shortlisted' | 'pending' | 'rejected'
 
@@ -97,12 +160,25 @@ export const SingleJobPost = () => {
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
   const [messageContent, setMessageContent] = useState('')
 
+  // Column defs with no-op action callbacks — only used here to derive
+  // toolbar metadata (toggleable/sortable keys, labels) from the same
+  // source of truth SingleJobTable renders from, so they can't drift.
+  const toolbarColumns = useMemo(
+    () =>
+      buildColumns({
+        onShortlist: () => {},
+        onReject: () => {},
+        onMessage: () => {},
+      }),
+    [],
+  )
+
   const [statusTab, setStatusTab] = useState<StatusTab>('all')
   const [filters, setFilters] = useState<ApplicantFiltersValues>(
     defaultApplicantFilters,
   )
-  const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(
-    TOGGLEABLE_COLUMN_KEYS,
+  const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(() =>
+    toolbarColumns.filter((col) => col.toggleable).map((col) => col.key),
   )
   const [sortKey, setSortKey] = useState('dateApplied')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
@@ -215,18 +291,14 @@ export const SingleJobPost = () => {
   )
 
   const sortedApplications = useMemo(() => {
-    const column = buildColumns({
-      onShortlist: () => {},
-      onReject: () => {},
-      onMessage: () => {},
-    }).find((col) => col.key === sortKey)
+    const column = toolbarColumns.find((col) => col.key === sortKey)
     if (!column?.sortAccessor) return filteredApplications
     return sortByAccessor(
       filteredApplications,
       column.sortAccessor,
       sortDirection,
     )
-  }, [filteredApplications, sortKey, sortDirection])
+  }, [filteredApplications, sortKey, sortDirection, toolbarColumns])
 
   const paginatedApplications = useMemo(() => {
     const start = (page - 1) * pageSize
@@ -277,7 +349,13 @@ export const SingleJobPost = () => {
       </div>
 
       <div className={styles.layout}>
-        <ApplicantFilters filters={filters} onApply={handleFiltersApply} />
+        <FilterPanel
+          fields={APPLICANT_FILTER_FIELDS}
+          filters={filters}
+          defaultFilters={defaultApplicantFilters}
+          onApply={handleFiltersApply}
+          ariaLabel="Filter applicants"
+        />
 
         <div className={styles.mainColumn}>
           <Tabs
@@ -329,16 +407,40 @@ export const SingleJobPost = () => {
             </div>
           )}
 
-          <Toolbar
+          <TableToolbar
+            columns={toolbarColumns}
             resultsCount={sortedApplications.length}
             visibleColumnKeys={visibleColumnKeys}
             onToggleColumn={handleToggleColumn}
             sortKey={
-              SORTABLE_COLUMN_KEYS.includes(sortKey) ? sortKey : 'dateApplied'
+              toolbarColumns.some(
+                (col) => col.key === sortKey && col.sortAccessor,
+              )
+                ? sortKey
+                : 'dateApplied'
             }
             sortDirection={sortDirection}
             onSortChange={handleSortChange}
-            exportRows={sortedApplications}
+            exportConfig={{
+              rows: sortedApplications,
+              headers: [
+                'Name',
+                'Email',
+                'Job Status',
+                'CV Ranking',
+                'AI Match',
+                'Date Applied',
+              ],
+              toCsvRow: (item) => [
+                `${item.talent.firstName} ${item.talent.lastName}`,
+                item.talent.email,
+                item.status,
+                item.rank ? `#${item.rank}` : '',
+                item.matchVerdict ?? '',
+                new Date(item.createdAt).toISOString(),
+              ],
+              filename: 'applicants.csv',
+            }}
           />
 
           <SingleJobTable
