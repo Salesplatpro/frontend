@@ -5,7 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components'
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { ColumnDef, DataTable } from '@/components/ui/DataTable'
+import {
+  ColumnDef,
+  DataTable,
+  sortByAccessor,
+  TableToolbar,
+} from '@/components/ui/DataTable'
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown'
 import { EmptyState } from '@/components/ui/EmptyState'
 import {
@@ -59,9 +64,13 @@ const ActionsCell = ({
   )
 }
 
+type SortDirection = 'asc' | 'desc'
+
 export const MyScoutJobs = () => {
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
+  const [sortKey, setSortKey] = useState('createdAt')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [jobToDelete, setJobToDelete] = useState<ScoutJobRow | null>(null)
   const { data, isLoading, isError } = useGetScoutJobsQuery({
     limit: 100,
@@ -70,11 +79,14 @@ export const MyScoutJobs = () => {
   const [deleteScoutJob, { isLoading: isDeleting }] =
     useDeleteScoutJobMutation()
 
-  const scoutJobs: ScoutJobRow[] = Array.isArray(data?.data?.scoutJobs)
+  const scoutJobsRaw: ScoutJobRow[] = Array.isArray(data?.data?.scoutJobs)
     ? data.data.scoutJobs
     : []
-  const startIndex = (page - 1) * ROWS_PER_PAGE
-  const paginatedJobs = scoutJobs.slice(startIndex, startIndex + ROWS_PER_PAGE)
+
+  const handleSortChange = (key: string, direction: SortDirection) => {
+    setSortKey(key)
+    setSortDirection(direction)
+  }
 
   const handleDelete = async () => {
     if (!jobToDelete) return
@@ -91,6 +103,7 @@ export const MyScoutJobs = () => {
     {
       key: 'name',
       header: 'Campaign Name',
+      sortLabel: 'Campaign Name',
       render: (row) => row.name,
       sortAccessor: (row) => row.name,
     },
@@ -102,6 +115,7 @@ export const MyScoutJobs = () => {
     {
       key: 'createdAt',
       header: 'Created',
+      sortLabel: 'Created',
       hideBelow: 640,
       render: (row) => new Date(row.createdAt).toLocaleDateString(),
       sortAccessor: (row) => row.createdAt,
@@ -113,6 +127,11 @@ export const MyScoutJobs = () => {
       render: (row) => <ActionsCell row={row} onDelete={setJobToDelete} />,
     },
   ]
+
+  const sortColumn = columns.find((col) => col.key === sortKey)
+  const scoutJobs = sortColumn?.sortAccessor
+    ? sortByAccessor(scoutJobsRaw, sortColumn.sortAccessor, sortDirection)
+    : scoutJobsRaw
 
   return (
     <div className="py-4 space-y-6">
@@ -147,9 +166,21 @@ export const MyScoutJobs = () => {
         />
       ) : (
         <>
+          <TableToolbar
+            columns={columns}
+            resultsCount={scoutJobs.length}
+            visibleColumnKeys={[]}
+            onToggleColumn={() => {}}
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+            onSortChange={handleSortChange}
+          />
           <DataTable
             columns={columns}
-            data={paginatedJobs}
+            data={scoutJobs.slice(
+              (page - 1) * ROWS_PER_PAGE,
+              page * ROWS_PER_PAGE,
+            )}
             isLoading={isLoading}
             getRowKey={(row) => row.id}
             allowOverflow
