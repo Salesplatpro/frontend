@@ -1,9 +1,14 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { ColumnDef, DataTable, sortByAccessor } from '@/components/ui/DataTable'
+import {
+  ColumnDef,
+  DataTable,
+  sortByAccessor,
+  TableToolbar,
+} from '@/components/ui/DataTable'
 import { Tabs } from '@/components/ui/Tabs'
 import { useGetScoutJobScoutsQuery } from '@/redux/api/recruiter'
 
@@ -15,11 +20,17 @@ interface ScoutReportRow {
   createdAt: string
 }
 
+type SortDirection = 'asc' | 'desc'
+
 export const ScoutJobHistory = () => {
   const params = useParams()
   const navigate = useNavigate()
   const scoutJobId = params.scoutJobId ?? ''
   const [activeTab, setActiveTab] = useState('batches')
+  // Rank highest-scoring CVs first by default so recruiters can see at a
+  // glance which uploaded file performed best.
+  const [sortKey, setSortKey] = useState('evaluationScore')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
 
   const { data, isLoading } = useGetScoutJobScoutsQuery(
     { scoutJobId, limit: 100, offset: 0 },
@@ -32,12 +43,10 @@ export const ScoutJobHistory = () => {
     ? data.data.scoutReports
     : []
 
-  // Rank highest-scoring CVs first by default so recruiters can see at a
-  // glance which uploaded file performed best.
-  const scoutReports = useMemo(
-    () => sortByAccessor(scoutReportsRaw, (row) => row.evaluationScore, 'desc'),
-    [scoutReportsRaw],
-  )
+  const handleSortChange = (key: string, direction: SortDirection) => {
+    setSortKey(key)
+    setSortDirection(direction)
+  }
 
   const columns: ColumnDef<ScoutReportRow>[] = [
     {
@@ -49,6 +58,7 @@ export const ScoutJobHistory = () => {
     {
       key: 'cvName',
       header: 'File Name',
+      sortLabel: 'File Name',
       render: (row) => row.cvName ?? '—',
       sortAccessor: (row) => row.cvName,
     },
@@ -61,6 +71,7 @@ export const ScoutJobHistory = () => {
     {
       key: 'evaluationScore',
       header: 'Score',
+      sortLabel: 'Score',
       render: (row) =>
         row.evaluationScore != null ? `${row.evaluationScore}%` : '—',
       sortAccessor: (row) => row.evaluationScore,
@@ -68,11 +79,17 @@ export const ScoutJobHistory = () => {
     {
       key: 'createdAt',
       header: 'Scored On',
+      sortLabel: 'Scored On',
       hideBelow: 640,
       render: (row) => new Date(row.createdAt).toLocaleString(),
       sortAccessor: (row) => row.createdAt,
     },
   ]
+
+  const sortColumn = columns.find((col) => col.key === sortKey)
+  const scoutReports = sortColumn?.sortAccessor
+    ? sortByAccessor(scoutReportsRaw, sortColumn.sortAccessor, sortDirection)
+    : scoutReportsRaw
 
   return (
     <div className="py-4 space-y-4">
@@ -111,6 +128,16 @@ export const ScoutJobHistory = () => {
           Upload More CVs
         </Button>
       </div>
+
+      <TableToolbar
+        columns={columns}
+        resultsCount={scoutReports.length}
+        visibleColumnKeys={[]}
+        onToggleColumn={() => {}}
+        sortKey={sortKey}
+        sortDirection={sortDirection}
+        onSortChange={handleSortChange}
+      />
 
       <DataTable
         columns={columns}
