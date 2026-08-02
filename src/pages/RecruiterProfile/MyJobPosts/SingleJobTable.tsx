@@ -56,9 +56,10 @@ const formatAbsoluteDate = (dateString: string) =>
     year: 'numeric',
   })
 
-// Single source of truth for column labels — shared by the column defs below
-// and the toolbar's "Columns" picker / "Sort by" select, so they can't drift.
-export const COLUMN_LABELS: Record<string, string> = {
+// Single source of truth for column labels — TableToolbar derives its
+// "Columns" picker / "Sort by" select straight from these column defs
+// (via each column's `toggleable`/`sortAccessor`/`header`), so they can't drift.
+const COLUMN_LABELS: Record<string, string> = {
   name: 'Name',
   stage: 'Stage',
   status: 'Job Status',
@@ -69,22 +70,6 @@ export const COLUMN_LABELS: Record<string, string> = {
 }
 
 const MANDATORY_COLUMN_KEYS = ['name', 'details']
-
-export const TOGGLEABLE_COLUMN_KEYS = [
-  'stage',
-  'status',
-  'cvRanking',
-  'aiMatch',
-  'dateApplied',
-]
-
-export const SORTABLE_COLUMN_KEYS = [
-  'name',
-  'status',
-  'cvRanking',
-  'aiMatch',
-  'dateApplied',
-]
 
 interface ApplicantActionsCellProps {
   item: SingleJobDetails
@@ -183,6 +168,7 @@ export const buildColumns = ({
     key: 'stage',
     header: COLUMN_LABELS.stage,
     align: 'center',
+    toggleable: true,
     render: (item) => getStatusStage(item.status),
   },
   {
@@ -190,6 +176,7 @@ export const buildColumns = ({
     header: COLUMN_LABELS.status,
     align: 'center',
     hideBelow: 768,
+    toggleable: true,
     render: (item) => (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <StatusBadge
@@ -206,6 +193,7 @@ export const buildColumns = ({
     header: COLUMN_LABELS.cvRanking,
     align: 'center',
     hideBelow: 900,
+    toggleable: true,
     render: (item) => (item.rank ? `#${item.rank}` : '—'),
     sortAccessor: (item) => item.rank ?? Infinity,
   },
@@ -214,6 +202,7 @@ export const buildColumns = ({
     header: COLUMN_LABELS.aiMatch,
     align: 'center',
     hideBelow: 900,
+    toggleable: true,
     render: (item) => (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <MatchScoreRing
@@ -232,6 +221,7 @@ export const buildColumns = ({
     header: COLUMN_LABELS.dateApplied,
     align: 'center',
     hideBelow: 768,
+    toggleable: true,
     render: (item) => (
       <div>
         <div>{calculateDaysFromCreation(item.createdAt)} days ago</div>
