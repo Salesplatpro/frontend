@@ -23,6 +23,10 @@ export interface ColumnDef<T> {
   render: (row: T, index: number) => React.ReactNode
   /** Opt a column into client-side sorting — return the raw comparable value for a row. */
   sortAccessor?: (row: T) => string | number | null | undefined
+  /** Plain-text label for this column in a TableToolbar's "Sort by" select — falls back to `header` when it's a string. */
+  sortLabel?: string
+  /** Opts this column into a TableToolbar's column-visibility picker. */
+  toggleable?: boolean
 }
 
 interface DataTableProps<T> {
