@@ -19,6 +19,7 @@ import {
   AiConfigFields,
   AiConfigFieldValues,
   DICHOTOMY_COUNT_FIELDS,
+  DICHOTOMY_ERROR_KEY,
 } from './AiConfigFields'
 import { aiConfigValidationSchema } from './aiConfigValidationSchema'
 import useGeneratedQuestion from './useGeneratedQuestion'
@@ -47,7 +48,9 @@ const DEFAULT_VALUES: AiConfigValues = {
   jobId: '',
 }
 
-const identity = (key: keyof AiConfigFieldValues) => key
+const identity = (
+  key: keyof AiConfigFieldValues | typeof DICHOTOMY_ERROR_KEY,
+) => key
 
 const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   const { jobId } = useParams()
@@ -84,7 +87,6 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
         minPrescreeningScore: configData.minPrescreeningScore ?? '',
         cvSimilarity: configData.cvSimilarity ? 'true' : 'false',
         minCvSimilarityScore: configData.minCvSimilarityScore ?? '',
-        noOfCvSimilarCandidates: configData.noOfCvSimilarCandidates ?? '',
         personalizedAssessment: configData.personalizedAssessment
           ? 'true'
           : 'false',
@@ -121,12 +123,8 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
   ) => {
     const cleanedValues: Partial<AiConfigValues> = { ...values }
 
-    if (values.prescreeningAssessment === 'false') {
-      delete cleanedValues.minPrescreeningScore
-    }
     if (values.cvSimilarity === 'false') {
       delete cleanedValues.minCvSimilarityScore
-      delete cleanedValues.noOfCvSimilarCandidates
     }
     if (values.personalizedAssessment === 'false') {
       delete cleanedValues.noPersonalizedQuestions

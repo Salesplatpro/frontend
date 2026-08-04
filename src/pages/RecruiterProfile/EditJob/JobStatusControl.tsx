@@ -18,14 +18,24 @@ import styles from './JobStatusControl.module.scss'
 type JobStatusControlProps = {
   jobId: string
   status: string
+  aiConfigId?: string | null
 }
 
-export const JobStatusControl = ({ jobId, status }: JobStatusControlProps) => {
+export const JobStatusControl = ({
+  jobId,
+  status,
+  aiConfigId,
+}: JobStatusControlProps) => {
   const navigate = useNavigate()
   const [currentStatus, setCurrentStatus] = useState(status)
   const [updateJob, { isLoading: isUpdatingStatus }] = useUpdateJobMutation()
   const [deleteJob, { isLoading: isDeleting }] = useDeleteJobMutation()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+
+  const canActivate = !!aiConfigId
+  const statusOptions = canActivate
+    ? JOB_STATUS_OPTIONS
+    : JOB_STATUS_OPTIONS.filter((option) => option.value !== 'active')
 
   // `status` comes from a query on a different RTK Query API slice than the one
   // `updateJob` invalidates, so it won't refresh on its own after a save —
@@ -65,11 +75,16 @@ export const JobStatusControl = ({ jobId, status }: JobStatusControlProps) => {
         <div className={styles.statusField}>
           <p className={styles.label}>Job Status</p>
           <Select
-            options={JOB_STATUS_OPTIONS}
+            options={statusOptions}
             value={currentStatus}
             onChange={(value) => void handleStatusChange(value)}
             disabled={isUpdatingStatus}
           />
+          {!canActivate && currentStatus !== 'active' && (
+            <p className={styles.aiConfigNote}>
+              Add an AI screening configuration before activating this job.
+            </p>
+          )}
         </div>
         <StatusBadge
           status={currentStatus}

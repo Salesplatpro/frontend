@@ -116,7 +116,6 @@ export const EditJobTab = () => {
         minPrescreeningScore: aiConfig.minPrescreeningScore ?? '',
         cvSimilarity: aiConfig.cvSimilarity ? 'true' : 'false',
         minCvSimilarityScore: aiConfig.minCvSimilarityScore ?? '',
-        noOfCvSimilarCandidates: aiConfig.noOfCvSimilarCandidates ?? '',
         personalizedAssessment: aiConfig.personalizedAssessment
           ? 'true'
           : 'false',
@@ -165,12 +164,8 @@ export const EditJobTab = () => {
     }
 
     const cleanedAiConfig: Partial<AiConfigFieldValues> = { ...aiConfigValues }
-    if (aiConfigValues.prescreeningAssessment === 'false') {
-      delete cleanedAiConfig.minPrescreeningScore
-    }
     if (aiConfigValues.cvSimilarity === 'false') {
       delete cleanedAiConfig.minCvSimilarityScore
-      delete cleanedAiConfig.noOfCvSimilarCandidates
     }
     if (aiConfigValues.personalizedAssessment === 'false') {
       delete cleanedAiConfig.noPersonalizedQuestions
@@ -182,9 +177,9 @@ export const EditJobTab = () => {
       delete cleanedAiConfig.noOfTFQuestions
       delete cleanedAiConfig.noOfJPQuestions
     } else {
-      // Validation requires all four counts when personalityEvaluation is
-      // enabled; this only guards against a stray '' slipping through
-      // (fails backend isInt()) rather than representing an intentional skip.
+      // Each dichotomy pair is independently optional (only one of the four
+      // is required overall) — a blank count means "skip this pair" and must
+      // not be sent as '' (fails backend isInt()).
       DICHOTOMY_COUNT_FIELDS.forEach((field) => {
         if (cleanedAiConfig[field] === '' || cleanedAiConfig[field] == null) {
           delete cleanedAiConfig[field]
@@ -241,7 +236,11 @@ export const EditJobTab = () => {
       </h2>
       <p className={tabStyles.subheading}>Modify your existing job post</p>
 
-      <JobStatusControl jobId={jobId ?? ''} status={job.status ?? 'draft'} />
+      <JobStatusControl
+        jobId={jobId ?? ''}
+        status={job.status ?? 'draft'}
+        aiConfigId={aiConfigId}
+      />
 
       <Formik
         initialValues={initialValues}
