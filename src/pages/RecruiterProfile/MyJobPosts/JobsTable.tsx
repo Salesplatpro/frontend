@@ -25,12 +25,17 @@ import styles from './JobsTable.module.scss'
 type StatusCellProps = {
   jobId: string
   status: string
+  aiConfigId?: string | null
 }
 
-const StatusCell = ({ jobId, status }: StatusCellProps) => {
+const StatusCell = ({ jobId, status, aiConfigId }: StatusCellProps) => {
   const [updateJob, { isLoading }] = useUpdateJobMutation()
   const [isEditing, setIsEditing] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const statusOptions = aiConfigId
+    ? JOB_STATUS_OPTIONS
+    : JOB_STATUS_OPTIONS.filter((option) => option.value !== 'active')
 
   useEffect(() => {
     if (!isEditing) return
@@ -61,7 +66,7 @@ const StatusCell = ({ jobId, status }: StatusCellProps) => {
     <div className={styles.statusCell} ref={containerRef}>
       {isEditing ? (
         <Select
-          options={JOB_STATUS_OPTIONS}
+          options={statusOptions}
           value={status}
           onChange={(value) => void handleChange(value)}
           disabled={isLoading}
@@ -144,7 +149,11 @@ export const JobsTable = ({ data }: JobsTableType) => {
         header: 'Status',
         align: 'center',
         render: (job) => (
-          <StatusCell jobId={job.id} status={job.status ?? 'draft'} />
+          <StatusCell
+            jobId={job.id}
+            status={job.status ?? 'draft'}
+            aiConfigId={job.aiConfigId}
+          />
         ),
       },
       {

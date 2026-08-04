@@ -25,6 +25,12 @@
   font-weight: 600;
 }
 
+.aiConfigNote {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
 .dangerZone {
   display: flex;
   align-items: center;

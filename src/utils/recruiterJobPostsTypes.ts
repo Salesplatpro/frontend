@@ -116,7 +116,6 @@ export interface JobAiConfig {
   cvSimilarity: boolean
   minCvSimilarityScore: number
   minPrescreeningScore: number
-  noOfCvSimilarCandidates: number
   noPersonalizedQuestions: number
   personalityEvaluation: boolean
   noOfEIQuestions: number

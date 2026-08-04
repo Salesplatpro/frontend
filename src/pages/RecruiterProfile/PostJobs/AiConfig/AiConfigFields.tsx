@@ -17,7 +17,6 @@ export interface AiConfigFieldValues {
   minPrescreeningScore: string | number
   cvSimilarity: string
   minCvSimilarityScore: string | number
-  noOfCvSimilarCandidates: string | number
   personalizedAssessment: string
   noPersonalizedQuestions: string | number
   personalityEvaluation: string
@@ -31,11 +30,11 @@ export interface AiConfigFieldValues {
 
 export const AI_CONFIG_DEFAULT_VALUES: AiConfigFieldValues = {
   name: '',
-  prescreeningAssessment: '',
+  // Always on — no UI toggle exists for this section.
+  prescreeningAssessment: 'true',
   minPrescreeningScore: '',
   cvSimilarity: '',
   minCvSimilarityScore: '',
-  noOfCvSimilarCandidates: '',
   personalizedAssessment: '',
   noPersonalizedQuestions: '',
   personalityEvaluation: '',
@@ -108,14 +107,23 @@ export const ToggleField = ({
   )
 }
 
+// Not a real form field — a synthetic path the Yup schema attaches its
+// "at least one dichotomy pair" cross-field error to, so it can be rendered
+// as one shared message instead of pinned to a single (arbitrarily-chosen) count input.
+export const DICHOTOMY_ERROR_KEY = 'personalityDichotomy' as const
+
 type AiConfigFieldsProps = {
   values: AiConfigFieldValues
-  errors: Partial<Record<keyof AiConfigFieldValues, unknown>>
+  errors: Partial<
+    Record<keyof AiConfigFieldValues | typeof DICHOTOMY_ERROR_KEY, unknown>
+  >
   /** Maps an unprefixed field key (e.g. "personalityEvaluation") to the
    * actual Formik field name to bind to — "personalityEvaluation" when this
    * form owns its own top-level Formik instance, or "aiConfig.personalityEvaluation"
    * when nested inside a combined job-details + AI-config form. */
-  fieldName: (key: keyof AiConfigFieldValues) => string
+  fieldName: (
+    key: keyof AiConfigFieldValues | typeof DICHOTOMY_ERROR_KEY,
+  ) => string
   setFieldValue: (key: keyof AiConfigFieldValues, value: unknown) => void
   jobId: string | undefined
   questionsByPair: Record<string, PersonalityQuestion[]>
@@ -150,19 +158,12 @@ export const AiConfigFields = ({
       evaluation.
     </h3>
     <div className={styles.configCard}>
-      <ToggleField
-        name={fieldName('prescreeningAssessment')}
-        label="Enable Pre-screening Assessment"
-        tooltipContent="Automatically screen candidates with a quick initial test before further evaluation"
+      <TextField
+        label="Min Pre-assessment Score"
+        name={fieldName('minPrescreeningScore')}
+        placeholder="Enter score (%)"
+        type="number"
       />
-      {values.prescreeningAssessment === 'true' && (
-        <TextField
-          label="Min Pre-assessment Score"
-          name={fieldName('minPrescreeningScore')}
-          placeholder="Enter score (%)"
-          type="number"
-        />
-      )}
     </div>
 
     {/* CV Similarity */}
@@ -179,20 +180,12 @@ export const AiConfigFields = ({
         tooltipContent="Match candidate's CV against job requirements to find the best fit"
       />
       {values.cvSimilarity === 'true' && (
-        <>
-          <TextField
-            label="Min CV Similarity Score"
-            name={fieldName('minCvSimilarityScore')}
-            placeholder="Enter score (%)"
-            type="number"
-          />
-          <TextField
-            label="Number of Similar CV Candidates"
-            name={fieldName('noOfCvSimilarCandidates')}
-            placeholder="Enter number"
-            type="number"
-          />
-        </>
+        <TextField
+          label="Min CV Similarity Score"
+          name={fieldName('minCvSimilarityScore')}
+          placeholder="Enter score (%)"
+          type="number"
+        />
       )}
     </div>
 
@@ -257,6 +250,12 @@ export const AiConfigFields = ({
               }
             />
           ))}
+
+          {typeof errors[DICHOTOMY_ERROR_KEY] === 'string' && (
+            <div className={styles.fieldError}>
+              {errors[DICHOTOMY_ERROR_KEY] as string}
+            </div>
+          )}
 
           <FieldArray name={fieldName('uploadedQuestions')}>
             {({ remove, push }) => (

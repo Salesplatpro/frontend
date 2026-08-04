@@ -15,10 +15,13 @@ vi.mock('@/redux/api/recruiter', () => ({
   useDeleteJobMutation: () => [deleteJobMock, { isLoading: false }],
 }))
 
-const renderControl = (status = 'suspended') =>
+const renderControl = (
+  status = 'suspended',
+  aiConfigId: string | null = 'config-1',
+) =>
   render(
     <MemoryRouter>
-      <JobStatusControl jobId="job-1" status={status} />
+      <JobStatusControl jobId="job-1" status={status} aiConfigId={aiConfigId} />
     </MemoryRouter>,
   )
 
@@ -59,5 +62,33 @@ describe('JobStatusControl', () => {
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /suspended/i })).toBeTruthy()
     })
+  })
+
+  it('omits "Active" from the status options when aiConfigId is missing', () => {
+    renderControl('draft', null)
+
+    const select = screen.getByRole('button', { name: /draft/i })
+    fireEvent.click(select)
+
+    expect(screen.queryByText('Active')).toBeNull()
+    expect(
+      screen.getByText(
+        'Add an AI screening configuration before activating this job.',
+      ),
+    ).toBeTruthy()
+  })
+
+  it('includes "Active" in the status options when aiConfigId is present', async () => {
+    renderControl('draft', 'config-1')
+
+    const select = screen.getByRole('button', { name: /draft/i })
+    fireEvent.click(select)
+
+    expect(await screen.findByText('Active')).toBeTruthy()
+    expect(
+      screen.queryByText(
+        'Add an AI screening configuration before activating this job.',
+      ),
+    ).toBeNull()
   })
 })
