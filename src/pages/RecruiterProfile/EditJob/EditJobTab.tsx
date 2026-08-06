@@ -1,5 +1,5 @@
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
@@ -13,6 +13,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useJobEditDraftStore } from '@/features/jobs/store/useJobEditDraftStore'
 import {
   useAiConfigMutation,
+  useGetAiConfigQuery,
   usePatchAiConfigMutation,
   useUpdateJobMutation,
 } from '@/redux/api/recruiter'
@@ -50,6 +51,40 @@ const FormObserver: React.FC<{ saveDraft: (v: EditJobFormValues) => void }> = ({
   return null
 }
 
+const toAiConfigFieldValues = (aiConfig: {
+  name?: string | null
+  prescreeningAssessment?: boolean
+  minPrescreeningScore?: number | null
+  cvSimilarity?: boolean
+  minCvSimilarityScore?: number | null
+  personalizedAssessment?: boolean
+  noPersonalizedQuestions?: number | null
+  personalityEvaluation?: boolean
+  noOfEIQuestions?: number | null
+  noOfSNQuestions?: number | null
+  noOfTFQuestions?: number | null
+  noOfJPQuestions?: number | null
+  uploadedQuestions?: string[] | null
+  recruiterGuide?: string | null
+}): AiConfigFieldValues => ({
+  name: aiConfig.name ?? '',
+  prescreeningAssessment: aiConfig.prescreeningAssessment ? 'true' : 'false',
+  minPrescreeningScore: aiConfig.minPrescreeningScore ?? '',
+  cvSimilarity: aiConfig.cvSimilarity ? 'true' : 'false',
+  minCvSimilarityScore: aiConfig.minCvSimilarityScore ?? '',
+  personalizedAssessment: aiConfig.personalizedAssessment ? 'true' : 'false',
+  noPersonalizedQuestions: aiConfig.noPersonalizedQuestions ?? '',
+  personalityEvaluation: aiConfig.personalityEvaluation ? 'true' : 'false',
+  noOfEIQuestions: aiConfig.noOfEIQuestions ?? '',
+  noOfSNQuestions: aiConfig.noOfSNQuestions ?? '',
+  noOfTFQuestions: aiConfig.noOfTFQuestions ?? '',
+  noOfJPQuestions: aiConfig.noOfJPQuestions ?? '',
+  uploadedQuestions: aiConfig.uploadedQuestions?.length
+    ? aiConfig.uploadedQuestions
+    : [''],
+  recruiterGuide: aiConfig.recruiterGuide ?? '',
+})
+
 export const EditJobTab = () => {
   const { jobId } = useParams()
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
@@ -59,6 +94,13 @@ export const EditJobTab = () => {
   const { drafts, saveDraft, clearDraft } = useJobEditDraftStore()
   const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
+
+  const job = data?.data?.job ?? data?.data
+  const nestedAiConfig = job?.aiConfig ?? null
+  const aiConfigId: string = nestedAiConfig?.id ?? job?.aiConfigId ?? ''
+
+  const { data: aiConfigResp, isLoading: aiConfigLoading } =
+    useGetAiConfigQuery(aiConfigId, { skip: !aiConfigId })
 
   const draftSaver = useCallback(
     (v: EditJobFormValues) => saveDraft(jobId ?? '', v),
@@ -71,11 +113,19 @@ export const EditJobTab = () => {
     }
   }, [error])
 
-  if (isLoading) return <Spinner fullPage />
+  const fetchedAiConfig = aiConfigResp?.data?.aiConfig ?? nestedAiConfig ?? null
 
-  const job = data?.data?.job ?? data?.data
-  const aiConfig = job?.aiConfig ?? null
-  const aiConfigId: string = aiConfig?.id ?? job?.aiConfigId ?? ''
+  const aiConfigInitialValues = useMemo<AiConfigFieldValues>(
+    () =>
+      fetchedAiConfig
+        ? toAiConfigFieldValues(fetchedAiConfig)
+        : AI_CONFIG_DEFAULT_VALUES,
+    [fetchedAiConfig],
+  )
+
+  if (isLoading || (aiConfigId && aiConfigLoading)) {
+    return <Spinner fullPage />
+  }
 
   if (!job) {
     return null
@@ -107,38 +157,27 @@ export const EditJobTab = () => {
     goals: job.goals || [],
   }
 
-  const aiConfigInitialValues: AiConfigFieldValues = aiConfig
-    ? {
-        name: aiConfig.name ?? '',
-        prescreeningAssessment: aiConfig.prescreeningAssessment
-          ? 'true'
-          : 'false',
-        minPrescreeningScore: aiConfig.minPrescreeningScore ?? '',
-        cvSimilarity: aiConfig.cvSimilarity ? 'true' : 'false',
-        minCvSimilarityScore: aiConfig.minCvSimilarityScore ?? '',
-        personalizedAssessment: aiConfig.personalizedAssessment
-          ? 'true'
-          : 'false',
-        noPersonalizedQuestions: aiConfig.noPersonalizedQuestions ?? '',
-        personalityEvaluation: aiConfig.personalityEvaluation
-          ? 'true'
-          : 'false',
-        noOfEIQuestions: aiConfig.noOfEIQuestions ?? '',
-        noOfSNQuestions: aiConfig.noOfSNQuestions ?? '',
-        noOfTFQuestions: aiConfig.noOfTFQuestions ?? '',
-        noOfJPQuestions: aiConfig.noOfJPQuestions ?? '',
-        uploadedQuestions: aiConfig.uploadedQuestions?.length
-          ? aiConfig.uploadedQuestions
-          : [''],
-        recruiterGuide: aiConfig.recruiterGuide ?? '',
-      }
-    : AI_CONFIG_DEFAULT_VALUES
-
   const savedDraft = drafts[jobId ?? ''] as EditJobFormValues | undefined
 
-  const initialValues: EditJobFormValues = savedDraft ?? {
-    ...jobInitialValues,
-    status: job.status ?? 'draft',
+  // Prefer the live attached AI config over any stale local draft so Edit Job
+  // always shows the configuration currently linked to this job. Job detail
+  // fields may still come from the draft.
+  const initialValues: EditJobFormValues = {
+    jobBrief: savedDraft?.jobBrief ?? jobInitialValues.jobBrief,
+    role: jobInitialValues.role,
+    requirements: savedDraft?.requirements ?? jobInitialValues.requirements,
+    minSalary: savedDraft?.minSalary ?? jobInitialValues.minSalary,
+    maxSalary: savedDraft?.maxSalary ?? jobInitialValues.maxSalary,
+    compensationPeriod:
+      savedDraft?.compensationPeriod ?? jobInitialValues.compensationPeriod,
+    currency: savedDraft?.currency ?? jobInitialValues.currency,
+    workMode: savedDraft?.workMode ?? jobInitialValues.workMode,
+    experienceLevel:
+      savedDraft?.experienceLevel ?? jobInitialValues.experienceLevel,
+    location: savedDraft?.location ?? jobInitialValues.location,
+    skills: savedDraft?.skills ?? jobInitialValues.skills,
+    goals: savedDraft?.goals ?? jobInitialValues.goals,
+    status: savedDraft?.status ?? job.status ?? 'draft',
     aiConfig: aiConfigInitialValues,
   }
 
