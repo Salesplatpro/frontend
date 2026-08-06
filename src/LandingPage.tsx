@@ -1,53 +1,31 @@
-import '@/components/features/landing/landingPageComponents/styles/landingArtifact.css'
-
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import {
-  AccessSection,
-  AudienceSection,
-  CompaniesSection,
-  HomeFaq,
-  HomeFooter,
-  HomeNavbar,
-  HomeQuote,
   HowItWorks,
+  ItsForYou,
   LandingHero,
-  ValuesSection,
+  RecruitmentWorkflow,
+  Statistics,
+  Testimonials,
 } from '@/components/features/landing/landingPageComponents'
+import { howItWorksData } from '@/components/features/landing/landingPageComponents/utils'
 import { useAuthRedirect } from '@/hooks/useAuthRedirect'
-import { ThemeProvider } from '@/theme'
 
-const LandingContent = () => {
+export const LandingPage = () => {
   useAuthRedirect()
 
-  useEffect(() => {
-    const hash = window.location.hash.replace('#', '')
-    if (!hash) return
-    window.setTimeout(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
-    }, 50)
-  }, [])
-
   return (
-    <>
-      <HomeNavbar />
-      <div className="wrap">
-        <LandingHero />
-        <CompaniesSection />
-        <ValuesSection />
-        <HowItWorks />
-        <AudienceSection />
-        <AccessSection />
-        <HomeQuote />
-        <HomeFaq />
-        <HomeFooter />
-      </div>
-    </>
+    <div style={{ overflowX: 'hidden' }}>
+      <LandingHero />
+      <RecruitmentWorkflow
+        title="How it works"
+        subTitle="Your Recruitment Workflow, Reinvented."
+        data={howItWorksData}
+      />
+      <ItsForYou />
+      <Statistics />
+      <HowItWorks />
+      <Testimonials />
+    </div>
   )
 }
-
-export const LandingPage = () => (
-  <ThemeProvider>
-    <LandingContent />
-  </ThemeProvider>
-)
