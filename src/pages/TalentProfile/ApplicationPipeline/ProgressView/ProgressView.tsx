@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { BackButton } from '@/components/ui/BackButton'
@@ -44,7 +44,9 @@ export const getProgresses = (application: Application): Progress[] => {
 
   const orderedStages: StageKey[] = []
   let cursor = entryStage
-  while (cursor && (cursor as string) !== 'completed') {
+  const visited = new Set<string>()
+  while (cursor && (cursor as string) !== 'completed' && !visited.has(cursor)) {
+    visited.add(cursor)
     orderedStages.push(cursor)
     cursor = stages[cursor] as StageKey
   }
@@ -117,12 +119,14 @@ const ProgressView: React.FC = () => {
   const [jobProgress, setJobProgress] = useState<Application | null>(null)
   const navigate = useNavigate()
   const location = useLocation()
+  const cvMatchTriggeredFor = useRef<string | null>(null)
+  const prescreeningTriggeredFor = useRef<string | null>(null)
 
   const {
     data: applicationsData,
     error: applicationsError,
     isLoading: applicationsLoading,
-  } = useAllJobApplicationsQuery({})
+  } = useAllJobApplicationsQuery({ limit: 200 })
   const applicationId = (
     applicationsData?.data?.applications as AllJobTypes[] | undefined
   )?.find((application) => application.job?.id === jobId)?.id
@@ -153,10 +157,24 @@ const ProgressView: React.FC = () => {
       const applicationData = applicationResp.data?.application || null
       setJobProgress(applicationData)
 
-      if (applicationData?.currentStage === 'cv_similarity') {
+      // Only auto-run once per application, and only when the stage score has
+      // not been written yet — otherwise a failed-threshold retake loops the
+      // CV-match call and keeps the page on a skeleton forever.
+      if (
+        applicationData?.currentStage === 'cv_similarity' &&
+        applicationData.cvSimilarityScore == null &&
+        applicationId &&
+        cvMatchTriggeredFor.current !== applicationId
+      ) {
+        cvMatchTriggeredFor.current = applicationId
         triggerCvMatch(jobId)
       }
-      if (applicationData?.currentStage === 'prescreening') {
+      if (
+        applicationData?.currentStage === 'prescreening' &&
+        applicationId &&
+        prescreeningTriggeredFor.current !== applicationId
+      ) {
+        prescreeningTriggeredFor.current = applicationId
         triggerPrescreeningCheck(jobId)
       }
     }
@@ -166,6 +184,7 @@ const ProgressView: React.FC = () => {
   }, [
     applicationResp,
     applicationError,
+    applicationId,
     jobId,
     triggerCvMatch,
     triggerPrescreeningCheck,
@@ -209,32 +228,39 @@ const ProgressView: React.FC = () => {
     console.error('Error:', error)
   }
 
-  const stillResolvingApplication =
-    applicationsLoading || (!applicationId && !applicationsError)
+  const applicationsReady = !applicationsLoading && !!applicationsData
 
   if (
-    stillResolvingApplication ||
-    applicationLoading ||
-    cvMatchLoading ||
-    prescreeningCheckLoading
-  )
+    applicationsLoading ||
+    (applicationId && applicationLoading && !jobProgress)
+  ) {
     return <ProgressSkeleton />
+  }
 
-  if (!jobProgress)
+  if (applicationsReady && !applicationId) {
+    return (
+      <div className={styles.page}>
+        <BackButton />
+        <ProgressError error={applicationsError || applicationError} />
+      </div>
+    )
+  }
+
+  if (!jobProgress) {
     return (
       <div className={styles.page}>
         <BackButton />
         <ProgressError error={applicationError || applicationsError} />
       </div>
     )
+  }
 
   const progresses = getProgresses(jobProgress)
+  const isAdvancingStage = cvMatchLoading || prescreeningCheckLoading
 
   const homePage = () => {
     if (location.key !== 'default') {
       navigate(-1)
-    } else {
-      null
     }
   }
 
@@ -242,7 +268,7 @@ const ProgressView: React.FC = () => {
   const completedStages = progresses.filter((progress) =>
     completedStatuses.includes(progress.status),
   ).length
-  const totalStages = progresses.length
+  const totalStages = Math.max(progresses.length, 1)
   const progressPercentage = Math.round((completedStages / totalStages) * 100)
 
   return (
@@ -252,6 +278,10 @@ const ProgressView: React.FC = () => {
         progressPercentage={progressPercentage}
         jobProgress={jobProgress}
       />
+
+      {isAdvancingStage && (
+        <p className={styles.headerSubtitle}>Updating your progress…</p>
+      )}
 
       <div className={styles.itemList}>
         {progresses.map((progress, i) => (

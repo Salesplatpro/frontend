@@ -116,10 +116,16 @@ export const talentApi = createApi({
       }),
     }),
     allJobApplications: builder.query({
-      query: () => ({
-        url: `/user/applications`,
-        method: 'GET',
-      }),
+      query: (params?: { limit?: number; offset?: number }) => {
+        const query = new URLSearchParams({
+          limit: String(params?.limit ?? 200),
+          offset: String(params?.offset ?? 0),
+        })
+        return {
+          url: `/user/applications?${query.toString()}`,
+          method: 'GET',
+        }
+      },
       providesTags: ['Applications'],
     }),
     getRole: builder.query({

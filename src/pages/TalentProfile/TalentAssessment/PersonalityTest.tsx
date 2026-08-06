@@ -2,12 +2,14 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 
 import {
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
 } from '../../../redux/api/talent'
 import { notify } from '../../../utils/toastNotifications'
+
 interface FormData {
   jobId: string
   answers: { [key: string]: string }
@@ -18,11 +20,13 @@ interface Question {
   question: string
 }
 
-interface PostAnswerResponse {
+interface PostPersonalityResponse {
   status: boolean
   message: string
   data: {
-    scorePercent: number
+    mbtiType?: string
+    score?: string
+    application?: { mbtiType?: string }
   }
 }
 
@@ -45,7 +49,6 @@ const PersonalityTest: React.FC = () => {
     isLoading: personalityLoading,
   } = usePersonalityTestQuery(jobId)
 
-  // Check if all questions are answered
   const personalityAnswered =
     personalityData?.data?.questions?.length > 0 &&
     Object.keys(formData.answers).length ===
@@ -83,31 +86,38 @@ const PersonalityTest: React.FC = () => {
     try {
       const response = (await postAnswer(
         formData,
-      ).unwrap()) as PostAnswerResponse
-      if (response.status) {
+      ).unwrap()) as PostPersonalityResponse
+
+      const mbtiType =
+        response.data?.mbtiType ||
+        response.data?.score ||
+        response.data?.application?.mbtiType
+
+      if (response.status && mbtiType) {
         notify(
           'success',
-          `${response.message} ${response.data.scorePercent}%`,
-          {
-            autoClose: 2000,
-          },
+          `${response.message || 'Personality evaluated'}: ${mbtiType}`,
+          { autoClose: 3000 },
         )
+      } else if (response.status) {
+        notify('success', response.message || 'Personality test submitted', {
+          autoClose: 2000,
+        })
       } else {
         notify(
           'error',
-          response.message || 'DisplayError submitting question',
-          {
-            autoClose: 2000,
-          },
+          response.message || 'Error submitting personality test',
+          { autoClose: 2000 },
         )
       }
       navigate(`/talentDashboard/applicationPipeline/${jobId}`)
     } catch (error) {
       console.error(error)
-
-      notify('error', 'DisplayError submitting quiz', {
-        autoClose: 2000,
-      })
+      notify(
+        'error',
+        getErrorMessage(error, 'Error submitting personality test'),
+        { autoClose: 3000 },
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -130,7 +140,9 @@ const PersonalityTest: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <ul>
             {personalityQuestions.map((question, i) => (
-              <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
+              <div
+                key={question.id}
+                className="bg-grey-50 mb-6 p-4 rounded-2xl">
                 <div className="flex justify-center items-start space-x-3 text-grey-900 font-raleway font-medium">
                   <h3 className="text-lg leading-[150%]">{i + 1}.</h3>
                   <h3 className="text-lg leading-[150%]">
@@ -148,13 +160,13 @@ const PersonalityTest: React.FC = () => {
             ))}
             <button
               type="submit"
-              disabled={!personalityAnswered} // Disable until all questions are answered
+              disabled={!personalityAnswered || isSubmitting}
               className={`px-4 py-2 rounded font-raleway text-normal font-medium ${
-                personalityAnswered
+                personalityAnswered && !isSubmitting
                   ? 'bg-blue-500 text-white hover:bg-blue-700'
                   : 'bg-gray-400 text-gray-700 cursor-not-allowed'
               }`}>
-              {isSubmitting ? 'submitting' : 'submit'}
+              {isSubmitting ? 'Submitting…' : 'Submit'}
             </button>
           </ul>
         </form>

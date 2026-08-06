@@ -69,4 +69,20 @@ describe('getProgresses', () => {
 
     expect(progresses.find((p) => p.title === 'Result')).toBeUndefined()
   })
+
+  it('survives a cyclic stages map without hanging', () => {
+    const progresses = getProgresses(
+      buildApplication({
+        currentStage: 'personalized',
+        stages: {
+          cv_similarity: 'personalized',
+          personalized: 'cv_similarity',
+        },
+      }),
+    )
+
+    // No unambiguous entry stage exists in a pure cycle, so the list may be
+    // empty — the important part is that walk terminates.
+    expect(Array.isArray(progresses)).toBe(true)
+  })
 })
