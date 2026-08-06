@@ -17,6 +17,7 @@ import {
 import { useRegenerateVerdict } from '../../../features/applications/hooks/useRegenerateVerdict'
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
+import { AiMatchPanel } from './AiMatchPanel'
 
 type SingleJobTableProps = {
   applications: SingleJobDetails[]
@@ -128,16 +129,44 @@ const ApplicantActionsCell = ({
   )
 }
 
+const AiMatchCell = ({
+  item,
+  onOpen,
+}: {
+  item: SingleJobDetails
+  onOpen: (item: SingleJobDetails) => void
+}) => (
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <button
+      type="button"
+      onClick={() => onOpen(item)}
+      aria-label={`View AI Match for ${item.talent.firstName} ${item.talent.lastName}`}
+      style={{
+        background: 'none',
+        border: 'none',
+        padding: 0,
+        cursor: 'pointer',
+      }}>
+      <MatchScoreRing
+        verdict={item.matchVerdict ?? null}
+        averageScore={item.averageScore ?? null}
+      />
+    </button>
+  </div>
+)
+
 export const buildColumns = ({
   onShortlist,
   onReject,
   onMessage,
   loadingRowId,
+  onOpenAiMatch,
 }: {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
   loadingRowId?: string | null
+  onOpenAiMatch?: (item: SingleJobDetails) => void
 }): ColumnDef<SingleJobDetails>[] => [
   {
     key: 'name',
@@ -203,14 +232,17 @@ export const buildColumns = ({
     align: 'center',
     hideBelow: 900,
     toggleable: true,
-    render: (item) => (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <MatchScoreRing
-          verdict={item.matchVerdict ?? null}
-          averageScore={item.averageScore ?? null}
-        />
-      </div>
-    ),
+    render: (item) =>
+      onOpenAiMatch ? (
+        <AiMatchCell item={item} onOpen={onOpenAiMatch} />
+      ) : (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <MatchScoreRing
+            verdict={item.matchVerdict ?? null}
+            averageScore={item.averageScore ?? null}
+          />
+        </div>
+      ),
     sortAccessor: (item) => {
       const order = { high: 0, medium: 1, low: 2 }
       return item.matchVerdict ? order[item.matchVerdict] : Infinity
@@ -266,11 +298,15 @@ export const SingleJobTable = ({
   sortDirection,
   onSortChange,
 }: SingleJobTableProps) => {
+  const [aiMatchApplicant, setAiMatchApplicant] =
+    React.useState<SingleJobDetails | null>(null)
+
   const allColumns = buildColumns({
     onShortlist,
     onReject,
     onMessage,
     loadingRowId,
+    onOpenAiMatch: setAiMatchApplicant,
   })
   const columns = visibleColumnKeys
     ? allColumns.filter(
@@ -281,24 +317,32 @@ export const SingleJobTable = ({
     : allColumns
 
   return (
-    <DataTable
-      columns={columns}
-      data={applications}
-      getRowKey={(item) => item.id}
-      ariaLabel="Job applications table"
-      selectedRowKeys={selectedRowKeys}
-      onToggleRow={onToggleRow}
-      onToggleAll={onToggleAll}
-      allowOverflow
-      sortKey={sortKey}
-      sortDirection={sortDirection}
-      onSortChange={onSortChange}
-      emptyState={
-        <EmptyState
-          title="No applications yet"
-          description="Applications for this job will appear here once candidates apply."
+    <>
+      <DataTable
+        columns={columns}
+        data={applications}
+        getRowKey={(item) => item.id}
+        ariaLabel="Job applications table"
+        selectedRowKeys={selectedRowKeys}
+        onToggleRow={onToggleRow}
+        onToggleAll={onToggleAll}
+        allowOverflow
+        sortKey={sortKey}
+        sortDirection={sortDirection}
+        onSortChange={onSortChange}
+        emptyState={
+          <EmptyState
+            title="No applications yet"
+            description="Applications for this job will appear here once candidates apply."
+          />
+        }
+      />
+      {aiMatchApplicant && (
+        <AiMatchPanel
+          application={aiMatchApplicant}
+          onClose={() => setAiMatchApplicant(null)}
         />
-      }
-    />
+      )}
+    </>
   )
 }
