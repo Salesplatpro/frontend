@@ -8,17 +8,25 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 2.7rem;
-  padding: 0.65rem 1.2rem;
+  min-height: var(--touch-min, 2.75rem);
+  padding: 0.6rem 1.05rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-ui);
   font-weight: var(--font-weight-bold);
-  font-size: 0.95rem;
+  font-size: var(--text-sm);
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
   transition: transform var(--duration-base) var(--ease-out),
     background var(--duration-base) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .ds-btn {
+    min-height: 2.7rem;
+    padding: 0.65rem 1.2rem;
+    font-size: 0.95rem;
+  }
 }
 
 .ds-btn:hover {

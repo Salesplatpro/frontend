@@ -13,13 +13,23 @@ Repo artifact / source: `design_system/` (monorepo root)
 
 ```
 design_system/
-  tokens/           # colors, typography, spacing, effects
+  tokens/           # colors, breakpoints, typography, spacing, effects
   primitives/       # buttons, pills, chips, cards, …
   components/       # how-it-works and composed CSS
   landing-page/     # visual source artifact (HTML)
   primitives.html
   AGENTS.md
 ```
+
+## Responsive breakpoints (landing)
+
+Mobile-first tokens and layouts under `.landing-root`:
+
+- default: small / mobile (`< 768px`)
+- `md`: medium / tablet (`≥ 768px`)
+- `lg`: large / desktop (`≥ 1024px`)
+
+See `tokens/breakpoints.css`. Prefer these breakpoints in primitives and landing CSS.
 
 ## Landing page
 
