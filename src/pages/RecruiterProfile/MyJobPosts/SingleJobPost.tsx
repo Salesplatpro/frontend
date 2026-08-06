@@ -17,6 +17,11 @@ import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMess
 import { notify } from '@/utils/toastNotifications'
 
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
+import {
+  exportRankingPdf,
+  RankingExportMode,
+  selectRankedApplicants,
+} from './exportRankingPdf'
 import { Pagination } from './Pagination'
 import styles from './SingleJobPost.module.scss'
 import { buildColumns, SingleJobTable } from './SingleJobTable'
@@ -184,6 +189,8 @@ export const SingleJobPost = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0])
+  const [rankingMode, setRankingMode] = useState<RankingExportMode>('top')
+  const [rankingCount, setRankingCount] = useState('5')
 
   const { bulkUpdateStatus, isBulkUpdating } = useBulkUpdateApplicationStatus()
   const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
@@ -326,6 +333,39 @@ export const SingleJobPost = () => {
     )
   }
 
+  const handleRankingPdfExport = () => {
+    const count = Number(rankingCount)
+    if (!Number.isFinite(count) || count < 1) {
+      notify('error', 'Enter how many candidates to include', {
+        autoClose: 2000,
+      })
+      return
+    }
+
+    const selected = selectRankedApplicants(applications, rankingMode, count)
+    if (selected.length === 0) {
+      notify('error', 'No ranked candidates available for export', {
+        autoClose: 2000,
+      })
+      return
+    }
+
+    try {
+      exportRankingPdf({
+        jobName: jobName || 'Job',
+        mode: rankingMode,
+        count,
+        applicants: selected,
+      })
+    } catch (err) {
+      notify(
+        'error',
+        err instanceof Error ? err.message : 'Failed to export ranking PDF',
+        { autoClose: 3000 },
+      )
+    }
+  }
+
   if (error) {
     return <div>Error loading job details</div>
   }
@@ -406,6 +446,37 @@ export const SingleJobPost = () => {
               </div>
             </div>
           )}
+
+          <div className={styles.rankingExport}>
+            <label className={styles.rankingLabel} htmlFor="ranking-mode">
+              Ranking export
+            </label>
+            <select
+              id="ranking-mode"
+              className={styles.rankingSelect}
+              value={rankingMode}
+              onChange={(event) =>
+                setRankingMode(event.target.value as RankingExportMode)
+              }>
+              <option value="top">Top ranked</option>
+              <option value="lowest">Lowest ranked</option>
+            </select>
+            <input
+              id="ranking-count"
+              className={styles.rankingCount}
+              type="number"
+              min={1}
+              value={rankingCount}
+              onChange={(event) => setRankingCount(event.target.value)}
+              aria-label="Number of candidates"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRankingPdfExport}>
+              Download PDF
+            </Button>
+          </div>
 
           <TableToolbar
             columns={toolbarColumns}
