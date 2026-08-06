@@ -1,0 +1,19 @@
+/**
+ * Primitive: Step badge
+ * .ds-step-badge
+ */
+
+.ds-step-badge {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-family: var(--font-ui);
+  font-weight: var(--font-weight-bold);
+  font-size: 0.85rem;
+  color: var(--color-text-heading);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-page);
+  flex-shrink: 0;
+}

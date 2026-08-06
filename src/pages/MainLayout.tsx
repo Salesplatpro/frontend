@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 import {
   LandingFooter,
@@ -7,13 +7,16 @@ import {
 } from '@/components/features/landing/landingPageComponents'
 
 export const MainLayout = () => {
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
+
   return (
     <>
-      <LandingNavbar />
-      <main className="mt-16">
+      {!isHome ? <LandingNavbar /> : null}
+      <main className={isHome ? undefined : 'mt-16'}>
         <Outlet />
       </main>
-      <LandingFooter />
+      {!isHome ? <LandingFooter /> : null}
     </>
   )
 }

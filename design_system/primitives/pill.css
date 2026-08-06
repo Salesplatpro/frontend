@@ -1,0 +1,40 @@
+/**
+ * Primitive: Pill / Tag
+ * .ds-pill | .ds-pill--brand | .ds-pill--soft
+ */
+
+.ds-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.ds-pill--brand {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.ds-pill--soft {
+  background: var(--color-brand-50);
+  color: var(--color-brand-800);
+  border: 1px solid var(--color-brand-200);
+}
+
+[data-theme='dark'] .ds-pill--soft {
+  background: rgba(73, 133, 223, 0.18);
+  color: var(--color-brand-200);
+  border-color: var(--color-border-glass);
+}
+
+.ds-pill--muted {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}

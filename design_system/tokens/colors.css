@@ -1,0 +1,102 @@
+/**
+ * Auxhr Design System — Color tokens
+ * Source of truth aligned with frontend/src/styles/tokens.css
+ * Agents: prefer semantic vars (--color-*) over primitives in UI.
+ */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* Primitives */
+  --color-white: #ffffff;
+  --color-brand-50: #f1f6fd;
+  --color-brand-100: #dfebfa;
+  --color-brand-200: #c6ddf7;
+  --color-brand-300: #cad8ed;
+  --color-brand-500: #4985df;
+  --color-brand-600: #4279cb;
+  --color-brand-700: #3c6fd4;
+  --color-brand-800: #2441ab;
+
+  --color-grey-50: #f8f8f8;
+  --color-grey-200: #e4e7ec;
+  --color-grey-300: #d0d5dd;
+  --color-grey-400: #98a2b3;
+  --color-grey-500: #667085;
+  --color-grey-600: #525c68;
+  --color-grey-700: #344054;
+  --color-grey-900: #101828;
+
+  --color-charcoal: #4b4b4b;
+  --color-midnight: #0d0c22;
+
+  /* Semantic */
+  --color-bg-page: var(--color-white);
+  --color-bg-subtle: var(--color-grey-50);
+  --color-bg-glass: rgba(255, 255, 255, 0.72);
+  --color-text-heading: var(--color-grey-900);
+  --color-text-body: var(--color-charcoal);
+  --color-text-muted: var(--color-grey-500);
+  --color-text-inverse: var(--color-white);
+  --color-border: var(--color-grey-200);
+  --color-border-glass: rgba(73, 133, 223, 0.18);
+  --color-primary: var(--color-brand-500);
+  --color-primary-strong: var(--color-brand-700);
+  --color-primary-deep: var(--color-brand-800);
+  --color-primary-tint: var(--color-brand-50);
+  --shadow-soft: 0 12px 40px rgba(36, 65, 171, 0.08);
+  --shadow-float: 0 16px 40px rgba(16, 24, 40, 0.1);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg-page: var(--color-midnight);
+  --color-bg-subtle: #141328;
+  --color-bg-glass: rgba(16, 24, 40, 0.55);
+  --color-text-heading: #f8fafc;
+  --color-text-body: #e4e7ec;
+  --color-text-muted: #98a2b3;
+  --color-border: rgba(198, 221, 247, 0.14);
+  --color-border-glass: rgba(198, 221, 247, 0.16);
+  --color-primary-strong: var(--color-brand-300);
+  --color-primary-deep: var(--color-brand-200);
+  --shadow-soft: 0 16px 48px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 18px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Brand gradient presets (no yellow/warm accents) */
+:root {
+  --gradient-brand-a: linear-gradient(
+    145deg,
+    var(--color-brand-100) 0%,
+    var(--color-brand-300) 45%,
+    var(--color-brand-500) 100%
+  );
+  --gradient-brand-b: linear-gradient(
+    160deg,
+    var(--color-brand-50) 0%,
+    var(--color-brand-200) 40%,
+    var(--color-brand-700) 100%
+  );
+  --gradient-brand-c: linear-gradient(
+    135deg,
+    var(--color-brand-200) 0%,
+    var(--color-brand-500) 50%,
+    var(--color-brand-800) 100%
+  );
+  --gradient-brand-deep: linear-gradient(
+    145deg,
+    var(--color-brand-800) 0%,
+    var(--color-brand-700) 48%,
+    var(--color-brand-500) 100%
+  );
+  --gradient-path: linear-gradient(
+    180deg,
+    var(--color-brand-200),
+    var(--color-brand-500),
+    var(--color-brand-800),
+    var(--color-brand-500),
+    var(--color-brand-200)
+  );
+}

@@ -1,0 +1,45 @@
+/**
+ * Auxhr Design System — Effects (glass, atmosphere)
+ * Use brand blues only — never yellow/lime accents.
+ */
+
+:root {
+  --glass-blur: blur(14px);
+  --glass-blur-strong: blur(48px);
+}
+
+.ds-atmosphere {
+  position: relative;
+  isolation: isolate;
+}
+
+.ds-atmosphere::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(
+      70% 55% at 12% 8%,
+      rgba(73, 133, 223, 0.28),
+      transparent 55%
+    ),
+    radial-gradient(
+      60% 50% at 88% 18%,
+      rgba(36, 65, 171, 0.22),
+      transparent 50%
+    ),
+    radial-gradient(
+      50% 45% at 70% 88%,
+      rgba(60, 111, 212, 0.18),
+      transparent 55%
+    );
+}
+
+.ds-glass {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-soft);
+}

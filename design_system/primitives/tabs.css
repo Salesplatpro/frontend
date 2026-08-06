@@ -1,0 +1,61 @@
+/**
+ * Primitive: Tabs
+ *
+ * .ds-tabs (segmented control)
+ * .ds-tab | .ds-tab.is-active
+ * .ds-tabs--underline (text tabs)
+ */
+
+.ds-tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--color-bg-glass);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-glass);
+  backdrop-filter: var(--glass-blur);
+}
+
+.ds-tab {
+  font-family: var(--font-ui);
+  font-weight: var(--font-weight-bold);
+  font-size: 0.88rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.ds-tab.is-active,
+.ds-tab[aria-selected='true'] {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.ds-tabs--underline {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 0;
+  gap: var(--space-6);
+  backdrop-filter: none;
+}
+
+.ds-tabs--underline .ds-tab {
+  border-radius: 0;
+  padding: 0.75rem 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.ds-tabs--underline .ds-tab.is-active,
+.ds-tabs--underline .ds-tab[aria-selected='true'] {
+  background: transparent;
+  color: var(--color-text-heading);
+  border-bottom-color: var(--color-primary);
+}
