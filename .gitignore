@@ -8,3 +8,5 @@ coverage
 storybook-static
 docs
 .vercel
+/AGENTS.md
+.DS_Store

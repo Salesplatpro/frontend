@@ -1,0 +1,57 @@
+/**
+ * Primitive: Accordion / FAQ item
+ *
+ * .ds-accordion
+ * .ds-accordion__item (details)
+ */
+
+.ds-accordion {
+  width: 100%;
+}
+
+.ds-accordion__item {
+  border-top: 1px solid var(--color-border);
+  padding: 1.15rem 0;
+}
+
+.ds-accordion__item:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ds-accordion__item > summary {
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.05rem;
+  color: var(--color-text-heading);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.ds-accordion__item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ds-accordion__item > summary::after {
+  content: '+';
+  font-weight: var(--font-weight-regular);
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.ds-accordion__item[open] > summary::after {
+  content: '−';
+}
+
+.ds-accordion__body {
+  margin-top: 0.75rem;
+  font-family: var(--font-text);
+  color: var(--color-text-muted);
+  font-size: 0.98rem;
+  max-width: 62ch;
+  line-height: var(--leading-body);
+}
