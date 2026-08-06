@@ -84,6 +84,10 @@
   align-items: flex-start;
 }
 
+.ds-how-step__copy .ds-btn {
+  margin-top: var(--space-2);
+}
+
 .ds-how-step__copy h3 {
   font-family: var(--font-ui);
   font-weight: var(--font-weight-bold);
@@ -104,6 +108,13 @@
 
 .ds-how-step__visual {
   width: 100%;
+  min-width: 0;
+}
+
+.ds-how-step__visual .ds-gradient-panel {
+  min-height: 220px;
+  height: 100%;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
 }
 
 /* Nested UI inside gradient panels */
@@ -160,11 +171,15 @@
 
 @media (min-width: 900px) {
   .ds-how-step {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-10);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: var(--space-8);
   }
 
   /* Zigzag: odd = visual left, copy right; even = reversed */
+  .ds-how-step--flip {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+
   .ds-how-step--flip .ds-how-step__visual {
     order: 2;
   }

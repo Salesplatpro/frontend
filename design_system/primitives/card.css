@@ -11,12 +11,33 @@
   border: 1px solid rgba(16, 24, 40, 0.06);
   box-shadow: var(--shadow-float);
   padding: var(--space-4);
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
 }
 
-[data-theme='dark'] .ds-card {
+.landing-root[data-theme='dark'] .ds-card {
   background: #1a1a2e;
   color: var(--color-text-heading);
   border-color: var(--color-border);
+}
+
+/* Product-mock cards stay light on brand gradients (readable in both themes) */
+.ds-gradient-panel .ds-card,
+.landing-root[data-theme='dark'] .ds-gradient-panel .ds-card {
+  background: #ffffff;
+  color: var(--color-grey-900);
+  border-color: rgba(16, 24, 40, 0.06);
+}
+
+.landing-root[data-theme='dark'] .ds-gradient-panel .ds-card__label {
+  color: var(--color-grey-500);
+}
+
+.landing-root[data-theme='dark'] .ds-gradient-panel .ds-card__title,
+.landing-root[data-theme='dark'] .ds-gradient-panel .ds-mock-list-item,
+.landing-root[data-theme='dark'] .ds-gradient-panel .ds-mock-list-item strong {
+  color: var(--color-grey-900);
 }
 
 .ds-card__label {
@@ -44,7 +65,12 @@
   line-height: var(--leading-body);
 }
 
-[data-theme='dark'] .ds-bubble {
+.landing-root[data-theme='dark'] .ds-bubble {
   background: rgba(73, 133, 223, 0.16);
   color: var(--color-text-body);
+}
+
+.landing-root[data-theme='dark'] .ds-gradient-panel .ds-bubble {
+  background: var(--color-brand-50);
+  color: var(--color-grey-700);
 }

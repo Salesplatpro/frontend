@@ -1,0 +1,34 @@
+.navigation-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.navigation-progress.is-active {
+  opacity: 1;
+}
+
+.navigation-progress__bar {
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-500),
+    var(--color-brand-700)
+  );
+  box-shadow: 0 0 10px
+    color-mix(in srgb, var(--color-brand-500) 55%, transparent);
+  transition: transform 180ms ease-out;
+}
+
+.navigation-progress:not(.is-active) .navigation-progress__bar {
+  transition: transform 180ms ease-in, opacity 160ms ease;
+}

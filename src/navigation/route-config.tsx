@@ -63,249 +63,257 @@ import PersonalizedTest from '@/pages/TalentProfile/TalentAssessment/Personalize
 import TalentProfileSidebar from '@/pages/TalentProfile/TalentProfileSidebar'
 import { paths } from '@/paths'
 
+import { RootLayout } from './RootLayout'
+
 export const routeConfig: RouteObject[] = [
   {
-    path: '/',
-    element: <MainLayout />,
+    element: <RootLayout />,
     errorElement: <PageNotFound />,
     children: [
       {
         path: '/',
-        element: <LandingPage />,
-      },
-      {
-        path: 'explore',
-        element: <Explore />,
-      },
-      {
-        path: 'solution',
-        element: <Solutions />,
-      },
-      {
-        path: 'features',
-        element: <Features />,
-      },
-      {
-        path: 'resources',
-        element: <Resources />,
-      },
-      {
-        path: 'customerstories',
-        element: <CustomerStories />,
-      },
-      {
-        path: 'pricing',
-        element: <Pricing />,
-      },
-      {
-        path: 'about-us',
-        element: <AboutUs />,
-      },
-      {
-        path: 'payment/verify',
-        element: <VerifyPaymentPage />,
-      },
-      {
-        path: paths.login,
-        element: <LoginPage />,
-      },
-      {
-        path: paths.register,
-        element: <SignupPage />,
-      },
-      {
-        path: 'faq',
-        element: <Faq />,
-      },
-      {
-        path: 'testimonials',
-        element: <Testimonials />,
-      },
-      {
-        path: 'job',
-        element: <SingleJob />,
-      },
-      {
-        path: 'job/postedjob/:jobId',
-        element: <PostedJob />,
-      },
-      {
-        path: paths.privacyPolicy,
-        element: <PrivacyPolicy />,
-      },
-      {
-        path: paths.termsConditions,
-        element: <TermsAndCondition />,
-      },
-    ],
-  },
-  {
-    path: '/talentDashboard',
-    element: <ProtectedRoute allowedRoles={['talent']} />,
-    children: [
-      {
-        path: '',
-        element: <TalentProfileSidebar />,
+        element: <MainLayout />,
+        errorElement: <PageNotFound />,
         children: [
           {
-            index: true,
-            element: <TalentDashboardHome />,
+            path: '/',
+            element: <LandingPage />,
           },
           {
-            path: 'talentProfile',
-            element: <TalentProfile />,
+            path: 'explore',
+            element: <Explore />,
           },
           {
-            path: 'talentQuiz',
-            element: <PreAssessmentPage />,
+            path: 'solution',
+            element: <Solutions />,
+          },
+          {
+            path: 'features',
+            element: <Features />,
+          },
+          {
+            path: 'resources',
+            element: <Resources />,
+          },
+          {
+            path: 'customerstories',
+            element: <CustomerStories />,
+          },
+          {
+            path: 'pricing',
+            element: <Pricing />,
+          },
+          {
+            path: 'about-us',
+            element: <AboutUs />,
+          },
+          {
+            path: 'payment/verify',
+            element: <VerifyPaymentPage />,
+          },
+          {
+            path: paths.login,
+            element: <LoginPage />,
+          },
+          {
+            path: paths.register,
+            element: <SignupPage />,
+          },
+          {
+            path: 'faq',
+            element: <Faq />,
+          },
+          {
+            path: 'testimonials',
+            element: <Testimonials />,
           },
           {
             path: 'job',
-            element: <Job />,
+            element: <SingleJob />,
           },
           {
-            path: '/talentDashboard/support',
-            element: <Support />,
+            path: 'job/postedjob/:jobId',
+            element: <PostedJob />,
           },
           {
-            path: 'Chat',
-            element: <Inbox />,
+            path: paths.privacyPolicy,
+            element: <PrivacyPolicy />,
           },
           {
-            path: 'Notification',
-            element: <Notifications />,
-          },
-          {
-            path: 'job/:jobId',
-            element: <IndividualJob />,
-          },
-          {
-            path: 'applicationPipeline',
-            element: <ApplicationPipeline />,
-          },
-          {
-            path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
-            element: <PersonalizedTest />,
-          },
-          {
-            path: 'applicationPipeline/:jobId',
-            element: <ProgressView />,
-          },
-          {
-            path: 'applicationPipeline/personalityTest/:jobId',
-            element: <PersonalityTest />,
+            path: paths.termsConditions,
+            element: <TermsAndCondition />,
           },
         ],
       },
-    ],
-  },
-  {
-    path: '/recruiterDashboard',
-    element: <ProtectedRoute allowedRoles={['recruiter']} />,
-    children: [
       {
-        path: '',
-        element: <RecruiterProfileSidebar />,
+        path: '/talentDashboard',
+        element: <ProtectedRoute allowedRoles={['talent']} />,
         children: [
           {
-            path: 'dashboard',
-            element: <Dashboard />,
-          },
-          {
-            path: 'dashboard/allapplications',
-            element: <AllApplications />,
-          },
-          {
-            path: 'postjob',
-            element: <PostJobTab />,
-          },
-          {
-            path: 'myJobPosts',
-            element: <MyJobPosts />,
-          },
-          {
-            path: 'scout',
-            element: <MyScoutJobs />,
-          },
-          {
-            path: 'scout/history/:scoutJobId',
-            element: <ScoutJobHistory />,
-          },
-          {
-            path: 'scout/:id',
-            element: <ChooseMethod />,
-          },
-          {
-            path: 'talent-search',
-            element: <SearchTalent />,
-          },
-          {
-            path: 'talent-search/results',
-            element: <SearchResult />,
-          },
-          {
-            path: 'scout/create-jd',
-            element: <CreateJD />,
-          },
-          {
-            path: 'scout/upload-cv/:id',
-            element: <UploadCv />,
-          },
-          {
-            path: 'scout/process-cv/:id',
-            element: <ProcessCV />,
-          },
-          {
-            path: 'singleJobPost/:jobId',
-            element: <SingleJobPost />,
-          },
-          {
-            path: 'singleJobPost/:jobId/:applicationId',
-            element: <ApplicationProgress />,
-          },
-          {
-            path: 'postjob/:jobId',
-            element: <PostJobTab />,
-          },
-          {
-            path: 'editJob/:jobId',
-            element: <EditJobTab />,
-          },
-          {
-            path: 'jobdetail/:jobId',
-            element: <JobDetail />,
-          },
-          {
-            path: 'shortlist',
-            element: <Shortlist />,
-          },
-          {
-            path: 'chat',
-            element: <Chat />,
-          },
-          {
-            path: 'profile',
-            element: <RecruiterProfilePage />,
+            path: '',
+            element: <TalentProfileSidebar />,
+            children: [
+              {
+                index: true,
+                element: <TalentDashboardHome />,
+              },
+              {
+                path: 'talentProfile',
+                element: <TalentProfile />,
+              },
+              {
+                path: 'talentQuiz',
+                element: <PreAssessmentPage />,
+              },
+              {
+                path: 'job',
+                element: <Job />,
+              },
+              {
+                path: '/talentDashboard/support',
+                element: <Support />,
+              },
+              {
+                path: 'Chat',
+                element: <Inbox />,
+              },
+              {
+                path: 'Notification',
+                element: <Notifications />,
+              },
+              {
+                path: 'job/:jobId',
+                element: <IndividualJob />,
+              },
+              {
+                path: 'applicationPipeline',
+                element: <ApplicationPipeline />,
+              },
+              {
+                path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
+                element: <PersonalizedTest />,
+              },
+              {
+                path: 'applicationPipeline/:jobId',
+                element: <ProgressView />,
+              },
+              {
+                path: 'applicationPipeline/personalityTest/:jobId',
+                element: <PersonalityTest />,
+              },
+            ],
           },
         ],
       },
-    ],
-  },
-  {
-    path: '/adminDashboard',
-    element: <ProtectedRoute allowedRoles={['admin']} />,
-    children: [
       {
-        path: '',
-        element: <AdminProfileSidebar />,
+        path: '/recruiterDashboard',
+        element: <ProtectedRoute allowedRoles={['recruiter']} />,
         children: [
           {
-            path: 'viewcandidates',
-            element: <ViewCandidates />,
+            path: '',
+            element: <RecruiterProfileSidebar />,
+            children: [
+              {
+                path: 'dashboard',
+                element: <Dashboard />,
+              },
+              {
+                path: 'dashboard/allapplications',
+                element: <AllApplications />,
+              },
+              {
+                path: 'postjob',
+                element: <PostJobTab />,
+              },
+              {
+                path: 'myJobPosts',
+                element: <MyJobPosts />,
+              },
+              {
+                path: 'scout',
+                element: <MyScoutJobs />,
+              },
+              {
+                path: 'scout/history/:scoutJobId',
+                element: <ScoutJobHistory />,
+              },
+              {
+                path: 'scout/:id',
+                element: <ChooseMethod />,
+              },
+              {
+                path: 'talent-search',
+                element: <SearchTalent />,
+              },
+              {
+                path: 'talent-search/results',
+                element: <SearchResult />,
+              },
+              {
+                path: 'scout/create-jd',
+                element: <CreateJD />,
+              },
+              {
+                path: 'scout/upload-cv/:id',
+                element: <UploadCv />,
+              },
+              {
+                path: 'scout/process-cv/:id',
+                element: <ProcessCV />,
+              },
+              {
+                path: 'singleJobPost/:jobId',
+                element: <SingleJobPost />,
+              },
+              {
+                path: 'singleJobPost/:jobId/:applicationId',
+                element: <ApplicationProgress />,
+              },
+              {
+                path: 'postjob/:jobId',
+                element: <PostJobTab />,
+              },
+              {
+                path: 'editJob/:jobId',
+                element: <EditJobTab />,
+              },
+              {
+                path: 'jobdetail/:jobId',
+                element: <JobDetail />,
+              },
+              {
+                path: 'shortlist',
+                element: <Shortlist />,
+              },
+              {
+                path: 'chat',
+                element: <Chat />,
+              },
+              {
+                path: 'profile',
+                element: <RecruiterProfilePage />,
+              },
+            ],
           },
+        ],
+      },
+      {
+        path: '/adminDashboard',
+        element: <ProtectedRoute allowedRoles={['admin']} />,
+        children: [
           {
-            path: 'roles',
-            element: <AdminRoles />,
+            path: '',
+            element: <AdminProfileSidebar />,
+            children: [
+              {
+                path: 'viewcandidates',
+                element: <ViewCandidates />,
+              },
+              {
+                path: 'roles',
+                element: <AdminRoles />,
+              },
+            ],
           },
         ],
       },

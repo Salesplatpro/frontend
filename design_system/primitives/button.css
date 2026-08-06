@@ -39,7 +39,7 @@
   color: var(--color-text-inverse);
 }
 
-[data-theme='dark'] .ds-btn--solid {
+.landing-root[data-theme='dark'] .ds-btn--solid {
   background: var(--color-primary);
 }
 

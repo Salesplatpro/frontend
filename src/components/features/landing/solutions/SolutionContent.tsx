@@ -1,3 +1,5 @@
+import './SolutionContent.scss'
+
 import React from 'react'
 
 import arrowIcon from '@/assets/Iconarrow.svg'
