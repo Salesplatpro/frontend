@@ -2,7 +2,7 @@
  * Auxhr Design System — Spacing, radius, motion
  */
 
-:root {
+.landing-root {
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;

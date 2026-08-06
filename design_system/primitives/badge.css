@@ -33,7 +33,7 @@
   color: var(--color-brand-800);
 }
 
-[data-theme='dark'] .ds-badge--soft {
+.landing-root[data-theme='dark'] .ds-badge--soft {
   background: rgba(73, 133, 223, 0.2);
   color: var(--color-brand-200);
 }

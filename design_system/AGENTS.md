@@ -36,8 +36,9 @@ components, styles, exports, and dead imports.
 
 - Colors only from `tokens/colors.css` semantic vars (`--color-*`).
 - No yellow / lime / terracotta accents.
-- Theme via `data-theme="light|dark"` (system default).
+- Theme via `data-theme="light|dark"` on **`.landing-root` only** (never `<html>`).
 - Apply this system to the landing page; do not restyle other routes unless asked.
+- Tokens/resets must be scoped under `.landing-root` so login, signup, solutions, pricing, privacy, and terms keep `src/styles/tokens.css`.
 
 ## Primitives
 

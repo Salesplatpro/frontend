@@ -1,11 +1,12 @@
 /**
  * Auxhr Design System — Color tokens
- * Source of truth aligned with frontend/src/styles/tokens.css
+ * Scoped to `.landing-root` so marketing theme never leaks into app routes
+ * (login, signup, pricing, solutions, privacy, terms, dashboards).
  * Agents: prefer semantic vars (--color-*) over primitives in UI.
  */
 
-:root,
-[data-theme='light'] {
+.landing-root,
+.landing-root[data-theme='light'] {
   color-scheme: light;
 
   /* Primitives */
@@ -47,26 +48,8 @@
   --color-primary-tint: var(--color-brand-50);
   --shadow-soft: 0 12px 40px rgba(36, 65, 171, 0.08);
   --shadow-float: 0 16px 40px rgba(16, 24, 40, 0.1);
-}
 
-[data-theme='dark'] {
-  color-scheme: dark;
-  --color-bg-page: var(--color-midnight);
-  --color-bg-subtle: #141328;
-  --color-bg-glass: rgba(16, 24, 40, 0.55);
-  --color-text-heading: #f8fafc;
-  --color-text-body: #e4e7ec;
-  --color-text-muted: #98a2b3;
-  --color-border: rgba(198, 221, 247, 0.14);
-  --color-border-glass: rgba(198, 221, 247, 0.16);
-  --color-primary-strong: var(--color-brand-300);
-  --color-primary-deep: var(--color-brand-200);
-  --shadow-soft: 0 16px 48px rgba(0, 0, 0, 0.35);
-  --shadow-float: 0 18px 48px rgba(0, 0, 0, 0.4);
-}
-
-/* Brand gradient presets (no yellow/warm accents) */
-:root {
+  /* Brand gradient presets (no yellow/warm accents) */
   --gradient-brand-a: linear-gradient(
     145deg,
     var(--color-brand-100) 0%,
@@ -99,4 +82,20 @@
     var(--color-brand-500),
     var(--color-brand-200)
   );
+}
+
+.landing-root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg-page: var(--color-midnight);
+  --color-bg-subtle: #141328;
+  --color-bg-glass: rgba(16, 24, 40, 0.55);
+  --color-text-heading: #f8fafc;
+  --color-text-body: #e4e7ec;
+  --color-text-muted: #98a2b3;
+  --color-border: rgba(198, 221, 247, 0.14);
+  --color-border-glass: rgba(198, 221, 247, 0.16);
+  --color-primary-strong: var(--color-brand-300);
+  --color-primary-deep: var(--color-brand-200);
+  --shadow-soft: 0 16px 48px rgba(0, 0, 0, 0.35);
+  --shadow-float: 0 18px 48px rgba(0, 0, 0, 0.4);
 }

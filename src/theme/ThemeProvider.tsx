@@ -20,27 +20,35 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 const getSystemTheme = (): Theme =>
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 
-const getInitialTheme = (): Theme => {
+const readStoredTheme = (): Theme | null => {
   const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored === 'light' || stored === 'dark') return stored
-  return getSystemTheme()
+  return stored === 'light' || stored === 'dark' ? stored : null
+}
+
+const getResolvedTheme = (): Theme => readStoredTheme() ?? getSystemTheme()
+
+const clearDocumentTheme = () => {
+  document.documentElement.removeAttribute('data-theme')
+  document.documentElement.style.removeProperty('color-scheme')
 }
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>(() =>
-    typeof window === 'undefined' ? 'light' : getInitialTheme(),
+    typeof window === 'undefined' ? 'light' : getResolvedTheme(),
   )
 
+  // Never leave marketing theme attributes on <html> — app routes use
+  // src/styles/tokens.css and must not inherit landing dark/light tokens.
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
+    clearDocumentTheme()
+    return clearDocumentTheme
+  }, [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const onChange = (event: MediaQueryListEvent) => {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        setThemeState(event.matches ? 'dark' : 'light')
-      }
+      if (readStoredTheme()) return
+      setThemeState(event.matches ? 'dark' : 'light')
     }
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
@@ -49,14 +57,28 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const toggleTheme = useCallback(() => {
     setThemeState((prev) => {
       const next = prev === 'dark' ? 'light' : 'dark'
-      localStorage.setItem(STORAGE_KEY, next)
+      const system = getSystemTheme()
+      if (next === system) {
+        localStorage.removeItem(STORAGE_KEY)
+      } else {
+        localStorage.setItem(STORAGE_KEY, next)
+      }
       return next
     })
   }, [])
 
   const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme])
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={value}>
+      <div
+        className="landing-root"
+        data-theme={theme}
+        style={{ colorScheme: theme }}>
+        {children}
+      </div>
+    </ThemeContext.Provider>
+  )
 }
 
 export const useTheme = () => {

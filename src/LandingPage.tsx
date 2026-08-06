@@ -29,7 +29,7 @@ const LandingContent = () => {
   }, [])
 
   return (
-    <div className="landing-root">
+    <>
       <HomeNavbar />
       <div className="wrap">
         <LandingHero />
@@ -42,7 +42,7 @@ const LandingContent = () => {
         <HomeFaq />
         <HomeFooter />
       </div>
-    </div>
+    </>
   )
 }
 

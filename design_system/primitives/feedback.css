@@ -18,7 +18,7 @@
   transition: width var(--duration-base) var(--ease-out);
 }
 
-[data-theme='dark'] .ds-progress {
+.landing-root[data-theme='dark'] .ds-progress {
   background: rgba(73, 133, 223, 0.2);
 }
 

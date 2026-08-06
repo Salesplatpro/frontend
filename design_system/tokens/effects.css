@@ -3,7 +3,7 @@
  * Use brand blues only — never yellow/lime accents.
  */
 
-:root {
+.landing-root {
   --glass-blur: blur(14px);
   --glass-blur-strong: blur(48px);
 }
