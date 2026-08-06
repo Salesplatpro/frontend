@@ -75,7 +75,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
 
   if (isEditMode && configLoading) return <Spinner fullPage />
 
-  const configData = existingConfig?.data?.config
+  const configData = existingConfig?.data?.aiConfig
 
   const editInitialValues: AiConfigValues | null = configData
     ? {
@@ -94,10 +94,10 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
         personalityEvaluation: configData.personalityEvaluation
           ? 'true'
           : 'false',
-        noOfEIQuestions: configData.noOfEIQuestions ?? 3,
-        noOfSNQuestions: configData.noOfSNQuestions ?? 3,
-        noOfTFQuestions: configData.noOfTFQuestions ?? 3,
-        noOfJPQuestions: configData.noOfJPQuestions ?? 3,
+        noOfEIQuestions: configData.noOfEIQuestions ?? '',
+        noOfSNQuestions: configData.noOfSNQuestions ?? '',
+        noOfTFQuestions: configData.noOfTFQuestions ?? '',
+        noOfJPQuestions: configData.noOfJPQuestions ?? '',
         uploadedQuestions: configData.uploadedQuestions?.length
           ? configData.uploadedQuestions
           : [''],

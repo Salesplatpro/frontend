@@ -16,7 +16,7 @@ const JOB_PATH_PATTERN = /^\/job\/postedjob\/([^/?#]+)/
 const API_BASE_URL =
   process.env['VITE_API_BASE_URL'] ?? 'https://api.auxhr.com/v1'
 
-const FALLBACK_IMAGE_PATH = '/Salesplat.png'
+const FALLBACK_IMAGE_PATH = '/og-image.png'
 
 interface JobResponse {
   data?: {
@@ -132,9 +132,13 @@ const buildHtml = (
     <meta name="description" content="${safeDescription}" />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Auxhr" />
     <meta property="og:title" content="${safeTitle}" />
     <meta property="og:description" content="${safeDescription}" />
     <meta property="og:image" content="${escapeHtml(imageUrl)}" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="${escapeHtml(pageUrl)}" />
 
     <meta name="twitter:card" content="summary_large_image" />
