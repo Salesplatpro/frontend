@@ -18,8 +18,9 @@
 .ds-textarea,
 .ds-select {
   width: 100%;
+  min-height: var(--touch-min, 2.75rem);
   font-family: var(--font-ui);
-  font-size: var(--text-sm);
+  font-size: 1rem;
   font-weight: var(--font-weight-regular);
   color: var(--color-text-heading);
   background: var(--color-bg-page);
@@ -29,6 +30,15 @@
   outline: none;
   transition: border-color var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .ds-input,
+  .ds-textarea,
+  .ds-select {
+    min-height: 0;
+    font-size: var(--text-sm);
+  }
 }
 
 .ds-input::placeholder,

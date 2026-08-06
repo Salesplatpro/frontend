@@ -4,8 +4,8 @@
  */
 
 .ds-avatar {
-  width: 2rem;
-  height: 2rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 50%;
   object-fit: cover;
   display: block;
@@ -15,18 +15,40 @@
 }
 
 .ds-avatar--sm {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .ds-avatar--md {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
 .ds-avatar--lg {
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 2.85rem;
+  height: 2.85rem;
+}
+
+@media (min-width: 768px) {
+  .ds-avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .ds-avatar--sm {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .ds-avatar--md {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .ds-avatar--lg {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
 }
 
 .ds-avatar-stack {

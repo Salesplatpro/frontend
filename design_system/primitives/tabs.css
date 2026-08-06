@@ -8,8 +8,11 @@
 
 .ds-tabs {
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.25rem;
   padding: 0.25rem;
+  max-width: 100%;
   background: var(--color-bg-glass);
   border-radius: var(--radius-pill);
   border: 1px solid var(--color-border-glass);
@@ -19,8 +22,9 @@
 .ds-tab {
   font-family: var(--font-ui);
   font-weight: var(--font-weight-bold);
-  font-size: 0.88rem;
-  padding: 0.55rem 1.1rem;
+  font-size: var(--text-sm);
+  padding: 0.5rem 0.9rem;
+  min-height: var(--touch-min, 2.75rem);
   border-radius: var(--radius-pill);
   color: var(--color-text-muted);
   border: none;
@@ -28,6 +32,14 @@
   cursor: pointer;
   transition: background var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out);
+}
+
+@media (min-width: 768px) {
+  .ds-tab {
+    font-size: 0.88rem;
+    padding: 0.55rem 1.1rem;
+    min-height: 0;
+  }
 }
 
 .ds-tab.is-active,

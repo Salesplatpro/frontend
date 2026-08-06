@@ -5,8 +5,8 @@
 
 .ds-gradient-panel {
   position: relative;
-  border-radius: var(--radius-xl);
-  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
   overflow: hidden;
   min-height: 0;
   width: 100%;
@@ -15,6 +15,14 @@
   justify-content: center;
   gap: var(--space-3);
   box-shadow: var(--shadow-soft);
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .ds-gradient-panel {
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+  }
 }
 
 .ds-gradient-panel--a {

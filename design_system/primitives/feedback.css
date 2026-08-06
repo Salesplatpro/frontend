@@ -110,8 +110,9 @@
   max-width: var(--max-content);
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: var(--wrap-pad-x, 1rem);
+  padding-right: var(--wrap-pad-x, 1rem);
+  box-sizing: border-box;
 }
 
 .ds-stack {

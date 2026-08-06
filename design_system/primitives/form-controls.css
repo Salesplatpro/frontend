@@ -21,8 +21,8 @@
 /* Switch */
 .ds-switch {
   position: relative;
-  width: 2.75rem;
-  height: 1.55rem;
+  width: 2.85rem;
+  height: 1.65rem;
   border-radius: var(--radius-pill);
   background: var(--color-grey-300);
   border: none;
@@ -30,6 +30,13 @@
   padding: 0;
   transition: background var(--duration-fast) var(--ease-out);
   flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .ds-switch {
+    width: 2.75rem;
+    height: 1.55rem;
+  }
 }
 
 .ds-switch::after {

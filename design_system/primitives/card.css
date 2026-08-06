@@ -10,10 +10,11 @@
   border-radius: var(--radius-md);
   border: 1px solid rgba(16, 24, 40, 0.06);
   box-shadow: var(--shadow-float);
-  padding: var(--space-4);
+  padding: var(--card-pad, var(--space-4));
   width: 100%;
   max-width: 100%;
   text-align: left;
+  box-sizing: border-box;
 }
 
 .landing-root[data-theme='dark'] .ds-card {

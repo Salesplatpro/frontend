@@ -4,16 +4,24 @@
  */
 
 .ds-step-badge {
-  width: 2rem;
-  height: 2rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 50%;
   display: inline-grid;
   place-items: center;
   font-family: var(--font-ui);
   font-weight: var(--font-weight-bold);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   color: var(--color-text-heading);
   border: 1.5px solid var(--color-border);
   background: var(--color-bg-page);
   flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .ds-step-badge {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.85rem;
+  }
 }
