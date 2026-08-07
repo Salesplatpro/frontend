@@ -32,11 +32,31 @@ describe('getProgresses', () => {
     expect(personalizedTest?.result).toBeNull()
   })
 
-  it('still shows the MBTI type for the personality stage (a type, not a score)', () => {
+  it('keeps the MBTI type on the personality stage result (non-numeric → check UI)', () => {
     const progresses = getProgresses(buildApplication())
 
     const personality = progresses.find((p) => p.title === 'Personality Test')
+    expect(personality?.status).toBe('completed')
     expect(personality?.result).toBe('INTJ')
+  })
+
+  it('marks earlier stages completed once the pipeline has advanced past them', () => {
+    const progresses = getProgresses(
+      buildApplication({
+        currentStage: 'personality',
+        mbtiType: null,
+      }),
+    )
+
+    expect(progresses.find((p) => p.title === 'CV-Matching')?.status).toBe(
+      'completed',
+    )
+    expect(
+      progresses.find((p) => p.title === 'Personalized Test')?.status,
+    ).toBe('completed')
+    expect(progresses.find((p) => p.title === 'Personality Test')?.status).toBe(
+      'current',
+    )
   })
 
   it('adds an "awaiting-decision" Result step once the pipeline completes and no decision has been made', () => {
@@ -81,8 +101,6 @@ describe('getProgresses', () => {
       }),
     )
 
-    // No unambiguous entry stage exists in a pure cycle, so the list may be
-    // empty — the important part is that walk terminates.
     expect(Array.isArray(progresses)).toBe(true)
   })
 })

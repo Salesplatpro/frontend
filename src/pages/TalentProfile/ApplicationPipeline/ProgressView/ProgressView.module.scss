@@ -6,7 +6,6 @@ $warning-tint: #fff8ef;
   padding: var(--space-6) var(--space-4);
 }
 
-// ── Header ─────────────────────────────────────────────────────────────────
 .headerSection {
   margin-bottom: var(--space-6);
 }
@@ -35,7 +34,6 @@ $warning-tint: #fff8ef;
   color: var(--color-warning);
 }
 
-// ── Item list / stepper ───────────────────────────────────────────────────
 .itemList {
   display: flex;
   flex-direction: column;
@@ -131,12 +129,15 @@ $warning-tint: #fff8ef;
   color: var(--color-text-heading);
 }
 
-// ── Footer ─────────────────────────────────────────────────────────────────
+.takenCheck {
+  flex-shrink: 0;
+  color: var(--color-success);
+}
+
 .footer {
   margin-top: var(--space-10);
 }
 
-// ── Loading skeleton ───────────────────────────────────────────────────────
 @keyframes skeletonPulse {
   0%,
   100% {
