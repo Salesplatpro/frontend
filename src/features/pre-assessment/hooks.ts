@@ -56,7 +56,11 @@ export function usePreAssessment() {
 
   useEffect(() => {
     const cached = usePreAssessmentStore.getState().assessment
-    if (cached) {
+    // Only reuse a cache that already has real questions. A generating stub
+    // (or empty pending payload) must hit the network so we can poll until
+    // generation finishes — otherwise the countdown never becomes eligible.
+    const hasQuestions = (cached?.questions?.length ?? 0) > 0
+    if (cached && hasQuestions && !cached.generating) {
       setAssessmentLocal(cached)
       setIsLoading(false)
       return
@@ -64,12 +68,16 @@ export function usePreAssessment() {
     void load()
   }, [load])
 
-  // For a brand-new talent, the first response is a stub with no questions
-  // yet while generation runs server-side (fire-and-forget). Poll silently
-  // until real questions arrive, instead of leaving the UI stuck on an empty
-  // question list once the countdown/loading state ends.
+  // Brand-new talents get a fire-and-forget stub (generating: true, no
+  // questions). Also poll if we somehow have a pending assessment with an
+  // empty question list and no generating flag, so the UI cannot stick on
+  // "Generating..." forever without a network refresh.
   useEffect(() => {
-    if (!assessment?.generating) return
+    const needsPoll =
+      assessment?.status === 'pending' &&
+      (assessment.generating === true ||
+        (assessment.questions?.length ?? 0) === 0)
+    if (!needsPoll) return
 
     const POLL_INTERVAL_MS = 3000
     const MAX_WAIT_MS = 60000
@@ -87,7 +95,12 @@ export function usePreAssessment() {
     }, POLL_INTERVAL_MS)
 
     return () => clearInterval(id)
-  }, [assessment?.generating, load])
+  }, [
+    assessment?.generating,
+    assessment?.status,
+    assessment?.questions?.length,
+    load,
+  ])
 
   return {
     assessment,
@@ -115,14 +128,14 @@ export function useAssessmentTimer(
 
   // Restore accurate remaining time from startedAt on mount
   useEffect(() => {
-    if (!assessmentStarted || startedAt === null) return
+    if (!assessmentStarted || startedAt === null || totalSeconds <= 0) return
     const elapsed = Math.floor((Date.now() - startedAt) / 1000)
     const restored = Math.max(0, totalSeconds - elapsed)
     setRemainingSeconds(restored)
   }, [assessmentStarted, startedAt, totalSeconds, setRemainingSeconds])
 
   useEffect(() => {
-    if (!assessmentStarted || isSubmitting) return
+    if (!assessmentStarted || isSubmitting || totalSeconds <= 0) return
 
     const id = setInterval(() => {
       const elapsed = Math.floor(

@@ -22,6 +22,9 @@ import {
 import { getStatusBadge, JOB_STATUS_OPTIONS } from '../getJobStatus'
 import styles from './JobsTable.module.scss'
 
+const resolveAiConfigId = (job: recruiterJobPostsTypes): string | null =>
+  job.aiConfigId ?? (typeof job.aiConfig === 'string' ? job.aiConfig : null)
+
 type StatusCellProps = {
   jobId: string
   status: string
@@ -152,7 +155,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
           <StatusCell
             jobId={job.id}
             status={job.status ?? 'draft'}
-            aiConfigId={job.aiConfigId}
+            aiConfigId={resolveAiConfigId(job)}
           />
         ),
       },
@@ -191,7 +194,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
               state={{ jobName: job.role.name, postedAt: job.createdAt }}>
               <button className={styles.viewJobButton}>View Job</button>
             </Link>
-            {job.status === 'draft' && !job.aiConfigId && (
+            {job.status === 'draft' && !resolveAiConfigId(job) && (
               <Link to={`/recruiterDashboard/postjob/${job.id}`}>
                 <button className={styles.addAiConfigButton}>
                   Add AI Config
@@ -217,7 +220,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         getRowClassName={(job) => {
           if (job.status === 'suspended' || job.status === 'closed')
             return styles.rowClosed
-          if (job.aiConfigId) return styles.rowComplete
+          if (resolveAiConfigId(job)) return styles.rowComplete
           return styles.rowIncomplete
         }}
       />

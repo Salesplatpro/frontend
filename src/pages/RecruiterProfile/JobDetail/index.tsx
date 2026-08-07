@@ -51,7 +51,11 @@ const JobDetail = () => {
               {job.noOfApplicants != null ? `(${job.noOfApplicants})` : ''}
             </button>
           </Link>
-          <JobStatusControl jobId={jobId!} status={job.status ?? 'draft'} />
+          <JobStatusControl
+            jobId={jobId!}
+            status={job.status ?? 'draft'}
+            aiConfigId={job.aiConfigId ?? job.aiConfig?.id ?? null}
+          />
         </>
       }
     />

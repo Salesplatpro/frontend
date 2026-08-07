@@ -48,7 +48,7 @@ const PreAssessmentPage: React.FC = () => {
 
   const submittingRef = useRef(false)
 
-  // Runtime-only. Never persisted. True only while the user is actively answering questions.
+  // Runtime-only. Never persisted. True from countdown through answering.
   // This is the single source of truth for the navigation lock — not the persisted store.
   const assessmentActiveRef = useRef(false)
 
@@ -64,18 +64,17 @@ const PreAssessmentPage: React.FC = () => {
   const allAnswered =
     questions.length > 0 && questions.every((q) => !!answers[q.questionId])
 
-  // Sync the sidebar lock with the current assessment state. Locks when questions are actively
-  // being answered; unlocks the moment any exit condition is true (completed, error, loading, etc.).
-  // Also handles restoring the lock after a page refresh when the session was in progress.
+  // Sync the sidebar lock with the current assessment state.
+  // Lock from countdown through answering; unlock on complete/error/loading/submit.
+  // Also restores the lock after a refresh when the session was already in progress.
   useEffect(() => {
-    const isActive =
-      !isLoading &&
-      !fetchError &&
-      !isProfileIncomplete &&
+    const sessionInProgress =
       assessment?.status === 'pending' &&
-      assessmentStarted &&
-      countdownCompleted &&
-      questions.length > 0
+      questions.length > 0 &&
+      (isCountingDown || (assessmentStarted && countdownCompleted))
+
+    const isActive =
+      !isLoading && !fetchError && !isProfileIncomplete && sessionInProgress
 
     if (isActive && !assessmentActiveRef.current) {
       assessmentActiveRef.current = true
@@ -88,7 +87,8 @@ const PreAssessmentPage: React.FC = () => {
     isLoading,
     fetchError,
     isProfileIncomplete,
-    assessment,
+    assessment?.status,
+    isCountingDown,
     assessmentStarted,
     countdownCompleted,
     questions.length,
@@ -146,8 +146,12 @@ const PreAssessmentPage: React.FC = () => {
   const handleSubmit = useCallback(
     async (auto = false) => {
       if (submittingRef.current) return
-      // Guard against stale timer ticks firing after a successful submission.
-      if (!assessmentActiveRef.current) return
+      // Allow submit while the session is locked OR while questions are on
+      // screen (covers the brief window before the lock effect commits).
+      const canSubmit =
+        assessmentActiveRef.current ||
+        (assessmentStarted && countdownCompleted && questions.length > 0)
+      if (!canSubmit) return
       submittingRef.current = true
       setIsSubmitting(true)
 
@@ -165,6 +169,8 @@ const PreAssessmentPage: React.FC = () => {
         assessmentActiveRef.current = false
         unlock()
         setAssessmentStarted(false)
+        setCountdownCompleted(false)
+        setIsCountingDown(false)
         await refetch()
         reset()
       } catch {
@@ -178,7 +184,17 @@ const PreAssessmentPage: React.FC = () => {
         setIsSubmitting(false)
       }
     },
-    [answers, questions, refetch, reset, setAssessmentStarted, unlock],
+    [
+      answers,
+      questions,
+      refetch,
+      reset,
+      assessmentStarted,
+      countdownCompleted,
+      setAssessmentStarted,
+      setCountdownCompleted,
+      unlock,
+    ],
   )
 
   const handleAutoSubmit = useCallback(() => {

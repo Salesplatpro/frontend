@@ -45,6 +45,19 @@ export const recruiterApi = createApi({
         method: 'POST',
         body: data,
       }),
+      // Creating a config links it onto the job (aiConfigId) — refresh job
+      // lists/detail so the "Active" status option becomes available.
+      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          // Job detail / edit pages load via talentApi.individualJob
+          const { talentApi } = await import('../talent')
+          dispatch(talentApi.util.invalidateTags(['Jobs']))
+        } catch {
+          // mutation failed — leave caches alone
+        }
+      },
     }),
 
     getAiConfig: builder.query({
@@ -60,6 +73,7 @@ export const recruiterApi = createApi({
         method: 'PATCH',
         body: data,
       }),
+      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
     fetchRecruiterJobPost: builder.query({
       query: () => '/jobs/me?limit=10&offset=0',

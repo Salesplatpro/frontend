@@ -37,6 +37,8 @@ export interface JobDetailsJob {
   postedBy?: { firstName?: string; lastName?: string } | null
   status?: string
   hasApplied?: boolean
+  aiConfigId?: string | null
+  aiConfig?: { id?: string } | null
 }
 
 interface JobDetailsViewProps {
