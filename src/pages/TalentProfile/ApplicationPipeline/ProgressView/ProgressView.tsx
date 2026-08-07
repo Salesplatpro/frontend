@@ -32,11 +32,6 @@ export const getProgresses = (application: Application): Progress[] => {
     personality: { icon: personalizedIcon, title: 'Personality Test' },
   }
 
-  // `application.stages` is a jsonb map of currentStage -> nextStage. Its key
-  // iteration order is not guaranteed to match the pipeline's actual order, so
-  // reconstruct the true order by walking the chain from its entry stage (the
-  // one key that never appears as another stage's "next") rather than trusting
-  // Object.keys() order.
   const stages = (application.stages ?? {}) as Record<StageKey, string>
   const stageKeys = Object.keys(stages) as StageKey[]
   const values = new Set(Object.values(stages))
@@ -55,11 +50,6 @@ export const getProgresses = (application: Application): Progress[] => {
   const currentStage = application.currentStage
   let currentStageFound = false
 
-  // Status is computed for every stage in the real chain (including
-  // 'prescreening', which has no display mapping below) so `currentStageFound`
-  // stays accurate — only the push into `progresses` is gated on having a
-  // mapping, keeping Pre-Assessment out of the visible pipeline without
-  // corrupting the completed/awaiting status of the stages after it.
   orderedStages.forEach((stage) => {
     let status
     if (stage === currentStage) {
@@ -75,9 +65,6 @@ export const getProgresses = (application: Application): Progress[] => {
       stagesMapping as Record<string, { icon: string; title: string }>
     )[stage]
     if (mapping) {
-      // CV-matching and personalized-test scores are never shown to the talent —
-      // only whether the stage is complete. The stage's own status badge already
-      // renders "Completed"; no numeric result is surfaced here for those stages.
       let result: string | null = null
       if (
         stage === 'personality' &&
@@ -96,9 +83,6 @@ export const getProgresses = (application: Application): Progress[] => {
     }
   })
 
-  // Once every assessment stage is done, add a terminal "Result" step that
-  // reflects the recruiter's decision — `application.status` is tracked
-  // independently of `currentStage`/`stages` and was never surfaced here before.
   if (currentStage === 'completed') {
     const resultStatus =
       application.status === 'shortlisted' || application.status === 'rejected'
@@ -135,8 +119,12 @@ const ProgressView: React.FC = () => {
     data: applicationResp,
     error: applicationError,
     isLoading: applicationLoading,
+    isFetching: applicationFetching,
     refetch,
-  } = useJobApplicationQuery(applicationId, { skip: !applicationId })
+  } = useJobApplicationQuery(applicationId, {
+    skip: !applicationId,
+    refetchOnMountOrArgChange: true,
+  })
 
   const [
     triggerCvMatch,
@@ -157,9 +145,6 @@ const ProgressView: React.FC = () => {
       const applicationData = applicationResp.data?.application || null
       setJobProgress(applicationData)
 
-      // Only auto-run once per application, and only when the stage score has
-      // not been written yet — otherwise a failed-threshold retake loops the
-      // CV-match call and keeps the page on a skeleton forever.
       if (
         applicationData?.currentStage === 'cv_similarity' &&
         applicationData.cvSimilarityScore == null &&
@@ -195,8 +180,7 @@ const ProgressView: React.FC = () => {
       notify('success', 'CV Match completed.', {
         autoClose: 2000,
       })
-
-      refetch()
+      void refetch()
     }
 
     if (cvMatchError) {
@@ -206,7 +190,7 @@ const ProgressView: React.FC = () => {
 
   useEffect(() => {
     if (prescreeningCheckData) {
-      refetch()
+      void refetch()
     }
 
     if (prescreeningCheckError) {
@@ -256,7 +240,10 @@ const ProgressView: React.FC = () => {
   }
 
   const progresses = getProgresses(jobProgress)
-  const isAdvancingStage = cvMatchLoading || prescreeningCheckLoading
+  const isAdvancingStage =
+    cvMatchLoading ||
+    prescreeningCheckLoading ||
+    (applicationFetching && !applicationLoading)
 
   const homePage = () => {
     if (location.key !== 'default') {

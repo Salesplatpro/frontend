@@ -30,12 +30,15 @@ const STATUS_LABELS: Record<string, string> = {
   'awaiting-decision': 'Awaiting Decision',
 }
 
-// Statuses without a dedicated `.dot-{status}` class fall back to the neutral
-// "awaiting" dot styling.
 const dotStatusClass = (status: string) =>
   styles[`dot-${status}`] ?? styles['dot-awaiting']
 
 const takeableTests = ['Personalized Test', 'Personality Test']
+
+export const isNumericOrPercentResult = (result?: string | null): boolean => {
+  if (result == null || result.trim() === '') return false
+  return /^\d+(\.\d+)?%?$/.test(result.trim())
+}
 
 const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
   const navigate = useNavigate()
@@ -60,6 +63,10 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
 
   const isTakeable =
     progress.status === 'current' && takeableTests.includes(progress.title)
+
+  const showTakenCheck =
+    progress.status === 'completed' &&
+    !isNumericOrPercentResult(progress.result)
 
   return (
     <div className={styles.itemRow}>
@@ -91,6 +98,12 @@ const ProgressItem: React.FC<Props> = ({ progress, jobId, isLast }) => {
           <StatusBadge
             status={STATUS_LABELS[progress.status]}
             {...getStatusBadge(progress.status)}
+          />
+        ) : showTakenCheck ? (
+          <IoCheckmarkCircle
+            className={styles.takenCheck}
+            size={28}
+            aria-label="Test completed"
           />
         ) : (
           <StatusBadge
