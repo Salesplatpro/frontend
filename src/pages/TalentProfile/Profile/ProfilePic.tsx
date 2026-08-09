@@ -1,76 +1,21 @@
 import React from 'react'
 
-import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { Avatar } from '@/components/ui/Avatar'
 import { useProfile } from '@/features/profile/hooks/useProfile'
-import { useUploadProfileImage } from '@/features/profile/hooks/useUploadProfileImage'
-import { getDefaultIcon } from '@/utils/getDefaultIcon'
-import { notify } from '@/utils/toastNotifications'
 
 import styles from './ProfilePic.module.scss'
 
-interface ProfilePicProps {
-  previewUrl?: string | null
-  onFileSelect?: (file: File) => void
-}
-
-const ProfilePic: React.FC<ProfilePicProps> = ({
-  previewUrl,
-  onFileSelect,
-}) => {
-  const user = useAuthStore((state) => state.user)
+const ProfilePic: React.FC = () => {
   const { profile } = useProfile()
-  const { uploadProfileImage, isUploading } = useUploadProfileImage()
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    if (!file.type.startsWith('image/')) {
-      notify('error', 'Only image files are allowed', {
-        autoClose: 2000,
-      })
-      return
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      notify('error', 'File size exceeds the 5MB limit', {
-        autoClose: 2000,
-      })
-      return
-    }
-
-    if (onFileSelect) {
-      onFileSelect(file)
-    } else {
-      void uploadProfileImage(file)
-    }
-
-    event.target.value = ''
-  }
-
-  const profileImageSrc =
-    previewUrl ||
-    profile?.profileImageUrl ||
-    getDefaultIcon({ id: user?.id || '', size: 50 })
 
   return (
     <div className={styles.container}>
-      <img src={profileImageSrc} alt="Profile" className={styles.image} />
-      <input
-        id="profileImage"
-        type="file"
-        accept="image/*"
-        className={styles.input}
-        onChange={handleImageChange}
-        disabled={isUploading}
+      <Avatar
+        firstName={profile?.firstName}
+        lastName={profile?.lastName}
+        size="lg"
+        className={styles.avatar}
       />
-      <button
-        type="button"
-        className={styles.changeButton}
-        onClick={() => document.getElementById('profileImage')?.click()}
-        disabled={isUploading}>
-        {isUploading ? 'Uploading...' : 'Change Image'}
-      </button>
     </div>
   )
 }

@@ -2,11 +2,7 @@ import { AxiosProgressEvent } from 'axios'
 
 import { httpClient } from '@/features/auth/services/httpClient'
 
-import {
-  ProfileApiResponse,
-  ProfilePatchPayload,
-  UploadResponse,
-} from '../types'
+import { ProfileApiResponse, ProfilePatchPayload } from '../types'
 
 export const PROFILE_ENDPOINT = '/user/me'
 // Distinct from PROFILE_ENDPOINT: accepts a multipart `cv` file, which runs
@@ -23,18 +19,6 @@ export const patchProfile = (payload: Partial<ProfilePatchPayload>) =>
   httpClient
     .patch<ProfileApiResponse>(PROFILE_ENDPOINT, payload)
     .then((response) => response.data)
-
-export const uploadFile = (
-  file: File,
-  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
-) => {
-  const formData = new FormData()
-  formData.append('file', file)
-
-  return httpClient
-    .post<UploadResponse>('/uploads', formData, { onUploadProgress })
-    .then((response) => response.data)
-}
 
 export const uploadCv = (
   file: File,

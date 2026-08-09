@@ -1,14 +1,30 @@
 .avatar {
-  width: 36px;
-  height: 36px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
   font-family: var(--font-heading);
-  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
+  user-select: none;
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--text-xs);
+}
+
+.md {
+  width: 40px;
+  height: 40px;
+  font-size: var(--text-sm);
+}
+
+.lg {
+  width: 72px;
+  height: 72px;
+  font-size: var(--text-xl);
 }
 
 .brand {

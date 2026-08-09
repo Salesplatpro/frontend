@@ -52,6 +52,13 @@
   padding-bottom: var(--space-2);
 }
 
+.hint {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
 .labelRow {
   display: flex;
   align-items: center;

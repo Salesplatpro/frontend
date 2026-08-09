@@ -53,7 +53,9 @@ export const PrivacyPolicy = () => {
           <br />
           <br />
           - Personal Information: Name, email address, phone number, job title,
-          professional history, resumes/CVs, and login credentials.
+          professional history, resume/CV text extracted from uploads, and login
+          credentials. Original CV files are not retained in object storage;
+          recruiters view a generated PDF derived from the extracted text.
           <br />
           - Organizational Data: Company name, role, workforce details,
           subscription plans, and HR-related information provided by employers.

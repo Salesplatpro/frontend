@@ -6,12 +6,11 @@ import {
 } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
 
+import { Avatar } from '@/components/ui/Avatar'
 import { CountBadge } from '@/components/ui/Badge'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { useProfile } from '@/features/profile/hooks/useProfile'
-
-import { getDefaultIcon } from '../../utils/getDefaultIcon'
 
 const NOTIFICATION_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
   talent: '/talentDashboard/Notification',
@@ -95,13 +94,10 @@ export const LoggedInUserBadge: React.FC = () => {
             }`}</div>
             <div className="text-sm text-gray-500">{userInfo?.email || ''}</div>
           </div>
-          <img
-            src={
-              userInfo?.profileImageUrl ||
-              getDefaultIcon({ id: user?.id || '', size: 40 })
-            }
-            alt="Profile"
-            className="w-10 h-10 shrink-0 object-cover rounded-full"
+          <Avatar
+            firstName={userInfo?.firstName}
+            lastName={userInfo?.lastName}
+            size="md"
           />
         </div>
       )}

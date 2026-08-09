@@ -1,8 +1,12 @@
 import { httpClient } from '@/features/auth/services/httpClient'
 
 import {
+  AdminJob,
+  AdminJobFilters,
   AdminRole,
   AdminRolePayload,
+  AdminTalent,
+  AdminTalentFilters,
   Candidate,
   CandidateFilters,
 } from '../types'
@@ -44,4 +48,43 @@ export const updateRole = (id: string, payload: AdminRolePayload) =>
 export const deleteRole = (id: string) =>
   httpClient
     .delete<ApiEnvelope<null>>(`/roles/${id}`)
+    .then((response) => response.data)
+
+export const fetchAdminTalents = (filters: AdminTalentFilters = {}) => {
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([, value]) => value !== undefined && value !== '',
+    ),
+  )
+  return httpClient
+    .get<ApiEnvelope<{ users: AdminTalent[]; total: number }>>(
+      '/admin/talents',
+      {
+        params,
+      },
+    )
+    .then((response) => response.data.data)
+}
+
+export const deleteAdminTalent = (id: string) =>
+  httpClient
+    .delete<ApiEnvelope<null>>(`/admin/talents/${id}`)
+    .then((response) => response.data)
+
+export const fetchAdminJobs = (filters: AdminJobFilters = {}) => {
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([, value]) => value !== undefined && value !== '',
+    ),
+  )
+  return httpClient
+    .get<ApiEnvelope<{ jobs: AdminJob[]; total: number }>>('/admin/jobs', {
+      params,
+    })
+    .then((response) => response.data.data)
+}
+
+export const deleteAdminJob = (id: string) =>
+  httpClient
+    .delete<ApiEnvelope<null>>(`/admin/jobs/${id}`)
     .then((response) => response.data)

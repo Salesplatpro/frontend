@@ -163,6 +163,11 @@
 }
 
 .cvLink {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   font-size: var(--text-sm, 0.875rem);
   color: var(--color-primary, #2563eb);
   text-decoration: underline;

@@ -33,8 +33,6 @@ const TalentProfile = () => {
     progress,
     cvFileName,
     formProgress,
-    picturePreview,
-    setPictureFile,
     initialValues,
     updateFormProgress,
     handleSubmit,
@@ -49,12 +47,7 @@ const TalentProfile = () => {
 
   return (
     <div className={styles.page}>
-      <TalentProfileHeader
-        profile={profile}
-        progress={formProgress}
-        picturePreview={picturePreview}
-        onPictureSelect={setPictureFile}
-      />
+      <TalentProfileHeader profile={profile} progress={formProgress} />
 
       <div className={styles.formCard}>
         <Formik
@@ -220,8 +213,15 @@ const TalentProfile = () => {
                 <div className={styles.row}>
                   <div className={styles.fullField}>
                     <label className={styles.label} htmlFor="cv">
-                      {profile?.cvUrl ? 'CV / Resume' : 'Upload CV'}
+                      {profile?.cvFileName || profile?.cvUploadedAt
+                        ? 'CV / Resume'
+                        : 'Upload CV'}
                     </label>
+                    <p className={styles.hint}>
+                      We extract the text from your PDF or DOCX and store it
+                      securely. Recruiters view a generated CV — the original
+                      file is not kept.
+                    </p>
                     <input
                       id="cv"
                       type="file"
@@ -234,12 +234,10 @@ const TalentProfile = () => {
                         event.target.value = ''
                       }}
                     />
-                    {profile?.cvUrl && !isUploading ? (
+                    {(profile?.cvFileName || profile?.cvUploadedAt) &&
+                    !isUploading ? (
                       <CvFile
-                        fileName={decodeURIComponent(
-                          profile.cvUrl.split('/').pop() || 'CV',
-                        )}
-                        url={profile.cvUrl}
+                        fileName={profile.cvFileName || 'CV'}
                         replaceInputId="cv"
                       />
                     ) : (
@@ -257,9 +255,7 @@ const TalentProfile = () => {
                   <Button
                     type="submit"
                     variant="primary"
-                    disabled={
-                      (!dirty && !picturePreview) || isSubmitting || isUpdating
-                    }
+                    disabled={!dirty || isSubmitting || isUpdating}
                     loading={isSubmitting || isUpdating}>
                     Save
                   </Button>

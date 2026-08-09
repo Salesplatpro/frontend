@@ -22,6 +22,7 @@ import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
 import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
+import Talents from '@/pages/AdminProfile/Talents/Talents'
 import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
 import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
@@ -49,6 +50,7 @@ import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
 import SearchResult from '@/pages/RecruiterProfile/TalentSearch/SearchResult'
 import SearchTalent from '@/pages/RecruiterProfile/TalentSearch/SearchTalent'
+import { ViewCvPage } from '@/pages/RecruiterProfile/ViewCv/ViewCvPage'
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
 import ProgressView from '@/pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
@@ -142,6 +144,15 @@ export const routeConfig: RouteObject[] = [
           {
             path: paths.termsConditions,
             element: <TermsAndCondition />,
+          },
+        ],
+      },
+      {
+        element: <ProtectedRoute allowedRoles={['recruiter', 'admin']} />,
+        children: [
+          {
+            path: '/view-cv/:talentId',
+            element: <ViewCvPage />,
           },
         ],
       },
@@ -305,6 +316,14 @@ export const routeConfig: RouteObject[] = [
             path: '',
             element: <AdminProfileSidebar />,
             children: [
+              {
+                index: true,
+                element: <Talents />,
+              },
+              {
+                path: 'talents',
+                element: <Talents />,
+              },
               {
                 path: 'viewcandidates',
                 element: <ViewCandidates />,

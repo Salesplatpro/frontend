@@ -1,11 +1,17 @@
 import React from 'react'
 import { HiOutlineUserGroup } from 'react-icons/hi'
+import { HiOutlineUsers } from 'react-icons/hi2'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md'
 
 const ICON_SIZE = 24
 const COLOR = '#ffffff'
 
 export const adminSidebarData = [
+  {
+    name: 'Talents',
+    icon: <HiOutlineUsers size={ICON_SIZE} color={COLOR} />,
+    link: '/adminDashboard/talents',
+  },
   {
     name: 'View Candidates',
     icon: <HiOutlineUserGroup size={ICON_SIZE} color={COLOR} />,
