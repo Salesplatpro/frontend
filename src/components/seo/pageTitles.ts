@@ -36,6 +36,7 @@ const EXACT_TITLES: Record<string, string> = {
   '/recruiterDashboard/profile': 'Profile',
   '/adminDashboard': 'Talents',
   '/adminDashboard/talents': 'Talents',
+  '/adminDashboard/jobs': 'Jobs',
   '/adminDashboard/viewcandidates': 'View Candidates',
   '/adminDashboard/roles': 'Roles',
 }
