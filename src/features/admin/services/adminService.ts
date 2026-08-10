@@ -3,6 +3,8 @@ import { httpClient } from '@/features/auth/services/httpClient'
 import {
   AdminJob,
   AdminJobFilters,
+  AdminRecruiter,
+  AdminRecruiterFilters,
   AdminRole,
   AdminRolePayload,
   AdminTalent,
@@ -69,6 +71,27 @@ export const fetchAdminTalents = (filters: AdminTalentFilters = {}) => {
 export const deleteAdminTalent = (id: string) =>
   httpClient
     .delete<ApiEnvelope<null>>(`/admin/talents/${id}`)
+    .then((response) => response.data)
+
+export const fetchAdminRecruiters = (filters: AdminRecruiterFilters = {}) => {
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([, value]) => value !== undefined && value !== '',
+    ),
+  )
+  return httpClient
+    .get<ApiEnvelope<{ users: AdminRecruiter[]; total: number }>>(
+      '/admin/recruiters',
+      {
+        params,
+      },
+    )
+    .then((response) => response.data.data)
+}
+
+export const deleteAdminRecruiter = (id: string) =>
+  httpClient
+    .delete<ApiEnvelope<null>>(`/admin/recruiters/${id}`)
     .then((response) => response.data)
 
 export const fetchAdminJobs = (filters: AdminJobFilters = {}) => {
