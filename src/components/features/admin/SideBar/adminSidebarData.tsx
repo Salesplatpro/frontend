@@ -1,6 +1,6 @@
 import React from 'react'
 import { HiOutlineBriefcase, HiOutlineUserGroup } from 'react-icons/hi'
-import { HiOutlineUsers } from 'react-icons/hi2'
+import { HiOutlineUserCircle, HiOutlineUsers } from 'react-icons/hi2'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md'
 
 const ICON_SIZE = 24
@@ -11,6 +11,11 @@ export const adminSidebarData = [
     name: 'Talents',
     icon: <HiOutlineUsers size={ICON_SIZE} color={COLOR} />,
     link: '/adminDashboard/talents',
+  },
+  {
+    name: 'Recruiters',
+    icon: <HiOutlineUserCircle size={ICON_SIZE} color={COLOR} />,
+    link: '/adminDashboard/recruiters',
   },
   {
     name: 'Jobs',

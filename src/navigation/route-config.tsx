@@ -22,6 +22,7 @@ import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
 import Jobs from '@/pages/AdminProfile/Jobs/Jobs'
+import Recruiters from '@/pages/AdminProfile/Recruiters/Recruiters'
 import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
 import Talents from '@/pages/AdminProfile/Talents/Talents'
 import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
@@ -324,6 +325,10 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'talents',
                 element: <Talents />,
+              },
+              {
+                path: 'recruiters',
+                element: <Recruiters />,
               },
               {
                 path: 'jobs',

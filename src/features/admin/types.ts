@@ -87,3 +87,23 @@ export interface AdminJobFilters {
   offset?: number
   sort?: 'asc' | 'desc'
 }
+
+export interface AdminRecruiter {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  createdAt: string
+  organization?: {
+    id: string
+    name: string
+  } | null
+}
+
+export interface AdminRecruiterFilters {
+  search?: string
+  limit?: number
+  offset?: number
+  sort?: 'asc' | 'desc'
+}
