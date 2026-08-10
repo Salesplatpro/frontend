@@ -15,6 +15,7 @@ import {
   StatusBadge,
 } from '../../../components'
 import { useRegenerateVerdict } from '../../../features/applications/hooks/useRegenerateVerdict'
+import { openTalentCv } from '../../../features/profile/services/openTalentCv'
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
 import { AiMatchPanel } from './AiMatchPanel'
@@ -101,11 +102,11 @@ const ApplicantActionsCell = ({
     { label: 'Shortlist', onClick: () => onShortlist(item.id) },
     { label: 'Reject', onClick: () => onReject(item.id) },
     { label: 'Message', onClick: () => onMessage(item.id) },
-    ...(item.talent.cvUrl
+    ...(item.talent.cvFileName || item.talent.cvUploadedAt
       ? [
           {
             label: 'View CV',
-            onClick: () => window.open(item.talent.cvUrl!, '_blank'),
+            onClick: () => openTalentCv(item.talent.id),
           },
         ]
       : []),

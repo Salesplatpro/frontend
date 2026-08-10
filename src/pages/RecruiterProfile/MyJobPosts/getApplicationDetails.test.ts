@@ -13,7 +13,9 @@ describe('getApplicationDetails', () => {
             bio: 'Mathematician and writer',
             experience: '10+ years',
             prescreeningScore: 88,
-            cvUrl: 'https://res.cloudinary.com/test/cv.pdf',
+            id: 'talent-1',
+            cvFileName: 'ada-cv.pdf',
+            cvUploadedAt: '2026-01-01T00:00:00.000Z',
           },
           cvSimilarityScore: 72,
           personalizedScore: 65,
@@ -41,7 +43,9 @@ describe('getApplicationDetails', () => {
       personalizedScore: 65,
       type: 'INTJ',
       jodStatus: 'awaiting_decision',
-      cvUrl: 'https://res.cloudinary.com/test/cv.pdf',
+      talentId: 'talent-1',
+      cvFileName: 'ada-cv.pdf',
+      hasCv: true,
       matchVerdict: 'high',
       matchVerdictReasoning: 'Strong alignment with the role.',
       matchRecommendation: 'hire',
@@ -74,7 +78,9 @@ describe('getApplicationDetails', () => {
 
     expect(result.firstName).toBe('')
     expect(result.prescreeningScore).toBe('No pre-assessment test')
-    expect(result.cvUrl).toBeNull()
+    expect(result.hasCv).toBe(false)
+    expect(result.cvFileName).toBeNull()
+    expect(result.talentId).toBeNull()
     expect(result.matchVerdict).toBeNull()
     expect(result.matchRecommendation).toBeNull()
     expect(result.matchStrengths).toBeNull()

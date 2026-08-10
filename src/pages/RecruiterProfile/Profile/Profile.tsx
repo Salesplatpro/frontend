@@ -1,7 +1,7 @@
 import React from 'react'
-import { CgProfile } from 'react-icons/cg'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { Avatar } from '@/components/ui/Avatar'
 import { Card } from '@/components/ui/Card'
 import { Spinner } from '@/components/ui/Spinner'
 import { Heading, Text } from '@/components/ui/Typography'
@@ -73,15 +73,11 @@ export const Profile = () => {
       />
       <Card className="max-w-[600px] p-6 flex flex-col space-y-6">
         <div className="flex items-center space-x-4">
-          {profile?.profileImageUrl ? (
-            <img
-              src={profile.profileImageUrl}
-              alt=""
-              className="w-16 h-16 rounded-full object-cover"
-            />
-          ) : (
-            <CgProfile size={64} />
-          )}
+          <Avatar
+            firstName={profile?.firstName}
+            lastName={profile?.lastName}
+            size="lg"
+          />
           <div>
             <Heading level={3}>
               {profile?.firstName} {profile?.lastName}

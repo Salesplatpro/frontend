@@ -28,7 +28,7 @@ export const howItWorksData: HowItWorksType[] = [
     imgClass: 'rounded-tr-2xl rounded-br-2xl',
   },
   {
-    text: 'Smart Recommendations — Not just resumes — insights.',
+    text: 'Secure CV Processing — Extract resume text on upload; recruiters view a generated PDF, not a stored file.',
     image: grid3Image,
     alt: 'Grid-three',
     style: styles.gridItem3,
@@ -66,7 +66,7 @@ export const featuresData: HowItWorksType[] = [
     imgClass: 'rounded-tr-2xl rounded-br-2xl',
   },
   {
-    text: 'Smart Recommendations — Not just resumes — insights.',
+    text: 'Secure CV Processing — Extract resume text on upload; recruiters view a generated PDF, not a stored file.',
     image: featuresDisplay,
     alt: 'Grid-three',
     style: styles.gridItem3,

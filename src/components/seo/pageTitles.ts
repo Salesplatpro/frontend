@@ -34,11 +34,14 @@ const EXACT_TITLES: Record<string, string> = {
   '/recruiterDashboard/shortlist': 'Shortlist',
   '/recruiterDashboard/chat': 'Chat',
   '/recruiterDashboard/profile': 'Profile',
+  '/adminDashboard': 'Talents',
+  '/adminDashboard/talents': 'Talents',
   '/adminDashboard/viewcandidates': 'View Candidates',
   '/adminDashboard/roles': 'Roles',
 }
 
 const PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [
+  { pattern: /^\/view-cv\//, title: 'Candidate CV' },
   { pattern: /^\/job\/postedjob\//, title: 'Job' },
   { pattern: /^\/talentDashboard\/job\//, title: 'Job' },
   {

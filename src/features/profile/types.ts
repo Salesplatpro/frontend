@@ -28,8 +28,6 @@ export interface ProfileUser {
   firstName?: string
   lastName?: string
   middleName?: string | null
-  profileImageUrl?: string | null
-  profileImagePublicId?: string | null
   userRole?: string
   phone?: string
   country?: string | null
@@ -37,8 +35,7 @@ export interface ProfileUser {
   emailVerified?: boolean
   active?: boolean
   bio?: string
-  cvUrl?: string | null
-  cvPublicId?: string | null
+  cvFileName?: string | null
   cvUploadedAt?: string | null
   workType?: WorkType[] | null
   locationCity?: string | null
@@ -66,12 +63,6 @@ export interface ProfileApiResponse {
   data: { user: ProfileUser }
 }
 
-export interface UploadResponse {
-  status?: boolean
-  message?: string
-  data: { fileUrl: string }
-}
-
 export interface ProfilePatchPayload {
   bio?: string
   roleIds?: string[]
@@ -85,8 +76,6 @@ export interface ProfilePatchPayload {
   currency?: string
   compensationPeriod?: string
   workType?: WorkType[]
-  cv?: string
-  picture?: string
 }
 
 export interface ProfileFormValues {

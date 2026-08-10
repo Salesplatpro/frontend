@@ -10,15 +10,11 @@ import ProfilePic from './ProfilePic'
 interface ProfileHeaderProps {
   profile: ProfileUser | null
   progress: number
-  picturePreview?: string | null
-  onPictureSelect?: (file: File) => void
 }
 
 const TalentProfileHeader: React.FC<ProfileHeaderProps> = ({
   profile,
   progress,
-  picturePreview,
-  onPictureSelect,
 }) => {
   return (
     <div>
@@ -33,10 +29,7 @@ const TalentProfileHeader: React.FC<ProfileHeaderProps> = ({
         />
       </div>
       <div className={styles.card}>
-        <ProfilePic
-          previewUrl={picturePreview}
-          onFileSelect={onPictureSelect}
-        />
+        <ProfilePic />
         <div className={styles.info}>
           <p className={styles.name}>
             {`${profile?.firstName || ''} ${profile?.lastName || ''}`}

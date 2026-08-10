@@ -18,6 +18,12 @@ vi.mock('@/features/applications/hooks/useApplication', () => ({
 vi.mock('@/features/applications/hooks/useUpdateApplicationStatus', () => ({
   useUpdateApplicationStatus: useUpdateApplicationStatusMock,
 }))
+vi.mock('@/features/applications/hooks/useRegenerateVerdict', () => ({
+  useRegenerateVerdict: () => ({
+    regenerateVerdict: vi.fn(),
+    isRegenerating: false,
+  }),
+}))
 vi.mock('./Messaging/Messaging', () => ({
   Messaging: () => <div>messaging-stub</div>,
 }))
@@ -30,7 +36,8 @@ const baseApplication = {
     bio: 'Engineer',
     experience: '5-7 years',
     prescreeningScore: 80,
-    cvUrl: 'https://res.cloudinary.com/test/ada-cv.pdf',
+    cvFileName: 'ada-cv.pdf',
+    cvUploadedAt: '2026-01-01T00:00:00.000Z',
   },
   cvSimilarityScore: 72,
   personalizedScore: 65,
@@ -93,7 +100,7 @@ describe('ApplicationProgress', () => {
     expect(screen.getByText(/Analyzing match/)).toBeTruthy()
   })
 
-  it('renders a CV link when the talent has an uploaded CV', () => {
+  it('renders a CV open control when the talent has an uploaded CV', () => {
     useApplicationMock.mockReturnValue({
       data: { data: { application: baseApplication } },
       error: null,
@@ -106,10 +113,7 @@ describe('ApplicationProgress', () => {
 
     renderPage()
 
-    const link = screen.getByText('ada-cv.pdf') as HTMLAnchorElement
-    expect(link.getAttribute('href')).toBe(
-      'https://res.cloudinary.com/test/ada-cv.pdf',
-    )
+    expect(screen.getByRole('button', { name: 'ada-cv.pdf' })).toBeTruthy()
   })
 
   it('calls updateStatus with "shortlisted" when the Shortlist button is clicked', () => {

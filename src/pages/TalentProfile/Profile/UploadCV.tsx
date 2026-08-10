@@ -18,7 +18,9 @@ const UploadCV: React.FC<UploadCVProps> = ({ fileName, progress }) => {
       ) : (
         <span className={styles.placeholder}>
           Click to upload <span className={styles.hint}>or drag and drop</span>
-          <p className={styles.subHint}>PDF, DOCX</p>
+          <p className={styles.subHint}>
+            PDF or DOCX — text is extracted securely
+          </p>
         </span>
       )}
       {progress != null && (

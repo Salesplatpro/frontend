@@ -27,7 +27,7 @@ const moreFeatureData: FeatureDataType[] = [
   {
     title: 'Data Security and Compliance',
     description:
-      'Enterprise-grade protection keeps candidate and company data safe.',
+      'CVs are stored as extracted text—not original files—so recruiters review a generated PDF while candidate data stays lean and controlled.',
   },
   {
     title: 'Bulk Recruitment ',

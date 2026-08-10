@@ -3,6 +3,7 @@ import { IoClose } from 'react-icons/io5'
 
 import { Avatar } from '@/components/ui/Avatar'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
+import { openTalentCv } from '@/features/profile/services/openTalentCv'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
 
 import styles from './AiMatchPanel.module.scss'
@@ -115,14 +116,13 @@ export const AiMatchPanel = ({ application, onClose }: AiMatchPanelProps) => {
             ) : (
               <EmptyNote text="No profile or CV details are available for this applicant." />
             )}
-            {talent.cvUrl && (
-              <a
+            {(talent.cvFileName || talent.cvUploadedAt) && (
+              <button
+                type="button"
                 className={styles.cvLink}
-                href={talent.cvUrl}
-                target="_blank"
-                rel="noreferrer">
+                onClick={() => openTalentCv(talent.id)}>
                 Open CV
-              </a>
+              </button>
             )}
           </Section>
 

@@ -10,6 +10,7 @@ import { VerdictBadge } from '@/components/ui/VerdictBadge'
 import { useApplication } from '@/features/applications/hooks/useApplication'
 import { useRegenerateVerdict } from '@/features/applications/hooks/useRegenerateVerdict'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
+import { openTalentCv } from '@/features/profile/services/openTalentCv'
 
 import { Button } from '../../../components'
 import styles from './ApplicationProgress.module.scss'
@@ -32,7 +33,6 @@ export const ApplicationProgress = () => {
   )
 
   const application = data?.data?.application
-  const talentId = application?.talent?.id
 
   const {
     firstName,
@@ -44,7 +44,9 @@ export const ApplicationProgress = () => {
     personalizedScore,
     type,
     jodStatus,
-    cvUrl,
+    talentId,
+    cvFileName,
+    hasCv,
     matchVerdict,
     matchVerdictReasoning,
     matchRecommendation,
@@ -52,6 +54,11 @@ export const ApplicationProgress = () => {
     matchWeaknesses,
     matchRisks,
   } = getApplicationDetails(data)
+
+  const handleOpenCv = () => {
+    if (!talentId) return
+    openTalentCv(talentId)
+  }
 
   const progress = [
     {
@@ -144,12 +151,9 @@ export const ApplicationProgress = () => {
         </div>
       )}
 
-      {cvUrl && (
+      {hasCv && talentId && (
         <div className={styles.cvSection}>
-          <CvFile
-            fileName={decodeURIComponent(cvUrl.split('/').pop() || 'CV')}
-            url={cvUrl}
-          />
+          <CvFile fileName={cvFileName || 'CV.pdf'} onOpen={handleOpenCv} />
         </div>
       )}
 
@@ -174,7 +178,10 @@ export const ApplicationProgress = () => {
         </Button>
       </div>
       <div>
-        <Messaging applicationId={applicationId} talentId={talentId} />
+        <Messaging
+          applicationId={applicationId}
+          talentId={talentId ?? undefined}
+        />
       </div>
     </div>
   )

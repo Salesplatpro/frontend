@@ -62,6 +62,13 @@ export const faqData = [
 
   {
     id: '9',
+    question: 'How are CVs stored on AUXHR ?',
+    answer:
+      'When a talent uploads a CV, we extract the text and keep that content for matching and scoring. Recruiters open a generated PDF view in a new page—we do not keep the original uploaded file in object storage.',
+  },
+
+  {
+    id: '10',
     question: 'Why should I trust AUXHR ?',
     answer:
       'Through AI-driven matching, collaborative reviews, and structured workflows, AUXHR increases the chances of hiring candidates who not only have the right skills but also fit your company’s culture.',
