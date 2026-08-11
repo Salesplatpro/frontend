@@ -15,6 +15,7 @@ import Faq from '@/components/features/landing/landingPageComponents/FAQ/Faq'
 import Pricing from '@/components/features/landing/Pricing'
 import Solutions from '@/components/features/landing/Solutions'
 import ProtectedRoute from '@/components/routing/ProtectedRoute'
+import RequireActiveCompany from '@/components/routing/RequireActiveCompany'
 import { LoginPage, SignupPage } from '@/features/auth/pages'
 import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
@@ -22,6 +23,7 @@ import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
 import Jobs from '@/pages/AdminProfile/Jobs/Jobs'
+import Organizations from '@/pages/AdminProfile/Organizations/Organizations'
 import Recruiters from '@/pages/AdminProfile/Recruiters/Recruiters'
 import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
 import Talents from '@/pages/AdminProfile/Talents/Talents'
@@ -43,6 +45,7 @@ import {
   MyScoutJobs,
   ScoutJobHistory,
 } from '@/pages/RecruiterProfile/Batching/MyScoutJobs'
+import Company from '@/pages/RecruiterProfile/Company/Company'
 import AllApplications from '@/pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from '@/pages/RecruiterProfile/Dashboard/Dashboard'
 import { EditJobTab } from '@/pages/RecruiterProfile/EditJob'
@@ -235,8 +238,21 @@ export const routeConfig: RouteObject[] = [
                 element: <AllApplications />,
               },
               {
-                path: 'postjob',
-                element: <PostJobTab />,
+                path: 'company',
+                element: <Company />,
+              },
+              {
+                element: <RequireActiveCompany />,
+                children: [
+                  {
+                    path: 'postjob',
+                    element: <PostJobTab />,
+                  },
+                  {
+                    path: 'postjob/:jobId',
+                    element: <PostJobTab />,
+                  },
+                ],
               },
               {
                 path: 'myJobPosts',
@@ -283,10 +299,6 @@ export const routeConfig: RouteObject[] = [
                 element: <ApplicationProgress />,
               },
               {
-                path: 'postjob/:jobId',
-                element: <PostJobTab />,
-              },
-              {
                 path: 'editJob/:jobId',
                 element: <EditJobTab />,
               },
@@ -329,6 +341,10 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'recruiters',
                 element: <Recruiters />,
+              },
+              {
+                path: 'organizations',
+                element: <Organizations />,
               },
               {
                 path: 'jobs',
