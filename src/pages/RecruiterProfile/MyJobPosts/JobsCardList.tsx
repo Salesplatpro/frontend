@@ -2,6 +2,7 @@ import React from 'react'
 import { IoChevronForward } from 'react-icons/io5'
 import { Link } from 'react-router-dom'
 
+import { CompanyTag } from '@/components/features/jobs/CompanyTag'
 import { CountBadge } from '@/components/ui/Badge'
 
 import {
@@ -51,6 +52,7 @@ export const JobsCardList = ({ data }: JobsCardListProps) => {
                   {statusLabel(status)}
                 </span>
               </div>
+              <CompanyTag organization={job.organization} />
               <p className={styles.subtext}>
                 {job.noOfApplicants} applicants &bull;{' '}
                 {calculateDaysFromCreation(job.createdAt)} days ago

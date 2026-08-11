@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Modal } from 'react-responsive-modal'
 import { Link } from 'react-router-dom'
 
+import { CompanyTag } from '@/components/features/jobs/CompanyTag'
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import { Select } from '@/components/forms/Select'
 import { StatusBadge } from '@/components/ui/Badge'
@@ -144,6 +145,16 @@ export const JobsTable = ({ data }: JobsTableType) => {
               className={styles.titleLink}>
               {job.role.name}
             </Link>
+          </div>
+        ),
+      },
+      {
+        key: 'organization',
+        header: 'Company',
+        align: 'center',
+        render: (job) => (
+          <div className={styles.companyCell}>
+            <CompanyTag organization={job.organization} />
           </div>
         ),
       },
