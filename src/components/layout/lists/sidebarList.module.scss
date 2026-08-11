@@ -7,9 +7,13 @@
   text-decoration: none; // remove underline
   border: none;
   outline: none;
-  color: inherit; // keeps sidebar white text
+  color: rgba(255, 255, 255, 0.85);
   @extend %sharedStyles;
-  padding: 16px 20px;
+  align-items: center;
+  padding: 10px 16px;
+  margin: 2px 12px;
+  border-radius: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
 
   &:active {
     text-decoration: none;
@@ -21,15 +25,38 @@
 
 .listContainer:hover {
   cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .listItem {
   @extend %sharedStyles;
-  gap: 16px;
+  align-items: center;
+  gap: 14px;
+}
+
+.iconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
 }
 
 .active {
-  background: #374672;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  background: rgba(72, 132, 223, 0.16);
+  box-shadow: 0 0 12px rgba(72, 132, 223, 0.25);
+  color: #6fa3f0;
+
+  .iconBox {
+    background: rgba(72, 132, 223, 0.25);
+    color: #6fa3f0;
+  }
+
+  &:hover {
+    background: rgba(72, 132, 223, 0.16);
+  }
 }

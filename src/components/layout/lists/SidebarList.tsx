@@ -31,7 +31,7 @@ export const SidebarList = ({
   const content = (
     <>
       <div className={styles.listItem}>
-        <div>{icon}</div>
+        <div className={styles.iconBox}>{icon}</div>
         <div>
           <div className="font-raleway font-medium text-base leading-[24px]">
             {name}

@@ -33,12 +33,24 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email('Must be a valid email')
     .required('Email is required'),
-  website: Yup.string().required('Website is required'),
+  website: Yup.string().test(
+    'website-or-linkedin',
+    'Provide a website or a LinkedIn URL',
+    function (value) {
+      return !!value || !!this.parent.linkedin
+    },
+  ),
+  linkedin: Yup.string().test(
+    'website-or-linkedin',
+    'Provide a website or a LinkedIn URL',
+    function (value) {
+      return !!value || !!this.parent.website
+    },
+  ),
   address: Yup.string().required('Address is required'),
   phone: Yup.string(),
   industry: Yup.string(),
   facebook: Yup.string(),
-  linkedin: Yup.string(),
   twitter: Yup.string(),
 })
 
@@ -132,11 +144,18 @@ const Company = () => {
               placeholder="contact@acme.com"
             />
             <TextField label="Phone" name="phone" placeholder="+234..." />
+            <Text size="fs-sm" color="secondary">
+              Provide a website or a LinkedIn URL (at least one is required).
+            </Text>
             <TextField
               label="Website"
               name="website"
-              asterick
               placeholder="https://acme.com"
+            />
+            <TextField
+              label="LinkedIn"
+              name="linkedin"
+              placeholder="https://linkedin.com/company/acme"
             />
             <TextField
               label="Address"
@@ -148,11 +167,6 @@ const Company = () => {
               label="Industry"
               name="industry"
               placeholder="Technology"
-            />
-            <TextField
-              label="LinkedIn"
-              name="linkedin"
-              placeholder="https://linkedin.com/company/acme"
             />
             <TextField
               label="Twitter"

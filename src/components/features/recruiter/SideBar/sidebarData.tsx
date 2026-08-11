@@ -6,58 +6,57 @@ import { FiDownload } from 'react-icons/fi'
 import { MdWorkOutline } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
 
-const ICON_SIZE = 24
-const COLOR = '#ffffff'
+const ICON_SIZE = 20
 
 export const sidebarData = [
   {
     name: 'Dashboard',
-    icon: <RxDashboard size={ICON_SIZE} color={COLOR} />,
+    icon: <RxDashboard size={ICON_SIZE} />,
     link: '/recruiterDashboard/dashboard',
   },
   {
     name: 'Company',
-    icon: <BsBuilding size={ICON_SIZE} color={COLOR} />,
+    icon: <BsBuilding size={ICON_SIZE} />,
     link: '/recruiterDashboard/company',
   },
   {
     name: 'Post a Job',
-    icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
+    icon: <MdWorkOutline size={ICON_SIZE} />,
     link: '/recruiterDashboard/postjob',
     end: false,
   },
   {
     name: 'My Job Posts',
-    icon: <MdWorkOutline size={ICON_SIZE} color={COLOR} />,
+    icon: <MdWorkOutline size={ICON_SIZE} />,
     link: '/recruiterDashboard/myJobPosts',
   },
 
   {
     name: 'Scout',
-    icon: <FiDownload size={ICON_SIZE} color={COLOR} />,
+    icon: <FiDownload size={ICON_SIZE} />,
     link: '/recruiterDashboard/scout',
     end: false,
   },
   {
     name: 'Talent Search',
-    icon: <CiSearch size={ICON_SIZE} color={COLOR} />,
+    icon: <CiSearch size={ICON_SIZE} />,
     link: '/recruiterDashboard/talent-search',
     end: false,
   },
 
   {
     name: 'Chat',
-    icon: <BsChatDots size={ICON_SIZE} color={COLOR} />,
+    icon: <BsChatDots size={ICON_SIZE} />,
     link: '/recruiterDashboard/chat',
   },
   {
     name: 'Profile',
-    icon: <CgProfile size={ICON_SIZE} color={COLOR} />,
+    icon: <CgProfile size={ICON_SIZE} />,
     link: '/recruiterDashboard/profile',
   },
   {
     name: 'Shortlist',
-    icon: <CiBoxList size={ICON_SIZE} color={COLOR} />,
+    icon: <CiBoxList size={ICON_SIZE} />,
     link: '/recruiterDashboard/shortlist',
   },
 ]

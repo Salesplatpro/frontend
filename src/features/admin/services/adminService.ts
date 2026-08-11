@@ -132,6 +132,13 @@ export const fetchAdminOrganizations = (
     .then((response) => response.data.data)
 }
 
+export const fetchAdminOrganization = (id: string) =>
+  httpClient
+    .get<ApiEnvelope<{ organization: AdminOrganization }>>(
+      `/admin/organizations/${id}`,
+    )
+    .then((response) => response.data.data.organization)
+
 export const verifyAdminOrganization = (id: string) =>
   httpClient
     .patch<ApiEnvelope<{ organization: AdminOrganization }>>(
