@@ -24,12 +24,12 @@ interface sideBarProps {
 const feedBack = [
   {
     name: 'Support',
-    icon: <MdSupport size={24} color="white" />,
+    icon: <MdSupport size={20} />,
     link: 'support',
   },
   {
     name: 'Leave us feedBack',
-    icon: <CgProfile size={24} color="white" />,
+    icon: <CgProfile size={20} />,
   },
 ]
 

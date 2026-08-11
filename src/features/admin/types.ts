@@ -108,7 +108,13 @@ export interface AdminOrganization {
   id: string
   name: string
   email?: string | null
+  phone?: string | null
+  address?: string | null
+  industry?: string | null
   website?: string | null
+  facebook?: string | null
+  linkedin?: string | null
+  twitter?: string | null
   status: 'pending' | 'verified' | 'rejected'
   verifiedAt?: string | null
   createdAt: string

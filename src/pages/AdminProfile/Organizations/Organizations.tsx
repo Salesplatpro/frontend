@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { StatusBadge } from '@/components/ui/Badge'
@@ -37,6 +38,7 @@ const defaultOrganizationFilters: OrganizationFilterValues = {
 }
 
 const STATUS_OPTIONS = [
+  { label: 'All', value: '' },
   { label: 'Pending', value: 'pending' },
   { label: 'Verified', value: 'verified' },
   { label: 'Rejected', value: 'rejected' },
@@ -45,6 +47,7 @@ const STATUS_OPTIONS = [
 const ROWS_PER_PAGE = 10
 
 const Organizations = () => {
+  const navigate = useNavigate()
   const [organizations, setOrganizations] = useState<AdminOrganization[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState<OrganizationFilterValues>(
@@ -127,7 +130,14 @@ const Organizations = () => {
         header: 'Name',
         sortLabel: 'Name',
         toggleable: true,
-        render: (row) => row.name,
+        render: (row) => (
+          <button
+            type="button"
+            className={styles.nameLink}
+            onClick={() => navigate(`/adminDashboard/organizations/${row.id}`)}>
+            {row.name}
+          </button>
+        ),
         sortAccessor: (row) => row.name,
       },
       {
@@ -178,6 +188,14 @@ const Organizations = () => {
             <Button
               variant="secondary"
               size="sm"
+              onClick={() =>
+                navigate(`/adminDashboard/organizations/${row.id}`)
+              }>
+              View
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
               disabled={row.status === 'verified' || updatingId === row.id}
               onClick={() => handleVerify(row)}>
               Verify
@@ -193,7 +211,7 @@ const Organizations = () => {
         ),
       },
     ],
-    [updatingId],
+    [updatingId, navigate],
   )
 
   const visibleColumns = columns.filter(
