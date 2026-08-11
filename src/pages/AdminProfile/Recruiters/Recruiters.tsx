@@ -47,7 +47,6 @@ const Recruiters = () => {
     'name',
     'email',
     'phone',
-    'organization',
     'createdAt',
   ])
   const [recruiterToDelete, setRecruiterToDelete] =
@@ -75,7 +74,7 @@ const Recruiters = () => {
       type: 'search',
       key: 'search',
       label: 'Search',
-      placeholder: 'Name, email, or organization',
+      placeholder: 'Name or email',
     },
   ]
 
@@ -103,14 +102,6 @@ const Recruiters = () => {
         toggleable: true,
         hideBelow: 900,
         render: (row) => row.phone ?? '—',
-      },
-      {
-        key: 'organization',
-        header: 'Organization',
-        sortLabel: 'Organization',
-        toggleable: true,
-        render: (row) => row.organization?.name ?? '—',
-        sortAccessor: (row) => row.organization?.name ?? '',
       },
       {
         key: 'createdAt',
@@ -148,9 +139,8 @@ const Recruiters = () => {
     const search = recruiterFilters.search.trim().toLowerCase()
     if (!search) return recruiters
     return recruiters.filter((row) => {
-      const haystack = `${row.firstName} ${row.lastName} ${row.email} ${
-        row.organization?.name ?? ''
-      }`.toLowerCase()
+      const haystack =
+        `${row.firstName} ${row.lastName} ${row.email}`.toLowerCase()
       return haystack.includes(search)
     })
   }, [recruiters, recruiterFilters])
