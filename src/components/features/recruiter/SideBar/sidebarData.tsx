@@ -1,5 +1,5 @@
 import React from 'react'
-import { BsChatDots } from 'react-icons/bs'
+import { BsBuilding, BsChatDots } from 'react-icons/bs'
 import { CgProfile } from 'react-icons/cg'
 import { CiBoxList, CiSearch } from 'react-icons/ci'
 import { FiDownload } from 'react-icons/fi'
@@ -14,6 +14,11 @@ export const sidebarData = [
     name: 'Dashboard',
     icon: <RxDashboard size={ICON_SIZE} color={COLOR} />,
     link: '/recruiterDashboard/dashboard',
+  },
+  {
+    name: 'Company',
+    icon: <BsBuilding size={ICON_SIZE} color={COLOR} />,
+    link: '/recruiterDashboard/company',
   },
   {
     name: 'Post a Job',
