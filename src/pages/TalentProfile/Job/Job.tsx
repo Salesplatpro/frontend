@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { JobOrganization } from '@/components/features/jobs/CompanyTag'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { DisplayError } from '@/components/ui/ErrorState'
 import { Spinner } from '@/components/ui/Spinner'
@@ -26,6 +27,7 @@ interface JobType {
   currency?: string | null
   compensationPeriod?: string | null
   hasApplied?: boolean
+  organization?: JobOrganization | null
 }
 
 const PAGE_SIZE = 10
@@ -106,6 +108,7 @@ const Job = () => {
                   jobExperience={job.experienceLevel}
                   jobSalary={formatCompensation(job)}
                   isApplied={job.hasApplied}
+                  organization={job.organization}
                 />
               ))}
             </div>

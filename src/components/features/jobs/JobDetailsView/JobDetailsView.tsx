@@ -6,6 +6,10 @@ import { Modal } from 'react-responsive-modal'
 import Facebook from '@/assets/Facebook icon.svg'
 import LinkedIn from '@/assets/linkedin logo_icon.svg'
 import Twitter from '@/assets/twitter_new_brand_icon.svg'
+import {
+  CompanyTag,
+  JobOrganization,
+} from '@/components/features/jobs/CompanyTag'
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
 import { BackButton } from '@/components/ui/BackButton'
@@ -35,6 +39,7 @@ export interface JobDetailsJob {
   compensationPeriod?: string | null
   noOfApplicants?: number
   postedBy?: { firstName?: string; lastName?: string } | null
+  organization?: JobOrganization | null
   status?: string
   hasApplied?: boolean
   aiConfigId?: string | null
@@ -114,6 +119,11 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
               />
             )}
           </div>
+          <CompanyTag
+            organization={job.organization}
+            size="md"
+            className={styles.company}
+          />
           {postedByName && (
             <p className={styles.postedBy}>Posted by {postedByName}</p>
           )}

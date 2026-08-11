@@ -71,6 +71,11 @@ export interface AdminJob {
   maxSalary: number | null
   createdAt: string
   role?: { id: string; name: string } | null
+  organization?: {
+    id: string
+    name: string
+    logoUrl?: string | null
+  } | null
   postedBy?: {
     id: string
     firstName: string

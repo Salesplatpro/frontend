@@ -23,11 +23,18 @@ type JobPostedBy = {
   onboarded: boolean
 }
 
+type JobOrganizationSummary = {
+  id: string
+  name: string
+  logoUrl?: string | null
+}
+
 export type recruiterJobPostsTypes = {
   location: JobLocation
   id: string
   role: JobRole
   postedBy: JobPostedBy
+  organization?: JobOrganizationSummary | null
   description: string
   maxSalary?: number | null
   minSalary: number

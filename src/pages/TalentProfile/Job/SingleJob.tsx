@@ -3,6 +3,10 @@ import { GoDotFill } from 'react-icons/go'
 import { PiBuildingOfficeBold } from 'react-icons/pi'
 import { Link } from 'react-router-dom'
 
+import {
+  CompanyTag,
+  JobOrganization,
+} from '@/components/features/jobs/CompanyTag'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 
@@ -28,6 +32,7 @@ export type SingleJobProps = {
   jobExperience?: string
   jobSalary?: string
   isApplied?: boolean
+  organization?: JobOrganization | null
 }
 
 export const SingleJob = ({
@@ -40,6 +45,7 @@ export const SingleJob = ({
   jobCountry,
   jobSalary,
   isApplied,
+  organization,
 }: SingleJobProps) => {
   return (
     <Card className={styles.card}>
@@ -52,6 +58,8 @@ export const SingleJob = ({
             {capitalizeFirstWord(jobCategory)}
           </span>
         </Link>
+
+        <CompanyTag organization={organization} className="mt-1" />
 
         {jobBrief && (
           <p className={styles.description}>

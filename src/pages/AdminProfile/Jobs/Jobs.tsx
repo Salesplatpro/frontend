@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { CompanyTag } from '@/components/features/jobs/CompanyTag'
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { Button } from '@/components/ui/Button'
@@ -63,6 +64,7 @@ const Jobs = () => {
   const [jobPage, setJobPage] = useState(1)
   const [jobVisibleKeys, setJobVisibleKeys] = useState<string[]>([
     'role',
+    'organization',
     'brief',
     'status',
     'recruiter',
@@ -132,6 +134,14 @@ const Jobs = () => {
         toggleable: true,
         render: (row) => row.role?.name ?? '—',
         sortAccessor: (row) => row.role?.name ?? '',
+      },
+      {
+        key: 'organization',
+        header: 'Company',
+        sortLabel: 'Company',
+        toggleable: true,
+        render: (row) => <CompanyTag organization={row.organization} />,
+        sortAccessor: (row) => row.organization?.name ?? '',
       },
       {
         key: 'brief',
@@ -208,6 +218,7 @@ const Jobs = () => {
       const haystack = [
         row.jobBrief,
         row.role?.name,
+        row.organization?.name,
         row.postedBy?.firstName,
         row.postedBy?.lastName,
         row.postedBy?.email,
