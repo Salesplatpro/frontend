@@ -47,6 +47,8 @@ import {
   ScoutJobHistory,
 } from '@/pages/RecruiterProfile/Batching/MyScoutJobs'
 import Company from '@/pages/RecruiterProfile/Company/Company'
+import CreateCompany from '@/pages/RecruiterProfile/Company/CreateCompany'
+import EditCompany from '@/pages/RecruiterProfile/Company/EditCompany'
 import AllApplications from '@/pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from '@/pages/RecruiterProfile/Dashboard/Dashboard'
 import { EditJobTab } from '@/pages/RecruiterProfile/EditJob'
@@ -241,6 +243,14 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'company',
                 element: <Company />,
+              },
+              {
+                path: 'company/new',
+                element: <CreateCompany />,
+              },
+              {
+                path: 'company/:id/edit',
+                element: <EditCompany />,
               },
               {
                 element: <RequireActiveCompany />,
