@@ -95,14 +95,34 @@ export interface AdminRecruiter {
   email: string
   phone?: string | null
   createdAt: string
-  organization?: {
-    id: string
-    name: string
-  } | null
 }
 
 export interface AdminRecruiterFilters {
   search?: string
+  limit?: number
+  offset?: number
+  sort?: 'asc' | 'desc'
+}
+
+export interface AdminOrganization {
+  id: string
+  name: string
+  email?: string | null
+  website?: string | null
+  status: 'pending' | 'verified' | 'rejected'
+  verifiedAt?: string | null
+  createdAt: string
+  owner?: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+  } | null
+}
+
+export interface AdminOrganizationFilters {
+  search?: string
+  status?: string
   limit?: number
   offset?: number
   sort?: 'asc' | 'desc'
