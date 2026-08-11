@@ -1,19 +1,10 @@
 import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { LocationFormValue } from '@/components/forms/LocationSelect'
+import { Organization } from '@/features/organizations/types'
 
 export interface ProfileRole {
   id: string
   name?: string
-}
-
-export interface ProfileOrganization {
-  id: string
-  name: string
-  email?: string | null
-  phone?: string | null
-  address?: string | null
-  industry?: string | null
-  website?: string | null
 }
 
 export interface ProfileCompletion {
@@ -31,7 +22,7 @@ export interface ProfileUser {
   userRole?: string
   phone?: string
   country?: string | null
-  organizationId?: string | null
+  activeOrganizationId?: string | null
   emailVerified?: boolean
   active?: boolean
   bio?: string
@@ -53,7 +44,7 @@ export interface ProfileUser {
   createdAt?: string
   updatedAt?: string
   userRoles?: ProfileRole[]
-  organization?: ProfileOrganization | null
+  activeOrganization?: Organization | null
   profileCompletion?: ProfileCompletion
 }
 
