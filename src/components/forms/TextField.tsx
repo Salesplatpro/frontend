@@ -11,6 +11,9 @@ interface TextFieldProps {
   placeholder?: string
   type?: string
   MAX_WORDS?: number
+  disabled?: boolean
+  /** Rendered under the input, e.g. to explain why a field is locked. */
+  hint?: string
 }
 
 const TextField = ({
@@ -20,6 +23,8 @@ const TextField = ({
   asterick,
   type,
   MAX_WORDS,
+  disabled,
+  hint,
 }: TextFieldProps) => {
   return (
     <div className="mb-4">
@@ -46,9 +51,13 @@ const TextField = ({
           id={name}
           name={name}
           placeholder={placeholder}
-          className="block border border-grey-300 p-4 rounded w-full mt-1"
+          disabled={disabled}
+          className={`block border border-grey-300 p-4 rounded w-full mt-1 ${
+            disabled ? 'bg-grey-100 text-grey-600 cursor-not-allowed' : ''
+          }`}
         />
       )}
+      {hint && <p className="text-sm text-grey-600 mt-1">{hint}</p>}
     </div>
   )
 }

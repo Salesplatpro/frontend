@@ -12,6 +12,7 @@ export interface Organization {
   facebook?: string | null
   linkedin?: string | null
   twitter?: string | null
+  logoUrl?: string | null
   status: OrganizationStatus
   verifiedAt?: string | null
   createdAt: string
@@ -28,6 +29,19 @@ export interface CreateOrganizationPayload {
   facebook?: string
   linkedin?: string
   twitter?: string
+  logoUrl?: string
+}
+
+/** Email and website are immutable after creation, so they are absent here. */
+export interface UpdateOrganizationPayload {
+  name?: string
+  phone?: string
+  address?: string
+  industry?: string
+  facebook?: string
+  linkedin?: string
+  twitter?: string
+  logoUrl?: string
 }
 
 export interface OrganizationsApiResponse {

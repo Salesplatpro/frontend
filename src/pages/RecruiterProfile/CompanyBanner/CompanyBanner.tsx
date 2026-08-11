@@ -32,9 +32,9 @@ export const CompanyBanner: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isOpen])
 
-  const goToCompanyPage = () => {
+  const goTo = (path: string) => {
     setIsOpen(false)
-    navigate('/recruiterDashboard/company')
+    navigate(path)
   }
 
   return (
@@ -62,7 +62,7 @@ export const CompanyBanner: React.FC = () => {
           <button
             type="button"
             className={styles.dropdownRow}
-            onClick={goToCompanyPage}>
+            onClick={() => goTo('/recruiterDashboard/company')}>
             <div className={styles.iconBox}>
               <HiOutlineUserGroup size={16} />
             </div>
@@ -71,7 +71,7 @@ export const CompanyBanner: React.FC = () => {
           <button
             type="button"
             className={styles.dropdownRow}
-            onClick={goToCompanyPage}>
+            onClick={() => goTo('/recruiterDashboard/company/new')}>
             <div className={styles.iconBox}>
               <AiOutlinePlus size={16} />
             </div>
