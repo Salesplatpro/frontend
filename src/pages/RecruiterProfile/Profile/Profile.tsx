@@ -41,11 +41,6 @@ export const Profile = () => {
     : []
 
   const fields: { label: string; value: string }[] = [
-    { label: 'Company', value: profile?.organization?.name ?? 'Not linked' },
-    {
-      label: 'Industry',
-      value: profile?.organization?.industry ?? '—',
-    },
     { label: 'Email', value: profile?.email ?? '—' },
     { label: 'Phone', value: profile?.phone ?? '—' },
     { label: 'Location', value: profile?.country ?? '—' },
