@@ -17,6 +17,8 @@ interface sideBarProps {
     end?: boolean
   }[]
   handleClick?: () => void
+  /** Optional content rendered between the logo and the nav list (e.g. a company switcher). */
+  topSlot?: ReactNode
 }
 
 const feedBack = [
@@ -34,6 +36,7 @@ const feedBack = [
 export const SideBar: React.FC<sideBarProps> = ({
   sideBarData,
   handleClick,
+  topSlot,
 }) => {
   return (
     <div className={styles.sideBarContainer}>
@@ -43,6 +46,8 @@ export const SideBar: React.FC<sideBarProps> = ({
             <img src={auxHrLogo} alt="Aux HR Logo" />
           </Link>
         </div>
+
+        {topSlot}
 
         <div className={styles.sidebarList}>
           {sideBarData.map((data, index) => {
