@@ -9,6 +9,7 @@ import { sidebarData } from '@/components/features/recruiter/SideBar/sidebarData
 
 import { SideBar } from '../../components'
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
+import { CompanyBanner } from './CompanyBanner/CompanyBanner'
 
 const RecruiterProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -25,6 +26,7 @@ const RecruiterProfileSidebar = () => {
         <SideBar
           sideBarData={sidebarData}
           handleClick={() => setIsOpen(false)}
+          topSlot={<CompanyBanner />}
         />
         <button className="close" onClick={() => setIsOpen(!isOpen)}>
           {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
