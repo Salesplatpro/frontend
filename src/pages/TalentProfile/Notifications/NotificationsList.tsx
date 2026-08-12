@@ -41,7 +41,9 @@ const NotificationsList: React.FC = () => {
           {notification.title && (
             <p className={styles.title}>{notification.title}</p>
           )}
-          <p className={styles.message}>{notification.message}</p>
+          {notification.message !== notification.title && (
+            <p className={styles.message}>{notification.message}</p>
+          )}
           <span className={styles.timestamp}>
             {calculateDaysFromCreation(notification.createdAt)} days ago
           </span>

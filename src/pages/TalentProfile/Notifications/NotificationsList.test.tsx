@@ -80,6 +80,35 @@ describe('NotificationsList', () => {
     expect(screen.getByText('Shortlisted for Backend Developer')).toBeTruthy()
   })
 
+  it('renders decision notifications as title-only, with no duplicate message line', () => {
+    useNotificationsMock.mockReturnValue({
+      isLoading: false,
+      mutate: vi.fn(),
+      notifications: [
+        {
+          id: 'n1',
+          userId: 'talent-1',
+          title:
+            "Congratulations, you've been shortlisted for Backend Developer at TechCorp",
+          message:
+            "Congratulations, you've been shortlisted for Backend Developer at TechCorp",
+          isRead: false,
+          deleted: false,
+          createdAt: new Date().toISOString(),
+        },
+      ],
+    })
+    useMarkNotificationReadMock.mockReturnValue({ markAsRead: markAsReadFn })
+
+    render(<NotificationsList />)
+
+    expect(
+      screen.getAllByText(
+        "Congratulations, you've been shortlisted for Backend Developer at TechCorp",
+      ),
+    ).toHaveLength(1)
+  })
+
   it('marks an unread notification as read when clicked', () => {
     const mutate = vi.fn()
     useNotificationsMock.mockReturnValue({
