@@ -4,14 +4,17 @@ import React from 'react'
 import { Chart } from '@/components/ui/Chart'
 import { Spinner } from '@/components/ui/Spinner'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
+import ActiveCompanyCard from './ActiveCompanyCard'
 import ApplicationTracker from './ApplicationTracker'
 import styles from './Dashboard.module.scss'
 import RecentApplications from './RecentApplications'
 import RecentCompilation from './RecentCompilation'
 
 const Dashboard = () => {
+  const { profile } = useProfile()
   const {
     data: dashboardData,
     isLoading: dashboardLoading,
@@ -45,6 +48,8 @@ const Dashboard = () => {
 
   return (
     <div className={styles.container}>
+      <ActiveCompanyCard organization={profile?.activeOrganization} />
+
       <ApplicationTracker infoData={stats} />
 
       <div className={styles.grid}>
