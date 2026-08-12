@@ -107,6 +107,16 @@ export const talentApi = createApi({
         method: 'GET',
       }),
     }),
+    // Talent-safe (unlike POST /questions/personality, which is recruiter-only)
+    // and idempotent — safe to call as a retry when generation hasn't happened
+    // yet or appears to have failed.
+    ensurePersonalityQuestions: builder.mutation({
+      query: (jobId: string) => ({
+        url: `/questions/personality/ensure`,
+        method: 'POST',
+        body: { jobId },
+      }),
+    }),
     postPersonalityTest: builder.mutation({
       query: (testAnswer) => ({
         url: `/questions/answer/personality`,
@@ -150,6 +160,7 @@ export const {
   usePostPersonalizedTestMutation,
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
+  useEnsurePersonalityQuestionsMutation,
   useAllJobApplicationsQuery,
   useGetRoleQuery,
 } = talentApi

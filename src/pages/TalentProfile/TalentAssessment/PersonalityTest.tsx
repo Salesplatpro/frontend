@@ -5,10 +5,16 @@ import { Spinner } from '@/components/ui/Spinner'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 
 import {
+  useEnsurePersonalityQuestionsMutation,
   usePersonalityTestQuery,
   usePostPersonalityTestMutation,
 } from '../../../redux/api/talent'
 import { notify } from '../../../utils/toastNotifications'
+
+// Mirrors the poll/timeout shape already proven in
+// features/pre-assessment/hooks.ts — give generation a bounded window before
+// telling the talent to retry, instead of leaving them on a spinner forever.
+const GENERATION_TIMEOUT_MS = 60000
 
 interface FormData {
   jobId: string
@@ -42,17 +48,26 @@ const PersonalityTest: React.FC = () => {
     answers: {},
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [autoEnsureAttempted, setAutoEnsureAttempted] = useState(false)
+  const [waitTimedOut, setWaitTimedOut] = useState(false)
+  const [ensureError, setEnsureError] = useState<string | null>(null)
 
   const {
     data: personalityData,
     error: personalityError,
     isLoading: personalityLoading,
+    refetch: refetchPersonalityTest,
   } = usePersonalityTestQuery(jobId)
+  const [ensurePersonalityQuestions, { isLoading: isEnsuring }] =
+    useEnsurePersonalityQuestionsMutation()
 
   const personalityAnswered =
     personalityData?.data?.questions?.length > 0 &&
     Object.keys(formData.answers).length ===
       personalityData?.data?.questions?.length
+
+  const questionsEmpty =
+    !personalityLoading && (personalityData?.data?.questions?.length ?? 0) === 0
 
   useEffect(() => {
     if (Array.isArray(personalityData?.data?.questions)) {
@@ -65,6 +80,39 @@ const PersonalityTest: React.FC = () => {
       console.error(personalityError)
     }
   }, [personalityData, personalityError])
+
+  const attemptGeneration = async () => {
+    if (!jobId) return
+    setEnsureError(null)
+    try {
+      await ensurePersonalityQuestions(jobId).unwrap()
+      await refetchPersonalityTest()
+    } catch (error) {
+      setEnsureError(
+        getErrorMessage(error, 'Unable to prepare your assessment'),
+      )
+    }
+  }
+
+  // Auto-trigger generation once, the moment we find no questions exist yet —
+  // this is what makes retry possible at all (previously nothing but a
+  // recruiter could generate personality questions).
+  useEffect(() => {
+    if (!questionsEmpty || autoEnsureAttempted) return
+    setAutoEnsureAttempted(true)
+    void attemptGeneration()
+  }, [questionsEmpty, autoEnsureAttempted])
+
+  useEffect(() => {
+    if (!autoEnsureAttempted || !questionsEmpty) return
+    const id = setTimeout(() => setWaitTimedOut(true), GENERATION_TIMEOUT_MS)
+    return () => clearTimeout(id)
+  }, [autoEnsureAttempted, questionsEmpty])
+
+  const handleRetry = () => {
+    setWaitTimedOut(false)
+    void attemptGeneration()
+  }
 
   const handleChange = (
     e: ChangeEvent<HTMLTextAreaElement>,
@@ -125,6 +173,47 @@ const PersonalityTest: React.FC = () => {
 
   if (personalityLoading) {
     return <Spinner fullPage />
+  }
+
+  if (questionsEmpty) {
+    if (ensureError) {
+      return (
+        <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+          <p className="text-red-500 font-raleway text-center">{ensureError}</p>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="px-4 py-2 rounded font-raleway font-medium bg-blue-500 text-white hover:bg-blue-700">
+            Retry
+          </button>
+        </div>
+      )
+    }
+    if (waitTimedOut) {
+      return (
+        <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+          <p className="text-grey-700 font-raleway font-medium text-center">
+            Still preparing your assessment questions.
+          </p>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="px-4 py-2 rounded font-raleway font-medium bg-blue-500 text-white hover:bg-blue-700">
+            Tap to retry
+          </button>
+        </div>
+      )
+    }
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+        <Spinner />
+        <p className="text-grey-700 font-raleway font-medium">
+          {isEnsuring
+            ? 'Preparing your assessment questions...'
+            : 'Loading your assessment...'}
+        </p>
+      </div>
+    )
   }
 
   return (

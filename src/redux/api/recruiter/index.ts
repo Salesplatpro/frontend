@@ -76,7 +76,15 @@ export const recruiterApi = createApi({
       invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
     fetchRecruiterJobPost: builder.query({
-      query: () => '/jobs/me?limit=10&offset=0',
+      query: (params: { limit?: number; status?: string } = {}) => {
+        const { limit = 10, status } = params
+        const queryParams = new URLSearchParams({
+          limit: String(limit),
+          offset: '0',
+        })
+        if (status) queryParams.append('status', status)
+        return `/jobs/me?${queryParams.toString()}`
+      },
       providesTags: (result) => {
         const jobs = Array.isArray(result?.data)
           ? result.data
@@ -115,7 +123,15 @@ export const recruiterApi = createApi({
     }),
     searchTalentDb: builder.query({
       query: (data) => {
-        const { role, experienceLevel, location, limit, offset } = data
+        const {
+          role,
+          experienceLevel,
+          location,
+          limit,
+          offset,
+          jobId,
+          percentage,
+        } = data
 
         const roleId = role || ''
         const experience = experienceLevel || ''
@@ -132,6 +148,8 @@ export const recruiterApi = createApi({
         if (city) queryParams.append('city', city)
         if (limit) queryParams.append('limit', String(limit))
         if (offset) queryParams.append('offset', String(offset))
+        if (jobId) queryParams.append('jobId', jobId)
+        if (percentage) queryParams.append('percentage', String(percentage))
 
         return {
           url: `/scout/talents?${queryParams.toString()}`,
@@ -148,6 +166,22 @@ export const recruiterApi = createApi({
       invalidatesTags: (_result, _error, data: FormData) => [
         { type: 'ScoutBatch', id: String(data.get('scoutJobId')) },
       ],
+    }),
+    addScoutToPipeline: builder.mutation({
+      query: ({
+        scoutId,
+        jobId,
+        talentEmail,
+      }: {
+        scoutId: string
+        jobId: string
+        talentEmail: string
+      }) => ({
+        url: `/scout/${scoutId}/add-to-pipeline`,
+        method: 'POST',
+        body: { jobId, talentEmail },
+      }),
+      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
     getCampaignName: builder.query({
       query: ({ id }) => ({
@@ -250,6 +284,7 @@ export const {
   useCreateJDMutation,
   useSearchTalentDbQuery,
   useUploadScoutCvBatchMutation,
+  useAddScoutToPipelineMutation,
   useGetCampaignNameQuery,
   useGetScoutJobsQuery,
   useGetScoutJobScoutsQuery,

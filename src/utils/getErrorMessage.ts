@@ -1,4 +1,7 @@
-type ErrorBody = { message?: string; error?: { message?: string } }
+type ErrorBody = {
+  message?: string
+  error?: { message?: string; fields?: Record<string, string> }
+}
 
 /**
  * The API has two error envelope shapes in the wild: the legacy
@@ -13,4 +16,13 @@ export const getErrorMessage = (err: unknown, fallback: string): string => {
   const data = (err_?.response?.data ?? err_?.data) as ErrorBody | undefined
 
   return data?.error?.message || data?.message || fallback
+}
+
+// Per-file validation errors, e.g. { "corrupt.pdf": "Unable to extract text..." },
+// keyed alongside the batch-level message in the `{ error: { message, fields } }` envelope.
+export const getErrorFields = (err: unknown): Record<string, string> => {
+  const err_ = err as { response?: { data?: unknown }; data?: unknown }
+  const data = (err_?.response?.data ?? err_?.data) as ErrorBody | undefined
+
+  return data?.error?.fields ?? {}
 }

@@ -18,6 +18,8 @@ interface VerdictBadgeProps {
   recommendation?: Recommendation | null
   /** True once the pipeline is complete but the verdict hasn't been generated yet. */
   pending?: boolean
+  /** True when verdict generation has failed — takes precedence over `pending`. */
+  failed?: boolean
   /** Small pill-only variant for table cells — no reasoning toggle. */
   compact?: boolean
 }
@@ -42,11 +44,19 @@ export const VerdictBadge = ({
   risks,
   recommendation,
   pending,
+  failed,
   compact,
 }: VerdictBadgeProps) => {
   const [expanded, setExpanded] = useState(false)
 
   if (!verdict) {
+    if (failed) {
+      return (
+        <div className={`${styles.badge} ${styles.failed}`}>
+          Match failed — retry
+        </div>
+      )
+    }
     if (!pending) return null
     return (
       <div className={`${styles.badge} ${styles.analyzing}`}>

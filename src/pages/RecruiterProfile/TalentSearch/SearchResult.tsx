@@ -16,6 +16,8 @@ const SearchResult = () => {
   const [searchParams] = useSearchParams()
   const [page, setPage] = useState(1)
 
+  const jobId = searchParams.get('jobId') || ''
+
   const searchValues = {
     role: searchParams.get('role') || '',
     location: {
@@ -26,6 +28,7 @@ const SearchResult = () => {
     experienceLevel: searchParams.get('experienceLevel') || '',
     limit: PAGE_SIZE,
     offset: (page - 1) * PAGE_SIZE,
+    ...(jobId ? { jobId } : {}),
   }
 
   const { data, isLoading, isFetching, error } =
@@ -48,7 +51,11 @@ const SearchResult = () => {
     <div>
       <PageHeaderTitle
         title="Talent Search"
-        description="Find qualified talents by searching"
+        description={
+          jobId
+            ? 'Ranked by fit to the job you searched from'
+            : 'Find qualified talents by searching'
+        }
         onBack={() => navigate(-1)}
       />
       {talents.length === 0 ? (
@@ -62,10 +69,10 @@ const SearchResult = () => {
             {talents.map((talent: any, i: number) => (
               <div
                 key={talent.id ?? i}
-                className="flex border border-grey-200 w-full items-center rounded-lg p-3">
+                className="flex border border-grey-200 w-full items-start rounded-lg p-3">
                 <div className="flex-1 flex space-x-4">
                   <img src={talentdb} alt="" className="w-9 h-9" />
-                  <div>
+                  <div className="flex-1">
                     <h2 className="text-midnight font-semibold">
                       {talent.firstName} {talent.lastName}
                     </h2>
@@ -79,6 +86,23 @@ const SearchResult = () => {
                     <h2 className="text-midnight text-sm font-medium">
                       {talent.profile?.experience}
                     </h2>
+                    {(talent.strengths?.length > 0 ||
+                      talent.weaknesses?.length > 0) && (
+                      <div className="mt-2 space-y-1 text-sm">
+                        {talent.strengths?.length > 0 && (
+                          <p className="text-green-700">
+                            <span className="font-semibold">Strengths: </span>
+                            {talent.strengths.join('; ')}
+                          </p>
+                        )}
+                        {talent.weaknesses?.length > 0 && (
+                          <p className="text-amber-700">
+                            <span className="font-semibold">Weaknesses: </span>
+                            {talent.weaknesses.join('; ')}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

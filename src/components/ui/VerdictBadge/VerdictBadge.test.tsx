@@ -15,6 +15,17 @@ describe('VerdictBadge', () => {
     expect(screen.getByText(/Analyzing match/i)).toBeTruthy()
   })
 
+  it('shows a "Match failed" state when verdict generation has failed', () => {
+    render(<VerdictBadge verdict={null} failed />)
+    expect(screen.getByText(/Match failed/i)).toBeTruthy()
+  })
+
+  it('prioritizes the failed state over pending when both are somehow true', () => {
+    render(<VerdictBadge verdict={null} pending failed />)
+    expect(screen.getByText(/Match failed/i)).toBeTruthy()
+    expect(screen.queryByText(/Analyzing match/i)).toBeNull()
+  })
+
   it('renders the label for each verdict', () => {
     const { rerender } = render(<VerdictBadge verdict="high" />)
     expect(screen.getByText('High Match')).toBeTruthy()

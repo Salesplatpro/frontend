@@ -70,6 +70,7 @@ export type SingleJobDetails = {
   }
   applicationType: string
   status: string
+  currentStage?: string
   createdAt: string
   updatedAt: string
   cvSimilarityScore: number
@@ -77,6 +78,7 @@ export type SingleJobDetails = {
   rank?: number | null
   averageScore?: number | null
   matchVerdict?: 'high' | 'medium' | 'low' | null
+  matchVerdictStatus?: 'pending' | 'succeeded' | 'failed' | null
   matchVerdictReasoning?: string | null
   matchRecommendation?: 'hire' | 'interview_further' | 'no_hire' | null
   matchStrengths?: string[] | null

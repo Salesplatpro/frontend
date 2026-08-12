@@ -7,8 +7,10 @@ import {
   regenerateVerdict,
 } from '../services/applicationService'
 
-// Mutating `applicationKey` makes SWR auto-revalidate `useApplication`/`useJobApplications`
-// reads for this application, same pattern as `useUpdateApplicationStatus`.
+// Mutating `applicationKey` auto-revalidates `useApplication` reads for this
+// application. It does NOT cover `useJobApplications` (a different SWR key,
+// `/jobs/applications/:jobId`) — callers backed by that list must pass their
+// own refetch callback and invoke it after `regenerateVerdict()` resolves.
 export const useRegenerateVerdict = (applicationId: string) => {
   const { trigger, isMutating } = useSWRMutation(
     applicationKey(applicationId),

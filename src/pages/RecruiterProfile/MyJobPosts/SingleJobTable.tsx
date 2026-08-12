@@ -15,6 +15,7 @@ import {
   StatusBadge,
 } from '../../../components'
 import { useRegenerateVerdict } from '../../../features/applications/hooks/useRegenerateVerdict'
+import { JobAiConfigThresholds } from '../../../features/applications/services/applicationService'
 import { openTalentCv } from '../../../features/profile/services/openTalentCv'
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
@@ -22,6 +23,7 @@ import { AiMatchPanel } from './AiMatchPanel'
 
 type SingleJobTableProps = {
   applications: SingleJobDetails[]
+  jobAiConfig?: JobAiConfigThresholds | null
   selectedRowKeys?: Set<string>
   onToggleRow?: (key: string | number) => void
   onToggleAll?: (keys: (string | number)[]) => void
@@ -30,6 +32,8 @@ type SingleJobTableProps = {
   onMessage: (applicationId: string) => void
   /** Application id currently being updated (e.g. via a row-level shortlist/reject) — shows a spinner in that row's actions cell instead of a static disabled state. */
   loadingRowId?: string | null
+  /** Called after a successful AI match regenerate so the caller can refetch the applications list — useRegenerateVerdict's own SWR key doesn't cover this table's data. */
+  onVerdictRegenerated?: () => void | Promise<void>
   visibleColumnKeys?: string[]
   sortKey?: string | null
   sortDirection?: 'asc' | 'desc'
@@ -65,7 +69,7 @@ const COLUMN_LABELS: Record<string, string> = {
   name: 'Name',
   stage: 'Stage',
   status: 'Job Status',
-  cvRanking: 'CV Ranking',
+  cvRanking: 'Completion order',
   aiMatch: 'AI Match',
   dateApplied: 'Date Applied',
   details: 'Details',
@@ -73,11 +77,44 @@ const COLUMN_LABELS: Record<string, string> = {
 
 const MANDATORY_COLUMN_KEYS = ['name', 'details']
 
+// high -> medium -> low -> no verdict (completed but failed/unavailable) ->
+// still screening. Shared by the aiMatch column's own sortAccessor
+// (single-key toolbar sort) and compareByAiMatch below (the default
+// page-load sort, which adds averageScore/createdAt tie-breakers).
+const VERDICT_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 }
+const verdictRank = (
+  verdict: SingleJobDetails['matchVerdict'],
+  currentStage?: SingleJobDetails['currentStage'],
+) => {
+  if (currentStage && currentStage !== 'completed') return 4
+  return verdict ? VERDICT_ORDER[verdict] : 3
+}
+
+// Default sort for the applicant table: best AI match first. A single
+// sortAccessor can't express three tie-break levels without fragile numeric
+// encoding (a date difference could overflow/outweigh a small score
+// difference), so this is a real multi-level comparator instead.
+export const compareByAiMatch = (
+  a: SingleJobDetails,
+  b: SingleJobDetails,
+): number => {
+  const verdictDiff =
+    verdictRank(a.matchVerdict, a.currentStage) -
+    verdictRank(b.matchVerdict, b.currentStage)
+  if (verdictDiff !== 0) return verdictDiff
+
+  const scoreDiff = (b.averageScore ?? 0) - (a.averageScore ?? 0) // desc
+  if (scoreDiff !== 0) return scoreDiff
+
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() // desc
+}
+
 interface ApplicantActionsCellProps {
   item: SingleJobDetails
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
+  onVerdictRegenerated?: () => void | Promise<void>
   isLoading?: boolean
 }
 
@@ -86,6 +123,7 @@ const ApplicantActionsCell = ({
   onShortlist,
   onReject,
   onMessage,
+  onVerdictRegenerated,
   isLoading,
 }: ApplicantActionsCellProps) => {
   const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(item.id)
@@ -96,6 +134,11 @@ const ApplicantActionsCell = ({
         <Spinner size="sm" />
       </div>
     )
+  }
+
+  const handleRegenerate = async () => {
+    await regenerateVerdict()
+    await onVerdictRegenerated?.()
   }
 
   const items: DropdownItem[] = [
@@ -110,14 +153,10 @@ const ApplicantActionsCell = ({
           },
         ]
       : []),
-    ...(!item.matchVerdict
-      ? [
-          {
-            label: 'Regenerate AI Match',
-            onClick: () => regenerateVerdict(),
-          },
-        ]
-      : []),
+    {
+      label: 'Regenerate AI Match',
+      onClick: () => handleRegenerate(),
+    },
   ]
 
   return (
@@ -151,6 +190,8 @@ const AiMatchCell = ({
       <MatchScoreRing
         verdict={item.matchVerdict ?? null}
         averageScore={item.averageScore ?? null}
+        failed={item.matchVerdictStatus === 'failed'}
+        currentStage={item.currentStage}
       />
     </button>
   </div>
@@ -160,12 +201,14 @@ export const buildColumns = ({
   onShortlist,
   onReject,
   onMessage,
+  onVerdictRegenerated,
   loadingRowId,
   onOpenAiMatch,
 }: {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
+  onVerdictRegenerated?: () => void | Promise<void>
   loadingRowId?: string | null
   onOpenAiMatch?: (item: SingleJobDetails) => void
 }): ColumnDef<SingleJobDetails>[] => [
@@ -241,13 +284,12 @@ export const buildColumns = ({
           <MatchScoreRing
             verdict={item.matchVerdict ?? null}
             averageScore={item.averageScore ?? null}
+            failed={item.matchVerdictStatus === 'failed'}
+            currentStage={item.currentStage}
           />
         </div>
       ),
-    sortAccessor: (item) => {
-      const order = { high: 0, medium: 1, low: 2 }
-      return item.matchVerdict ? order[item.matchVerdict] : Infinity
-    },
+    sortAccessor: (item) => verdictRank(item.matchVerdict, item.currentStage),
   },
   {
     key: 'dateApplied',
@@ -279,6 +321,7 @@ export const buildColumns = ({
         onShortlist={onShortlist}
         onReject={onReject}
         onMessage={onMessage}
+        onVerdictRegenerated={onVerdictRegenerated}
         isLoading={item.id === loadingRowId}
       />
     ),
@@ -287,6 +330,7 @@ export const buildColumns = ({
 
 export const SingleJobTable = ({
   applications,
+  jobAiConfig,
   selectedRowKeys,
   onToggleRow,
   onToggleAll,
@@ -294,6 +338,7 @@ export const SingleJobTable = ({
   onReject,
   onMessage,
   loadingRowId,
+  onVerdictRegenerated,
   visibleColumnKeys,
   sortKey,
   sortDirection,
@@ -306,6 +351,7 @@ export const SingleJobTable = ({
     onShortlist,
     onReject,
     onMessage,
+    onVerdictRegenerated,
     loadingRowId,
     onOpenAiMatch: setAiMatchApplicant,
   })
@@ -341,7 +387,9 @@ export const SingleJobTable = ({
       {aiMatchApplicant && (
         <AiMatchPanel
           application={aiMatchApplicant}
+          jobAiConfig={jobAiConfig}
           onClose={() => setAiMatchApplicant(null)}
+          onRegenerated={onVerdictRegenerated}
         />
       )}
     </>

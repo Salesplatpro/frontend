@@ -3,7 +3,7 @@ import 'react-responsive-modal/styles.css'
 import React, { useMemo, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 import Modal from 'react-responsive-modal'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
@@ -13,7 +13,12 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Tabs } from '@/components/ui/Tabs'
 import { useBulkUpdateApplicationStatus } from '@/features/applications/hooks/useBulkUpdateApplicationStatus'
 import { useJobApplications } from '@/features/applications/hooks/useJobApplications'
+import {
+  regenerateVerdict,
+  retryMissingVerdicts,
+} from '@/features/applications/services/applicationService'
 import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
@@ -24,7 +29,11 @@ import {
 } from './exportRankingPdf'
 import { Pagination } from './Pagination'
 import styles from './SingleJobPost.module.scss'
-import { buildColumns, SingleJobTable } from './SingleJobTable'
+import {
+  buildColumns,
+  compareByAiMatch,
+  SingleJobTable,
+} from './SingleJobTable'
 
 export type CvRankingTier = 'all' | 'top3' | 'top5' | 'top10' | 'unranked'
 export type AiMatchLevel =
@@ -154,16 +163,22 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50]
 
 export const SingleJobPost = () => {
   const { jobId } = useParams()
+  const navigate = useNavigate()
   const { data, error, isLoading, mutate } = useJobApplications(jobId)
   const location = useLocation()
   const jobName = location.state?.jobName
   const postedAt = location.state?.postedAt
   const applications = data?.data?.applications ?? []
+  const jobAiConfig = data?.data?.aiConfig ?? null
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<Set<string>>(new Set())
   const [loadingRowId, setLoadingRowId] = useState<string | null>(null)
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
   const [messageContent, setMessageContent] = useState('')
+  const [isMissingVerdictModalOpen, setIsMissingVerdictModalOpen] =
+    useState(false)
+  const [isRetryingVerdicts, setIsRetryingVerdicts] = useState(false)
+  const [isRetryingAllVerdicts, setIsRetryingAllVerdicts] = useState(false)
 
   // Column defs with no-op action callbacks — only used here to derive
   // toolbar metadata (toggleable/sortable keys, labels) from the same
@@ -185,8 +200,8 @@ export const SingleJobPost = () => {
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(() =>
     toolbarColumns.filter((col) => col.toggleable).map((col) => col.key),
   )
-  const [sortKey, setSortKey] = useState('dateApplied')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
+  const [sortKey, setSortKey] = useState('aiMatch')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0])
   const [rankingMode, setRankingMode] = useState<RankingExportMode>('top')
@@ -226,6 +241,75 @@ export const SingleJobPost = () => {
       await mutate()
     } catch {
       notify('error', `Failed to update talent statuses`, { autoClose: 2000 })
+    }
+  }
+
+  const getMissingVerdictIds = (keys: Set<string>) =>
+    applications
+      .filter(
+        (item) =>
+          keys.has(item.id) &&
+          item.currentStage === 'completed' &&
+          !item.matchVerdict,
+      )
+      .map((item) => item.id)
+
+  const handleShortlistClick = () => {
+    if (getMissingVerdictIds(selectedRowKeys).length > 0) {
+      setIsMissingVerdictModalOpen(true)
+      return
+    }
+    void handleBulkStatus('shortlisted')
+  }
+
+  // Retries a fixed set of application ids with a small concurrency limit —
+  // used for both the bulk-selection confirm modal and the toolbar's
+  // "retry all missing" button, so the AI provider isn't hit with an
+  // unbounded burst of requests.
+  const retryVerdictsForIds = async (ids: string[]) => {
+    const CONCURRENCY = 3
+    for (let i = 0; i < ids.length; i += CONCURRENCY) {
+      const batch = ids.slice(i, i + CONCURRENCY)
+      await Promise.all(batch.map((id) => regenerateVerdict(id)))
+    }
+  }
+
+  const handleRetryMissingForSelection = async () => {
+    const ids = getMissingVerdictIds(selectedRowKeys)
+    setIsRetryingVerdicts(true)
+    try {
+      await retryVerdictsForIds(ids)
+      notify('success', 'AI matches retried for selected talents', {
+        autoClose: 2000,
+      })
+      await mutate()
+    } catch {
+      notify('error', 'Failed to retry some AI matches', { autoClose: 2000 })
+    } finally {
+      setIsRetryingVerdicts(false)
+      setIsMissingVerdictModalOpen(false)
+    }
+  }
+
+  const handleRetryAllMissingVerdicts = async () => {
+    if (!jobId) return
+    setIsRetryingAllVerdicts(true)
+    try {
+      const result = await retryMissingVerdicts(jobId)
+      notify(
+        'success',
+        `Retried ${result.attempted} — ${result.succeeded} succeeded, ${result.failed} failed`,
+        { autoClose: 3000 },
+      )
+      await mutate()
+    } catch (err) {
+      notify(
+        'error',
+        getErrorMessage(err, 'Failed to retry missing AI matches'),
+        { autoClose: 2000 },
+      )
+    } finally {
+      setIsRetryingAllVerdicts(false)
     }
   }
 
@@ -275,6 +359,14 @@ export const SingleJobPost = () => {
     }
   }
 
+  const missingVerdictCount = useMemo(
+    () =>
+      applications.filter(
+        (item) => item.currentStage === 'completed' && !item.matchVerdict,
+      ).length,
+    [applications],
+  )
+
   const tabCounts = useMemo(
     () => ({
       all: applications.length,
@@ -298,6 +390,12 @@ export const SingleJobPost = () => {
   )
 
   const sortedApplications = useMemo(() => {
+    if (sortKey === 'aiMatch') {
+      // Best AI match first, tie-broken by average score then recency — a
+      // single-key sortAccessor can't express that, so this bypasses it.
+      const sorted = [...filteredApplications].sort(compareByAiMatch)
+      return sortDirection === 'asc' ? sorted : sorted.reverse()
+    }
     const column = toolbarColumns.find((col) => col.key === sortKey)
     if (!column?.sortAccessor) return filteredApplications
     return sortByAccessor(
@@ -385,7 +483,28 @@ export const SingleJobPost = () => {
             {applications.length > 1 ? 'applicants' : 'applicant'}
           </span>
         </div>
-        <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>
+        <div className="flex items-center gap-3">
+          <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>
+          {missingVerdictCount > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              loading={isRetryingAllVerdicts}
+              onClick={handleRetryAllMissingVerdicts}>
+              Retry all missing AI matches ({missingVerdictCount})
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              navigate(
+                `/recruiterDashboard/talent-search/results?jobId=${jobId}`,
+              )
+            }>
+            Find matching talent
+          </Button>
+        </div>
       </div>
 
       <div className={styles.layout}>
@@ -434,7 +553,7 @@ export const SingleJobPost = () => {
                   variant="primary"
                   size="sm"
                   loading={isBulkUpdating}
-                  onClick={() => handleBulkStatus('shortlisted')}>
+                  onClick={handleShortlistClick}>
                   Shortlist
                 </Button>
                 <Button
@@ -488,7 +607,7 @@ export const SingleJobPost = () => {
                 (col) => col.key === sortKey && col.sortAccessor,
               )
                 ? sortKey
-                : 'dateApplied'
+                : 'aiMatch'
             }
             sortDirection={sortDirection}
             onSortChange={handleSortChange}
@@ -516,6 +635,7 @@ export const SingleJobPost = () => {
 
           <SingleJobTable
             applications={paginatedApplications}
+            jobAiConfig={jobAiConfig}
             selectedRowKeys={selectedRowKeys}
             onToggleRow={handleToggleRow}
             onToggleAll={handleToggleAll}
@@ -523,6 +643,9 @@ export const SingleJobPost = () => {
             onReject={(id) => handleRowStatus(id, 'rejected')}
             onMessage={handleRowMessage}
             loadingRowId={loadingRowId}
+            onVerdictRegenerated={async () => {
+              await mutate()
+            }}
             visibleColumnKeys={visibleColumnKeys}
             sortKey={sortKey}
             sortDirection={sortDirection}
@@ -569,6 +692,35 @@ export const SingleJobPost = () => {
               loading={isBroadcasting}
               onClick={handleSendBulkMessage}>
               Send
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        open={isMissingVerdictModalOpen}
+        onClose={() => setIsMissingVerdictModalOpen(false)}
+        center>
+        <div>
+          <h2 className={styles.modalTitle}>
+            {getMissingVerdictIds(selectedRowKeys).length} selected have no AI
+            match. Shortlist anyway?
+          </h2>
+          <div className={styles.modalActions}>
+            <Button
+              variant="outline"
+              loading={isRetryingVerdicts}
+              onClick={handleRetryMissingForSelection}>
+              Retry matches first
+            </Button>
+            <Button
+              variant="primary"
+              loading={isBulkUpdating}
+              onClick={() => {
+                setIsMissingVerdictModalOpen(false)
+                void handleBulkStatus('shortlisted')
+              }}>
+              Shortlist anyway
             </Button>
           </div>
         </div>

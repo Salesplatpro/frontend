@@ -13,6 +13,9 @@ import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 const SearchTalent = () => {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  // Carried through, not a form field — set when arriving from a job page's
+  // "Find matching talent" link, so results rank by fit to that job.
+  const jobId = searchParams.get('jobId') || ''
 
   // Initialize form values from URL params
   const initialSearchValues = {
@@ -39,6 +42,7 @@ const SearchTalent = () => {
       role,
       ...locationParams,
       experienceLevel,
+      ...(jobId ? { jobId } : {}),
     })
 
     // Navigate to the results page
@@ -46,6 +50,7 @@ const SearchTalent = () => {
       role,
       ...locationParams,
       experienceLevel,
+      ...(jobId ? { jobId } : {}),
     }).toString()
 
     navigate(`/recruiterDashboard/talent-search/results?${queryParams}`)

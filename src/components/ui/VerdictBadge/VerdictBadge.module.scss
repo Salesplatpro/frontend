@@ -39,6 +39,12 @@
   font-weight: var(--weight-medium);
 }
 
+.failed {
+  background: rgba(196, 50, 10, 0.1);
+  color: var(--color-danger);
+  font-weight: var(--weight-medium);
+}
+
 .pulse {
   width: 6px;
   height: 6px;
