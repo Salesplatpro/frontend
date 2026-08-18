@@ -10,6 +10,7 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { VerdictBadge } from '@/components/ui/VerdictBadge'
 
 import { useGetRecruiterShortlistQuery } from '../../../redux/api/recruiter'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
@@ -21,9 +22,20 @@ interface ShortlistedApplication {
   createdAt: string
   role?: { name: string } | null
   talent: { firstName: string; lastName: string }
+  matchVerdict?: 'high' | 'medium' | 'low' | null
+  averageScore?: number | null
 }
 
 type SortDirection = 'asc' | 'desc'
+
+// high -> medium -> low -> no verdict, mirroring SingleJobTable's ordering.
+const VERDICT_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 }
+const verdictRank = (verdict: ShortlistedApplication['matchVerdict']) =>
+  verdict ? VERDICT_ORDER[verdict] : 3
+// Single numeric key encoding "verdict order, then averageScore desc" so a
+// single-key sortByAccessor can express both levels at once.
+const verdictSortValue = (row: ShortlistedApplication) =>
+  verdictRank(row.matchVerdict) * 1000 + (100 - (row.averageScore ?? 0))
 
 interface ShortlistFilterValues {
   search: string
@@ -45,8 +57,8 @@ export const Shortlist = () => {
   const [filters, setFilters] = useState<ShortlistFilterValues>(
     defaultShortlistFilters,
   )
-  const [sortKey, setSortKey] = useState('createdAt')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [sortKey, setSortKey] = useState('verdict')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
 
   const handleSortChange = (key: string, direction: SortDirection) => {
     setSortKey(key)
@@ -82,6 +94,16 @@ export const Shortlist = () => {
       sortLabel: 'Talent Name',
       render: (row) => `${row.talent.firstName} ${row.talent.lastName}`,
       sortAccessor: (row) => `${row.talent.firstName} ${row.talent.lastName}`,
+    },
+    {
+      key: 'verdict',
+      header: 'AI Match',
+      sortLabel: 'AI Match',
+      align: 'center',
+      render: (row) => (
+        <VerdictBadge verdict={row.matchVerdict ?? null} compact />
+      ),
+      sortAccessor: verdictSortValue,
     },
     {
       key: 'status',

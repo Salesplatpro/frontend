@@ -3,9 +3,12 @@ import { IoClose } from 'react-icons/io5'
 
 import { Avatar } from '@/components/ui/Avatar'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
+import { useRegenerateVerdict } from '@/features/applications/hooks/useRegenerateVerdict'
+import type { JobAiConfigThresholds } from '@/features/applications/services/applicationService'
 import { openTalentCv } from '@/features/profile/services/openTalentCv'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
 
+import { Button } from '../../../components'
 import styles from './AiMatchPanel.module.scss'
 
 const RECOMMENDATION_LABELS: Record<string, string> = {
@@ -22,7 +25,10 @@ const VERDICT_LABELS: Record<string, string> = {
 
 type AiMatchPanelProps = {
   application: SingleJobDetails
+  jobAiConfig?: JobAiConfigThresholds | null
   onClose: () => void
+  /** Called after a successful regenerate so the caller can refetch the applications list. */
+  onRegenerated?: () => void | Promise<void>
 }
 
 const Section = ({
@@ -50,23 +56,63 @@ const EmptyNote = ({ text }: { text: string }) => (
   <p className={styles.empty}>{text}</p>
 )
 
-export const AiMatchPanel = ({ application, onClose }: AiMatchPanelProps) => {
+const ScoreListItem = ({
+  label,
+  score,
+  threshold,
+}: {
+  label: string
+  score: number
+  threshold?: number | null
+}) => {
+  const passed = threshold != null ? score >= threshold : null
+  return (
+    <li>
+      {label}: {score}%
+      {passed != null && (
+        <span
+          style={{
+            marginLeft: 8,
+            fontSize: 'var(--text-xs)',
+            fontWeight: 600,
+            color: passed ? 'var(--color-success)' : 'var(--color-danger)',
+          }}>
+          {passed ? 'Passed' : 'Below bar'}
+        </span>
+      )}
+    </li>
+  )
+}
+
+export const AiMatchPanel = ({
+  application,
+  jobAiConfig,
+  onClose,
+  onRegenerated,
+}: AiMatchPanelProps) => {
   const { talent } = application
   const fullName = `${talent.firstName} ${talent.lastName}`.trim()
+  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(
+    application.id,
+  )
+
+  const handleRegenerate = async () => {
+    await regenerateVerdict()
+    await onRegenerated?.()
+  }
 
   const profileDetails = [
     talent.experience ? `Experience: ${talent.experience}` : null,
     talent.bio ? talent.bio : null,
-    application.cvSimilarityScore != null
-      ? `CV match score: ${application.cvSimilarityScore}%`
-      : null,
     application.personalizedScore != null
       ? `Personalized assessment: ${application.personalizedScore}%`
       : null,
-    talent.prescreeningScore != null
-      ? `Pre-assessment: ${talent.prescreeningScore}%`
-      : null,
   ].filter(Boolean) as string[]
+
+  const hasProfileOrScoreDetails =
+    profileDetails.length > 0 ||
+    application.cvSimilarityScore != null ||
+    talent.prescreeningScore != null
 
   const strengths = application.matchStrengths?.filter(Boolean) ?? []
   const weaknesses = application.matchWeaknesses?.filter(Boolean) ?? []
@@ -78,6 +124,7 @@ export const AiMatchPanel = ({ application, onClose }: AiMatchPanelProps) => {
   const fitLevel = application.matchVerdict
     ? VERDICT_LABELS[application.matchVerdict]
     : null
+  const interviewFocusItems = Array.from(new Set([...weaknesses, ...risks]))
 
   return (
     <div className={styles.overlay}>
@@ -100,19 +147,47 @@ export const AiMatchPanel = ({ application, onClose }: AiMatchPanelProps) => {
               <p className={styles.email}>{talent.email}</p>
             </div>
           </div>
-          <button
-            type="button"
-            className={styles.closeButton}
-            onClick={onClose}
-            aria-label="Close AI Match panel">
-            <IoClose size={22} />
-          </button>
+          <div className={styles.headerActions}>
+            <Button
+              variant="outline"
+              size="sm"
+              loading={isRegenerating}
+              disabled={application.currentStage !== 'completed'}
+              onClick={handleRegenerate}>
+              Regenerate match
+            </Button>
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={onClose}
+              aria-label="Close AI Match panel">
+              <IoClose size={22} />
+            </button>
+          </div>
         </header>
 
         <div className={styles.body}>
           <Section title="Profile & CV details">
-            {profileDetails.length > 0 ? (
-              <BulletList items={profileDetails} />
+            {hasProfileOrScoreDetails ? (
+              <ul className={styles.list}>
+                {profileDetails.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+                {application.cvSimilarityScore != null && (
+                  <ScoreListItem
+                    label="CV match score"
+                    score={application.cvSimilarityScore}
+                    threshold={jobAiConfig?.minCvSimilarityScore}
+                  />
+                )}
+                {talent.prescreeningScore != null && (
+                  <ScoreListItem
+                    label="Pre-assessment"
+                    score={talent.prescreeningScore}
+                    threshold={jobAiConfig?.minPrescreeningScore}
+                  />
+                )}
+              </ul>
             ) : (
               <EmptyNote text="No profile or CV details are available for this applicant." />
             )}
@@ -164,6 +239,18 @@ export const AiMatchPanel = ({ application, onClose }: AiMatchPanelProps) => {
             )}
           </Section>
 
+          {application.matchRecommendation === 'interview_further' && (
+            <Section title="Ask about in interview">
+              {interviewFocusItems.length > 0 ? (
+                <BulletList items={interviewFocusItems} />
+              ) : reasoning ? (
+                <p className={styles.prose}>{reasoning}</p>
+              ) : (
+                <EmptyNote text="No specific interview focus areas were returned." />
+              )}
+            </Section>
+          )}
+
           <Section title="Why they are a good fit">
             {strengths.length > 0 ? (
               <BulletList items={strengths} />
@@ -173,13 +260,13 @@ export const AiMatchPanel = ({ application, onClose }: AiMatchPanelProps) => {
           </Section>
 
           <Section title="Relevant experience">
-            {talent.experience || strengths.length > 0 ? (
+            {talent.experience || talent.bio ? (
               <BulletList
                 items={[
                   ...(talent.experience
                     ? [`Stated experience level: ${talent.experience}`]
                     : []),
-                  ...strengths,
+                  ...(talent.bio ? [talent.bio] : []),
                 ]}
               />
             ) : (

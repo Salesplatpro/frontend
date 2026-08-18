@@ -19,6 +19,7 @@ export interface ScoutReport {
 export interface ScoutBatchResult {
   batchId: string
   scoutReports: ScoutReport[]
+  failures?: Record<string, string>
 }
 
 interface FileState {
@@ -45,6 +46,21 @@ const fileSlice = createSlice({
     setScoutBatchResult(state, action: PayloadAction<ScoutBatchResult>) {
       state.scoutBatchResult = action.payload
     },
+    // Folds a single-file retry's result into the existing batch instead of
+    // replacing it, so previously-scored cards aren't lost.
+    mergeScoutBatchResult(state, action: PayloadAction<ScoutBatchResult>) {
+      if (!state.scoutBatchResult) {
+        state.scoutBatchResult = action.payload
+        return
+      }
+      state.scoutBatchResult = {
+        batchId: state.scoutBatchResult.batchId,
+        scoutReports: [
+          ...state.scoutBatchResult.scoutReports,
+          ...action.payload.scoutReports,
+        ],
+      }
+    },
     clearScoutUploads(state) {
       state.scoutUploads = []
       state.scoutBatchResult = null
@@ -56,6 +72,7 @@ export const {
   setScoutUploads,
   removeScoutUpload,
   setScoutBatchResult,
+  mergeScoutBatchResult,
   clearScoutUploads,
 } = fileSlice.actions
 

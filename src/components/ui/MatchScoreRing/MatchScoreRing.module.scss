@@ -26,3 +26,24 @@
   color: var(--color-text-muted);
   white-space: nowrap;
 }
+
+.failed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  border: 3px solid rgba(196, 50, 10, 0.1);
+  color: var(--color-danger);
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.failedLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-danger);
+  white-space: nowrap;
+}

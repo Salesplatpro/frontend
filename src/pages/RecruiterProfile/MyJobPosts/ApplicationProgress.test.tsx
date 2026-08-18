@@ -76,7 +76,7 @@ describe('ApplicationProgress', () => {
     expect(screen.getByText('High Match')).toBeTruthy()
   })
 
-  it('shows an "Analyzing match…" state when the pipeline is complete but no verdict yet', () => {
+  it('shows an "Analyzing match…" state when a verdict generation is actively pending', () => {
     useApplicationMock.mockReturnValue({
       data: {
         data: {
@@ -84,6 +84,7 @@ describe('ApplicationProgress', () => {
             ...baseApplication,
             matchVerdict: null,
             matchVerdictReasoning: null,
+            matchVerdictStatus: 'pending',
           },
         },
       },
@@ -98,6 +99,31 @@ describe('ApplicationProgress', () => {
     renderPage()
 
     expect(screen.getByText(/Analyzing match/)).toBeTruthy()
+  })
+
+  it('shows a "Match failed" state when the pipeline is complete, no verdict exists, and it is not actively pending (including legacy rows with no matchVerdictStatus at all)', () => {
+    useApplicationMock.mockReturnValue({
+      data: {
+        data: {
+          application: {
+            ...baseApplication,
+            matchVerdict: null,
+            matchVerdictReasoning: null,
+            matchVerdictStatus: null,
+          },
+        },
+      },
+      error: null,
+      isLoading: false,
+    })
+    useUpdateApplicationStatusMock.mockReturnValue({
+      updateStatus: updateStatusFn,
+      isUpdating: false,
+    })
+
+    renderPage()
+
+    expect(screen.getByText(/Match failed/)).toBeTruthy()
   })
 
   it('renders a CV open control when the talent has an uploaded CV', () => {

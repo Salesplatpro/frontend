@@ -35,9 +35,28 @@ export const bulkUpdateApplicationStatus = (
 export const jobApplicationsKey = (jobId: string) =>
   `/jobs/applications/${jobId}`
 
+export interface JobAiConfigThresholds {
+  minCvSimilarityScore: number | null
+  minPrescreeningScore: number | null
+}
+
 export const fetchJobApplications = (jobId: string) =>
   httpClient
-    .get<{ data: { applications: SingleJobDetails[] } }>(
-      jobApplicationsKey(jobId),
-    )
+    .get<{
+      data: {
+        applications: SingleJobDetails[]
+        aiConfig: JobAiConfigThresholds | null
+      }
+    }>(jobApplicationsKey(jobId))
     .then((response) => response.data)
+
+export interface RetryVerdictsResult {
+  attempted: number
+  succeeded: number
+  failed: number
+}
+
+export const retryMissingVerdicts = (jobId: string) =>
+  httpClient
+    .post<{ data: RetryVerdictsResult }>(`/jobs/${jobId}/retry-verdicts`)
+    .then((response) => response.data.data)

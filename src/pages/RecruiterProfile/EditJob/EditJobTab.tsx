@@ -13,6 +13,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useJobEditDraftStore } from '@/features/jobs/store/useJobEditDraftStore'
 import {
   useAiConfigMutation,
+  useGenerateJobContentMutation,
   useGetAiConfigQuery,
   usePatchAiConfigMutation,
   useUpdateJobMutation,
@@ -91,6 +92,8 @@ export const EditJobTab = () => {
   const [updateJob] = useUpdateJobMutation()
   const [patchAiConfig] = usePatchAiConfigMutation()
   const [createAiConfig] = useAiConfigMutation()
+  const [generateJobContent, { isLoading: isGeneratingWithAI }] =
+    useGenerateJobContentMutation()
   const { drafts, saveDraft, clearDraft } = useJobEditDraftStore()
   const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
@@ -179,6 +182,42 @@ export const EditJobTab = () => {
     goals: savedDraft?.goals ?? jobInitialValues.goals,
     status: savedDraft?.status ?? job.status ?? 'draft',
     aiConfig: aiConfigInitialValues,
+  }
+
+  const handleGenerateWithAI = async (
+    values: EditJobFormValues,
+    setFieldValue: (key: keyof PostJobFormValues, value: unknown) => void,
+  ) => {
+    try {
+      const response = await generateJobContent({
+        role: values.role,
+        experienceLevel: values.experienceLevel || undefined,
+        keywords: values.skills,
+      }).unwrap()
+      const content = response?.data?.content
+      if (!content) return
+
+      setFieldValue('jobBrief', content.jobBrief)
+      setFieldValue('requirements', content.requirements)
+      if (Array.isArray(content.skills) && content.skills.length > 0) {
+        setFieldValue('skills', content.skills)
+      }
+      if (Array.isArray(content.goals) && content.goals.length > 0) {
+        setFieldValue('goals', content.goals)
+      }
+      notify(
+        'success',
+        'Job content generated — feel free to edit before submitting.',
+      )
+    } catch (err) {
+      notify(
+        'error',
+        getErrorMessage(
+          err,
+          'Failed to generate job content. Please try again.',
+        ),
+      )
+    }
   }
 
   const onSubmit = async (
@@ -296,6 +335,10 @@ export const EditJobTab = () => {
               touched={touched}
               setFieldValue={(key, value) => setFieldValue(key, value)}
               roleDisabled
+              onGenerateWithAI={() =>
+                handleGenerateWithAI(values, setFieldValue)
+              }
+              isGeneratingWithAI={isGeneratingWithAI}
             />
 
             <h2 className={tabStyles.heading}>AI Configuration</h2>

@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import {
+  getTalentHasEmbedding,
+  reprocessCv,
+} from '@/features/profile/services/reprocessCv'
 import { getToken } from '@/utils/authUtils'
 import { baseUrl } from '@/utils/baseConfig'
+import { notify } from '@/utils/toastNotifications'
 
 import styles from './ViewCvPage.module.scss'
 
@@ -12,6 +18,8 @@ export const ViewCvPage = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [hasEmbedding, setHasEmbedding] = useState(true)
+  const [isReprocessing, setIsReprocessing] = useState(false)
 
   useEffect(() => {
     if (!talentId) {
@@ -48,12 +56,34 @@ export const ViewCvPage = () => {
     }
 
     void load()
+    getTalentHasEmbedding(talentId)
+      .then((value) => {
+        if (!cancelled) setHasEmbedding(value)
+      })
+      .catch(() => {
+        // Non-critical — leave the "Re-analyze CV" button hidden if the
+        // status check itself fails.
+      })
 
     return () => {
       cancelled = true
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
   }, [talentId])
+
+  const handleReprocess = async () => {
+    if (!talentId) return
+    setIsReprocessing(true)
+    try {
+      await reprocessCv(talentId)
+      setHasEmbedding(true)
+      notify('success', 'CV re-analyzed', { autoClose: 2000 })
+    } catch {
+      notify('error', 'Failed to re-analyze CV', { autoClose: 2000 })
+    } finally {
+      setIsReprocessing(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -81,12 +111,23 @@ export const ViewCvPage = () => {
             review.
           </p>
         </div>
-        <a
-          className={styles.download}
-          href={pdfUrl}
-          download="candidate-cv.pdf">
-          Download PDF
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          {!hasEmbedding && (
+            <Button
+              variant="outline"
+              size="sm"
+              loading={isReprocessing}
+              onClick={handleReprocess}>
+              Re-analyze CV
+            </Button>
+          )}
+          <a
+            className={styles.download}
+            href={pdfUrl}
+            download="candidate-cv.pdf">
+            Download PDF
+          </a>
+        </div>
       </header>
       <iframe title="Candidate CV" src={pdfUrl} className={styles.frame} />
     </div>

@@ -16,6 +16,8 @@ type ScoutFileCardProps = {
   onDelete?: () => void
   result?: ScoutReport
   failureReason?: string
+  onRetry?: () => void
+  retrying?: boolean
 }
 
 const FileRow = ({ file }: { file: File }) => (
@@ -34,6 +36,8 @@ export const ScoutFileCard = ({
   onDelete,
   result,
   failureReason,
+  onRetry,
+  retrying,
 }: ScoutFileCardProps) => {
   if (result) {
     return (
@@ -63,9 +67,20 @@ export const ScoutFileCard = ({
         </div>
       </div>
       {failureReason && (
-        <div className="flex items-center gap-1.5 px-4 pb-3 text-red-600 text-sm">
-          <IoAlertCircleOutline size={16} />
-          <span>{failureReason}</span>
+        <div className="flex items-center justify-between gap-2 px-4 pb-3 text-red-600 text-sm">
+          <span className="flex items-center gap-1.5">
+            <IoAlertCircleOutline size={16} />
+            <span>{failureReason}</span>
+          </span>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              disabled={retrying}
+              className="underline shrink-0 disabled:opacity-60">
+              {retrying ? 'Retrying…' : 'Retry'}
+            </button>
+          )}
         </div>
       )}
     </div>

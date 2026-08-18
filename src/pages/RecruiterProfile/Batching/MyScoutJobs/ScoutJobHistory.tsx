@@ -1,4 +1,7 @@
+import 'react-responsive-modal/styles.css'
+
 import React, { useState } from 'react'
+import Modal from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components'
@@ -10,7 +13,13 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { Tabs } from '@/components/ui/Tabs'
-import { useGetScoutJobScoutsQuery } from '@/redux/api/recruiter'
+import {
+  useAddScoutToPipelineMutation,
+  useFetchRecruiterJobPostQuery,
+  useGetScoutJobScoutsQuery,
+} from '@/redux/api/recruiter'
+import { getErrorMessage } from '@/utils/getErrorMessage'
+import { notify } from '@/utils/toastNotifications'
 
 interface ScoutReportRow {
   id: string
@@ -18,6 +27,114 @@ interface ScoutReportRow {
   cvName: string | null
   evaluationScore: number | null
   createdAt: string
+}
+
+interface AddToPipelineModalProps {
+  scout: ScoutReportRow
+  onClose: () => void
+}
+
+// Phase 1, manual link: the recruiter picks the job and confirms the talent
+// account by email themselves — Scout has no extracted candidate identity
+// (cvName is just a filename) and no automatic account creation happens.
+const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
+  const { data: jobsData, isLoading: isLoadingJobs } =
+    useFetchRecruiterJobPostQuery({ limit: 100, status: 'active' })
+  const [addToPipeline, { isLoading: isSubmitting }] =
+    useAddScoutToPipelineMutation()
+  const [jobId, setJobId] = useState('')
+  const [talentEmail, setTalentEmail] = useState('')
+  const [error, setError] = useState<string | null>(null)
+
+  const jobs = Array.isArray(jobsData?.data?.jobs) ? jobsData.data.jobs : []
+
+  const handleSubmit = async () => {
+    if (!jobId || !talentEmail) return
+    setError(null)
+    try {
+      await addToPipeline({ scoutId: scout.id, jobId, talentEmail }).unwrap()
+      notify('success', 'Added to the job pipeline', { autoClose: 2000 })
+      onClose()
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          'No talent account found with that email — ask them to create a profile first.',
+        ),
+      )
+    }
+  }
+
+  return (
+    <div className="w-[320px] sm:w-[420px] space-y-4">
+      <h2 className="text-lg font-semibold text-grey-900">
+        Add {scout.cvName ?? 'this candidate'} to a job pipeline
+      </h2>
+      <p className="text-sm text-grey-500">
+        This creates a real application for an existing talent account — it
+        doesn&apos;t create a new account. Enter the email the candidate uses to
+        sign in.
+      </p>
+
+      <div className="space-y-1">
+        <label
+          htmlFor="pipeline-job"
+          className="text-sm font-medium text-grey-700">
+          Job
+        </label>
+        <select
+          id="pipeline-job"
+          className="w-full border border-grey-300 rounded-lg p-2"
+          value={jobId}
+          onChange={(e) => setJobId(e.target.value)}
+          disabled={isLoadingJobs}>
+          <option value="">Select an active job</option>
+          {jobs.map(
+            (job: {
+              id: string
+              jobBrief?: string
+              role?: { name?: string }
+            }) => (
+              <option key={job.id} value={job.id}>
+                {job.role?.name ?? job.jobBrief?.slice(0, 60) ?? job.id}
+              </option>
+            ),
+          )}
+        </select>
+      </div>
+
+      <div className="space-y-1">
+        <label
+          htmlFor="pipeline-email"
+          className="text-sm font-medium text-grey-700">
+          Talent&apos;s email
+        </label>
+        <input
+          id="pipeline-email"
+          type="email"
+          className="w-full border border-grey-300 rounded-lg p-2"
+          placeholder="candidate@example.com"
+          value={talentEmail}
+          onChange={(e) => setTalentEmail(e.target.value)}
+        />
+      </div>
+
+      {error && <p className="text-red-600 text-sm">{error}</p>}
+
+      <div className="flex justify-end gap-3">
+        <Button variant="outline" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button
+          variant="primary"
+          loading={isSubmitting}
+          disabled={!jobId || !talentEmail || isSubmitting}
+          onClick={handleSubmit}>
+          Add to pipeline
+        </Button>
+      </div>
+    </div>
+  )
 }
 
 type SortDirection = 'asc' | 'desc'
@@ -31,6 +148,9 @@ export const ScoutJobHistory = () => {
   // glance which uploaded file performed best.
   const [sortKey, setSortKey] = useState('evaluationScore')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+  const [pipelineTarget, setPipelineTarget] = useState<ScoutReportRow | null>(
+    null,
+  )
 
   const { data, isLoading } = useGetScoutJobScoutsQuery(
     { scoutJobId, limit: 100, offset: 0 },
@@ -83,6 +203,19 @@ export const ScoutJobHistory = () => {
       hideBelow: 640,
       render: (row) => new Date(row.createdAt).toLocaleString(),
       sortAccessor: (row) => row.createdAt,
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      align: 'center',
+      render: (row) => (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPipelineTarget(row)}>
+          Add to job pipeline
+        </Button>
+      ),
     },
   ]
 
@@ -150,6 +283,18 @@ export const ScoutJobHistory = () => {
           </div>
         }
       />
+
+      <Modal
+        open={pipelineTarget !== null}
+        onClose={() => setPipelineTarget(null)}
+        center>
+        {pipelineTarget && (
+          <AddToPipelineModal
+            scout={pipelineTarget}
+            onClose={() => setPipelineTarget(null)}
+          />
+        )}
+      </Modal>
     </div>
   )
 }

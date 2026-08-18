@@ -2,12 +2,17 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 
 import {
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
 import { notify } from '../../../utils/toastNotifications'
+
+// Mirrors the poll/timeout shape already proven in
+// features/pre-assessment/hooks.ts.
+const GENERATION_TIMEOUT_MS = 60000
 
 // Type definitions
 interface FormData {
@@ -40,16 +45,37 @@ const PersonalizedTest: React.FC = () => {
     answers: {},
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [waitTimedOut, setWaitTimedOut] = useState(false)
   const isValidTalentId = !!talentId && talentId !== 'undefined'
 
   const {
     data: personalizedData,
     error: personalizedError,
     isLoading: personalizedLoading,
+    isFetching: personalizedFetching,
+    refetch: refetchPersonalizedTest,
   } = useGeneratePersonalizedTestQuery(
     { jobId, talentId },
     { skip: !jobId || !isValidTalentId },
   )
+
+  const questionsEmpty =
+    !personalizedLoading &&
+    !personalizedFetching &&
+    !personalizedError &&
+    personalizedQuestions.length === 0
+
+  // POST /questions/personalized is idempotent (returns existing questions if
+  // already generated), so a plain refetch is a safe, real retry — no risk of
+  // duplicate generation.
+  useEffect(() => {
+    if (!questionsEmpty) {
+      setWaitTimedOut(false)
+      return
+    }
+    const id = setTimeout(() => setWaitTimedOut(true), GENERATION_TIMEOUT_MS)
+    return () => clearTimeout(id)
+  }, [questionsEmpty])
 
   useEffect(() => {
     if (!isValidTalentId) {
@@ -139,6 +165,54 @@ const PersonalizedTest: React.FC = () => {
 
   if (personalizedLoading) {
     return <Spinner fullPage />
+  }
+
+  if (personalizedError) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+        <p className="text-red-500 font-raleway text-center">
+          {getErrorMessage(
+            personalizedError,
+            'Unable to load your personalized test.',
+          )}
+        </p>
+        <button
+          type="button"
+          onClick={() => refetchPersonalizedTest()}
+          className="px-4 py-2 rounded font-raleway font-medium bg-blue-500 text-white hover:bg-blue-700">
+          Retry
+        </button>
+      </div>
+    )
+  }
+
+  if (questionsEmpty) {
+    if (waitTimedOut) {
+      return (
+        <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+          <p className="text-grey-700 font-raleway font-medium text-center">
+            Still preparing your assessment questions.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setWaitTimedOut(false)
+              void refetchPersonalizedTest()
+            }}
+            className="px-4 py-2 rounded font-raleway font-medium bg-blue-500 text-white hover:bg-blue-700">
+            Tap to retry
+          </button>
+        </div>
+      )
+    }
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+        <Spinner />
+        <p className="text-grey-700 font-raleway font-medium">
+          Preparing your assessment questions...
+        </p>
+      </div>
+    )
   }
 
   return (

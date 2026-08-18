@@ -96,8 +96,11 @@ export const ApplicationProgress = () => {
     return <Spinner fullPage />
   }
 
-  const verdictPending =
-    application?.currentStage === 'completed' && !matchVerdict
+  const pending = !matchVerdict && application?.matchVerdictStatus === 'pending'
+  const failed =
+    !matchVerdict &&
+    application?.currentStage === 'completed' &&
+    application?.matchVerdictStatus !== 'pending'
 
   return (
     <div className={styles.page}>
@@ -128,7 +131,7 @@ export const ApplicationProgress = () => {
         applicants
       </div>
 
-      {(matchVerdict || verdictPending) && (
+      {(matchVerdict || pending || failed) && (
         <div className={styles.verdictSection}>
           <VerdictBadge
             verdict={matchVerdict}
@@ -137,9 +140,10 @@ export const ApplicationProgress = () => {
             weaknesses={matchWeaknesses}
             risks={matchRisks}
             recommendation={matchRecommendation}
-            pending={verdictPending}
+            pending={pending}
+            failed={failed}
           />
-          {verdictPending && (
+          {(pending || failed) && (
             <Button
               variant="outline"
               size="sm"
