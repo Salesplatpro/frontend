@@ -12,20 +12,30 @@ import {
   sortByAccessor,
   TableToolbar,
 } from '@/components/ui/DataTable'
-import { Tabs } from '@/components/ui/Tabs'
 import {
   useAddScoutToPipelineMutation,
   useFetchRecruiterJobPostQuery,
+  useGetCampaignNameQuery,
   useGetScoutJobScoutsQuery,
 } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
-interface ScoutReportRow {
+import { ScoutCandidatePanel } from './ScoutCandidatePanel'
+
+export interface ScoutReportRow {
   id: string
   batchId: string | null
   cvName: string | null
+  cvScore: number | null
+  insights: string | null
+  coverLetterScore: number | null
+  coverLetterInsights: string | null
   evaluationScore: number | null
+  candidateName: string | null
+  candidateEmail: string | null
+  candidatePhone: string | null
+  candidateAddress: string | null
   createdAt: string
 }
 
@@ -143,7 +153,6 @@ export const ScoutJobHistory = () => {
   const params = useParams()
   const navigate = useNavigate()
   const scoutJobId = params.scoutJobId ?? ''
-  const [activeTab, setActiveTab] = useState('batches')
   // Rank highest-scoring CVs first by default so recruiters can see at a
   // glance which uploaded file performed best.
   const [sortKey, setSortKey] = useState('evaluationScore')
@@ -151,11 +160,22 @@ export const ScoutJobHistory = () => {
   const [pipelineTarget, setPipelineTarget] = useState<ScoutReportRow | null>(
     null,
   )
+  const [detailsTarget, setDetailsTarget] = useState<ScoutReportRow | null>(
+    null,
+  )
 
   const { data, isLoading } = useGetScoutJobScoutsQuery(
     { scoutJobId, limit: 100, offset: 0 },
     { skip: !scoutJobId },
   )
+  // Same cache entry PageHeaderTitle already queries for the heading — RTK
+  // Query dedupes this, it doesn't trigger a second network request.
+  const { data: campaignData } = useGetCampaignNameQuery(
+    { id: scoutJobId },
+    { skip: !scoutJobId },
+  )
+  const jobBrief = campaignData?.data?.scoutJob?.jobBrief
+  const recruiterGuide = campaignData?.data?.scoutJob?.recruiterGuide
 
   const scoutReportsRaw: ScoutReportRow[] = Array.isArray(
     data?.data?.scoutReports,
@@ -209,12 +229,20 @@ export const ScoutJobHistory = () => {
       header: 'Actions',
       align: 'center',
       render: (row) => (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPipelineTarget(row)}>
-          Add to job pipeline
-        </Button>
+        <div className="flex justify-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setDetailsTarget(row)}>
+            View details
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPipelineTarget(row)}>
+            Add to job pipeline
+          </Button>
+        </div>
       ),
     },
   ]
@@ -232,24 +260,30 @@ export const ScoutJobHistory = () => {
         onBack={() => navigate(-1)}
       />
 
-      <Tabs
-        tabs={[
-          {
-            key: 'batches',
-            label: 'Uploaded Batches',
-            count: scoutReports.length,
-          },
-          { key: 'search', label: 'Search Talent' },
-        ]}
-        activeKey={activeTab}
-        onChange={(key) => {
-          if (key === 'search') {
-            navigate('/recruiterDashboard/talent-search')
-            return
-          }
-          setActiveTab(key)
-        }}
-      />
+      {(jobBrief || recruiterGuide) && (
+        <div className="border border-grey-200 rounded-lg p-4 space-y-3 bg-grey-50">
+          {jobBrief && (
+            <div>
+              <h2 className="text-sm font-semibold text-grey-900 mb-1">
+                Job Description
+              </h2>
+              <p className="text-sm text-grey-700 whitespace-pre-wrap">
+                {jobBrief}
+              </p>
+            </div>
+          )}
+          {recruiterGuide && (
+            <div>
+              <h2 className="text-sm font-semibold text-grey-900 mb-1">
+                Scoring Guide
+              </h2>
+              <p className="text-sm text-grey-700 whitespace-pre-wrap">
+                {recruiterGuide}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex justify-end">
         <Button
@@ -295,6 +329,13 @@ export const ScoutJobHistory = () => {
           />
         )}
       </Modal>
+
+      {detailsTarget && (
+        <ScoutCandidatePanel
+          scout={detailsTarget}
+          onClose={() => setDetailsTarget(null)}
+        />
+      )}
     </div>
   )
 }
