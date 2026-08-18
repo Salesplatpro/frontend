@@ -138,3 +138,23 @@ export interface AdminOrganizationFilters {
   offset?: number
   sort?: 'asc' | 'desc'
 }
+
+export interface AdminFeedback {
+  id: string
+  subject: string | null
+  message: string
+  isRead: boolean
+  createdAt: string
+  user?: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+  } | null
+}
+
+export interface AdminFeedbackFilters {
+  isRead?: boolean
+  limit?: number
+  skip?: number
+}

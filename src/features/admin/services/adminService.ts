@@ -1,6 +1,8 @@
 import { httpClient } from '@/features/auth/services/httpClient'
 
 import {
+  AdminFeedback,
+  AdminFeedbackFilters,
   AdminJob,
   AdminJobFilters,
   AdminOrganization,
@@ -151,4 +153,28 @@ export const rejectAdminOrganization = (id: string) =>
     .patch<ApiEnvelope<{ organization: AdminOrganization }>>(
       `/admin/organizations/${id}/reject`,
     )
+    .then((response) => response.data)
+
+export const fetchAdminFeedback = (filters: AdminFeedbackFilters = {}) => {
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([, value]) => value !== undefined && value !== '',
+    ),
+  )
+  return httpClient
+    .get<ApiEnvelope<{ feedback: AdminFeedback[]; total: number }>>(
+      '/feedback',
+      { params },
+    )
+    .then((response) => response.data.data)
+}
+
+export const markFeedbackRead = (id: string) =>
+  httpClient
+    .patch<ApiEnvelope<{ feedback: AdminFeedback }>>(`/feedback/${id}/read`)
+    .then((response) => response.data)
+
+export const markFeedbackUnread = (id: string) =>
+  httpClient
+    .patch<ApiEnvelope<{ feedback: AdminFeedback }>>(`/feedback/${id}/unread`)
     .then((response) => response.data)
