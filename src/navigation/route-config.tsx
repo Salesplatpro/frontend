@@ -22,6 +22,7 @@ import { LandingPage } from '@/LandingPage'
 import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
+import Feedback from '@/pages/AdminProfile/Feedback/Feedback'
 import Jobs from '@/pages/AdminProfile/Jobs/Jobs'
 import OrganizationDetail from '@/pages/AdminProfile/Organizations/OrganizationDetail'
 import Organizations from '@/pages/AdminProfile/Organizations/Organizations'
@@ -372,6 +373,10 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'roles',
                 element: <AdminRoles />,
+              },
+              {
+                path: 'feedback',
+                element: <Feedback />,
               },
             ],
           },

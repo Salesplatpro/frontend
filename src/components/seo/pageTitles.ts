@@ -40,6 +40,7 @@ const EXACT_TITLES: Record<string, string> = {
   '/adminDashboard/jobs': 'Jobs',
   '/adminDashboard/viewcandidates': 'View Candidates',
   '/adminDashboard/roles': 'Roles',
+  '/adminDashboard/feedback': 'Feedback',
 }
 
 const PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [

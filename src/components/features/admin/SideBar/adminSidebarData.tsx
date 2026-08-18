@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   HiOutlineBriefcase,
+  HiOutlineChatAlt2,
   HiOutlineOfficeBuilding,
   HiOutlineUserGroup,
 } from 'react-icons/hi'
@@ -40,5 +41,10 @@ export const adminSidebarData = [
     name: 'Roles',
     icon: <MdOutlineAdminPanelSettings size={ICON_SIZE} />,
     link: '/adminDashboard/roles',
+  },
+  {
+    name: 'Feedback',
+    icon: <HiOutlineChatAlt2 size={ICON_SIZE} />,
+    link: '/adminDashboard/feedback',
   },
 ]
