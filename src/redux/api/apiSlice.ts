@@ -28,6 +28,14 @@ export const api = createApi({
         body: data,
       }),
     }),
+
+    submitFeedback: builder.mutation({
+      query: (data: { subject?: string; message: string }) => ({
+        url: `/feedback`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
@@ -35,4 +43,5 @@ export const {
   usePricingPlanQuery,
   usePaymentInitiateMutation,
   useVerifyPaymentMutation,
+  useSubmitFeedbackMutation,
 } = api

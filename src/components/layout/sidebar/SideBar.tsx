@@ -1,9 +1,10 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { MdSupport } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 
 import auxHrLogo from '@/assets/aux_logo.png'
+import { FeedbackModal } from '@/components/feedback'
 
 import { SidebarList } from '../lists'
 import styles from './sidebar.module.scss'
@@ -21,23 +22,13 @@ interface sideBarProps {
   topSlot?: ReactNode
 }
 
-const feedBack = [
-  {
-    name: 'Support',
-    icon: <MdSupport size={20} />,
-    link: 'support',
-  },
-  {
-    name: 'Leave us feedBack',
-    icon: <CgProfile size={20} />,
-  },
-]
-
 export const SideBar: React.FC<sideBarProps> = ({
   sideBarData,
   handleClick,
   topSlot,
 }) => {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
+
   return (
     <div className={styles.sideBarContainer}>
       <div>
@@ -66,16 +57,26 @@ export const SideBar: React.FC<sideBarProps> = ({
         </div>
       </div>
       <div>
-        {feedBack.map((data, index) => (
-          <SidebarList
-            key={index}
-            icon={data.icon}
-            name={data.name}
-            link={data.link}
-            onClick={handleClick}
-          />
-        ))}
+        <SidebarList
+          icon={<MdSupport size={20} />}
+          name="Support"
+          link="support"
+          onClick={handleClick}
+        />
+        <SidebarList
+          icon={<CgProfile size={20} />}
+          name="Leave us feedBack"
+          onClick={() => {
+            setIsFeedbackOpen(true)
+            handleClick?.()
+          }}
+        />
       </div>
+
+      <FeedbackModal
+        open={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+      />
     </div>
   )
 }
