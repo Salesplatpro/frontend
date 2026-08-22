@@ -50,6 +50,7 @@ interface JobDetailsViewProps {
   jobId: string
   job: JobDetailsJob
   action: React.ReactNode
+  onBack?: () => void
 }
 
 const formatLocation = (job: JobDetailsJob) => {
@@ -63,6 +64,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
   jobId,
   job,
   action,
+  onBack,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
@@ -103,7 +105,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
 
   return (
     <div className={styles.page}>
-      <BackButton />
+      <BackButton onClick={onBack} />
       <div className={styles.header}>
         <div>
           <div className={styles.titleRow}>

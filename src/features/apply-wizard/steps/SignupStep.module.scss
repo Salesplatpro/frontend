@@ -1,0 +1,10 @@
+.page {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-10) var(--space-4);
+}
+
+.card {
+  width: 100%;
+  max-width: 28rem;
+}
