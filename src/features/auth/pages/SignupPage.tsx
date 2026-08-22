@@ -1,21 +1,21 @@
 import React from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-
-import { getPostAuthRedirectPath } from '@/hooks/useAuthRedirect'
+import { useNavigate } from 'react-router-dom'
 
 import { AuthLayout } from '../components/AuthLayout'
 import { SignupForm } from '../components/SignupForm'
 
 export const SignupPage = () => {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
 
   const handleSuccess = (
     lastName: string,
     userType: 'talent' | 'recruiter',
   ) => {
-    const redirectJobId = searchParams.get('redirectJobId')
-    navigate(getPostAuthRedirectPath(userType, redirectJobId), {
+    const dashboardPath =
+      userType === 'recruiter'
+        ? '/recruiterDashboard/dashboard'
+        : '/talentDashboard'
+    navigate(dashboardPath, {
       state: { showWelcomeModal: true, welcomeName: lastName },
     })
   }

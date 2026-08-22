@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import {
@@ -13,28 +13,19 @@ import {
 } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
 
-const IndividualJob = () => {
-  const { jobId } = useParams()
+const ApplyStep: React.FC = () => {
+  const { jobId } = useParams<{ jobId: string }>()
   const navigate = useNavigate()
-  const { data, error, isLoading } = useIndividualJobQuery(jobId)
+  const { data, isLoading } = useIndividualJobQuery(jobId)
   const job: JobDetailsJob | undefined = data?.data?.job
-  const isApplied = !!job?.hasApplied
 
   const [applyToJob, { isLoading: applying }] = useApplyToJobMutation()
 
-  useEffect(() => {
-    if (error) {
-      notify('error', 'Error loading job post', {
-        autoClose: 2000,
-      })
-    }
-  }, [error])
-
   const handleApply = async () => {
-    if (isApplied || applying || !jobId) return
+    if (!jobId) return
     try {
       await applyToJob(jobId).unwrap()
-      navigate(`/talentDashboard/applicationPipeline/${jobId}`)
+      navigate('/talentDashboard')
     } catch (err) {
       const message =
         (err as { data?: { message?: string } })?.data?.message ||
@@ -51,19 +42,14 @@ const IndividualJob = () => {
     <JobDetailsView
       jobId={jobId!}
       job={job}
+      onBack={() => navigate(`/apply/${jobId}/prescreen`)}
       action={
-        isApplied ? (
-          <Button fullWidth variant="secondary" disabled>
-            Applied ✓
-          </Button>
-        ) : (
-          <Button fullWidth onClick={handleApply} loading={applying}>
-            Apply for this position
-          </Button>
-        )
+        <Button fullWidth onClick={() => void handleApply()} loading={applying}>
+          Apply for this position
+        </Button>
       }
     />
   )
 }
 
-export default IndividualJob
+export default ApplyStep

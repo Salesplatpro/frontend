@@ -1,0 +1,27 @@
+.page {
+  position: relative;
+  min-height: 100%;
+}
+
+.continueBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background-color: var(--color-bg-page);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-sticky);
+}
+
+.message {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-text-body);
+  font-weight: var(--weight-medium);
+}

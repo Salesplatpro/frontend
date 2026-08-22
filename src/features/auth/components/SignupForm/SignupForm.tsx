@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React from 'react'
-import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { Alert } from '@/components/feedback'
 import {
@@ -35,16 +35,16 @@ const userTypeOptions = [
 
 type SignupFormProps = {
   onSuccess: (lastName: string, userType: 'talent' | 'recruiter') => void
+  forceTalent?: boolean
 }
 
-export const SignupForm = ({ onSuccess }: SignupFormProps) => {
+export const SignupForm = ({
+  onSuccess,
+  forceTalent = false,
+}: SignupFormProps) => {
   const { submitSignup, isLoading } = useSignup()
   const error = useAuthStore((state) => state.error)
   const location = useLocation()
-  const [searchParams] = useSearchParams()
-  // A share-link entry point already implies the visitor is applying as a
-  // talent, so skip asking them to choose a role.
-  const isShareLinkEntry = !!searchParams.get('redirectJobId')
 
   const initialValues: SignupFormValues = {
     email: '',
@@ -53,7 +53,7 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
     firstName: '',
     lastName: '',
     phone: '',
-    userType: isShareLinkEntry ? 'talent' : '',
+    userType: forceTalent ? 'talent' : '',
   }
 
   const handleSubmit = async (values: SignupFormValues) => {
@@ -114,7 +114,7 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
         />
         <ErrorMessage name="email" component="p" className={styles.error} />
 
-        {!isShareLinkEntry && (
+        {!forceTalent && (
           <div className={styles.userType}>
             <Field
               name="userType"

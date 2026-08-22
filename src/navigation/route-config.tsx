@@ -16,6 +16,12 @@ import Pricing from '@/components/features/landing/Pricing'
 import Solutions from '@/components/features/landing/Solutions'
 import ProtectedRoute from '@/components/routing/ProtectedRoute'
 import RequireActiveCompany from '@/components/routing/RequireActiveCompany'
+import ApplyWizardEntry from '@/features/apply-wizard/ApplyWizardEntry'
+import ApplyWizardLayout from '@/features/apply-wizard/ApplyWizardLayout'
+import ApplyStep from '@/features/apply-wizard/steps/ApplyStep'
+import PrescreeningStep from '@/features/apply-wizard/steps/PrescreeningStep'
+import ProfileStep from '@/features/apply-wizard/steps/ProfileStep'
+import SignupStep from '@/features/apply-wizard/steps/SignupStep'
 import { LoginPage, SignupPage } from '@/features/auth/pages'
 import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
@@ -162,6 +168,37 @@ export const routeConfig: RouteObject[] = [
           {
             path: '/view-cv/:talentId',
             element: <ViewCvPage />,
+          },
+        ],
+      },
+      {
+        path: '/apply/:jobId',
+        element: <ApplyWizardLayout />,
+        children: [
+          {
+            index: true,
+            element: <ApplyWizardEntry />,
+          },
+          {
+            path: 'signup',
+            element: <SignupStep />,
+          },
+          {
+            element: <ProtectedRoute allowedRoles={['talent']} />,
+            children: [
+              {
+                path: 'profile',
+                element: <ProfileStep />,
+              },
+              {
+                path: 'prescreen',
+                element: <PrescreeningStep />,
+              },
+              {
+                path: 'details',
+                element: <ApplyStep />,
+              },
+            ],
           },
         ],
       },

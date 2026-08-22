@@ -18,6 +18,7 @@ export function usePreAssessment() {
       if (!opts?.silent) setIsLoading(true)
       setFetchError(null)
       setIsProfileIncomplete(false)
+      let profileIncomplete = false
       try {
         const res = await fetchAssessment()
         setAssessmentLocal(res.data.preScreening)
@@ -43,6 +44,7 @@ export function usePreAssessment() {
           errorCode === PROFILE_INCOMPLETE_CODE ||
           message?.toLowerCase().includes('profile')
         ) {
+          profileIncomplete = true
           setIsProfileIncomplete(true)
         } else {
           setFetchError(message)
@@ -50,6 +52,7 @@ export function usePreAssessment() {
       } finally {
         if (!opts?.silent) setIsLoading(false)
       }
+      return profileIncomplete
     },
     [setAssessment],
   )
