@@ -3,7 +3,6 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import applicationPipeline from '@/assets/application_pipeline.png'
-import logo from '@/assets/salesplate_support_pro.png'
 import { Text } from '@/components/ui/Typography'
 import { paths } from '@/paths'
 
@@ -47,12 +46,6 @@ export const LandingHero = () => {
               onClick={() => {}}
             />
           </div>
-        </div>
-        <div className={styles.heroFooter}>
-          <Text color="white" size="fs-md" weight="bold">
-            Top HR platform by
-          </Text>
-          <img src={logo} alt="Support pro and Salesplat" />
         </div>
       </div>
       <div className={styles.heroRight}>

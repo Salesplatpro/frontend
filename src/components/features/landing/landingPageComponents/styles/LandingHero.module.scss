@@ -51,20 +51,6 @@
   z-index: 100;
 }
 
-.heroFooter {
-  margin: auto 0 20px 0;
-
-  @media screen and (max-width: 768px) {
-    margin-top: 32px;
-    margin-bottom: 16px;
-    text-align: center;
-
-    img {
-      margin: 12px auto 0;
-    }
-  }
-}
-
 .heroRight {
   width: 35%;
   height: initial;
