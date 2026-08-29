@@ -11,7 +11,6 @@ export const Support = () => {
   const [values, setValues] = useState({
     name: `${userInfo?.firstName} ${userInfo?.lastName}`,
     email: `${userInfo?.email}`,
-    phoneNumber: `${userInfo?.phone}`,
     role: `${userInfo?.userRole}`,
     message: '',
   })
@@ -90,7 +89,7 @@ export const Support = () => {
           </div>
         </div>
         <div className="flex flex-col md:flex-row w-full align-center justify-between gap-8">
-          <div className="w-full md:w-1/2">
+          <div className="w-full">
             <label htmlFor="email" className="text-sm font-medium mb-[6px]">
               Email
             </label>
@@ -98,16 +97,6 @@ export const Support = () => {
               type="email"
               className="w-full border border-grey-300 rounded-lg p-2 mt-2 text-[#A7B1B9]"
               value={`${userInfo?.email}`}
-            />
-          </div>
-          <div className="w-full md:w-1/2">
-            <label htmlFor="phoneNumber" className="text-sm font-medium">
-              Phone number
-            </label>
-            <input
-              type="phoneNumber"
-              className="w-full border border-grey-300 rounded-lg p-2 mt-2 text-[#A7B1B9]"
-              value={`${userInfo?.phone}`}
             />
           </div>
         </div>

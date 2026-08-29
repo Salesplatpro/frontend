@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { LocationSelect } from '@/components/forms/LocationSelect'
-import { PhoneNumberInput } from '@/components/forms/PhoneNumberInput'
 import { RoleMultiSelect } from '@/components/forms/Roles/RoleMultiSelect'
 import {
   COMPENSATION_PERIOD_OPTIONS,
@@ -112,9 +111,6 @@ const TalentProfile = () => {
                 </div>
 
                 <div className={styles.row}>
-                  <div className={styles.field}>
-                    <PhoneNumberInput name="phone" label="Phone Number" />
-                  </div>
                   <div className={styles.field}>
                     <Select
                       label="Experience Level"

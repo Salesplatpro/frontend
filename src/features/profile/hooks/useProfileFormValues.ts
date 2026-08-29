@@ -11,7 +11,6 @@ export const buildProfileFormValues = (
   const formValues = {
     bio: user?.bio || '',
     role: user?.userRoles?.map((role) => role.id) || [],
-    phone: user?.phone || '',
     location:
       user?.locationCountry || user?.locationState || user?.locationCity
         ? resolveLocationFromNames(

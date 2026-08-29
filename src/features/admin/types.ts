@@ -42,7 +42,6 @@ export interface AdminTalent {
   firstName: string
   lastName: string
   email: string
-  phone?: string | null
   experience: string | null
   prescreeningScore: number | null
   cvFileName?: string | null
@@ -98,7 +97,6 @@ export interface AdminRecruiter {
   firstName: string
   lastName: string
   email: string
-  phone?: string | null
   createdAt: string
 }
 
