@@ -1,36 +1,167 @@
-.panel {
+.wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  max-width: 480px;
+  gap: var(--space-6);
+  max-width: 720px;
 }
 
-.status {
+.statusCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+.illustration {
+  position: relative;
+  flex: 0 0 180px;
+  height: 160px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: var(--color-brand-100);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.circleOuter {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius-full);
+  border: 1px dashed var(--color-brand-300);
+  top: 10%;
+  left: -10%;
+}
+
+.circleInner {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-50);
+  bottom: 8%;
+  right: -5%;
+}
+
+.planeIcon {
+  position: absolute;
+  top: 22%;
+  left: 18%;
+  width: 28px;
+  height: 28px;
+  color: var(--color-white);
+  transform: rotate(-20deg);
+}
+
+.envelopeWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.envelopeIcon {
+  width: 40px;
+  height: 40px;
+  color: var(--color-white);
+}
+
+.checkBadge {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-white);
+  color: var(--color-success, #1b7b44);
+  box-shadow: var(--shadow-sm);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.statusContent {
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-4);
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .email {
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
 }
 
-.pendingMessage,
-.verifiedMessage {
-  color: var(--color-grey-500, #667085);
+.message {
+  color: var(--color-text-muted);
+  max-width: 480px;
 }
 
-.changeEmail {
+.changeEmailCard {
   display: flex;
   flex-direction: column;
+  gap: var(--space-5);
+}
+
+.changeEmailHeader {
+  display: flex;
+  align-items: flex-start;
   gap: var(--space-3);
-  margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-grey-200, #e5e7eb);
+}
+
+.changeEmailIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-tint);
+  color: var(--color-primary-strong);
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .changeEmailTitle {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.changeEmailSubtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
+}
+
+.changeEmailForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
 }
