@@ -36,8 +36,11 @@ export const resetPasswordRequest = (payload: ResetPasswordRequest) =>
 export const verifyEmailRequest = (payload: VerifyEmailRequest) =>
   httpClient.post<VerifyEmailResponse>(AUTH_ENDPOINTS.VERIFY_EMAIL, payload)
 
-export const resendVerificationRequest = () =>
-  httpClient.post<ForgotPasswordResponse>(AUTH_ENDPOINTS.RESEND_VERIFICATION)
+export const resendVerificationRequest = (redirectPath?: string) =>
+  httpClient.post<ForgotPasswordResponse>(
+    AUTH_ENDPOINTS.RESEND_VERIFICATION,
+    redirectPath ? { redirectPath } : undefined,
+  )
 
 export const changeEmailRequest = (payload: ChangeEmailRequest) =>
   httpClient.post<AuthApiResponse>(AUTH_ENDPOINTS.CHANGE_EMAIL, payload)

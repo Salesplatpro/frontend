@@ -19,8 +19,10 @@ export const useEmailVerification = () => {
     AUTH_ENDPOINTS.VERIFY_EMAIL,
     (_key, { arg }: { arg: VerifyEmailRequest }) => verifyEmailRequest(arg),
   )
-  const resend = useSWRMutation(AUTH_ENDPOINTS.RESEND_VERIFICATION, () =>
-    resendVerificationRequest(),
+  const resend = useSWRMutation(
+    AUTH_ENDPOINTS.RESEND_VERIFICATION,
+    (_key, { arg }: { arg?: { redirectPath?: string } }) =>
+      resendVerificationRequest(arg?.redirectPath),
   )
   const changeEmail = useSWRMutation(
     AUTH_ENDPOINTS.CHANGE_EMAIL,
@@ -39,9 +41,9 @@ export const useEmailVerification = () => {
     }
   }
 
-  const submitResend = async () => {
+  const submitResend = async (redirectPath?: string) => {
     try {
-      const { data } = await resend.trigger()
+      const { data } = await resend.trigger({ redirectPath })
       return data
     } catch (err) {
       throw new Error(

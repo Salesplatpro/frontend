@@ -30,11 +30,13 @@ const userTypeOptions = [
 type SignupFormProps = {
   onSuccess: (lastName: string, userType: 'talent' | 'recruiter') => void
   forceTalent?: boolean
+  redirectPath?: string
 }
 
 export const SignupForm = ({
   onSuccess,
   forceTalent = false,
+  redirectPath,
 }: SignupFormProps) => {
   const { submitSignup, isLoading } = useSignup()
   const error = useAuthStore((state) => state.error)
@@ -57,6 +59,7 @@ export const SignupForm = ({
       await submitSignup({
         ...payload,
         userType: role,
+        ...(redirectPath ? { redirectPath } : {}),
       })
       onSuccess(values.lastName, role)
     } catch {

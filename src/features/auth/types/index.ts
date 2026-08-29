@@ -32,6 +32,7 @@ export interface TalentRegisterRequest {
   password: string
   firstName: string
   lastName: string
+  redirectPath?: string
 }
 
 export type RecruiterRegisterRequest = TalentRegisterRequest
