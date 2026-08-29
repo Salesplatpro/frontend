@@ -73,7 +73,7 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
         '/apply/11111111-1111-1111-1111-111111111111',
-        { replace: true },
+        { replace: true, state: { showEmailVerifiedModal: true } },
       ),
     )
   })
@@ -86,6 +86,7 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith('/talentDashboard', {
         replace: true,
+        state: { showEmailVerifiedModal: true },
       }),
     )
   })
@@ -98,6 +99,7 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith('/talentDashboard', {
         replace: true,
+        state: { showEmailVerifiedModal: true },
       }),
     )
   })
@@ -110,6 +112,7 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith('/talentDashboard', {
         replace: true,
+        state: { showEmailVerifiedModal: true },
       }),
     )
   })

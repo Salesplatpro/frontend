@@ -7,6 +7,7 @@ import { Heading, Text } from '@/components/ui/Typography'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
+import { EmailVerifiedModal } from '@/features/email-verification/components/EmailVerifiedModal'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { useAllJobApplicationsQuery } from '@/redux/api/talent'
@@ -162,6 +163,7 @@ const TalentDashboardHome = () => {
       )}
 
       <WelcomeModal />
+      <EmailVerifiedModal />
     </div>
   )
 }
