@@ -219,13 +219,13 @@ export const routeConfig: RouteObject[] = [
         element: <ProtectedRoute allowedRoles={['talent']} />,
         children: [
           {
+            path: 'verify-email',
+            element: <AccountEmailVerification />,
+          },
+          {
             path: '',
             element: <TalentProfileSidebar />,
             children: [
-              {
-                path: 'verify-email',
-                element: <AccountEmailVerification />,
-              },
               {
                 element: (
                   <RequireEmailVerified redirectTo="/talentDashboard/verify-email" />
@@ -290,13 +290,13 @@ export const routeConfig: RouteObject[] = [
         element: <ProtectedRoute allowedRoles={['recruiter']} />,
         children: [
           {
+            path: 'verify-email',
+            element: <AccountEmailVerification />,
+          },
+          {
             path: '',
             element: <RecruiterProfileSidebar />,
             children: [
-              {
-                path: 'verify-email',
-                element: <AccountEmailVerification />,
-              },
               {
                 element: (
                   <RequireEmailVerified redirectTo="/recruiterDashboard/verify-email" />
