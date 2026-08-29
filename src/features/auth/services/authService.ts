@@ -2,6 +2,7 @@ import { AUTH_ENDPOINTS } from '@/services/api/endpoints'
 
 import {
   AuthApiResponse,
+  ChangeEmailRequest,
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
@@ -9,6 +10,8 @@ import {
   ResetPasswordRequest,
   ResetPasswordResponse,
   TalentRegisterRequest,
+  VerifyEmailRequest,
+  VerifyEmailResponse,
 } from '../types'
 import { httpClient } from './httpClient'
 
@@ -29,3 +32,12 @@ export const requestPasswordOtp = (payload: ForgotPasswordRequest) =>
 
 export const resetPasswordRequest = (payload: ResetPasswordRequest) =>
   httpClient.post<ResetPasswordResponse>(AUTH_ENDPOINTS.RESET_PASSWORD, payload)
+
+export const verifyEmailRequest = (payload: VerifyEmailRequest) =>
+  httpClient.post<VerifyEmailResponse>(AUTH_ENDPOINTS.VERIFY_EMAIL, payload)
+
+export const resendVerificationRequest = () =>
+  httpClient.post<ForgotPasswordResponse>(AUTH_ENDPOINTS.RESEND_VERIFICATION)
+
+export const changeEmailRequest = (payload: ChangeEmailRequest) =>
+  httpClient.post<AuthApiResponse>(AUTH_ENDPOINTS.CHANGE_EMAIL, payload)

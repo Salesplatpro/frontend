@@ -16,6 +16,7 @@ import Pricing from '@/components/features/landing/Pricing'
 import Solutions from '@/components/features/landing/Solutions'
 import ProtectedRoute from '@/components/routing/ProtectedRoute'
 import RequireActiveCompany from '@/components/routing/RequireActiveCompany'
+import RequireEmailVerified from '@/components/routing/RequireEmailVerified'
 import ApplyWizardEntry from '@/features/apply-wizard/ApplyWizardEntry'
 import ApplyWizardLayout from '@/features/apply-wizard/ApplyWizardLayout'
 import ApplyStep from '@/features/apply-wizard/steps/ApplyStep'
@@ -23,6 +24,7 @@ import PrescreeningStep from '@/features/apply-wizard/steps/PrescreeningStep'
 import ProfileStep from '@/features/apply-wizard/steps/ProfileStep'
 import SignupStep from '@/features/apply-wizard/steps/SignupStep'
 import { LoginPage, SignupPage } from '@/features/auth/pages'
+import AccountEmailVerification from '@/features/email-verification/pages/AccountEmailVerification'
 import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
 import PageNotFound from '@/PageNotFound'
@@ -78,6 +80,7 @@ import { Support } from '@/pages/TalentProfile/Support'
 import PersonalityTest from '@/pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from '@/pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentProfileSidebar from '@/pages/TalentProfile/TalentProfileSidebar'
+import VerifyEmailPage from '@/pages/VerifyEmail/VerifyEmailPage'
 import { paths } from '@/paths'
 
 import { RootLayout } from './RootLayout'
@@ -135,6 +138,10 @@ export const routeConfig: RouteObject[] = [
           {
             path: paths.register,
             element: <SignupPage />,
+          },
+          {
+            path: paths.verifyEmail,
+            element: <VerifyEmailPage />,
           },
           {
             path: 'faq',
@@ -211,52 +218,63 @@ export const routeConfig: RouteObject[] = [
             element: <TalentProfileSidebar />,
             children: [
               {
-                index: true,
-                element: <TalentDashboardHome />,
+                path: 'verify-email',
+                element: <AccountEmailVerification />,
               },
               {
-                path: 'talentProfile',
-                element: <TalentProfile />,
-              },
-              {
-                path: 'talentQuiz',
-                element: <PreAssessmentPage />,
-              },
-              {
-                path: 'job',
-                element: <Job />,
-              },
-              {
-                path: '/talentDashboard/support',
-                element: <Support />,
-              },
-              {
-                path: 'Chat',
-                element: <Inbox />,
-              },
-              {
-                path: 'Notification',
-                element: <Notifications />,
-              },
-              {
-                path: 'job/:jobId',
-                element: <IndividualJob />,
-              },
-              {
-                path: 'applicationPipeline',
-                element: <ApplicationPipeline />,
-              },
-              {
-                path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
-                element: <PersonalizedTest />,
-              },
-              {
-                path: 'applicationPipeline/:jobId',
-                element: <ProgressView />,
-              },
-              {
-                path: 'applicationPipeline/personalityTest/:jobId',
-                element: <PersonalityTest />,
+                element: (
+                  <RequireEmailVerified redirectTo="/talentDashboard/verify-email" />
+                ),
+                children: [
+                  {
+                    index: true,
+                    element: <TalentDashboardHome />,
+                  },
+                  {
+                    path: 'talentProfile',
+                    element: <TalentProfile />,
+                  },
+                  {
+                    path: 'talentQuiz',
+                    element: <PreAssessmentPage />,
+                  },
+                  {
+                    path: 'job',
+                    element: <Job />,
+                  },
+                  {
+                    path: '/talentDashboard/support',
+                    element: <Support />,
+                  },
+                  {
+                    path: 'Chat',
+                    element: <Inbox />,
+                  },
+                  {
+                    path: 'Notification',
+                    element: <Notifications />,
+                  },
+                  {
+                    path: 'job/:jobId',
+                    element: <IndividualJob />,
+                  },
+                  {
+                    path: 'applicationPipeline',
+                    element: <ApplicationPipeline />,
+                  },
+                  {
+                    path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
+                    element: <PersonalizedTest />,
+                  },
+                  {
+                    path: 'applicationPipeline/:jobId',
+                    element: <ProgressView />,
+                  },
+                  {
+                    path: 'applicationPipeline/personalityTest/:jobId',
+                    element: <PersonalityTest />,
+                  },
+                ],
               },
             ],
           },
@@ -271,101 +289,112 @@ export const routeConfig: RouteObject[] = [
             element: <RecruiterProfileSidebar />,
             children: [
               {
-                path: 'dashboard',
-                element: <Dashboard />,
+                path: 'verify-email',
+                element: <AccountEmailVerification />,
               },
               {
-                path: 'dashboard/allapplications',
-                element: <AllApplications />,
-              },
-              {
-                path: 'company',
-                element: <Company />,
-              },
-              {
-                path: 'company/new',
-                element: <CreateCompany />,
-              },
-              {
-                path: 'company/:id/edit',
-                element: <EditCompany />,
-              },
-              {
-                element: <RequireActiveCompany />,
+                element: (
+                  <RequireEmailVerified redirectTo="/recruiterDashboard/verify-email" />
+                ),
                 children: [
                   {
-                    path: 'postjob',
-                    element: <PostJobTab />,
+                    path: 'dashboard',
+                    element: <Dashboard />,
                   },
                   {
-                    path: 'postjob/:jobId',
-                    element: <PostJobTab />,
+                    path: 'dashboard/allapplications',
+                    element: <AllApplications />,
+                  },
+                  {
+                    path: 'company',
+                    element: <Company />,
+                  },
+                  {
+                    path: 'company/new',
+                    element: <CreateCompany />,
+                  },
+                  {
+                    path: 'company/:id/edit',
+                    element: <EditCompany />,
+                  },
+                  {
+                    element: <RequireActiveCompany />,
+                    children: [
+                      {
+                        path: 'postjob',
+                        element: <PostJobTab />,
+                      },
+                      {
+                        path: 'postjob/:jobId',
+                        element: <PostJobTab />,
+                      },
+                    ],
+                  },
+                  {
+                    path: 'myJobPosts',
+                    element: <MyJobPosts />,
+                  },
+                  {
+                    path: 'scout',
+                    element: <MyScoutJobs />,
+                  },
+                  {
+                    path: 'scout/history/:scoutJobId',
+                    element: <ScoutJobHistory />,
+                  },
+                  {
+                    path: 'scout/:id',
+                    element: <ChooseMethod />,
+                  },
+                  {
+                    path: 'talent-search',
+                    element: <SearchTalent />,
+                  },
+                  {
+                    path: 'talent-search/results',
+                    element: <SearchResult />,
+                  },
+                  {
+                    path: 'scout/create-jd',
+                    element: <CreateJD />,
+                  },
+                  {
+                    path: 'scout/upload-cv/:id',
+                    element: <UploadCv />,
+                  },
+                  {
+                    path: 'scout/process-cv/:id',
+                    element: <ProcessCV />,
+                  },
+                  {
+                    path: 'singleJobPost/:jobId',
+                    element: <SingleJobPost />,
+                  },
+                  {
+                    path: 'singleJobPost/:jobId/:applicationId',
+                    element: <ApplicationProgress />,
+                  },
+                  {
+                    path: 'editJob/:jobId',
+                    element: <EditJobTab />,
+                  },
+                  {
+                    path: 'jobdetail/:jobId',
+                    element: <JobDetail />,
+                  },
+                  {
+                    path: 'shortlist',
+                    element: <Shortlist />,
+                  },
+                  {
+                    path: 'chat',
+                    element: <Chat />,
+                  },
+                  {
+                    path: 'profile',
+                    element: <RecruiterProfilePage />,
                   },
                 ],
-              },
-              {
-                path: 'myJobPosts',
-                element: <MyJobPosts />,
-              },
-              {
-                path: 'scout',
-                element: <MyScoutJobs />,
-              },
-              {
-                path: 'scout/history/:scoutJobId',
-                element: <ScoutJobHistory />,
-              },
-              {
-                path: 'scout/:id',
-                element: <ChooseMethod />,
-              },
-              {
-                path: 'talent-search',
-                element: <SearchTalent />,
-              },
-              {
-                path: 'talent-search/results',
-                element: <SearchResult />,
-              },
-              {
-                path: 'scout/create-jd',
-                element: <CreateJD />,
-              },
-              {
-                path: 'scout/upload-cv/:id',
-                element: <UploadCv />,
-              },
-              {
-                path: 'scout/process-cv/:id',
-                element: <ProcessCV />,
-              },
-              {
-                path: 'singleJobPost/:jobId',
-                element: <SingleJobPost />,
-              },
-              {
-                path: 'singleJobPost/:jobId/:applicationId',
-                element: <ApplicationProgress />,
-              },
-              {
-                path: 'editJob/:jobId',
-                element: <EditJobTab />,
-              },
-              {
-                path: 'jobdetail/:jobId',
-                element: <JobDetail />,
-              },
-              {
-                path: 'shortlist',
-                element: <Shortlist />,
-              },
-              {
-                path: 'chat',
-                element: <Chat />,
-              },
-              {
-                path: 'profile',
-                element: <RecruiterProfilePage />,
               },
             ],
           },

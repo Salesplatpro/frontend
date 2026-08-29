@@ -23,7 +23,7 @@ export interface ProfileUser {
   phone?: string
   country?: string | null
   activeOrganizationId?: string | null
-  emailVerified?: boolean
+  emailVerifiedAt?: string | null
   active?: boolean
   bio?: string
   cvFileName?: string | null

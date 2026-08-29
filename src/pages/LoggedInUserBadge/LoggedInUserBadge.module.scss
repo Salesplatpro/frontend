@@ -1,0 +1,115 @@
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.notificationIcon {
+  position: relative;
+}
+
+.notificationIconClickable {
+  cursor: pointer;
+}
+
+.countBadge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  transform: scale(0.75);
+}
+
+.loadingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.avatarSkeleton {
+  width: 40px;
+  height: 40px;
+  background-color: #e5e7eb;
+  border-radius: var(--radius-full);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.textSkeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.skeletonLine {
+  height: 16px;
+  background-color: #e5e7eb;
+  border-radius: var(--radius-md);
+  animation: pulse 1.5s ease-in-out infinite;
+
+  &.short {
+    width: 80px;
+  }
+
+  &.long {
+    width: 128px;
+  }
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.userInfoHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.name {
+  font-weight: 600;
+}
+
+.email {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.dropdownToggle {
+  cursor: pointer;
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: var(--space-2);
+  width: 192px;
+  background-color: #4884df;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  z-index: 10;
+}
+
+.dropdownItem {
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

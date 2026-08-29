@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { StatusBadge } from '@/components/ui/Badge'
+import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { ProfileUser } from '@/features/profile/types'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
 import ProgressBar from '@/utils/ProgressBar'
@@ -31,9 +33,15 @@ const TalentProfileHeader: React.FC<ProfileHeaderProps> = ({
       <div className={styles.card}>
         <ProfilePic />
         <div className={styles.info}>
-          <p className={styles.name}>
-            {`${profile?.firstName || ''} ${profile?.lastName || ''}`}
-          </p>
+          <div className={styles.nameRow}>
+            <p className={styles.name}>
+              {`${profile?.firstName || ''} ${profile?.lastName || ''}`}
+            </p>
+            <StatusBadge
+              {...getEmailVerificationBadge(profile?.emailVerifiedAt)}
+              showDot
+            />
+          </div>
           <p className={styles.role}>{capitalizeEachWord(profile?.userRole)}</p>
         </div>
       </div>
