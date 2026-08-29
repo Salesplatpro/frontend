@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { usePreAssessment } from '@/features/pre-assessment/hooks'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { useIndividualJobQuery } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
+
+import styles from './ApplyWizardEntry.module.scss'
 
 const ApplyWizardEntry: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>()
@@ -13,9 +17,23 @@ const ApplyWizardEntry: React.FC = () => {
   const { user, token } = useAuthStore()
   const { profile, isLoading: isProfileLoading } = useProfile()
   const { assessment, isLoading, isProfileIncomplete } = usePreAssessment()
+  const {
+    data: jobData,
+    error: jobError,
+    isLoading: isJobLoading,
+    refetch: refetchJob,
+  } = useIndividualJobQuery(jobId)
+
+  const job = jobData?.data?.job
+  const jobErrorStatus = (jobError as { status?: number } | undefined)?.status
+  const jobNotFound = jobErrorStatus === 404
+  const jobLoadFailed = !!jobError && !jobNotFound
+  const jobClosed = !!job && job.status !== 'active'
+  const jobUnavailable =
+    !isJobLoading && (jobNotFound || jobClosed || jobLoadFailed)
 
   useEffect(() => {
-    if (!jobId) return
+    if (!jobId || isJobLoading || jobUnavailable) return
 
     if (!token) {
       navigate('signup', { replace: true })
@@ -52,6 +70,8 @@ const ApplyWizardEntry: React.FC = () => {
     navigate('details', { replace: true })
   }, [
     jobId,
+    isJobLoading,
+    jobUnavailable,
     token,
     user,
     isProfileLoading,
@@ -61,6 +81,32 @@ const ApplyWizardEntry: React.FC = () => {
     assessment?.status,
     navigate,
   ])
+
+  if (isJobLoading) return <Spinner fullPage />
+
+  if (jobUnavailable) {
+    return (
+      <div className={styles.unavailable}>
+        <h1 className={styles.title}>
+          {jobLoadFailed
+            ? "Couldn't load this job"
+            : 'This job is no longer available'}
+        </h1>
+        <p className={styles.message}>
+          {jobNotFound
+            ? "This job posting doesn't exist or has been removed."
+            : jobLoadFailed
+            ? 'Something went wrong loading this job. Please try again.'
+            : 'This job is no longer accepting applications.'}
+        </p>
+        {jobLoadFailed ? (
+          <Button onClick={() => void refetchJob()}>Try again</Button>
+        ) : (
+          <Button onClick={() => navigate('/job')}>Browse open jobs</Button>
+        )}
+      </div>
+    )
+  }
 
   return <Spinner fullPage />
 }

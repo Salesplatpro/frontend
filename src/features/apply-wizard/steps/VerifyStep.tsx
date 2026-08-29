@@ -24,7 +24,7 @@ const VerifyStep: React.FC = () => {
       <p className={styles.intro}>
         Please verify your email address before continuing your application.
       </p>
-      <EmailVerificationPanel />
+      <EmailVerificationPanel redirectPath={`/apply/${jobId}`} />
       <div className={styles.continueBar}>
         <Button onClick={() => void handleContinue()}>
           I&apos;ve verified — Continue

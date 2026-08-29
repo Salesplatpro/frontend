@@ -22,6 +22,10 @@ const dashboardPathForRole = (userRole?: string): string =>
     ? '/talentDashboard'
     : '/adminDashboard/viewcandidates'
 
+// Only ever resume into the apply wizard — anything else is rejected so this
+// query param can never be turned into an open redirect.
+const SAFE_REDIRECT_PATTERN = /^\/apply\/[A-Za-z0-9-]+$/
+
 const AccountEmailVerification: React.FC = () => {
   const logout = useAuthStore((state) => state.logout)
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
@@ -29,16 +33,24 @@ const AccountEmailVerification: React.FC = () => {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const token = searchParams.get('token')
+  const redirect = searchParams.get('redirect')
+  const safeRedirect =
+    redirect && SAFE_REDIRECT_PATTERN.test(redirect) ? redirect : null
+  const continueTarget = safeRedirect ?? dashboardPathForRole(userRole)
 
   const { submitVerifyToken } = useEmailVerification()
   const { mutate } = useProfile()
 
   const [tokenStatus, setTokenStatus] = useState<TokenStatus>('verifying')
-  const hasRun = useRef(false)
+  // Tracks which token value has already been submitted, so the same token
+  // never double-fires (e.g. StrictMode's double-invoke) while a genuinely
+  // different token (a fresh mount via a new emailed link) always does.
+  const processedTokenRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!token || hasRun.current) return
-    hasRun.current = true
+    if (!token || processedTokenRef.current === token) return
+    processedTokenRef.current = token
+    setTokenStatus('verifying')
 
     submitVerifyToken(token)
       .then(() => setTokenStatus('success'))
@@ -52,15 +64,13 @@ const AccountEmailVerification: React.FC = () => {
         }
         setTokenStatus('error')
       })
-    // Runs exactly once per mount — hasRun guards against dependency changes
-    // re-triggering the verify call.
   }, [token])
 
   useEffect(() => {
     if (token && tokenStatus === 'success' && isLoggedIn) {
-      navigate(dashboardPathForRole(userRole), { replace: true })
+      navigate(continueTarget, { replace: true })
     }
-  }, [token, tokenStatus, isLoggedIn, userRole, navigate])
+  }, [token, tokenStatus, isLoggedIn, continueTarget, navigate])
 
   if (token) {
     if (tokenStatus === 'verifying') {
@@ -92,8 +102,8 @@ const AccountEmailVerification: React.FC = () => {
               <p className={styles.subtitle}>
                 Your email address is already verified.
               </p>
-              <Button onClick={() => navigate(dashboardPathForRole(userRole))}>
-                Go to dashboard
+              <Button onClick={() => navigate(continueTarget)}>
+                {safeRedirect ? 'Continue application' : 'Go to dashboard'}
               </Button>
             </>
           )}
@@ -105,7 +115,12 @@ const AccountEmailVerification: React.FC = () => {
                 This verification link is invalid or has expired.
               </p>
               {isLoggedIn ? (
-                <Button onClick={() => setSearchParams({})}>
+                <Button
+                  onClick={() =>
+                    setSearchParams(
+                      safeRedirect ? { redirect: safeRedirect } : {},
+                    )
+                  }>
                   Resend verification email
                 </Button>
               ) : (
@@ -146,7 +161,7 @@ const AccountEmailVerification: React.FC = () => {
           </div>
         </div>
 
-        <EmailVerificationPanel />
+        <EmailVerificationPanel redirectPath={safeRedirect ?? undefined} />
       </div>
     </div>
   )

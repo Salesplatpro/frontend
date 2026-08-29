@@ -16,7 +16,13 @@ import styles from './EmailVerificationPanel.module.scss'
 
 const RESEND_COOLDOWN_SECONDS = 60
 
-export const EmailVerificationPanel = () => {
+interface EmailVerificationPanelProps {
+  redirectPath?: string
+}
+
+export const EmailVerificationPanel = ({
+  redirectPath,
+}: EmailVerificationPanelProps = {}) => {
   const { profile } = useProfile()
   const { submitResend, submitChangeEmail, isResending, isChangingEmail } =
     useEmailVerification()
@@ -40,7 +46,7 @@ export const EmailVerificationPanel = () => {
   const handleResend = async () => {
     setError(null)
     try {
-      await submitResend()
+      await submitResend(redirectPath)
       setCooldown(RESEND_COOLDOWN_SECONDS)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
