@@ -9,6 +9,7 @@ import { WizardStepper } from './WizardStepper'
 
 const WIZARD_STEPS = [
   { label: 'Sign Up', segment: 'signup' },
+  { label: 'Verify Email', segment: 'verify' },
   { label: 'Profile', segment: 'profile' },
   { label: 'Prescreening', segment: 'prescreen' },
   { label: 'Apply', segment: 'details' },

@@ -4,12 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { usePreAssessment } from '@/features/pre-assessment/hooks'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 import { notify } from '@/utils/toastNotifications'
 
 const ApplyWizardEntry: React.FC = () => {
   const { jobId } = useParams<{ jobId: string }>()
   const navigate = useNavigate()
   const { user, token } = useAuthStore()
+  const { profile, isLoading: isProfileLoading } = useProfile()
   const { assessment, isLoading, isProfileIncomplete } = usePreAssessment()
 
   useEffect(() => {
@@ -25,6 +27,13 @@ const ApplyWizardEntry: React.FC = () => {
         autoClose: 2000,
       })
       navigate(`/job/postedjob/${jobId}`, { replace: true })
+      return
+    }
+
+    if (isProfileLoading) return
+
+    if (!profile?.emailVerifiedAt) {
+      navigate('verify', { replace: true })
       return
     }
 
@@ -45,6 +54,8 @@ const ApplyWizardEntry: React.FC = () => {
     jobId,
     token,
     user,
+    isProfileLoading,
+    profile?.emailVerifiedAt,
     isLoading,
     isProfileIncomplete,
     assessment?.status,
