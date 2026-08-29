@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useOutletContext } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
 import { useProfile } from '@/features/profile/hooks/useProfile'
@@ -12,6 +12,7 @@ const RequireEmailVerified: React.FC<RequireEmailVerifiedProps> = ({
   redirectTo,
 }) => {
   const { profile, isLoading } = useProfile()
+  const outletContext = useOutletContext()
 
   if (isLoading) {
     return <Spinner fullPage />
@@ -21,7 +22,7 @@ const RequireEmailVerified: React.FC<RequireEmailVerifiedProps> = ({
     return <Navigate to={redirectTo} replace />
   }
 
-  return <Outlet />
+  return <Outlet context={outletContext} />
 }
 
 export default RequireEmailVerified
