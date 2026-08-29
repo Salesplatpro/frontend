@@ -42,7 +42,6 @@ export const Profile = () => {
 
   const fields: { label: string; value: string }[] = [
     { label: 'Email', value: profile?.email ?? '—' },
-    { label: 'Phone', value: profile?.phone ?? '—' },
     { label: 'Location', value: profile?.country ?? '—' },
     {
       label: 'Member Since',

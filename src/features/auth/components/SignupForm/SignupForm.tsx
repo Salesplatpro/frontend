@@ -3,12 +3,7 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { Alert } from '@/components/feedback'
-import {
-  CheckBox,
-  PasswordInput,
-  PhoneNumberInput,
-  TextInput,
-} from '@/components/forms'
+import { CheckBox, PasswordInput, TextInput } from '@/components/forms'
 import { Button } from '@/components/ui/Button'
 import { paths } from '@/paths'
 
@@ -24,7 +19,6 @@ type SignupFormValues = {
   confirmPassword: string
   firstName: string
   lastName: string
-  phone: string
   userType: 'talent' | 'recruiter' | ''
 }
 
@@ -52,18 +46,16 @@ export const SignupForm = ({
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    phone: '',
     userType: forceTalent ? 'talent' : '',
   }
 
   const handleSubmit = async (values: SignupFormValues) => {
     try {
       // eslint-disable-next-line no-unused-vars
-      const { confirmPassword, userType, phone, ...payload } = values
+      const { confirmPassword, userType, ...payload } = values
       const role = userType as 'talent' | 'recruiter'
       await submitSignup({
         ...payload,
-        ...(phone ? { phone } : {}),
         userType: role,
       })
       onSuccess(values.lastName, role)
@@ -129,8 +121,6 @@ export const SignupForm = ({
             />
           </div>
         )}
-
-        <PhoneNumberInput name="phone" label="Phone Number" />
 
         <Field
           title="Password"

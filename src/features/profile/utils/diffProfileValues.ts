@@ -8,7 +8,6 @@ export const diffProfileValues = (
   const patch: Partial<ProfilePatchPayload> = {}
 
   if (current.bio !== initial.bio) patch.bio = current.bio
-  if (current.phone !== initial.phone) patch.phone = current.phone
   if (current.experience !== initial.experience) {
     patch.experience = current.experience
   }

@@ -46,7 +46,6 @@ const Recruiters = () => {
   const [recruiterVisibleKeys, setRecruiterVisibleKeys] = useState<string[]>([
     'name',
     'email',
-    'phone',
     'createdAt',
   ])
   const [recruiterToDelete, setRecruiterToDelete] =
@@ -95,13 +94,6 @@ const Recruiters = () => {
         toggleable: true,
         render: (row) => row.email,
         sortAccessor: (row) => row.email,
-      },
-      {
-        key: 'phone',
-        header: 'Phone',
-        toggleable: true,
-        hideBelow: 900,
-        render: (row) => row.phone ?? '—',
       },
       {
         key: 'createdAt',

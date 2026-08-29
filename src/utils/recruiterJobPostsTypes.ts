@@ -17,8 +17,7 @@ type JobPostedBy = {
   lastName: string
   middleName: string
   userRole: string
-  phone: string
-  emailVerified: boolean
+  emailVerifiedAt: string | null
   active: boolean
   onboarded: boolean
 }

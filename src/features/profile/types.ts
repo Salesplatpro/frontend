@@ -20,7 +20,6 @@ export interface ProfileUser {
   lastName?: string
   middleName?: string | null
   userRole?: string
-  phone?: string
   country?: string | null
   activeOrganizationId?: string | null
   emailVerifiedAt?: string | null
@@ -57,7 +56,6 @@ export interface ProfileApiResponse {
 export interface ProfilePatchPayload {
   bio?: string
   roleIds?: string[]
-  phone?: string
   locationCity?: string
   locationState?: string
   locationCountry?: string
@@ -72,7 +70,6 @@ export interface ProfilePatchPayload {
 export interface ProfileFormValues {
   bio: string
   role: string[]
-  phone: string
   location: LocationFormValue
   experience: string
   minSalary: string
