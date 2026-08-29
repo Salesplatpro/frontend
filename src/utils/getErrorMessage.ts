@@ -1,6 +1,6 @@
 type ErrorBody = {
   message?: string
-  error?: { message?: string; fields?: Record<string, string> }
+  error?: { code?: string; message?: string; fields?: Record<string, string> }
 }
 
 /**
@@ -25,4 +25,13 @@ export const getErrorFields = (err: unknown): Record<string, string> => {
   const data = (err_?.response?.data ?? err_?.data) as ErrorBody | undefined
 
   return data?.error?.fields ?? {}
+}
+
+// Machine-readable error codes (e.g. EMAIL_VERIFICATION_REQUIRED, PROFILE_INCOMPLETE)
+// live in the same `{ error: { code } }` envelope as the message.
+export const getErrorCode = (err: unknown): string | undefined => {
+  const err_ = err as { response?: { data?: unknown }; data?: unknown }
+  const data = (err_?.response?.data ?? err_?.data) as ErrorBody | undefined
+
+  return data?.error?.code
 }

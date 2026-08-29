@@ -1,3 +1,4 @@
+import cn from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   IoIosArrowDown,
@@ -7,10 +8,13 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar } from '@/components/ui/Avatar'
-import { CountBadge } from '@/components/ui/Badge'
+import { CountBadge, StatusBadge } from '@/components/ui/Badge'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+
+import styles from './LoggedInUserBadge.module.scss'
 
 const NOTIFICATION_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
   talent: '/talentDashboard/Notification',
@@ -62,37 +66,45 @@ export const LoggedInUserBadge: React.FC = () => {
   }
 
   return (
-    <div className="relative flex items-center space-x-4">
+    <div className={styles.container}>
       <div
-        className={`relative ${notificationRoute ? 'cursor-pointer' : ''}`}
+        className={cn(styles.notificationIcon, {
+          [styles.notificationIconClickable]: !!notificationRoute,
+        })}
         onClick={
           notificationRoute ? () => navigate(notificationRoute) : undefined
         }>
         <IoMdNotificationsOutline size={24} />
         {!!unReadCount && (
-          <div className="absolute -top-2 -right-2 scale-75">
+          <div className={styles.countBadge}>
             <CountBadge item={unReadCount} />
           </div>
         )}
       </div>
 
       {isLoading ? (
-        <div className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
-          <div className="space-y-1">
-            <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
-            <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+        <div className={styles.loadingRow}>
+          <div className={styles.avatarSkeleton} />
+          <div className={styles.textSkeletons}>
+            <div className={cn(styles.skeletonLine, styles.short)} />
+            <div className={cn(styles.skeletonLine, styles.long)} />
           </div>
         </div>
       ) : error ? (
-        <div className="text-red-500 text-sm">Error loading profile</div>
+        <div className={styles.errorText}>Error loading profile</div>
       ) : (
-        <div className="flex items-center space-x-2">
+        <div className={styles.userRow}>
           <div>
-            <div className="font-semibold">{`${userInfo?.firstName || ''} ${
-              userInfo?.lastName || ''
-            }`}</div>
-            <div className="text-sm text-gray-500">{userInfo?.email || ''}</div>
+            <div className={styles.userInfoHeader}>
+              <span className={styles.name}>{`${userInfo?.firstName || ''} ${
+                userInfo?.lastName || ''
+              }`}</span>
+              <StatusBadge
+                {...getEmailVerificationBadge(userInfo?.emailVerifiedAt)}
+                showDot
+              />
+            </div>
+            <div className={styles.email}>{userInfo?.email || ''}</div>
           </div>
           <Avatar
             firstName={userInfo?.firstName}
@@ -104,7 +116,7 @@ export const LoggedInUserBadge: React.FC = () => {
 
       {/* Dropdown Toggle */}
       {!isLoading && !error && (
-        <div onClick={toggleDropdown} className="cursor-pointer">
+        <div onClick={toggleDropdown} className={styles.dropdownToggle}>
           {isDropdownVisible ? (
             <IoIosArrowUp size={20} />
           ) : (
@@ -115,12 +127,8 @@ export const LoggedInUserBadge: React.FC = () => {
 
       {/* Dropdown Menu */}
       {isDropdownVisible && !isLoading && !error && (
-        <div
-          ref={dropdownRef}
-          className="absolute right-0 top-full mt-2 w-48 bg-[#4884DF] shadow-lg rounded-md z-10">
-          <div
-            className="px-4 py-2  cursor-pointer text-white font-raleway font-medium"
-            onClick={handleLogout}>
+        <div ref={dropdownRef} className={styles.dropdownMenu}>
+          <div className={styles.dropdownItem} onClick={handleLogout}>
             Logout
           </div>
         </div>

@@ -6,6 +6,7 @@ export interface AuthUser {
   lastName?: string
   email?: string
   userRole?: UserRole
+  emailVerifiedAt?: string | null
   profile?: Record<string, any>
   [key: string]: unknown
 }
@@ -54,4 +55,18 @@ export interface ResetPasswordRequest {
 export interface ResetPasswordResponse {
   status?: boolean
   message?: string
+}
+
+export interface VerifyEmailRequest {
+  token: string
+}
+
+export interface VerifyEmailResponse {
+  status?: boolean
+  message?: string
+}
+
+export interface ChangeEmailRequest {
+  newEmail: string
+  currentPassword: string
 }
