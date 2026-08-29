@@ -23,6 +23,7 @@ import ApplyStep from '@/features/apply-wizard/steps/ApplyStep'
 import PrescreeningStep from '@/features/apply-wizard/steps/PrescreeningStep'
 import ProfileStep from '@/features/apply-wizard/steps/ProfileStep'
 import SignupStep from '@/features/apply-wizard/steps/SignupStep'
+import VerifyStep from '@/features/apply-wizard/steps/VerifyStep'
 import { LoginPage, SignupPage } from '@/features/auth/pages'
 import AccountEmailVerification from '@/features/email-verification/pages/AccountEmailVerification'
 import PreAssessmentPage from '@/features/pre-assessment/page'
@@ -193,6 +194,10 @@ export const routeConfig: RouteObject[] = [
           {
             element: <ProtectedRoute allowedRoles={['talent']} />,
             children: [
+              {
+                path: 'verify',
+                element: <VerifyStep />,
+              },
               {
                 path: 'profile',
                 element: <ProfileStep />,
