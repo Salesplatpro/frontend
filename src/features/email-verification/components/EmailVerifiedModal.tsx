@@ -4,24 +4,21 @@ import React from 'react'
 import { Modal } from 'react-responsive-modal'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import CheckMark from '@/assets/CheckMark.png'
-import { Button } from '@/components/ui/Button'
 import { Heading, Text } from '@/components/ui/Typography'
 
-import styles from './WelcomeModal.module.scss'
+import styles from './EmailVerifiedModal.module.scss'
 
-type WelcomeLocationState = {
-  showWelcomeModal?: boolean
-  welcomeName?: string
+type EmailVerifiedLocationState = {
+  showEmailVerifiedModal?: boolean
 }
 
-export const WelcomeModal = () => {
+export const EmailVerifiedModal = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { showWelcomeModal, welcomeName } =
-    (location.state as WelcomeLocationState) || {}
+  const { showEmailVerifiedModal } =
+    (location.state as EmailVerifiedLocationState) || {}
 
-  if (!showWelcomeModal) return null
+  if (!showEmailVerifiedModal) return null
 
   const handleClose = () => {
     navigate(location.pathname, { replace: true, state: null })
@@ -37,14 +34,14 @@ export const WelcomeModal = () => {
         overlay: 'dashboard-modal-overlay',
       }}>
       <div className={styles.content}>
-        <img src={CheckMark} alt="checklist" className={styles.checkmark} />
-        <Heading level={2}>Welcome onboard {welcomeName}</Heading>
+        <span className={styles.emoji} role="img" aria-label="Celebration">
+          🎉
+        </span>
+        <Heading level={2}>Email verified!</Heading>
         <Text as="p" color="primary" className={styles.description}>
-          We&apos;re glad to have you here. Let&apos;s get you started.
+          Your email address is confirmed. You&apos;re all set to start your job
+          search.
         </Text>
-        <Button onClick={handleClose} aria-label="Close modal">
-          Get started
-        </Button>
       </div>
     </Modal>
   )

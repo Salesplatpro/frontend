@@ -68,7 +68,10 @@ const AccountEmailVerification: React.FC = () => {
 
   useEffect(() => {
     if (token && tokenStatus === 'success' && isLoggedIn) {
-      navigate(continueTarget, { replace: true })
+      navigate(continueTarget, {
+        replace: true,
+        state: { showEmailVerifiedModal: true },
+      })
     }
   }, [token, tokenStatus, isLoggedIn, continueTarget, navigate])
 

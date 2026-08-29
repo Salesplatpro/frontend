@@ -9,6 +9,7 @@ import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { notify } from '@/utils/toastNotifications'
 
 import { useEmailVerification } from '../hooks/useEmailVerification'
 import { getEmailVerificationBadge } from '../utils/getEmailVerificationBadge'
@@ -63,6 +64,13 @@ export const EmailVerificationPanel = ({
       await submitChangeEmail({ newEmail, currentPassword })
       setNewEmail('')
       setCurrentPassword('')
+      notify(
+        'success',
+        'Email address changed. Please verify your new email.',
+        {
+          autoClose: 2000,
+        },
+      )
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
     }
