@@ -81,7 +81,6 @@ import { Support } from '@/pages/TalentProfile/Support'
 import PersonalityTest from '@/pages/TalentProfile/TalentAssessment/PersonalityTest'
 import PersonalizedTest from '@/pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentProfileSidebar from '@/pages/TalentProfile/TalentProfileSidebar'
-import VerifyEmailPage from '@/pages/VerifyEmail/VerifyEmailPage'
 import { paths } from '@/paths'
 
 import { RootLayout } from './RootLayout'
@@ -142,7 +141,7 @@ export const routeConfig: RouteObject[] = [
           },
           {
             path: paths.verifyEmail,
-            element: <VerifyEmailPage />,
+            element: <AccountEmailVerification />,
           },
           {
             path: 'faq',
@@ -219,22 +218,16 @@ export const routeConfig: RouteObject[] = [
         element: <ProtectedRoute allowedRoles={['talent']} />,
         children: [
           {
-            path: 'verify-email',
-            element: <AccountEmailVerification />,
-          },
-          {
             path: '',
             element: <TalentProfileSidebar />,
             children: [
               {
-                element: (
-                  <RequireEmailVerified redirectTo="/talentDashboard/verify-email" />
-                ),
+                index: true,
+                element: <TalentDashboardHome />,
+              },
+              {
+                element: <RequireEmailVerified redirectTo="/talentDashboard" />,
                 children: [
-                  {
-                    index: true,
-                    element: <TalentDashboardHome />,
-                  },
                   {
                     path: 'talentProfile',
                     element: <TalentProfile />,

@@ -6,6 +6,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Heading, Text } from '@/components/ui/Typography'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { useAllJobApplicationsQuery } from '@/redux/api/talent'
@@ -52,12 +53,13 @@ const columns: ColumnDef<AllJobTypes>[] = [
 const TalentDashboardHome = () => {
   const user = useAuthStore((state) => state.user)
   const { profile, isLoading: isProfileLoading } = useProfile()
-  const { data, isLoading: isApplicationsLoading } = useAllJobApplicationsQuery(
+  const isVerified = !!profile?.emailVerifiedAt
+  const { data, isLoading } = useAllJobApplicationsQuery(
     {},
+    { skip: !isVerified },
   )
 
   const applications: AllJobTypes[] = data?.data?.applications ?? []
-  const isLoading = isProfileLoading || isApplicationsLoading
 
   const shortlisted = applications.filter(
     (app) => app.status === 'shortlisted',
@@ -97,56 +99,66 @@ const TalentDashboardHome = () => {
     { label: 'Shortlisted', value: shortlisted },
   ]
 
+  if (isProfileLoading) {
+    return <Spinner fullPage />
+  }
+
   return (
     <div className={styles.container}>
-      <div>
-        <Heading level={2}>Welcome back, {user?.firstName}</Heading>
-        <Text as="p" color="primary">
-          Here&apos;s what&apos;s happening with your job search today.
-        </Text>
-      </div>
-
-      {isLoading ? (
-        <Spinner fullPage />
-      ) : (
+      {isVerified ? (
         <>
-          <div className={styles.statsRow}>
-            {tiles.map((tile) => (
-              <Card key={tile.label} className={styles.statTile}>
-                <Text size="fs-sm" color="secondary">
-                  {tile.label}
-                </Text>
-                <Text size="fs-2xl" weight="bolder">
-                  {tile.value}
-                </Text>
-              </Card>
-            ))}
+          <div>
+            <Heading level={2}>Welcome back, {user?.firstName}</Heading>
+            <Text as="p" color="primary">
+              Here&apos;s what&apos;s happening with your job search today.
+            </Text>
           </div>
 
-          <div className={styles.grid}>
-            <Chart
-              type="pie"
-              title="Applications by Status"
-              data={statusBreakdown}
-            />
-            <div>
-              <Heading level={4} className={styles.tableTitle}>
-                Recent Applications
-              </Heading>
-              <DataTable
-                columns={columns}
-                data={recentApplications}
-                getRowKey={(row) => row.id ?? ''}
-                ariaLabel="Recent applications"
-                emptyState={
-                  <div className="py-8 text-center text-grey-500">
-                    You haven&apos;t applied to any jobs yet.
-                  </div>
-                }
-              />
-            </div>
-          </div>
+          {isLoading ? (
+            <Spinner fullPage />
+          ) : (
+            <>
+              <div className={styles.statsRow}>
+                {tiles.map((tile) => (
+                  <Card key={tile.label} className={styles.statTile}>
+                    <Text size="fs-sm" color="secondary">
+                      {tile.label}
+                    </Text>
+                    <Text size="fs-2xl" weight="bolder">
+                      {tile.value}
+                    </Text>
+                  </Card>
+                ))}
+              </div>
+
+              <div className={styles.grid}>
+                <Chart
+                  type="pie"
+                  title="Applications by Status"
+                  data={statusBreakdown}
+                />
+                <div>
+                  <Heading level={4} className={styles.tableTitle}>
+                    Recent Applications
+                  </Heading>
+                  <DataTable
+                    columns={columns}
+                    data={recentApplications}
+                    getRowKey={(row) => row.id ?? ''}
+                    ariaLabel="Recent applications"
+                    emptyState={
+                      <div className="py-8 text-center text-grey-500">
+                        You haven&apos;t applied to any jobs yet.
+                      </div>
+                    }
+                  />
+                </div>
+              </div>
+            </>
+          )}
         </>
+      ) : (
+        <EmailVerificationPanel />
       )}
 
       <WelcomeModal />
