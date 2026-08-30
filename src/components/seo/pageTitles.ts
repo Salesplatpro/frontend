@@ -70,10 +70,6 @@ const PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [
     title: 'Process CV',
   },
   { pattern: /^\/recruiterDashboard\/scout\//, title: 'Scout' },
-  {
-    pattern: /^\/recruiterDashboard\/singleJobPost\/[^/]+\/[^/]+/,
-    title: 'Application Progress',
-  },
   { pattern: /^\/recruiterDashboard\/singleJobPost\//, title: 'Job Post' },
   { pattern: /^\/recruiterDashboard\/postjob\//, title: 'Post Job' },
   { pattern: /^\/recruiterDashboard\/editJob\//, title: 'Edit Job' },
