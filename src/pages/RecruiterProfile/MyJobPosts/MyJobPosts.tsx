@@ -3,6 +3,8 @@
 import React, { useMemo, useState } from 'react'
 
 import { DisplayError } from '@/components'
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
 import { Spinner } from '@/components/ui/Spinner'
 import { useScreenWidth } from '@/hooks'
@@ -68,16 +70,12 @@ export const MyJobPosts = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.topContainer}>
-        <div className={styles.titleDesc}>
-          <div className={styles.title}>Job Posts</div>
-          <div className={styles.description}>
-            View jobs posted by you and see number of applicants that have
-            responded.
-          </div>
-        </div>
-      </div>
+    <PageShell wide>
+      <PageHero
+        compact
+        title="Job Posts"
+        lead="View jobs posted by you and see number of applicants that have responded."
+      />
       <div className={styles.layout}>
         <FilterPanel
           fields={JOBS_FILTER_FIELDS}
@@ -103,6 +101,6 @@ export const MyJobPosts = () => {
           />
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }

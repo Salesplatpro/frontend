@@ -1,0 +1,44 @@
+.image,
+.fallback {
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+.image {
+  background: var(--color-bg-subtle);
+}
+
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-brand-50);
+  color: var(--color-brand-800);
+}
+
+.sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.md {
+  width: 52px;
+  height: 52px;
+  font-size: 20px;
+}
+
+.lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  font-size: 28px;
+}
+
+.onDark.image,
+.onDark.fallback {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-text-on-dark);
+}

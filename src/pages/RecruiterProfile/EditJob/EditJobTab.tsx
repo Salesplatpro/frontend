@@ -7,6 +7,8 @@ import {
   EMPTY_LOCATION,
   resolveLocationFromNames,
 } from '@/components/forms/LocationSelect'
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
@@ -307,12 +309,13 @@ export const EditJobTab = () => {
   }
 
   return (
-    <div className={tabStyles.page}>
+    <PageShell>
       <BackButton />
-      <h2 className={tabStyles.heading}>
-        Edit {capitalizeEachWord(job.role?.name)} Job
-      </h2>
-      <p className={tabStyles.subheading}>Modify your existing job post</p>
+      <PageHero
+        compact
+        title={`Edit ${capitalizeEachWord(job.role?.name)} Job`}
+        lead="Modify your existing job post"
+      />
 
       <JobStatusControl
         jobId={jobId ?? ''}
@@ -369,6 +372,6 @@ export const EditJobTab = () => {
           </Form>
         )}
       </Formik>
-    </div>
+    </PageShell>
   )
 }

@@ -5,13 +5,17 @@ import Modal from 'react-responsive-modal'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '@/components'
+import { Select } from '@/components/forms/Select'
+import { TextInput } from '@/components/forms/TextInput'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { PageShell } from '@/components/layout/PageShell'
 import {
   ColumnDef,
   DataTable,
   sortByAccessor,
   TableToolbar,
 } from '@/components/ui/DataTable'
+import { EmptyState } from '@/components/ui/EmptyState'
 import {
   useAddScoutToPipelineMutation,
   useFetchRecruiterJobPostQuery,
@@ -22,6 +26,7 @@ import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { ScoutCandidatePanel } from './ScoutCandidatePanel'
+import styles from './ScoutJobHistory.module.scss'
 
 export interface ScoutReportRow {
   id: string
@@ -75,63 +80,48 @@ const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
     }
   }
 
+  const jobOptions = jobs.map(
+    (job: { id: string; jobBrief?: string; role?: { name?: string } }) => ({
+      value: job.id,
+      label: job.role?.name ?? job.jobBrief?.slice(0, 60) ?? job.id,
+    }),
+  )
+
   return (
-    <div className="w-[320px] sm:w-[420px] space-y-4">
-      <h2 className="text-lg font-semibold text-grey-900">
+    <div className={styles.modal}>
+      <h2 className={styles.title}>
         Add {scout.cvName ?? 'this candidate'} to a job pipeline
       </h2>
-      <p className="text-sm text-grey-500">
+      <p className={styles.lead}>
         This creates a real application for an existing talent account — it
         doesn&apos;t create a new account. Enter the email the candidate uses to
         sign in.
       </p>
 
-      <div className="space-y-1">
-        <label
-          htmlFor="pipeline-job"
-          className="text-sm font-medium text-grey-700">
-          Job
-        </label>
-        <select
-          id="pipeline-job"
-          className="w-full border border-grey-300 rounded-lg p-2"
+      <div className={styles.field}>
+        <Select
+          label="Job"
+          options={jobOptions}
           value={jobId}
-          onChange={(e) => setJobId(e.target.value)}
-          disabled={isLoadingJobs}>
-          <option value="">Select an active job</option>
-          {jobs.map(
-            (job: {
-              id: string
-              jobBrief?: string
-              role?: { name?: string }
-            }) => (
-              <option key={job.id} value={job.id}>
-                {job.role?.name ?? job.jobBrief?.slice(0, 60) ?? job.id}
-              </option>
-            ),
-          )}
-        </select>
-      </div>
-
-      <div className="space-y-1">
-        <label
-          htmlFor="pipeline-email"
-          className="text-sm font-medium text-grey-700">
-          Talent&apos;s email
-        </label>
-        <input
-          id="pipeline-email"
-          type="email"
-          className="w-full border border-grey-300 rounded-lg p-2"
-          placeholder="candidate@example.com"
-          value={talentEmail}
-          onChange={(e) => setTalentEmail(e.target.value)}
+          onChange={setJobId}
+          placeholder="Select an active job"
+          disabled={isLoadingJobs}
         />
       </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      <TextInput
+        title="Talent's email"
+        label="pipeline-email"
+        name="talentEmail"
+        autoComplete="email"
+        placeholder="candidate@example.com"
+        value={talentEmail}
+        onChange={(event) => setTalentEmail(event.target.value)}
+      />
 
-      <div className="flex justify-end gap-3">
+      {error && <p className={styles.error}>{error}</p>}
+
+      <div className={styles.actions}>
         <Button variant="outline" onClick={onClose}>
           Cancel
         </Button>
@@ -253,8 +243,9 @@ export const ScoutJobHistory = () => {
     : scoutReportsRaw
 
   return (
-    <div className="py-4 space-y-4">
+    <PageShell wide>
       <PageHeaderTitle
+        variant="hero"
         paramsId={{ id: scoutJobId }}
         description="Scouting history for this job"
         onBack={() => navigate(-1)}
@@ -312,9 +303,10 @@ export const ScoutJobHistory = () => {
         isLoading={isLoading}
         getRowKey={(row) => row.id}
         emptyState={
-          <div className="py-8 text-center text-grey-500">
-            No CVs have been scored for this job yet.
-          </div>
+          <EmptyState
+            title="No CVs scored yet"
+            description="Upload CVs for this campaign and scores will appear in this table."
+          />
         }
       />
 
@@ -336,6 +328,6 @@ export const ScoutJobHistory = () => {
           onClose={() => setDetailsTarget(null)}
         />
       )}
-    </div>
+    </PageShell>
   )
 }

@@ -8,12 +8,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { FileDesign } from '@/components/features/recruiter/Cards/FileDesign'
 import { CheckBox } from '@/components/forms/CheckBox'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { Card } from '@/components/ui/Card'
+import { PagePanel } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
 import { setScoutUploads } from '@/redux/features/filesSlice/fileSlice'
 import { capitalizeFirstWord, convertFileSize } from '@/utils'
 
 import { Button } from '../../../../components'
-import styles from '../../../../components/features/recruiter/Cards/DocumentUploaderCard.module.scss'
+import fileStyles from '../../../../components/features/recruiter/Cards/DocumentUploaderCard.module.scss'
+import styles from './UploadCv.module.scss'
 
 const MAX_BATCH_SIZE = 15
 const ALLOWED_DOC_MIMETYPES = [
@@ -95,140 +97,143 @@ export const UploadCv = () => {
   }
 
   return (
-    <div className="py-4 space-y-4">
+    <PageShell>
       <PageHeaderTitle
+        variant="hero"
         paramsId={params}
         description="Upload CVs in batch for collective AI assessment"
         onBack={() => navigate(-1)}
       />
 
-      <Card className="p-6 space-y-4">
-        <div
-          className="flex justify-center items-center flex-col py-16 cursor-pointer border border-dashed border-grey-300 rounded-2xl"
-          onClick={() => cvInputRef.current?.click()}>
-          <FileDesign
-            icon={<AiOutlineCloudUpload size={28} color="#3c6fd4" />}
-          />
-          <p className="mt-3 font-raleway text-grey-900">
-            {cvFiles.length > 0
-              ? `${cvFiles.length} CV(s) selected`
-              : 'Click or drag CVs to upload'}
-          </p>
-          <p className="text-grey-500 text-sm mt-1">
-            PDF or Word, up to {MAX_BATCH_SIZE} files
-          </p>
-          <input
-            ref={cvInputRef}
-            type="file"
-            multiple
-            accept={ALLOWED_DOC_MIMETYPES.join(',')}
-            onChange={handleCvChange}
-            className="hidden"
-          />
-        </div>
+      <PagePanel>
+        <div className={styles.stack}>
+          <div
+            className={styles.dropzone}
+            onClick={() => cvInputRef.current?.click()}>
+            <FileDesign
+              icon={<AiOutlineCloudUpload size={28} color="#3c6fd4" />}
+            />
+            <p className={styles.dropzoneTitle}>
+              {cvFiles.length > 0
+                ? `${cvFiles.length} CV(s) selected`
+                : 'Click or drag CVs to upload'}
+            </p>
+            <p className={styles.dropzoneHint}>
+              PDF or Word, up to {MAX_BATCH_SIZE} files
+            </p>
+            <input
+              ref={cvInputRef}
+              type="file"
+              multiple
+              accept={ALLOWED_DOC_MIMETYPES.join(',')}
+              onChange={handleCvChange}
+              className={styles.hiddenInput}
+            />
+          </div>
 
-        {cvFiles.length > 0 && (
-          <div className={styles.uploader}>
-            {cvFiles.map((file, index) => (
-              <div key={index} className={styles.container}>
-                <div className={styles.innerContainer}>
-                  <div className={styles.file}>
-                    <FileDesign icon={<FaRegFile size={20} />} />
-                    <div className={styles.text}>
-                      <div>{capitalizeFirstWord(file.name)}</div>
-                      <div>{convertFileSize(file.size)}</div>
+          {cvFiles.length > 0 && (
+            <div className={styles.fileList}>
+              {cvFiles.map((file, index) => (
+                <div key={index} className={fileStyles.container}>
+                  <div className={fileStyles.innerContainer}>
+                    <div className={fileStyles.file}>
+                      <FileDesign icon={<FaRegFile size={20} />} />
+                      <div className={fileStyles.text}>
+                        <div>{capitalizeFirstWord(file.name)}</div>
+                        <div>{convertFileSize(file.size)}</div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="cursor-pointer">
-                    <RiDeleteBinLine
-                      size={20}
-                      onClick={() => removeCv(index)}
-                    />
+                    <div className={styles.remove}>
+                      <RiDeleteBinLine
+                        size={20}
+                        onClick={() => removeCv(index)}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <CheckBox
-          name="attachCoverLetters"
-          value="attachCoverLetters"
-          label="Attach a cover letter for each CV (optional)"
-          checked={attachCoverLetters}
-          onChange={(event) => {
-            const checked = event.target.checked
-            setAttachCoverLetters(checked)
-            if (!checked) setCoverLetterFiles([])
-          }}
-        />
-
-        {attachCoverLetters && (
-          <>
-            <div
-              className="flex justify-center items-center flex-col py-10 cursor-pointer border border-dashed border-grey-300 rounded-2xl"
-              onClick={() => coverLetterInputRef.current?.click()}>
-              <FileDesign
-                icon={<AiOutlineCloudUpload size={24} color="#3c6fd4" />}
-              />
-              <p className="mt-2 font-raleway text-grey-900 text-sm">
-                {coverLetterFiles.length > 0
-                  ? `${coverLetterFiles.length} cover letter(s) selected`
-                  : 'Select matching cover letters, in the same order as the CVs above'}
-              </p>
-              <input
-                ref={coverLetterInputRef}
-                type="file"
-                multiple
-                accept={ALLOWED_DOC_MIMETYPES.join(',')}
-                onChange={handleCoverLetterChange}
-                className="hidden"
-              />
+              ))}
             </div>
-            {coverLetterFiles.length > 0 && (
-              <div className={styles.uploader}>
-                {coverLetterFiles.map((file, index) => (
-                  <div key={index} className={styles.container}>
-                    <div className={styles.innerContainer}>
-                      <div className={styles.file}>
-                        <FileDesign icon={<FaRegFile size={20} />} />
-                        <div className={styles.text}>
-                          <div>{capitalizeFirstWord(file.name)}</div>
-                          <div>{convertFileSize(file.size)}</div>
+          )}
+
+          <CheckBox
+            name="attachCoverLetters"
+            value="attachCoverLetters"
+            label="Attach a cover letter for each CV (optional)"
+            checked={attachCoverLetters}
+            onChange={(event) => {
+              const checked = event.target.checked
+              setAttachCoverLetters(checked)
+              if (!checked) setCoverLetterFiles([])
+            }}
+          />
+
+          {attachCoverLetters && (
+            <>
+              <div
+                className={`${styles.dropzone} ${styles.dropzoneCompact}`}
+                onClick={() => coverLetterInputRef.current?.click()}>
+                <FileDesign
+                  icon={<AiOutlineCloudUpload size={24} color="#3c6fd4" />}
+                />
+                <p className={styles.dropzoneTitle}>
+                  {coverLetterFiles.length > 0
+                    ? `${coverLetterFiles.length} cover letter(s) selected`
+                    : 'Select matching cover letters, in the same order as the CVs above'}
+                </p>
+                <input
+                  ref={coverLetterInputRef}
+                  type="file"
+                  multiple
+                  accept={ALLOWED_DOC_MIMETYPES.join(',')}
+                  onChange={handleCoverLetterChange}
+                  className={styles.hiddenInput}
+                />
+              </div>
+              {coverLetterFiles.length > 0 && (
+                <div className={styles.fileList}>
+                  {coverLetterFiles.map((file, index) => (
+                    <div key={index} className={fileStyles.container}>
+                      <div className={fileStyles.innerContainer}>
+                        <div className={fileStyles.file}>
+                          <FileDesign icon={<FaRegFile size={20} />} />
+                          <div className={fileStyles.text}>
+                            <div>{capitalizeFirstWord(file.name)}</div>
+                            <div>{convertFileSize(file.size)}</div>
+                          </div>
+                        </div>
+                        <div className={styles.remove}>
+                          <RiDeleteBinLine
+                            size={20}
+                            onClick={() => removeCoverLetter(index)}
+                          />
                         </div>
                       </div>
-                      <div className="cursor-pointer">
-                        <RiDeleteBinLine
-                          size={20}
-                          onClick={() => removeCoverLetter(index)}
-                        />
-                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {coverLetterMismatch && (
-              <div className="text-red-600 text-sm">
-                You have {cvFiles.length} CV(s) but {coverLetterFiles.length}{' '}
-                cover letter(s) — provide one cover letter per CV, in the same
-                order.
-              </div>
-            )}
-          </>
-        )}
+                  ))}
+                </div>
+              )}
+              {coverLetterMismatch && (
+                <div className={styles.error}>
+                  You have {cvFiles.length} CV(s) but {coverLetterFiles.length}{' '}
+                  cover letter(s) — provide one cover letter per CV, in the same
+                  order.
+                </div>
+              )}
+            </>
+          )}
 
-        {error && <div className="text-red-600 text-sm">{error}</div>}
+          {error && <div className={styles.error}>{error}</div>}
 
-        <Button
-          variant="primary"
-          size="wide"
-          fullWidth
-          disabled={!canContinue}
-          onClick={handleContinue}>
-          Continue
-        </Button>
-      </Card>
-    </div>
+          <div className={styles.actions}>
+            <Button
+              variant="primary"
+              disabled={!canContinue}
+              onClick={handleContinue}>
+              Continue
+            </Button>
+          </div>
+        </div>
+      </PagePanel>
+    </PageShell>
   )
 }

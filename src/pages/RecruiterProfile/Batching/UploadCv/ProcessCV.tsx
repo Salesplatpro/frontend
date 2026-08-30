@@ -147,6 +147,7 @@ export const ProcessCV = () => {
   return (
     <div className="py-4 space-y-4">
       <PageHeaderTitle
+        variant="hero"
         paramsId={params}
         description="Upload CVs in batch for collective AI assessment"
         onBack={() => navigate(-1)}

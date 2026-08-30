@@ -16,7 +16,13 @@
 }
 
 .statusField {
-  min-width: 200px;
+  min-width: 0;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    min-width: 200px;
+    width: auto;
+  }
 }
 
 .label {

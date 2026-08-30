@@ -17,8 +17,9 @@
   min-height: 96px;
 }
 
-.primary {
-  background-color: var(--color-primary);
+.primary.tile {
+  background: var(--color-bg-hero);
+  color: var(--color-text-on-dark);
 }
 
 .subtle {

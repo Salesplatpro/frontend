@@ -1,8 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { Card } from '@/components/ui/Card'
+import { PageHero, pageHeroStyles } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
+import { BackButton } from '@/components/ui/BackButton'
 import { useCreateOrganization } from '@/features/organizations/hooks/useCreateOrganization'
 import { CreateOrganizationPayload } from '@/features/organizations/types'
 
@@ -27,24 +28,31 @@ const CreateCompany = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-12">
-      <PageHeaderTitle
-        title="Create a company"
-        description="Add a company to post jobs under. Creating it switches you onto it straight away."
-        onBack={goBack}
+    <PageShell>
+      <BackButton onClick={goBack} />
+      <PageHero
+        compact
+        kicker="New workspace"
+        title="Tell us about the company"
+        lead="Fill in the essentials first. You can add social links and a logo whenever you have them — the live preview on the right shows how the brand will appear to candidates."
+        chips={
+          <>
+            <span className={pageHeroStyles.chip}>1 Identity</span>
+            <span className={pageHeroStyles.chip}>2 Contact</span>
+            <span className={pageHeroStyles.chip}>3 Presence</span>
+          </>
+        }
       />
 
-      <Card className="max-w-[700px] p-6 flex flex-col space-y-6">
-        <CompanyForm
-          mode="create"
-          initialValues={EMPTY_COMPANY_FORM}
-          isSubmitting={isCreating}
-          submitLabel="Create company"
-          onSubmit={handleSubmit}
-          onCancel={goBack}
-        />
-      </Card>
-    </div>
+      <CompanyForm
+        mode="create"
+        initialValues={EMPTY_COMPANY_FORM}
+        isSubmitting={isCreating}
+        submitLabel="Create company"
+        onSubmit={handleSubmit}
+        onCancel={goBack}
+      />
+    </PageShell>
   )
 }
 

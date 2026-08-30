@@ -1,0 +1,31 @@
+@use '../../../styles/form-field' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 640px;
+}
+
+.field {
+  @extend %form-field-group;
+}
+
+.label {
+  @extend %form-label;
+}
+
+.textarea {
+  @extend %form-textarea;
+}
+
+.error {
+  @extend %form-error;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}

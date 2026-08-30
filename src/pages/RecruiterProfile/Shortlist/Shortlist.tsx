@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
 import {
   ColumnDef,
@@ -9,6 +10,7 @@ import {
   sortByAccessor,
   TableToolbar,
 } from '@/components/ui/DataTable'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
 
@@ -141,10 +143,11 @@ export const Shortlist = () => {
     : filteredApplications
 
   return (
-    <div className="flex flex-col space-y-6">
-      <PageHeaderTitle
+    <PageShell wide>
+      <PageHero
+        compact
         title="Shortlist"
-        description="View shortlisted talents ready for the next stage"
+        lead="View shortlisted talents ready for the next stage"
       />
       <div className="flex flex-col md:flex-row gap-5 items-start">
         <FilterPanel
@@ -171,13 +174,14 @@ export const Shortlist = () => {
             getRowKey={(row) => row.id}
             ariaLabel="Shortlisted applications"
             emptyState={
-              <div className="p-4 text-gray-500 text-center">
-                No shortlisted applications yet
-              </div>
+              <EmptyState
+                title="No shortlisted applications yet"
+                description="Shortlist strong applicants from a job post and they will land here, ready for the next conversation."
+              />
             }
           />
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }

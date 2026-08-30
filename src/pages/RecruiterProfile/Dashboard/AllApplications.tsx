@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import {
   DataTable,
@@ -88,11 +90,13 @@ const AllApplications: React.FC = () => {
   if (error) return <DisplayError message="Error loading applications" />
 
   return (
-    <div className="lg:w-[90%] mx-auto mt-8">
+    <PageShell wide>
       <BackButton />
-      <div className="mb-4 flex items-center justify-between mt-4">
-        <h4 className="text-lg text-[#000] font-semibold">Applications</h4>
-      </div>
+      <PageHero
+        compact
+        title="Applications"
+        lead="Every application across your jobs, with search and sort."
+      />
       <div className="flex flex-col md:flex-row gap-5 items-start">
         <FilterPanel
           fields={APPLICATIONS_FILTER_FIELDS}
@@ -119,7 +123,7 @@ const AllApplications: React.FC = () => {
           />
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }
 

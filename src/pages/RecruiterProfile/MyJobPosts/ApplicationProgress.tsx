@@ -4,6 +4,7 @@ import { SiReaddotcv } from 'react-icons/si'
 import { TbEdit } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 
+import { PageShell } from '@/components/layout/PageShell'
 import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
@@ -103,7 +104,7 @@ export const ApplicationProgress = () => {
     application?.matchVerdictStatus !== 'pending'
 
   return (
-    <div className={styles.page}>
+    <PageShell>
       <ProfileCard
         firstName={firstName}
         lastName={lastName}
@@ -187,6 +188,6 @@ export const ApplicationProgress = () => {
           talentId={talentId ?? undefined}
         />
       </div>
-    </div>
+    </PageShell>
   )
 }

@@ -5,13 +5,12 @@ import { FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
-import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { HeroAction, HeroGhost, PageHero } from '@/components/layout/PageHero'
+import { PagePanel } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
-import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
-import { Text } from '@/components/ui/Typography'
 import { useDeleteOrganization } from '@/features/organizations/hooks/useDeleteOrganization'
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import { useSwitchOrganization } from '@/features/organizations/hooks/useSwitchOrganization'
@@ -19,27 +18,12 @@ import { Organization } from '@/features/organizations/types'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
-const CompanyLogo: React.FC<{ organization: Organization }> = ({
-  organization,
-}) => {
-  const [failed, setFailed] = useState(false)
+import styles from './Company.module.scss'
+import { CompanyLogo } from './CompanyLogo'
 
-  if (!organization.logoUrl || failed) {
-    return (
-      <div className="flex items-center justify-center w-10 h-10 rounded bg-grey-100 text-grey-600 shrink-0">
-        <BsBuilding size={18} />
-      </div>
-    )
-  }
-
-  return (
-    <img
-      src={organization.logoUrl}
-      alt={`${organization.name} logo`}
-      onError={() => setFailed(true)}
-      className="w-10 h-10 rounded object-contain bg-grey-100 shrink-0"
-    />
-  )
+const titleCase = (value?: string | null) => {
+  if (!value) return '—'
+  return value.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
 const Company = () => {
@@ -51,6 +35,11 @@ const Company = () => {
 
   const [pendingDelete, setPendingDelete] = useState<Organization | null>(null)
 
+  const activeOrg =
+    organizations.find((org) => org.id === profile?.activeOrganizationId) ??
+    profile?.activeOrganization ??
+    null
+
   const handleDelete = async () => {
     if (!pendingDelete) return
     const removed = await deleteOrganization(pendingDelete.id)
@@ -60,104 +49,149 @@ const Company = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-12">
-      <PageHeaderTitle
-        title="Companies"
-        description="Manage the companies you post jobs for. Every job you create belongs to whichever company you're currently on."
+    <PageShell>
+      <PageHero
+        identity={
+          activeOrg ? (
+            <CompanyLogo
+              name={activeOrg.name}
+              logoUrl={activeOrg.logoUrl}
+              size="lg"
+              onDark
+            />
+          ) : (
+            <CompanyLogo name="Company" size="lg" onDark />
+          )
+        }
+        title={activeOrg?.name ?? 'No active company'}
+        lead={
+          activeOrg
+            ? 'This is the brand candidates will see on new jobs. Create another company if you hire for a different organisation.'
+            : 'Create a company to start posting jobs under your brand. You can add more later and switch between them.'
+        }
+        pills={
+          activeOrg ? (
+            <StatusBadge
+              status={titleCase(activeOrg.status)}
+              {...getOrganizationStatusBadge(activeOrg.status)}
+              showDot
+            />
+          ) : undefined
+        }
+        actions={
+          <>
+            <HeroAction
+              onClick={() => navigate('/recruiterDashboard/company/new')}>
+              <AiOutlinePlus size={16} />
+              Create company
+            </HeroAction>
+            {activeOrg && (
+              <HeroGhost
+                onClick={() =>
+                  navigate(`/recruiterDashboard/company/${activeOrg.id}/edit`)
+                }>
+                <FiEdit2 size={14} />
+                Edit details
+              </HeroGhost>
+            )}
+          </>
+        }
+        meta={[
+          {
+            label: 'Active workspace',
+            value: activeOrg?.name ?? 'Not selected',
+          },
+          { label: 'Industry', value: activeOrg?.industry || 'Not set' },
+          { label: 'Companies', value: organizations.length },
+        ]}
       />
 
-      <Card className="max-w-[900px] p-6 flex flex-col space-y-6">
-        <div className="flex items-center justify-between">
-          <Text size="fs-md" weight="bolder">
-            Your companies
-          </Text>
-          <Button
-            size="sm"
-            icon={<AiOutlinePlus size={16} />}
-            onClick={() => navigate('/recruiterDashboard/company/new')}>
-            Create company
-          </Button>
-        </div>
-
+      <PagePanel
+        title="Your companies"
+        hint="Switch to the company you want jobs to belong to, then post or edit as usual.">
         {isLoading ? (
           <Spinner />
         ) : organizations.length === 0 ? (
-          <EmptyState
-            title="No companies yet"
-            description="Create a company to start posting jobs."
-            icon={<BsBuilding size={28} />}
-            action={
-              <Button
-                onClick={() => navigate('/recruiterDashboard/company/new')}>
-                Create company
-              </Button>
-            }
-          />
+          <div className={styles.empty}>
+            <div className={styles.emptyIcon}>
+              <BsBuilding size={24} />
+            </div>
+            <p className={styles.emptyTitle}>No companies yet</p>
+            <p className={styles.emptyCopy}>
+              Add your first company so job posts, applications, and candidate
+              messages sit under the right brand.
+            </p>
+            <Button onClick={() => navigate('/recruiterDashboard/company/new')}>
+              Create company
+            </Button>
+          </div>
         ) : (
-          <div className="flex flex-col space-y-3">
+          <div className={styles.list}>
             {organizations.map((org) => {
               const isActive = org.id === profile?.activeOrganizationId
               return (
-                <div
+                <article
                   key={org.id}
-                  className="flex flex-wrap items-center justify-between gap-4 border border-grey-200 rounded p-3">
-                  <div className="flex items-center space-x-3">
-                    <CompanyLogo organization={org} />
-                    <div className="flex flex-col">
-                      <div className="flex items-center space-x-3">
-                        <Text size="fs-md" weight="bolder">
-                          {org.name}
-                        </Text>
+                  className={`${styles.card} ${
+                    isActive ? styles.cardActive : ''
+                  }`}>
+                  <div className={styles.cardMain}>
+                    <CompanyLogo name={org.name} logoUrl={org.logoUrl} />
+                    <div className={styles.cardBody}>
+                      <div className={styles.nameRow}>
+                        <h3 className={styles.name}>{org.name}</h3>
+                        {isActive && (
+                          <span className={styles.activeChip}>Working as</span>
+                        )}
                         <StatusBadge
-                          status={org.status}
+                          status={titleCase(org.status)}
                           {...getOrganizationStatusBadge(org.status)}
                         />
                       </div>
-                      {org.industry && (
-                        <Text size="fs-sm" color="secondary">
-                          {org.industry}
-                        </Text>
-                      )}
+                      <p className={styles.meta}>
+                        {org.industry || 'Industry not set'}
+                        {org.address ? ` · ${org.address}` : ''}
+                      </p>
+                      <div className={styles.facts}>
+                        {org.email && <span>{org.email}</span>}
+                        {org.website && <span>{org.website}</span>}
+                        {org.phone && <span>{org.phone}</span>}
+                      </div>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2">
-                    {isActive ? (
-                      <Text size="fs-sm" color="secondary">
-                        Active
-                      </Text>
-                    ) : (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        loading={isSwitching}
+                  <div className={styles.cardActions}>
+                    {!isActive && (
+                      <button
+                        type="button"
+                        className={styles.switchBtn}
+                        disabled={isSwitching}
                         onClick={() => switchOrganization(org.id)}>
-                        Switch to this company
-                      </Button>
+                        Work as this company
+                      </button>
                     )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={<FiEdit2 size={14} />}
+                    <button
+                      type="button"
+                      className={styles.editBtn}
                       onClick={() =>
                         navigate(`/recruiterDashboard/company/${org.id}/edit`)
                       }>
+                      <FiEdit2 size={14} />
                       Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={<FiTrash2 size={14} />}
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.deleteBtn}
                       onClick={() => setPendingDelete(org)}>
+                      <FiTrash2 size={14} />
                       Delete
-                    </Button>
+                    </button>
                   </div>
-                </div>
+                </article>
               )
             })}
           </div>
         )}
-      </Card>
+      </PagePanel>
 
       <ConfirmDialog
         open={!!pendingDelete}
@@ -169,7 +203,7 @@ const Company = () => {
         onConfirm={handleDelete}
         onCancel={() => setPendingDelete(null)}
       />
-    </div>
+    </PageShell>
   )
 }
 

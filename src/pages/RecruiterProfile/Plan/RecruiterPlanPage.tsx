@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { Spinner } from '@/components/ui/Spinner'
 import { PlanUsage } from '@/features/pricing/components/PlanUsage'
 import { PricingContent } from '@/features/pricing/components/PricingContent'
 import { usePaidCheckout } from '@/features/pricing/hooks/usePaidCheckout'
 import { BillingInterval } from '@/features/pricing/types'
 import { useProfile } from '@/features/profile/hooks/useProfile'
-
-import styles from '../Dashboard/Dashboard.module.scss'
 
 const RecruiterPlanPage: React.FC = () => {
   const { profile, isLoading } = useProfile()
@@ -34,13 +34,22 @@ const RecruiterPlanPage: React.FC = () => {
   const isPaid = profile?.billingPlan === 'paid'
 
   return (
-    <div className={styles.container}>
+    <PageShell wide>
+      <PageHero
+        compact
+        title={isPaid ? 'Your plan' : 'Choose a plan'}
+        lead={
+          isPaid
+            ? 'See how you are using Auxhr on your current subscription.'
+            : 'Upgrade to post more jobs and unlock recruiter tools.'
+        }
+      />
       {isPaid ? (
         <PlanUsage interval={profile?.billingInterval} />
       ) : (
         <PricingContent variant="dashboard" currentPlan="free" />
       )}
-    </div>
+    </PageShell>
   )
 }
 

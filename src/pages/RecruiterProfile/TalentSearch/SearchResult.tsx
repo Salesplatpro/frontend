@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { PageShell } from '@/components/layout/PageShell'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
 
@@ -48,8 +49,9 @@ const SearchResult = () => {
   }
 
   return (
-    <div>
+    <PageShell>
       <PageHeaderTitle
+        variant="hero"
         title="Talent Search"
         description={
           jobId
@@ -126,7 +128,7 @@ const SearchResult = () => {
           </div>
         </>
       )}
-    </div>
+    </PageShell>
   )
 }
 
