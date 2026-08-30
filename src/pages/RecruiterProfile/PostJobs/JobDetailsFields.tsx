@@ -1,8 +1,14 @@
 import { Field } from 'formik'
 import React from 'react'
 
-import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
-import { LocationSelect } from '@/components/forms/LocationSelect'
+import {
+  workModeNeedsLocation,
+  WorkTypeCheckboxes,
+} from '@/components/features/jobs/WorkTypeCheckboxes'
+import {
+  EMPTY_LOCATION,
+  LocationSelect,
+} from '@/components/forms/LocationSelect'
 import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
 import {
   COMPENSATION_PERIOD_OPTIONS,
@@ -127,29 +133,9 @@ export const JobDetailsFields = ({
       </div>
     </section>
 
-    {/* Section 3: Location & Work */}
+    {/* Section 3: Work & Location */}
     <section className={styles.formSection}>
-      <h3 className={styles.sectionTitle}>Location &amp; Work</h3>
-      <p className={styles.sectionNote}>
-        Only Country is required — State/Province and Region/City are optional.
-      </p>
-
-      <div className={styles.fieldGroup}>
-        <LocationSelect
-          value={values.location}
-          onChange={(location) => setFieldValue('location', location)}
-          stateLabel="State/Province (Optional)"
-          cityLabel="Region/City (Optional)"
-          countryRequired
-          errors={{
-            country:
-              touched.location?.country &&
-              typeof errors.location?.country?.name === 'string'
-                ? errors.location?.country?.name
-                : undefined,
-          }}
-        />
-      </div>
+      <h3 className={styles.sectionTitle}>Work &amp; Location</h3>
 
       <div className={styles.fieldGroup}>
         <p className={styles.label}>
@@ -157,7 +143,12 @@ export const JobDetailsFields = ({
         </p>
         <WorkTypeCheckboxes
           value={values.workMode}
-          onChange={(value) => setFieldValue('workMode', value)}
+          onChange={(value) => {
+            setFieldValue('workMode', value)
+            if (!workModeNeedsLocation(value)) {
+              setFieldValue('location', { ...EMPTY_LOCATION })
+            }
+          }}
           error={
             touched.workMode && typeof errors.workMode === 'string'
               ? (errors.workMode as string)
@@ -165,6 +156,31 @@ export const JobDetailsFields = ({
           }
         />
       </div>
+
+      {workModeNeedsLocation(values.workMode) && (
+        <>
+          <p className={styles.sectionNote}>
+            Only Country is required — State/Province and Region/City are
+            optional.
+          </p>
+          <div className={styles.fieldGroup}>
+            <LocationSelect
+              value={values.location}
+              onChange={(location) => setFieldValue('location', location)}
+              stateLabel="State/Province (Optional)"
+              cityLabel="Region/City (Optional)"
+              countryRequired
+              errors={{
+                country:
+                  touched.location?.country &&
+                  typeof errors.location?.country?.name === 'string'
+                    ? errors.location?.country?.name
+                    : undefined,
+              }}
+            />
+          </div>
+        </>
+      )}
     </section>
 
     {/* Section 4: Compensation */}

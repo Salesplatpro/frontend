@@ -12,6 +12,9 @@ export const WORK_TYPE = {
 
 export type WorkType = (typeof WORK_TYPE)[keyof typeof WORK_TYPE]
 
+export const workModeNeedsLocation = (workMode: readonly string[]): boolean =>
+  workMode.includes(WORK_TYPE.HYBRID) || workMode.includes(WORK_TYPE.ONSITE)
+
 interface WorkTypeCheckboxesProps {
   value: WorkType[]
   onChange: (value: WorkType[]) => void

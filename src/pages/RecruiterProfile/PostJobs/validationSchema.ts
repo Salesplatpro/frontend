@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 
+import { workModeNeedsLocation } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { emptyToUndefined } from '@/utils/yupHelpers'
 
 export const validationSchema = Yup.object({
@@ -9,11 +10,20 @@ export const validationSchema = Yup.object({
   experienceLevel: Yup.string().required('Experience level is required'),
   location: Yup.object({
     country: Yup.object({
-      name: Yup.string().required('Country is required'),
+      name: Yup.string(),
     }),
     state: Yup.object({
       name: Yup.string(),
     }),
+  }).when('workMode', {
+    is: (workMode: string[] | undefined) =>
+      workModeNeedsLocation(workMode ?? []),
+    then: (schema) =>
+      schema.shape({
+        country: Yup.object({
+          name: Yup.string().required('Country is required'),
+        }),
+      }),
   }),
   workMode: Yup.array()
     .of(Yup.string().oneOf(['remote', 'hybrid', 'onSite']))
