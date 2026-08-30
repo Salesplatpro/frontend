@@ -1,17 +1,21 @@
 import cn from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
+import { HiOutlineCreditCard, HiOutlineUser } from 'react-icons/hi'
+import { HiArrowRightOnRectangle } from 'react-icons/hi2'
 import {
   IoIosArrowDown,
-  IoIosArrowUp,
+  IoIosArrowForward,
   IoMdNotificationsOutline,
 } from 'react-icons/io'
+import { IoCheckmarkCircle } from 'react-icons/io5'
+import { MdOutlineWorkspacePremium } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
 import { Avatar } from '@/components/ui/Avatar'
-import { CountBadge, StatusBadge } from '@/components/ui/Badge'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
+import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import styles from './LoggedInUserBadge.module.scss'
@@ -20,8 +24,17 @@ const NOTIFICATION_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
   talent: '/talentDashboard/Notification',
 }
 
+const PROFILE_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
+  talent: '/talentDashboard/talentProfile',
+  recruiter: '/recruiterDashboard/profile',
+}
+
+const PLAN_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
+  recruiter: '/recruiterDashboard/plan',
+}
+
 export const LoggedInUserBadge: React.FC = () => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false)
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -30,16 +43,26 @@ export const LoggedInUserBadge: React.FC = () => {
   const { profile: userInfo, isLoading, error } = useProfile()
   const { unReadCount } = useNotifications()
 
-  const notificationRoute = user?.userRole
-    ? NOTIFICATION_ROUTE_BY_ROLE[user.userRole]
-    : undefined
+  const role = user?.userRole
+  const notificationRoute = role ? NOTIFICATION_ROUTE_BY_ROLE[role] : undefined
+  const profileRoute = role ? PROFILE_ROUTE_BY_ROLE[role] : undefined
+  const planRoute = role ? PLAN_ROUTE_BY_ROLE[role] : undefined
 
-  // Toggle dropdown visibility
+  const firstName = userInfo?.firstName || user?.firstName || ''
+  const lastName = userInfo?.lastName || user?.lastName || ''
+  const fullName = `${firstName} ${lastName}`.trim() || 'Account'
+  const email = userInfo?.email || user?.email || ''
+  const isVerified = !!userInfo?.emailVerifiedAt
+  const isPaid = userInfo?.billingPlan === 'paid'
+  const verificationBadge = getEmailVerificationBadge(userInfo?.emailVerifiedAt)
+  const planBadge = getBillingPlanBadge(userInfo?.billingPlan)
+
   const toggleDropdown = () => {
     setIsDropdownVisible((prev) => !prev)
   }
 
-  // Close dropdown on outside click
+  const closeDropdown = () => setIsDropdownVisible(false)
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -59,27 +82,24 @@ export const LoggedInUserBadge: React.FC = () => {
     }
   }, [isDropdownVisible])
 
-  // Handle logout — logout() itself redirects to /login via a full page
-  // reload once all caches/stores are cleared.
-  const handleLogout = () => {
-    logout()
+  const goTo = (path: string) => {
+    closeDropdown()
+    navigate(path)
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={dropdownRef}>
       <div
         className={cn(styles.notificationIcon, {
           [styles.notificationIconClickable]: !!notificationRoute,
         })}
         onClick={
           notificationRoute ? () => navigate(notificationRoute) : undefined
-        }>
-        <IoMdNotificationsOutline size={24} />
-        {!!unReadCount && (
-          <div className={styles.countBadge}>
-            <CountBadge item={unReadCount} />
-          </div>
-        )}
+        }
+        role={notificationRoute ? 'button' : undefined}
+        aria-label="Notifications">
+        <IoMdNotificationsOutline size={22} />
+        {!!unReadCount && <span className={styles.unreadDot} aria-hidden />}
       </div>
 
       {isLoading ? (
@@ -87,50 +107,144 @@ export const LoggedInUserBadge: React.FC = () => {
           <div className={styles.avatarSkeleton} />
           <div className={styles.textSkeletons}>
             <div className={cn(styles.skeletonLine, styles.short)} />
-            <div className={cn(styles.skeletonLine, styles.long)} />
           </div>
         </div>
       ) : error ? (
         <div className={styles.errorText}>Error loading profile</div>
       ) : (
-        <div className={styles.userRow}>
-          <div>
-            <div className={styles.userInfoHeader}>
-              <span className={styles.name}>{`${userInfo?.firstName || ''} ${
-                userInfo?.lastName || ''
-              }`}</span>
-              <StatusBadge
-                {...getEmailVerificationBadge(userInfo?.emailVerifiedAt)}
-                showDot
-              />
-            </div>
-            <div className={styles.email}>{userInfo?.email || ''}</div>
-          </div>
-          <Avatar
-            firstName={userInfo?.firstName}
-            lastName={userInfo?.lastName}
-            size="md"
-          />
-        </div>
-      )}
-
-      {/* Dropdown Toggle */}
-      {!isLoading && !error && (
-        <div onClick={toggleDropdown} className={styles.dropdownToggle}>
-          {isDropdownVisible ? (
-            <IoIosArrowUp size={20} />
-          ) : (
-            <IoIosArrowDown size={20} />
+        <button
+          type="button"
+          className={styles.trigger}
+          onClick={toggleDropdown}
+          aria-expanded={isDropdownVisible}
+          aria-haspopup="menu">
+          <span className={styles.name}>{fullName}</span>
+          <span
+            className={cn(styles.pill, styles.verifiedPill)}
+            style={{
+              backgroundColor: verificationBadge.backgroundColor,
+              color: verificationBadge.color,
+            }}>
+            {isVerified ? (
+              <IoCheckmarkCircle size={14} />
+            ) : (
+              <span className={styles.pillDot} />
+            )}
+            {verificationBadge.status}
+          </span>
+          {role === 'recruiter' && isPaid && (
+            <span
+              className={cn(styles.pill, styles.paidPill)}
+              style={{
+                backgroundColor: planBadge.backgroundColor,
+                color: planBadge.color,
+              }}>
+              <MdOutlineWorkspacePremium size={14} />
+              Paid
+            </span>
           )}
-        </div>
+          <span className={styles.avatarWrap}>
+            <Avatar firstName={firstName} lastName={lastName} size="md" />
+          </span>
+          <IoIosArrowDown
+            size={16}
+            className={cn(styles.chevron, {
+              [styles.chevronOpen]: isDropdownVisible,
+            })}
+          />
+        </button>
       )}
 
-      {/* Dropdown Menu */}
       {isDropdownVisible && !isLoading && !error && (
-        <div ref={dropdownRef} className={styles.dropdownMenu}>
-          <div className={styles.dropdownItem} onClick={handleLogout}>
-            Logout
+        <div className={styles.dropdownMenu} role="menu">
+          <div className={styles.dropdownHeader}>
+            <div className={styles.headerAvatar}>
+              <Avatar firstName={firstName} lastName={lastName} size="lg" />
+              <span className={styles.onlineDot} aria-hidden />
+            </div>
+            <p className={styles.headerName}>{fullName}</p>
+            <p className={styles.headerEmail}>{email}</p>
+            <div className={styles.headerPills}>
+              <span
+                className={cn(styles.pill, styles.verifiedPill)}
+                style={{
+                  backgroundColor: verificationBadge.backgroundColor,
+                  color: verificationBadge.color,
+                }}>
+                {isVerified ? (
+                  <IoCheckmarkCircle size={14} />
+                ) : (
+                  <span className={styles.pillDot} />
+                )}
+                {verificationBadge.status}
+              </span>
+              {role === 'recruiter' && (
+                <span
+                  className={cn(styles.pill, styles.paidPill)}
+                  style={{
+                    backgroundColor: planBadge.backgroundColor,
+                    color: planBadge.color,
+                  }}>
+                  <MdOutlineWorkspacePremium size={14} />
+                  {isPaid ? 'Paid Plan' : 'Free plan'}
+                </span>
+              )}
+            </div>
           </div>
+
+          {profileRoute && (
+            <button
+              type="button"
+              className={styles.menuRow}
+              onClick={() => goTo(profileRoute)}
+              role="menuitem">
+              <span className={styles.menuIcon}>
+                <HiOutlineUser size={20} />
+              </span>
+              <span className={styles.menuCopy}>
+                <span className={styles.menuTitle}>My Profile</span>
+                <span className={styles.menuHint}>
+                  View and manage your profile
+                </span>
+              </span>
+              <IoIosArrowForward className={styles.menuChevron} />
+            </button>
+          )}
+
+          {planRoute && (
+            <button
+              type="button"
+              className={styles.menuRow}
+              onClick={() => goTo(planRoute)}
+              role="menuitem">
+              <span className={styles.menuIcon}>
+                <HiOutlineCreditCard size={20} />
+              </span>
+              <span className={styles.menuCopy}>
+                <span className={styles.menuTitle}>Plan & Billing</span>
+                <span className={styles.menuHint}>
+                  View your plan details and billing history
+                </span>
+              </span>
+              <IoIosArrowForward className={styles.menuChevron} />
+            </button>
+          )}
+
+          <button
+            type="button"
+            className={cn(styles.menuRow, styles.logoutRow)}
+            onClick={() => logout()}
+            role="menuitem">
+            <span className={cn(styles.menuIcon, styles.logoutIcon)}>
+              <HiArrowRightOnRectangle size={20} />
+            </span>
+            <span className={styles.menuCopy}>
+              <span className={cn(styles.menuTitle, styles.logoutTitle)}>
+                Logout
+              </span>
+              <span className={styles.menuHint}>Sign out of your account</span>
+            </span>
+          </button>
         </div>
       )}
     </div>

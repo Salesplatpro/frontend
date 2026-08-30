@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import {
+  dashboardPathForRole,
+  loginPathWithNext,
+} from '@/features/auth/utils/dashboardPath'
 import { notify } from '@/utils/toastNotifications'
 
 interface ProtectedRouteProps {
@@ -11,6 +15,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const { user, isLoggedIn, token } = useAuthStore()
   const userRole = user?.userRole
+  const location = useLocation()
 
   useEffect(() => {
     if (isLoggedIn && user && userRole && !allowedRoles.includes(userRole)) {
@@ -21,11 +26,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   }, [user, isLoggedIn, userRole, allowedRoles])
 
   if (!token) {
-    return <Navigate to="/login" />
+    const applyEntry = location.pathname.match(/^(\/apply\/[^/]+)/)
+    const next = applyEntry
+      ? applyEntry[1]
+      : `${location.pathname}${location.search}`
+    const loginTo = loginPathWithNext(next)
+    return <Navigate to={loginTo} replace />
   }
 
   if (user && userRole && !allowedRoles.includes(userRole)) {
-    return <Navigate to="/" />
+    return <Navigate to={dashboardPathForRole(userRole)} replace />
   }
 
   return <Outlet />

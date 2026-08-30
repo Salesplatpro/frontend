@@ -7,17 +7,32 @@
 
 .notificationIcon {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-text-heading);
 }
 
 .notificationIconClickable {
   cursor: pointer;
+  border-radius: var(--radius-full);
+
+  &:hover {
+    background: var(--color-bg-subtle);
+  }
 }
 
-.countBadge {
+.unreadDot {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  transform: scale(0.75);
+  top: 6px;
+  right: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  border: 2px solid var(--color-white);
 }
 
 .loadingRow {
@@ -49,10 +64,6 @@
   &.short {
     width: 80px;
   }
-
-  &.long {
-    width: 128px;
-  }
 }
 
 .errorText {
@@ -60,48 +71,199 @@
   font-size: 14px;
 }
 
-.userRow {
+.trigger {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-}
+  padding: 4px 4px 4px 8px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  border-radius: var(--radius-lg);
 
-.userInfoHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  &:hover {
+    background: var(--color-bg-subtle);
+  }
 }
 
 .name {
   font-weight: 600;
-}
-
-.email {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-text-heading);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.dropdownToggle {
-  cursor: pointer;
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px 3px 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.pillDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.avatarWrap {
+  display: flex;
+}
+
+.chevron {
+  color: var(--color-text-muted);
+  transition: transform 0.15s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
 }
 
 .dropdownMenu {
   position: absolute;
   right: 0;
-  top: 100%;
-  margin-top: var(--space-2);
-  width: 192px;
-  background-color: #4884df;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-md);
-  z-index: 10;
+  top: calc(100% + 10px);
+  width: 340px;
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(16, 24, 40, 0.12),
+    0 0 0 1px rgba(16, 24, 40, 0.04);
+  z-index: 40;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 48px;
+    width: 12px;
+    height: 12px;
+    background: var(--color-white);
+    transform: rotate(45deg);
+    box-shadow: -1px -1px 0 rgba(16, 24, 40, 0.04);
+  }
 }
 
-.dropdownItem {
-  padding: var(--space-2) var(--space-4);
+.dropdownHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerAvatar {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.onlineDot {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  border: 2px solid var(--color-white);
+}
+
+.headerName {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-heading);
+}
+
+.headerEmail {
+  margin: 4px 0 12px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.headerPills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.menuRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  background: transparent;
+  text-align: left;
   cursor: pointer;
-  color: #ffffff;
-  font-weight: 500;
+  font: inherit;
+  color: inherit;
+
+  &:hover {
+    background: var(--color-bg-subtle);
+  }
+}
+
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--color-bg-subtle);
+  color: var(--color-text-heading);
+  flex-shrink: 0;
+}
+
+.menuCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.menuTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-heading);
+}
+
+.menuHint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.menuChevron {
+  color: var(--color-grey-400);
+  flex-shrink: 0;
+}
+
+.logoutIcon {
+  background: #fde8e4;
+  color: var(--color-danger);
+}
+
+.logoutTitle {
+  color: var(--color-danger);
 }
 
 @keyframes pulse {
@@ -111,5 +273,20 @@
   }
   50% {
     opacity: 0.5;
+  }
+}
+
+@media (max-width: 980px) {
+  .name,
+  .pill {
+    display: none;
+  }
+
+  .headerPills .pill {
+    display: inline-flex;
+  }
+
+  .dropdownMenu {
+    width: min(340px, calc(100vw - 24px));
   }
 }

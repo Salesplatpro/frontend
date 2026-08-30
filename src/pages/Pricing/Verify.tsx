@@ -2,56 +2,55 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { verifyPaidCheckout } from '@/features/pricing/services/checkoutService'
+import { useProfile } from '@/features/profile/hooks/useProfile'
+import { getErrorMessage } from '@/utils/getErrorMessage'
+import { notify } from '@/utils/toastNotifications'
 
 import { Button, DisplayError } from '../../components'
-import { useVerifyPaymentMutation } from '../../redux/api/apiSlice'
-import { getErrorMessage } from '../../utils/getErrorMessage'
-import { notify } from '../../utils/toastNotifications'
 
 const VerifyPaymentPage: React.FC = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const [verifyPayment] = useVerifyPaymentMutation()
+  const { mutate } = useProfile()
   const [error, setError] = useState<string | null>(null)
 
-  const reference = searchParams.get('reference')
+  const reference = searchParams.get('reference') || searchParams.get('trxref')
 
   useEffect(() => {
     const verify = async () => {
       if (!reference) {
         notify('error', 'Missing payment reference.')
-        return navigate('/pricing')
+        navigate('/pricing')
+        return
       }
 
       try {
-        const response = await verifyPayment({ reference }).unwrap()
-        if (response?.status) {
-          notify('success', 'Payment verified successfully!')
-          navigate('/pricing')
-        } else {
-          notify('error', response?.message || 'Verification failed')
-          navigate('/pricing')
-        }
-      } catch (error) {
+        await verifyPaidCheckout(reference)
+        await mutate()
+        notify('success', 'Payment verified. You are now on the Paid plan.')
+        navigate('/recruiterDashboard/plan')
+      } catch (err) {
         const message = getErrorMessage(
-          error,
-          'Failed to initialize payment. Please try again.',
+          err,
+          'Payment verification failed. Please try again.',
         )
         setError(message)
         notify('error', message)
-        // navigate('/')
       }
     }
 
-    verify()
-  }, [reference, verifyPayment, navigate])
+    void verify()
+  }, [mutate, navigate, reference])
 
   return (
     <div className="w-full h-screen flex flex-col justify-center items-center">
       {error ? (
         <div>
           <DisplayError message={error} />
-          <Button onClick={() => navigate('/pricing')}>Go Back</Button>
+          <Button onClick={() => navigate('/recruiterDashboard/plan')}>
+            Go to Plan
+          </Button>
         </div>
       ) : (
         <Spinner fullPage />
@@ -61,5 +60,3 @@ const VerifyPaymentPage: React.FC = () => {
 }
 
 export default VerifyPaymentPage
-
-// https://auxhr.com/payment/verify?trxref=clmdgkgx3b&reference=clmdgkgx3b   ku2x8rqyau

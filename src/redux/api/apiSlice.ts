@@ -15,7 +15,11 @@ export const api = createApi({
     }),
 
     paymentInitiate: builder.mutation({
-      query: (data) => ({
+      query: (data: {
+        planKey?: string
+        interval?: string
+        planId?: string
+      }) => ({
         url: `/payments`,
         method: 'POST',
         body: data,

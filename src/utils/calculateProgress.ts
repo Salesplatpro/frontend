@@ -1,22 +1,19 @@
 import { ProfileFormValues } from '@/features/profile/types'
 
-const PROFILE_FIELDS: (keyof ProfileFormValues)[] = [
-  'bio',
-  'role',
-  'maxSalary',
-  'minSalary',
-  'experience',
-]
-
+/** Mirrors backend getProfileCompletion so the bar matches what Continue/prescreening require. */
 export const calculateProgress = (
   values: ProfileFormValues,
   hasCv: boolean,
 ): number => {
-  const filledFields = PROFILE_FIELDS.filter((field) => {
-    const value = values[field]
-    return Array.isArray(value) ? value.length > 0 : value !== ''
-  })
-  const totalFields = PROFILE_FIELDS.length + 1
-
-  return ((filledFields.length + (hasCv ? 1 : 0)) / totalFields) * 100
+  const fields = [
+    !!values.bio,
+    hasCv,
+    values.workType.length > 0,
+    !!values.location.country.name,
+    !!values.experience,
+    !!(values.maxSalary && values.minSalary),
+    values.role.length > 0,
+  ]
+  const completed = fields.filter(Boolean).length
+  return Math.round((completed / fields.length) * 100)
 }

@@ -50,9 +50,14 @@ export const CompanyBanner: React.FC = () => {
           <span className={styles.name}>
             {activeOrganization?.name ?? 'No company yet'}
           </span>
-          {activeOrganization && (
-            <span className={styles.activeTag}>Active</span>
-          )}
+          <span className={styles.metaRow}>
+            {activeOrganization && (
+              <span className={styles.activeTag}>Active</span>
+            )}
+            <span className={styles.planTag}>
+              {profile?.billingPlan === 'paid' ? 'Paid' : 'Free plan'}
+            </span>
+          </span>
         </div>
         {isOpen ? <IoIosArrowUp size={16} /> : <IoIosArrowDown size={16} />}
       </button>
@@ -76,6 +81,15 @@ export const CompanyBanner: React.FC = () => {
               <AiOutlinePlus size={16} />
             </div>
             <span>Create company</span>
+          </button>
+          <button
+            type="button"
+            className={styles.dropdownRow}
+            onClick={() => goTo('/recruiterDashboard/plan')}>
+            <div className={styles.iconBox}>
+              <HiOutlineUserGroup size={16} />
+            </div>
+            <span>View plan</span>
           </button>
         </div>
       )}

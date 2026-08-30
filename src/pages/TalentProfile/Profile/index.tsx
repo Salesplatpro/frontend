@@ -7,8 +7,8 @@ import { LocationSelect } from '@/components/forms/LocationSelect'
 import { RoleMultiSelect } from '@/components/forms/Roles/RoleMultiSelect'
 import {
   COMPENSATION_PERIOD_OPTIONS,
-  CURRENCY_OPTIONS,
   EXPERIENCE_LEVEL_OPTIONS,
+  PROFILE_CURRENCY_OPTIONS,
   Select,
 } from '@/components/forms/Select'
 import { Button } from '@/components/ui/Button'
@@ -128,6 +128,11 @@ const TalentProfile = () => {
                     <WorkTypeCheckboxes
                       value={values.workType}
                       onChange={(value) => setFieldValue('workType', value)}
+                      error={
+                        touched.workType && typeof errors.workType === 'string'
+                          ? errors.workType
+                          : undefined
+                      }
                     />
                   </div>
                 </div>
@@ -157,7 +162,7 @@ const TalentProfile = () => {
                   <div className={styles.salaryField}>
                     <Select
                       label="Currency"
-                      options={CURRENCY_OPTIONS}
+                      options={PROFILE_CURRENCY_OPTIONS}
                       value={values.currency}
                       onChange={(value) => setFieldValue('currency', value)}
                       placeholder="Select currency"
