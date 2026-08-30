@@ -12,6 +12,8 @@ import {
 } from '@/components/features/jobs/CompanyTag'
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import { StatusBadge } from '@/components/ui/Badge'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
@@ -104,32 +106,26 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
   }
 
   return (
-    <div className={styles.page}>
+    <PageShell wide>
       <BackButton onClick={onBack} />
+      <PageHero
+        compact
+        title={
+          job.role?.name ? capitalizeEachWord(job.role.name) : 'Job details'
+        }
+        lead={postedByName ? `Posted by ${postedByName}` : undefined}
+        pills={
+          job.status ? (
+            <StatusBadge status={job.status} {...getStatusBadge(job.status)} />
+          ) : undefined
+        }
+      />
       <div className={styles.header}>
-        <div>
-          <div className={styles.titleRow}>
-            <h1 className={styles.title}>
-              {job.role?.name
-                ? capitalizeEachWord(job.role.name)
-                : 'Job details'}
-            </h1>
-            {job.status && (
-              <StatusBadge
-                status={job.status}
-                {...getStatusBadge(job.status)}
-              />
-            )}
-          </div>
-          <CompanyTag
-            organization={job.organization}
-            size="md"
-            className={styles.company}
-          />
-          {postedByName && (
-            <p className={styles.postedBy}>Posted by {postedByName}</p>
-          )}
-        </div>
+        <CompanyTag
+          organization={job.organization}
+          size="md"
+          className={styles.company}
+        />
         <ShareOptions handleShare={() => setIsModalOpen(true)} jobId={jobId} />
       </div>
 
@@ -231,7 +227,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
           </div>
         </div>
       </Modal>
-    </div>
+    </PageShell>
   )
 }
 
