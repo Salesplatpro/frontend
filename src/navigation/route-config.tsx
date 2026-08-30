@@ -1,5 +1,5 @@
 import React from 'react'
-import { RouteObject } from 'react-router-dom'
+import { Navigate, RouteObject } from 'react-router-dom'
 
 import SingleJob from '@/components/features/jobs/SingleJob'
 import CustomerStories from '@/components/features/landing/customerStories'
@@ -283,22 +283,24 @@ export const routeConfig: RouteObject[] = [
         element: <ProtectedRoute allowedRoles={['recruiter']} />,
         children: [
           {
-            path: 'verify-email',
-            element: <AccountEmailVerification />,
-          },
-          {
             path: '',
             element: <RecruiterProfileSidebar />,
             children: [
               {
+                path: 'dashboard',
+                element: <Dashboard />,
+              },
+              {
+                path: 'verify-email',
                 element: (
-                  <RequireEmailVerified redirectTo="/recruiterDashboard/verify-email" />
+                  <Navigate to="/recruiterDashboard/dashboard" replace />
+                ),
+              },
+              {
+                element: (
+                  <RequireEmailVerified redirectTo="/recruiterDashboard/dashboard" />
                 ),
                 children: [
-                  {
-                    path: 'dashboard',
-                    element: <Dashboard />,
-                  },
                   {
                     path: 'dashboard/allapplications',
                     element: <AllApplications />,

@@ -4,6 +4,8 @@ import React from 'react'
 import { Chart } from '@/components/ui/Chart'
 import { Spinner } from '@/components/ui/Spinner'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
+import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
+import { EmailVerifiedModal } from '@/features/email-verification/components/EmailVerifiedModal'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
@@ -14,18 +16,34 @@ import RecentApplications from './RecentApplications'
 import RecentCompilation from './RecentCompilation'
 
 const Dashboard = () => {
-  const { profile } = useProfile()
+  const { profile, isLoading: isProfileLoading } = useProfile()
+  const isVerified = !!profile?.emailVerifiedAt
   const {
     data: dashboardData,
     isLoading: dashboardLoading,
     error: dashboardError,
-  } = useFetchDashboardQuery({})
+  } = useFetchDashboardQuery({}, { skip: !isVerified })
+
+  if (isProfileLoading) {
+    return <Spinner fullPage />
+  }
+
+  if (!isVerified) {
+    return (
+      <div className={styles.container}>
+        <EmailVerificationPanel />
+        <WelcomeModal />
+        <EmailVerifiedModal />
+      </div>
+    )
+  }
 
   if (dashboardLoading)
     return (
       <>
         <Spinner fullPage />
         <WelcomeModal />
+        <EmailVerifiedModal />
       </>
     )
 
@@ -34,6 +52,7 @@ const Dashboard = () => {
       <>
         <Alert severity="error">Error Fetching Data</Alert>
         <WelcomeModal />
+        <EmailVerifiedModal />
       </>
     )
 
@@ -59,6 +78,7 @@ const Dashboard = () => {
 
       <RecentCompilation />
       <WelcomeModal />
+      <EmailVerifiedModal />
     </div>
   )
 }

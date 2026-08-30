@@ -5,6 +5,7 @@ import { Modal } from 'react-responsive-modal'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Heading, Text } from '@/components/ui/Typography'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
 
 import styles from './EmailVerifiedModal.module.scss'
 
@@ -15,6 +16,7 @@ type EmailVerifiedLocationState = {
 export const EmailVerifiedModal = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const userRole = useAuthStore((state) => state.user?.userRole)
   const { showEmailVerifiedModal } =
     (location.state as EmailVerifiedLocationState) || {}
 
@@ -23,6 +25,11 @@ export const EmailVerifiedModal = () => {
   const handleClose = () => {
     navigate(location.pathname, { replace: true, state: null })
   }
+
+  const description =
+    userRole === 'recruiter'
+      ? "Your email address is confirmed. You're all set to start hiring."
+      : "Your email address is confirmed. You're all set to start your job search."
 
   return (
     <Modal
@@ -39,8 +46,7 @@ export const EmailVerifiedModal = () => {
         </span>
         <Heading level={2}>Email verified!</Heading>
         <Text as="p" color="primary" className={styles.description}>
-          Your email address is confirmed. You&apos;re all set to start your job
-          search.
+          {description}
         </Text>
       </div>
     </Modal>
