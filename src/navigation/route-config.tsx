@@ -28,7 +28,6 @@ import { LoginPage, SignupPage } from '@/features/auth/pages'
 import AccountEmailVerification from '@/features/email-verification/pages/AccountEmailVerification'
 import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
-import PageNotFound from '@/PageNotFound'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
 import Feedback from '@/pages/AdminProfile/Feedback/Feedback'
@@ -42,7 +41,6 @@ import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
 import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
 import {
-  ApplicationProgress,
   Chat,
   MyJobPosts,
   ProcessCV,
@@ -71,30 +69,33 @@ import SearchResult from '@/pages/RecruiterProfile/TalentSearch/SearchResult'
 import SearchTalent from '@/pages/RecruiterProfile/TalentSearch/SearchTalent'
 import { ViewCvPage } from '@/pages/RecruiterProfile/ViewCv/ViewCvPage'
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
-import ProgressView from '@/pages/TalentProfile/ApplicationPipeline/ProgressView/ProgressView'
 import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
 import Inbox from '@/pages/TalentProfile/Inbox/InboxList'
 import IndividualJob from '@/pages/TalentProfile/Job/IndividualJob'
 import Job from '@/pages/TalentProfile/Job/Job'
+import {
+  RedirectPersonalityToJob,
+  RedirectPersonalizedToJob,
+  RedirectPipelineToJob,
+} from '@/pages/TalentProfile/Job/PipelineRedirects'
 import Notifications from '@/pages/TalentProfile/Notifications/NotificationsList'
 import TalentProfile from '@/pages/TalentProfile/Profile'
 import { Support } from '@/pages/TalentProfile/Support'
-import PersonalityTest from '@/pages/TalentProfile/TalentAssessment/PersonalityTest'
-import PersonalizedTest from '@/pages/TalentProfile/TalentAssessment/PersonalizedTest'
 import TalentProfileSidebar from '@/pages/TalentProfile/TalentProfileSidebar'
 import { paths } from '@/paths'
 
 import { RootLayout } from './RootLayout'
+import { RouteErrorPage } from './RouteErrorPage'
 
 export const routeConfig: RouteObject[] = [
   {
     element: <RootLayout />,
-    errorElement: <PageNotFound />,
+    errorElement: <RouteErrorPage />,
     children: [
       {
         path: '/',
         element: <MainLayout />,
-        errorElement: <PageNotFound />,
+        errorElement: <RouteErrorPage />,
         children: [
           {
             path: '/',
@@ -263,15 +264,15 @@ export const routeConfig: RouteObject[] = [
                   },
                   {
                     path: 'applicationPipeline/personalizedTest/:jobId/:talentId',
-                    element: <PersonalizedTest />,
+                    element: <RedirectPersonalizedToJob />,
                   },
                   {
                     path: 'applicationPipeline/:jobId',
-                    element: <ProgressView />,
+                    element: <RedirectPipelineToJob />,
                   },
                   {
                     path: 'applicationPipeline/personalityTest/:jobId',
-                    element: <PersonalityTest />,
+                    element: <RedirectPersonalityToJob />,
                   },
                 ],
               },
@@ -287,6 +288,10 @@ export const routeConfig: RouteObject[] = [
             path: '',
             element: <RecruiterProfileSidebar />,
             children: [
+              {
+                index: true,
+                element: <Navigate to="dashboard" replace />,
+              },
               {
                 path: 'dashboard',
                 element: <Dashboard />,
@@ -370,10 +375,6 @@ export const routeConfig: RouteObject[] = [
                   {
                     path: 'singleJobPost/:jobId',
                     element: <SingleJobPost />,
-                  },
-                  {
-                    path: 'singleJobPost/:jobId/:applicationId',
-                    element: <ApplicationProgress />,
                   },
                   {
                     path: 'editJob/:jobId',
