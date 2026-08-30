@@ -10,7 +10,9 @@ export const fetchAssessment = () =>
 
 export const submitAssessment = (payload: SubmitPayload) =>
   httpClient
-    .post<ApiResponse<Assessment>>(`${PRESCREENING_ENDPOINT}/submit`, payload)
+    .post<ApiResponse<Assessment>>(`${PRESCREENING_ENDPOINT}/submit`, payload, {
+      timeout: 120_000,
+    })
     .then((res) => res.data)
 
 export const retakeAssessment = () =>

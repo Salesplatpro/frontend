@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material'
-import { Field, Form, Formik } from 'formik'
+import { Field, Form, Formik, FormikProps } from 'formik'
 import React, { useEffect } from 'react'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
@@ -16,6 +16,7 @@ import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
 import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
+import { ProfileFormValues } from '@/features/profile/types'
 
 import BioTextArea from './BioTextArea'
 import styles from './Profile.module.scss'
@@ -24,7 +25,11 @@ import { validationSchema } from './ProileValidationSchema'
 import UploadCV from './UploadCV'
 import { useProfileForm } from './useProfileForm'
 
-const TalentProfile = () => {
+type TalentProfileProps = {
+  formikRef?: React.Ref<FormikProps<ProfileFormValues>>
+}
+
+const TalentProfile = ({ formikRef }: TalentProfileProps) => {
   const {
     profile,
     isLoading,
@@ -52,6 +57,7 @@ const TalentProfile = () => {
 
       <PagePanel>
         <Formik
+          innerRef={formikRef}
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}

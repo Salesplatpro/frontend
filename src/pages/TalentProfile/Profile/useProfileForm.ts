@@ -36,9 +36,11 @@ export const useProfileForm = () => {
 
     if (Object.keys(patch).length > 0) {
       const success = await updateProfile(patch)
-      if (success) {
-        resetForm({ values })
+      if (!success) {
+        setSubmitting(false)
+        throw new Error('Profile update failed')
       }
+      resetForm({ values })
     }
 
     setSubmitting(false)

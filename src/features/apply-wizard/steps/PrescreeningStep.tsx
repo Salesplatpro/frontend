@@ -13,15 +13,15 @@ const PrescreeningStep: React.FC = () => {
   const assessment = usePreAssessmentStore((s) => s.assessment)
   const isCompleted = assessment?.status === 'completed'
 
+  const goToJob = () => navigate(`/apply/${jobId}/details`)
+
   return (
     <div className={styles.page}>
-      <PreAssessmentPage />
+      <PreAssessmentPage onContinue={goToJob} />
       {isCompleted && (
         <div className={styles.continueBar}>
           <span className={styles.message}>Prescreening complete.</span>
-          <Button onClick={() => navigate(`/apply/${jobId}/details`)}>
-            Continue to Job
-          </Button>
+          <Button onClick={goToJob}>Continue to Job</Button>
         </div>
       )}
     </div>
