@@ -1,19 +1,22 @@
 import React from 'react'
 
-import styles from './ApplicationPipeline.module.scss'
+import { PageHero } from '@/components/layout/PageHero'
+import { PagePanel } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
+
 import { PipelineTable } from './PipelineTable'
 
 export const ApplicationPipeline = () => {
   return (
-    <div className={styles.pipelineContainer}>
-      <div>
-        <div className={styles.title}>Application Pipelines</div>
-        <div>
-          Your job application pipeline. Track your progress and see where you
-          are in the process.
-        </div>
-      </div>
-      <PipelineTable />
-    </div>
+    <PageShell wide>
+      <PageHero
+        compact
+        title="Application Pipelines"
+        lead="Your job application pipeline. Track your progress and see where you are in the process."
+      />
+      <PagePanel>
+        <PipelineTable />
+      </PagePanel>
+    </PageShell>
   )
 }

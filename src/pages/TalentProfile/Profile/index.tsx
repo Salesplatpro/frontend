@@ -11,6 +11,8 @@ import {
   PROFILE_CURRENCY_OPTIONS,
   Select,
 } from '@/components/forms/Select'
+import { PagePanel } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
 import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
@@ -45,10 +47,10 @@ const TalentProfile = () => {
   }
 
   return (
-    <div className={styles.page}>
+    <PageShell>
       <TalentProfileHeader profile={profile} progress={formProgress} />
 
-      <div className={styles.formCard}>
+      <PagePanel>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -265,8 +267,8 @@ const TalentProfile = () => {
             )
           }}
         </Formik>
-      </div>
-    </div>
+      </PagePanel>
+    </PageShell>
   )
 }
 

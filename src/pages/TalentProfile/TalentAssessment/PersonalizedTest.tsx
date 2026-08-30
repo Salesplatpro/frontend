@@ -216,9 +216,9 @@ const PersonalizedTest: React.FC = () => {
   }
 
   return (
-    <div className="lg:w-[70%] md:w-[80%] mx-auto mt-8">
-      <div className="ml-8">
-        <h2 className="text-3xl font-raleway text-grey-900 font-bold">
+    <div className="w-full max-w-full px-4 lg:w-[70%] md:w-[80%] mx-auto mt-8 box-border">
+      <div className="ml-0 sm:ml-8">
+        <h2 className="text-2xl md:text-3xl font-raleway text-grey-900 font-bold">
           Personalized Test
         </h2>
         <p className="text-xl text-grey-900 font-medium mt-3 font-raleway">

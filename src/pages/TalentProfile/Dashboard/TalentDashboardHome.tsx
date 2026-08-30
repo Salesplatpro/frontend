@@ -1,9 +1,14 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Card, Chart, ColumnDef, DataTable } from '@/components'
+import { Chart, ColumnDef, DataTable } from '@/components'
+import { PageHero } from '@/components/layout/PageHero'
+import { PagePanel, StatCard, StatGrid } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
 import { StatusBadge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
-import { Heading, Text } from '@/components/ui/Typography'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
@@ -52,6 +57,7 @@ const columns: ColumnDef<AllJobTypes>[] = [
 ]
 
 const TalentDashboardHome = () => {
+  const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
   const { profile, isLoading: isProfileLoading } = useProfile()
   const isVerified = !!profile?.emailVerifiedAt
@@ -105,32 +111,44 @@ const TalentDashboardHome = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <PageShell wide>
       {isVerified ? (
         <>
-          <div>
-            <Heading level={2}>Welcome back, {user?.firstName}</Heading>
-            <Text as="p" color="primary">
-              Here&apos;s what&apos;s happening with your job search today.
-            </Text>
-          </div>
+          <PageHero
+            kicker="Talent dashboard"
+            title={`Welcome back, ${user?.firstName ?? ''}`.trim()}
+            lead="Here's what's happening with your job search today."
+            meta={[
+              {
+                label: 'Applications',
+                value: applications.length,
+              },
+              {
+                label: 'Profile',
+                value: `${
+                  profile?.profileCompletion?.percentage ?? 0
+                }% complete`,
+              },
+              {
+                label: 'Shortlisted',
+                value: shortlisted,
+              },
+            ]}
+          />
 
           {isLoading ? (
             <Spinner fullPage />
           ) : (
             <>
-              <div className={styles.statsRow}>
+              <StatGrid columns={4}>
                 {tiles.map((tile) => (
-                  <Card key={tile.label} className={styles.statTile}>
-                    <Text size="fs-sm" color="secondary">
-                      {tile.label}
-                    </Text>
-                    <Text size="fs-2xl" weight="bolder">
-                      {tile.value}
-                    </Text>
-                  </Card>
+                  <StatCard
+                    key={tile.label}
+                    value={tile.value}
+                    label={tile.label}
+                  />
                 ))}
-              </div>
+              </StatGrid>
 
               <div className={styles.grid}>
                 <Chart
@@ -138,22 +156,26 @@ const TalentDashboardHome = () => {
                   title="Applications by Status"
                   data={statusBreakdown}
                 />
-                <div>
-                  <Heading level={4} className={styles.tableTitle}>
-                    Recent Applications
-                  </Heading>
+                <PagePanel title="Recent Applications">
                   <DataTable
                     columns={columns}
                     data={recentApplications}
                     getRowKey={(row) => row.id ?? ''}
                     ariaLabel="Recent applications"
                     emptyState={
-                      <div className="py-8 text-center text-grey-500">
-                        You haven&apos;t applied to any jobs yet.
-                      </div>
+                      <EmptyState
+                        title="No applications yet"
+                        description="Start applying — roles that match your profile will show up here."
+                        action={
+                          <Button
+                            onClick={() => navigate('/talentDashboard/job')}>
+                            Browse jobs
+                          </Button>
+                        }
+                      />
                     }
                   />
-                </div>
+                </PagePanel>
               </div>
             </>
           )}
@@ -164,7 +186,7 @@ const TalentDashboardHome = () => {
 
       <WelcomeModal />
       <EmailVerifiedModal />
-    </div>
+    </PageShell>
   )
 }
 

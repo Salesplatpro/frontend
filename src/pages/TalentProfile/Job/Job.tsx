@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 
 import { JobOrganization } from '@/components/features/jobs/CompanyTag'
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { DisplayError } from '@/components/ui/ErrorState'
 import { Spinner } from '@/components/ui/Spinner'
-import { Heading, Text } from '@/components/ui/Typography'
 
 import { Button } from '../../../components'
 import { useFetchJobsQuery } from '../../../redux/api/talent'
@@ -72,13 +73,12 @@ const Job = () => {
   const isLoadingMore = isFetching && offset > 0
 
   return (
-    <div className={styles.page}>
-      <div className={styles.header}>
-        <Heading level={1}>Jobs</Heading>
-        <Text color="primary" className={styles.subtitle}>
-          Find your dream job by searching and applying directly.
-        </Text>
-      </div>
+    <PageShell wide>
+      <PageHero
+        compact
+        title="Jobs"
+        lead="Find your dream job by searching and applying directly."
+      />
 
       <div className={styles.section}>
         <JobFilter filters={filters} onApply={handleFilterApply} />
@@ -133,7 +133,7 @@ const Job = () => {
           )}
         </div>
       </div>
-    </div>
+    </PageShell>
   )
 }
 
