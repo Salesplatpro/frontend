@@ -4,10 +4,10 @@
 }
 
 .listContainer {
-  text-decoration: none; // remove underline
+  text-decoration: none;
   border: none;
   outline: none;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text-on-dark-muted);
   @extend %sharedStyles;
   align-items: center;
   padding: 10px 16px;
@@ -25,7 +25,8 @@
 
 .listContainer:hover {
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-on-dark);
 }
 
 .listItem {
@@ -42,21 +43,22 @@
   height: 36px;
   flex-shrink: 0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
   color: inherit;
 }
 
 .active {
-  background: rgba(72, 132, 223, 0.16);
-  box-shadow: 0 0 12px rgba(72, 132, 223, 0.25);
-  color: #6fa3f0;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 12px rgba(73, 133, 223, 0.35);
+  color: var(--color-text-on-dark);
 
   .iconBox {
-    background: rgba(72, 132, 223, 0.25);
-    color: #6fa3f0;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--color-text-on-dark);
   }
 
   &:hover {
-    background: rgba(72, 132, 223, 0.16);
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--color-text-on-dark);
   }
 }

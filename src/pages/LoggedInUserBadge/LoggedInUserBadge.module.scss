@@ -135,7 +135,7 @@
   position: absolute;
   right: 0;
   top: calc(100% + 10px);
-  width: 340px;
+  width: min(340px, calc(100vw - 16px));
   background: var(--color-white);
   border-radius: 16px;
   box-shadow: 0 18px 40px rgba(16, 24, 40, 0.12),
@@ -287,6 +287,18 @@
   }
 
   .dropdownMenu {
-    width: min(340px, calc(100vw - 24px));
+    width: min(340px, calc(100vw - 16px));
+    right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .name,
+  .pill {
+    display: none;
+  }
+
+  .dropdownMenu {
+    width: min(340px, calc(100vw - 16px));
   }
 }

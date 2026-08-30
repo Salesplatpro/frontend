@@ -22,6 +22,14 @@ const RecruiterProfileSidebar = () => {
         </button>
         <LoggedInUserBadge />
       </div>
+      {isOpen && (
+        <button
+          type="button"
+          className="sidebar-backdrop"
+          aria-label="Close menu"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
       <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
         <SideBar
           sideBarData={sidebarData}
