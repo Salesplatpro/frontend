@@ -1,0 +1,30 @@
+@use '../../styles/form-field' as *;
+
+.field {
+  @extend %form-field-group;
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  @extend %form-label;
+}
+
+.required {
+  @extend %form-required;
+}
+
+.input {
+  @extend %form-input;
+}
+
+.hint {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.disabled {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}

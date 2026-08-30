@@ -27,14 +27,14 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
     <div className="relative">
       <button
         onClick={() => setDropdownVisible(!dropdownVisible)}
-        className="flex items-center space-x-2 px-4 py-2 border border-[#4884DF] rounded-t-lg hover:bg-gray-100">
+        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[10px] border border-[rgba(36,65,171,0.22)] bg-white text-[13px] font-semibold text-[#2441ab] hover:-translate-y-px transition">
         <IoFilterOutline className="text-gray-600" />
         <span className="text-grey-700 text-sm font-medium">Filters</span>
       </button>
 
       {/* Dropdown List */}
       {dropdownVisible && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-[200px] overflow-y-auto">
+        <div className="absolute right-0 mt-2 w-64 bg-white border border-[var(--color-border)] rounded-[12px] shadow-lg z-10 max-h-[200px] overflow-y-auto">
           {isLoading ? (
             <p className="p-4">Loading jobs...</p>
           ) : error ? (
