@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components'
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
-import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { HeroAction, PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import {
   ColumnDef,
   DataTable,
@@ -134,18 +135,18 @@ export const MyScoutJobs = () => {
     : scoutJobsRaw
 
   return (
-    <div className="py-4 space-y-6">
-      <div className="flex justify-between items-center">
-        <PageHeaderTitle
-          title="My Scout Jobs"
-          description="Revisit past scouting campaigns or start a new one"
-        />
-        <Button
-          variant="primary"
-          onClick={() => navigate('/recruiterDashboard/scout/create-jd')}>
-          Create New
-        </Button>
-      </div>
+    <PageShell wide>
+      <PageHero
+        compact
+        title="My Scout Jobs"
+        lead="Revisit past scouting campaigns or start a new one"
+        actions={
+          <HeroAction
+            onClick={() => navigate('/recruiterDashboard/scout/create-jd')}>
+            Create New
+          </HeroAction>
+        }
+      />
 
       {isError ? (
         <EmptyState
@@ -206,6 +207,6 @@ export const MyScoutJobs = () => {
         onConfirm={() => void handleDelete()}
         onCancel={() => setJobToDelete(null)}
       />
-    </div>
+    </PageShell>
   )
 }

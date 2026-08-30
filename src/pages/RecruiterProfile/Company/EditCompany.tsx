@@ -1,14 +1,17 @@
 import React from 'react'
+import { BsBuilding } from 'react-icons/bs'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
-import { Card } from '@/components/ui/Card'
-import { EmptyState } from '@/components/ui/EmptyState'
+import { PageHero, pageHeroStyles } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
+import { BackButton } from '@/components/ui/BackButton'
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import { useUpdateOrganization } from '@/features/organizations/hooks/useUpdateOrganization'
 import { UpdateOrganizationPayload } from '@/features/organizations/types'
 
+import listStyles from './Company.module.scss'
 import {
   CompanyForm,
   CompanyFormValues,
@@ -27,7 +30,6 @@ const EditCompany = () => {
 
   const handleSubmit = async (values: CompanyFormValues) => {
     if (!organization) return
-    // email and website are locked server-side too — sending them would be ignored.
     const payload: UpdateOrganizationPayload = {
       name: values.name,
       phone: values.phone,
@@ -61,22 +63,37 @@ const EditCompany = () => {
     : EMPTY_COMPANY_FORM
 
   return (
-    <div className="flex flex-col space-y-12">
-      <PageHeaderTitle
-        title={organization ? `Edit ${organization.name}` : 'Edit company'}
-        description="Update your company details. Email and website are fixed once a company is created."
-        onBack={goBack}
-      />
-
+    <PageShell>
+      <BackButton onClick={goBack} />
       {isLoading ? (
         <Spinner />
       ) : !organization ? (
-        <EmptyState
-          title="Company not found"
-          description="This company either doesn't exist or isn't one you created."
-        />
+        <div className={listStyles.empty}>
+          <div className={listStyles.emptyIcon}>
+            <BsBuilding size={24} />
+          </div>
+          <p className={listStyles.emptyTitle}>Company not found</p>
+          <p className={listStyles.emptyCopy}>
+            This company either does not exist or is not one you created.
+          </p>
+          <Button onClick={goBack}>Back to companies</Button>
+        </div>
       ) : (
-        <Card className="max-w-[700px] p-6 flex flex-col space-y-6">
+        <>
+          <PageHero
+            compact
+            kicker="Edit workspace"
+            title={organization.name}
+            lead="Change the details candidates see. Locked fields stay as they were registered so verification remains consistent."
+            chips={
+              <>
+                <span className={pageHeroStyles.chip}>Identity</span>
+                <span className={pageHeroStyles.chip}>Contact</span>
+                <span className={pageHeroStyles.chip}>Presence</span>
+              </>
+            }
+          />
+
           <CompanyForm
             mode="edit"
             initialValues={initialValues}
@@ -85,9 +102,9 @@ const EditCompany = () => {
             onSubmit={handleSubmit}
             onCancel={goBack}
           />
-        </Card>
+        </>
       )}
-    </div>
+    </PageShell>
   )
 }
 

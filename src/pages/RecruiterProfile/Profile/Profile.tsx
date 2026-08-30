@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { BsBuilding } from 'react-icons/bs'
+import React from 'react'
 import { FiDownload } from 'react-icons/fi'
 import {
   HiOutlineBriefcase,
@@ -10,13 +9,19 @@ import {
 } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 
-import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import {
+  HeroAction,
+  HeroGhost,
+  PageHero,
+  pageHeroStyles,
+} from '@/components/layout/PageHero'
+import { PagePanel, StatCard, StatGrid } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
 import { Avatar } from '@/components/ui/Avatar'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
-import { Organization } from '@/features/organizations/types'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
@@ -28,6 +33,7 @@ import {
 } from '@/redux/api/recruiter'
 import { recruiterJobPostsTypes } from '@/utils/recruiterJobPostsTypes'
 
+import { CompanyLogo } from '../Company/CompanyLogo'
 import styles from './Profile.module.scss'
 
 const formatDate = (value?: string | null) => {
@@ -42,27 +48,6 @@ const formatDate = (value?: string | null) => {
 const titleCase = (value?: string | null) => {
   if (!value) return '—'
   return value.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
-}
-
-const CompanyMark: React.FC<{ organization: Organization }> = ({
-  organization,
-}) => {
-  const [failed, setFailed] = useState(false)
-  if (!organization.logoUrl || failed) {
-    return (
-      <div className={styles.companyLogoFallback}>
-        <BsBuilding size={20} />
-      </div>
-    )
-  }
-  return (
-    <img
-      src={organization.logoUrl}
-      alt=""
-      className={styles.companyLogo}
-      onError={() => setFailed(true)}
-    />
-  )
 }
 
 export const Profile = () => {
@@ -162,90 +147,71 @@ export const Profile = () => {
   const recentScouts = scoutJobs.slice(0, 4)
 
   return (
-    <div className={styles.page}>
-      <PageHeaderTitle
-        title="My Profile"
-        description="Your recruiter identity, hiring activity, and workspace at a glance"
-      />
-
-      <section className={styles.hero}>
-        <div className={styles.heroGlow} />
-        <div className={styles.heroTop}>
-          <div className={styles.identity}>
-            <div className={styles.avatarRing}>
-              <Avatar
-                firstName={profile?.firstName}
-                lastName={profile?.lastName}
-                size="lg"
-              />
-            </div>
-            <div className={styles.heroCopy}>
-              <h1>{fullName || 'Recruiter'}</h1>
-              <p className={styles.roleLine}>
-                Hiring on Auxhr
-                {activeOrg?.name ? ` for ${activeOrg.name}` : ''}
-              </p>
-              <div className={styles.heroPills}>
-                <StatusBadge {...verificationBadge} showDot />
-                <StatusBadge
-                  status={isPaid ? 'Paid plan' : planBadge.status}
-                  backgroundColor={planBadge.backgroundColor}
-                  color={planBadge.color}
-                  showDot
-                />
-              </div>
-            </div>
+    <PageShell>
+      <PageHero
+        identity={
+          <div className={pageHeroStyles.avatarRing}>
+            <Avatar
+              firstName={profile?.firstName}
+              lastName={profile?.lastName}
+              size="lg"
+            />
           </div>
-          <div className={styles.heroActions}>
-            <Link className={styles.actionBtn} to="/recruiterDashboard/plan">
+        }
+        title={fullName || 'Recruiter'}
+        lead={`Hiring on Auxhr${
+          activeOrg?.name ? ` for ${activeOrg.name}` : ''
+        }`}
+        pills={
+          <>
+            <StatusBadge {...verificationBadge} showDot />
+            <StatusBadge
+              status={isPaid ? 'Paid plan' : planBadge.status}
+              backgroundColor={planBadge.backgroundColor}
+              color={planBadge.color}
+              showDot
+            />
+          </>
+        }
+        actions={
+          <>
+            <HeroAction to="/recruiterDashboard/plan">
               <HiOutlineCreditCard size={16} />
               Plan & billing
-            </Link>
-            <Link className={styles.ghostBtn} to="/recruiterDashboard/company">
+            </HeroAction>
+            <HeroGhost to="/recruiterDashboard/company">
               <HiOutlineOfficeBuilding size={16} />
               Companies
-            </Link>
-            <Link className={styles.ghostBtn} to="/recruiterDashboard/postjob">
+            </HeroGhost>
+            <HeroGhost to="/recruiterDashboard/postjob">
               <HiOutlineBriefcase size={16} />
               Post a job
-            </Link>
-          </div>
-        </div>
-        <div className={styles.heroMeta}>
-          <div className={styles.metaCard}>
-            <span className={styles.metaLabel}>Workspace</span>
-            <span className={styles.metaValue}>
-              {activeOrg?.name ?? 'No active company'}
-            </span>
-          </div>
-          <div className={styles.metaCard}>
-            <span className={styles.metaLabel}>Email</span>
-            <span className={styles.metaValue}>{profile?.email ?? '—'}</span>
-          </div>
-          <div className={styles.metaCard}>
-            <span className={styles.metaLabel}>Joined</span>
-            <span className={styles.metaValue}>
-              {formatDate(profile?.createdAt)}
-            </span>
-          </div>
-        </div>
-      </section>
+            </HeroGhost>
+          </>
+        }
+        meta={[
+          {
+            label: 'Workspace',
+            value: activeOrg?.name ?? 'No active company',
+          },
+          { label: 'Email', value: profile?.email ?? '—' },
+          { label: 'Joined', value: formatDate(profile?.createdAt) },
+        ]}
+      />
 
-      <div className={styles.statsGrid}>
+      <StatGrid>
         {tiles.map((tile) => (
-          <div key={tile.label} className={styles.statCard}>
-            <span className={styles.statIcon}>{tile.icon}</span>
-            <span className={styles.statValue}>{tile.value}</span>
-            <span className={styles.statLabel}>{tile.label}</span>
-          </div>
+          <StatCard
+            key={tile.label}
+            icon={tile.icon}
+            value={tile.value}
+            label={tile.label}
+          />
         ))}
-      </div>
+      </StatGrid>
 
       <div className={styles.columns}>
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <h2 className={styles.panelTitle}>Account details</h2>
-          </div>
+        <PagePanel title="Account details" flush>
           <div className={styles.detailGrid}>
             {details.map((item) => (
               <div key={item.label} className={styles.detailItem}>
@@ -254,18 +220,15 @@ export const Profile = () => {
               </div>
             ))}
           </div>
-        </section>
+        </PagePanel>
 
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <h2 className={styles.panelTitle}>Active company</h2>
-            <Link className={styles.panelLink} to="/recruiterDashboard/company">
-              Manage
-            </Link>
-          </div>
+        <PagePanel
+          title="Active company"
+          actionTo="/recruiterDashboard/company"
+          actionLabel="Manage">
           {activeOrg ? (
             <div className={styles.companyCard}>
-              <CompanyMark organization={activeOrg} />
+              <CompanyLogo name={activeOrg.name} logoUrl={activeOrg.logoUrl} />
               <div>
                 <p className={styles.companyName}>{activeOrg.name}</p>
                 <p className={styles.companyMeta}>
@@ -293,19 +256,15 @@ export const Profile = () => {
               jobs under your brand.
             </p>
           )}
-        </section>
+        </PagePanel>
       </div>
 
       <div className={styles.columns}>
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <h2 className={styles.panelTitle}>Recent job posts</h2>
-            <Link
-              className={styles.panelLink}
-              to="/recruiterDashboard/myJobPosts">
-              View all
-            </Link>
-          </div>
+        <PagePanel
+          title="Recent job posts"
+          actionTo="/recruiterDashboard/myJobPosts"
+          actionLabel="View all"
+          flush>
           {recentJobs.length === 0 ? (
             <p className={styles.empty}>No job posts yet.</p>
           ) : (
@@ -335,15 +294,13 @@ export const Profile = () => {
               ))}
             </div>
           )}
-        </section>
+        </PagePanel>
 
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <h2 className={styles.panelTitle}>Scout campaigns</h2>
-            <Link className={styles.panelLink} to="/recruiterDashboard/scout">
-              View all
-            </Link>
-          </div>
+        <PagePanel
+          title="Scout campaigns"
+          actionTo="/recruiterDashboard/scout"
+          actionLabel="View all"
+          flush>
           {recentScouts.length === 0 ? (
             <p className={styles.empty}>No scout campaigns yet.</p>
           ) : (
@@ -372,8 +329,8 @@ export const Profile = () => {
               )}
             </div>
           )}
-        </section>
+        </PagePanel>
       </div>
-    </div>
+    </PageShell>
   )
 }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+import { PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
+
 import AiConfig from './AiConfig/AiConfig'
 import PostJob from './PostJob'
 import styles from './PostJobTab.module.scss'
@@ -40,11 +43,12 @@ const PostJobTab = () => {
   }
 
   return (
-    <div className={styles.page}>
-      <h2 className={styles.heading}>Create a new job</h2>
-      <p className={styles.subheading}>
-        Input information needed to land a role with your organization
-      </p>
+    <PageShell>
+      <PageHero
+        compact
+        title="Create a new job"
+        lead="Input information needed to land a role with your organization"
+      />
 
       <div className={styles.tabList} role="tablist">
         {tabs.map((tab) => {
@@ -77,7 +81,7 @@ const PostJobTab = () => {
       <div className={styles.content} role="tabpanel">
         {renderContent()}
       </div>
-    </div>
+    </PageShell>
   )
 }
 

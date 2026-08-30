@@ -9,6 +9,11 @@ import {
 import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
 import { EXPERIENCE_LEVEL_OPTIONS, Select } from '@/components/forms/Select'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { PagePanel } from '@/components/layout/PagePanel'
+import { PageShell } from '@/components/layout/PageShell'
+import { Button } from '@/components/ui/Button'
+
+import styles from './SearchTalent.module.scss'
 
 const SearchTalent = () => {
   const navigate = useNavigate()
@@ -17,7 +22,6 @@ const SearchTalent = () => {
   // "Find matching talent" link, so results rank by fit to that job.
   const jobId = searchParams.get('jobId') || ''
 
-  // Initialize form values from URL params
   const initialSearchValues = {
     role: searchParams.get('role') || '',
     location: resolveLocationFromNames(
@@ -37,7 +41,6 @@ const SearchTalent = () => {
       cityName: location.city.name,
     }
 
-    // Set search parameters in URL
     setSearchParams({
       role,
       ...locationParams,
@@ -45,7 +48,6 @@ const SearchTalent = () => {
       ...(jobId ? { jobId } : {}),
     })
 
-    // Navigate to the results page
     const queryParams = new URLSearchParams({
       role,
       ...locationParams,
@@ -57,17 +59,18 @@ const SearchTalent = () => {
   }
 
   return (
-    <div className="py-4 space-y-4">
+    <PageShell>
       <PageHeaderTitle
+        variant="hero"
         title="Talent Search"
         description="Find qualified talents by searching"
         onBack={() => navigate(-1)}
       />
-      <div className="flex justify-center items-center mx-auto md:w-[60%] w-full ">
+      <PagePanel>
         <Formik initialValues={initialSearchValues} onSubmit={onSubmit}>
           {({ setFieldValue, values }) => (
-            <Form className="lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-[700px] md:w-[600px] md:flex md:flex-col md:justify-start md: items-start sm:w-[550px] h-[550px] w-[300px] rounded-2xl mt-10 space-y-3">
-              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+            <Form className={styles.form}>
+              <div className={styles.field}>
                 <RoleSelect
                   label="Job Title"
                   name="role"
@@ -77,7 +80,7 @@ const SearchTalent = () => {
                 />
               </div>
 
-              <div className="w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+              <div className={styles.field}>
                 <LocationSelect
                   value={values.location}
                   onChange={(location) => setFieldValue('location', location)}
@@ -85,7 +88,7 @@ const SearchTalent = () => {
                 />
               </div>
 
-              <div className="mb-4 w-[320px] lg:w-[674px] md:w-[550px] sm:w-[490px]">
+              <div className={styles.field}>
                 <Select
                   label="Experience Level"
                   options={EXPERIENCE_LEVEL_OPTIONS}
@@ -94,18 +97,15 @@ const SearchTalent = () => {
                   placeholder="Select Experience Level"
                 />
               </div>
-              <button
-                type="submit"
-                className="flex justify-center items-center w-[270px] lg:w-[358px] md:w-[300px] sm:w-[320px] rounded-lg bg-primary-strong hover:bg-[#4b82e1] py-3 mt-8 mx-auto">
-                <p className="text-white font-semibold font-raleway leading-[24px] text-lg">
-                  Search
-                </p>
-              </button>
+
+              <div className={styles.actions}>
+                <Button type="submit">Search</Button>
+              </div>
             </Form>
           )}
         </Formik>
-      </div>
-    </div>
+      </PagePanel>
+    </PageShell>
   )
 }
 

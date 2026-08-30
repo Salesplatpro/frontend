@@ -5,6 +5,8 @@ import { DateRange } from 'react-day-picker'
 import Modal from 'react-responsive-modal'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import { HeroGhost, PageHero } from '@/components/layout/PageHero'
+import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { sortByAccessor, TableToolbar } from '@/components/ui/DataTable'
@@ -473,39 +475,36 @@ export const SingleJobPost = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <PageShell wide>
       <BackButton />
-      <div className={styles.topContainer}>
-        <div className={styles.title}>
-          {jobName}
-          <span className={styles.applicants}>
-            {applications.length || 0}{' '}
-            {applications.length > 1 ? 'applicants' : 'applicant'}
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <div>Posted {calculateDaysFromCreation(postedAt)} days ago</div>
-          {missingVerdictCount > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              loading={isRetryingAllVerdicts}
-              onClick={handleRetryAllMissingVerdicts}>
-              Retry all missing AI matches ({missingVerdictCount})
-            </Button>
-          )}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              navigate(
-                `/recruiterDashboard/talent-search/results?jobId=${jobId}`,
-              )
-            }>
-            Find matching talent
-          </Button>
-        </div>
-      </div>
+      <PageHero
+        compact
+        title={jobName}
+        lead={`${applications.length || 0} ${
+          applications.length > 1 ? 'applicants' : 'applicant'
+        } · Posted ${calculateDaysFromCreation(postedAt)} days ago`}
+        actions={
+          <>
+            {missingVerdictCount > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                loading={isRetryingAllVerdicts}
+                onClick={handleRetryAllMissingVerdicts}>
+                Retry all missing AI matches ({missingVerdictCount})
+              </Button>
+            )}
+            <HeroGhost
+              onClick={() =>
+                navigate(
+                  `/recruiterDashboard/talent-search/results?jobId=${jobId}`,
+                )
+              }>
+              Find matching talent
+            </HeroGhost>
+          </>
+        }
+      />
 
       <div className={styles.layout}>
         <FilterPanel
@@ -725,6 +724,6 @@ export const SingleJobPost = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </PageShell>
   )
 }

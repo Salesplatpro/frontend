@@ -1,13 +1,22 @@
 .page {
-  padding: var(--space-4);
+  padding: var(--space-3) 0;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    padding: var(--space-4);
+  }
 }
 
 .heading {
   font-family: var(--font-heading);
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
   color: var(--color-text-heading);
   margin: var(--space-1) 0 var(--space-2) 0;
+
+  @media (min-width: 768px) {
+    font-size: var(--text-3xl);
+  }
 }
 
 .subheading {
@@ -21,17 +30,22 @@
   display: flex;
   flex-direction: row;
   gap: var(--space-4);
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   margin-top: var(--space-8);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--space-2);
 
   @media (min-width: 768px) {
     gap: var(--space-10);
+    justify-content: center;
   }
 }
 
 .tabItem {
-  min-width: 180px;
+  min-width: 140px;
+  flex: 0 0 auto;
   padding-top: var(--space-2);
   border-top: 4px solid transparent;
   cursor: pointer;
@@ -78,6 +92,10 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   margin-top: var(--space-1);
+
+  @media (max-width: 767px) {
+    display: none;
+  }
 }
 
 .content {

@@ -2,9 +2,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-5) var(--space-6);
+  gap: var(--space-3);
+  padding: var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+
+  @media (min-width: 768px) {
+    padding: var(--space-5) var(--space-6);
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .title {
@@ -12,6 +22,10 @@
   font-family: var(--font-body);
   font-weight: var(--weight-medium);
   color: var(--color-text-heading);
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 .divider {
@@ -23,6 +37,10 @@
 
 .value {
   width: 50%;
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 .scoreValue {
@@ -51,7 +69,15 @@
   text-align: right;
 }
 
-.personalityValue {
-  text-align: center;
-  font-weight: var(--weight-medium);
+@media (max-width: 640px) {
+  .divider {
+    display: none;
+  }
+
+  .plainValue,
+  .personalityValue,
+  .scoreValue {
+    text-align: left;
+    justify-content: flex-start;
+  }
 }

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { ChooseMethodCard } from '@/components/features/recruiter/Cards'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
+import { PageShell } from '@/components/layout/PageShell'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
 import { useGetCampaignNameQuery } from '@/redux/api/recruiter'
@@ -55,8 +56,9 @@ export const ChooseMethod = () => {
   ]
 
   return (
-    <div className={styles.topContainer}>
+    <PageShell>
       <PageHeaderTitle
+        variant="hero"
         paramsId={params}
         description="Choose how you'd like to scout talent for this job"
         onBack={() => navigate(-1)}
@@ -70,6 +72,6 @@ export const ChooseMethod = () => {
           />
         ))}
       </div>
-    </div>
+    </PageShell>
   )
 }

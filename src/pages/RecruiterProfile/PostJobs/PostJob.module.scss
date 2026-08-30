@@ -1,24 +1,4 @@
-%input-base {
-  width: 100%;
-  height: 44px;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: var(--text-md);
-  color: var(--color-text-heading);
-  background-color: var(--color-white);
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--color-text-muted);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-  }
-}
+@use '../../../styles/form-field' as *;
 
 .page {
   width: 100%;
@@ -34,6 +14,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-3);
   margin-bottom: var(--space-2);
 }
 
@@ -44,10 +26,14 @@
 
 .pageHeading {
   font-family: var(--font-heading);
-  font-size: var(--text-3xl);
+  font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
   color: var(--color-text-heading);
   margin: 0 0 var(--space-1) 0;
+
+  @media (min-width: 768px) {
+    font-size: var(--text-3xl);
+  }
 }
 
 .pageSubheading {
@@ -95,8 +81,7 @@
 }
 
 .fieldGroup {
-  display: flex;
-  flex-direction: column;
+  @extend %form-field-group;
   margin-bottom: var(--space-5);
 
   &:last-child {
@@ -105,17 +90,11 @@
 }
 
 .label {
-  font-family: var(--font-heading);
-  font-size: var(--text-md);
-  font-weight: var(--weight-medium);
-  color: var(--color-grey-700);
-  margin-bottom: var(--space-2);
-  display: block;
+  @extend %form-label;
 }
 
 .required {
-  color: var(--color-danger);
-  margin-left: var(--space-1);
+  @extend %form-required;
 }
 
 .row {
@@ -194,13 +173,11 @@
 }
 
 .input {
-  @extend %input-base;
+  @extend %form-input;
 }
 
 .errorText {
-  margin-top: var(--space-1);
-  color: var(--color-danger);
-  font-size: var(--text-sm);
+  @extend %form-error;
 }
 
 .arrayList {
@@ -217,25 +194,7 @@
 }
 
 .arrayInput {
-  width: 100%;
-  height: 44px;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: var(--text-md);
-  color: var(--color-text-heading);
-  background-color: var(--color-white);
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: var(--color-text-muted);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-  }
+  @extend %form-input;
 }
 
 .deleteButton {
@@ -282,6 +241,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: var(--space-4);
   position: sticky;
   bottom: 0;

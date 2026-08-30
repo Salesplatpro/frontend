@@ -35,7 +35,8 @@
 .thread {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-3);
   padding: var(--space-4);
   text-decoration: none;
   color: inherit;
@@ -53,10 +54,13 @@
 
 .talentName {
   flex: 1;
+  min-width: 0;
   font-family: var(--font-body);
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);
   color: var(--color-text-heading);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .meta {

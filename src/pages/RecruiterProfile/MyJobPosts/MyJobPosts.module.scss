@@ -9,6 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 24px;
 }
 
@@ -49,22 +50,16 @@
 
 .description {
   font-size: var(--text-sm);
-  width: 220px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 
   @media (min-width: 1024px) {
     font-size: var(--text-lg);
-    width: 100%;
   }
 
   @media (min-width: 768px) and (max-width: 1023px) {
-    width: 100%;
-    font-size: var(--text-md);
-  }
-
-  @media (min-width: 640px) and (max-width: 767px) {
-    width: 350px;
     font-size: var(--text-md);
   }
 }
