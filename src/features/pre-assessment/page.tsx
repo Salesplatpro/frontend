@@ -6,8 +6,10 @@ import {
   MdOutlineAssessment,
   MdRefresh,
 } from 'react-icons/md'
+import { useLocation } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { retakeAssessment, submitAssessment } from './api'
@@ -18,7 +20,16 @@ import { formatTime, useAssessmentTimer, usePreAssessment } from './hooks'
 import { useAssessmentLockStore } from './lockStore'
 import { usePreAssessmentStore } from './store'
 
-const PreAssessmentPage: React.FC = () => {
+type PreAssessmentPageProps = {
+  onContinue?: () => void
+}
+
+const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
+  onContinue,
+}) => {
+  const location = useLocation()
+  const shouldLockNavigation = !location.pathname.includes('/apply/')
+
   const { assessment, isLoading, fetchError, isProfileIncomplete, refetch } =
     usePreAssessment()
 
@@ -39,6 +50,7 @@ const PreAssessmentPage: React.FC = () => {
   )
   const setStartedAt = usePreAssessmentStore((s) => s.setStartedAt)
   const reset = usePreAssessmentStore((s) => s.reset)
+  const resetSession = usePreAssessmentStore((s) => s.resetSession)
 
   const [countdown, setCountdown] = useState(COUNTDOWN_FROM)
   const [isCountingDown, setIsCountingDown] = useState(false)
@@ -78,10 +90,10 @@ const PreAssessmentPage: React.FC = () => {
 
     if (isActive && !assessmentActiveRef.current) {
       assessmentActiveRef.current = true
-      lock()
+      if (shouldLockNavigation) lock()
     } else if (!isActive && assessmentActiveRef.current) {
       assessmentActiveRef.current = false
-      unlock()
+      if (shouldLockNavigation) unlock()
     }
   }, [
     isLoading,
@@ -92,6 +104,7 @@ const PreAssessmentPage: React.FC = () => {
     assessmentStarted,
     countdownCompleted,
     questions.length,
+    shouldLockNavigation,
     lock,
     unlock,
   ])
@@ -167,16 +180,23 @@ const PreAssessmentPage: React.FC = () => {
         await submitAssessment({ answers: payloadAnswers })
         // Release immediately on success — do not wait for the sync effect.
         assessmentActiveRef.current = false
-        unlock()
+        if (shouldLockNavigation) unlock()
         setAssessmentStarted(false)
         setCountdownCompleted(false)
         setIsCountingDown(false)
         await refetch()
-        reset()
-      } catch {
-        notify('error', 'Failed to submit assessment. Please try again.', {
-          autoClose: 2000,
-        })
+        resetSession()
+      } catch (error) {
+        notify(
+          'error',
+          getErrorMessage(
+            error,
+            'Failed to submit assessment. Please try again.',
+          ),
+          {
+            autoClose: 4000,
+          },
+        )
         setAutoSubmitMessage('')
         // Transient error — assessment is still active, keep the lock.
       } finally {
@@ -188,11 +208,12 @@ const PreAssessmentPage: React.FC = () => {
       answers,
       questions,
       refetch,
-      reset,
+      resetSession,
       assessmentStarted,
       countdownCompleted,
       setAssessmentStarted,
       setCountdownCompleted,
+      shouldLockNavigation,
       unlock,
     ],
   )
@@ -250,6 +271,7 @@ const PreAssessmentPage: React.FC = () => {
           attemptsRemaining={assessment.maxAttempts - assessment.attemptCount}
           onRetake={() => void handleRetake()}
           isRetaking={isRetaking}
+          onContinue={onContinue}
         />
       </div>
     )

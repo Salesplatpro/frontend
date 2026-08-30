@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import salesplarLogo from '@/assets/Salesplat.png'
 
@@ -10,6 +10,7 @@ interface ResultCardProps {
   attemptsRemaining?: number
   onRetake?: () => void
   isRetaking?: boolean
+  onContinue?: () => void
 }
 
 const ResultCard: React.FC<ResultCardProps> = ({
@@ -19,10 +20,18 @@ const ResultCard: React.FC<ResultCardProps> = ({
   attemptsRemaining,
   onRetake,
   isRetaking,
+  onContinue,
 }) => {
   const navigate = useNavigate()
+  const { jobId } = useParams<{ jobId: string }>()
+  const location = useLocation()
+  const isApplyWizard = location.pathname.includes('/apply/')
 
   if (variant === 'profileIncomplete') {
+    const profilePath =
+      isApplyWizard && jobId
+        ? `/apply/${jobId}/profile`
+        : '/talentDashboard/talentProfile'
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-2xl border border-grey-200 p-10 text-center max-w-lg mx-auto">
         <h2 className="text-xl font-bold text-grey-900 font-raleway mb-3">
@@ -34,7 +43,7 @@ const ResultCard: React.FC<ResultCardProps> = ({
         </p>
         <button
           type="button"
-          onClick={() => navigate('/talentDashboard/talentProfile')}
+          onClick={() => navigate(profilePath)}
           className="px-6 py-3 bg-blue-500 text-white rounded-lg font-raleway font-medium hover:bg-blue-600 transition-colors">
           Complete Profile
         </button>
@@ -92,20 +101,36 @@ const ResultCard: React.FC<ResultCardProps> = ({
           )}
         </div>
 
-        {hasAttemptsRemaining ? (
-          <button
-            type="button"
-            onClick={onRetake}
-            disabled={isRetaking}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg font-raleway font-medium hover:bg-blue-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
-            {isRetaking ? 'Starting...' : 'Retake Assessment'}
-          </button>
-        ) : (
-          <p className="text-grey-500 font-raleway text-sm">
-            You have used all available assessment attempts for your current
-            role selection.
-          </p>
-        )}
+        <div className="flex flex-col items-center gap-3 w-full">
+          {onContinue && (
+            <button
+              type="button"
+              onClick={onContinue}
+              className="px-6 py-3 bg-blue-500 text-white rounded-lg font-raleway font-medium hover:bg-blue-600 transition-colors w-full">
+              Continue
+            </button>
+          )}
+          {hasAttemptsRemaining ? (
+            <button
+              type="button"
+              onClick={onRetake}
+              disabled={isRetaking}
+              className={`${
+                onContinue
+                  ? 'px-6 py-3 border border-grey-300 text-grey-700 rounded-lg font-raleway font-medium hover:bg-grey-50 transition-colors w-full disabled:opacity-60 disabled:cursor-not-allowed'
+                  : 'px-6 py-3 bg-blue-500 text-white rounded-lg font-raleway font-medium hover:bg-blue-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
+              }`}>
+              {isRetaking ? 'Starting...' : 'Retake Assessment'}
+            </button>
+          ) : (
+            !onContinue && (
+              <p className="text-grey-500 font-raleway text-sm">
+                You have used all available assessment attempts for your current
+                role selection.
+              </p>
+            )
+          )}
+        </div>
       </div>
     </div>
   )

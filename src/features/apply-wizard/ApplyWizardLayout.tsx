@@ -1,9 +1,6 @@
 import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
-import { NavigationLockOverlay } from '@/features/pre-assessment/components/NavigationLockOverlay'
-import { useAssessmentNavigationBlocker } from '@/features/pre-assessment/useAssessmentNavigationBlocker'
-
 import styles from './ApplyWizardLayout.module.scss'
 import { WizardStepper } from './WizardStepper'
 
@@ -17,7 +14,6 @@ const WIZARD_STEPS = [
 
 const ApplyWizardLayout: React.FC = () => {
   const location = useLocation()
-  const { isLocked } = useAssessmentNavigationBlocker()
 
   const currentSegment = location.pathname.split('/').filter(Boolean).pop()
   const currentIndex = Math.max(
@@ -33,7 +29,6 @@ const ApplyWizardLayout: React.FC = () => {
       />
       <div className={styles.content}>
         <Outlet />
-        {isLocked && <NavigationLockOverlay />}
       </div>
     </div>
   )

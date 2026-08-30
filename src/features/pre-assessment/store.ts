@@ -18,6 +18,7 @@ interface PreAssessmentState {
   setRemainingSeconds: (seconds: number) => void
   setAssessmentStarted: (value: boolean) => void
   setCountdownCompleted: (value: boolean) => void
+  resetSession: () => void
   reset: () => void
 }
 
@@ -47,6 +48,7 @@ export const usePreAssessmentStore = create<PreAssessmentState>()(
       setAssessmentStarted: (assessmentStarted) => set({ assessmentStarted }),
       setCountdownCompleted: (countdownCompleted) =>
         set({ countdownCompleted }),
+      resetSession: () => set({ ...initialPersistedState }),
       reset: () => set({ assessment: null, ...initialPersistedState }),
     }),
     {
