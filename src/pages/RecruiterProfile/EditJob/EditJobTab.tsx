@@ -23,6 +23,7 @@ import {
 import { useIndividualJobQuery } from '@/redux/api/talent'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
 import { getErrorMessage } from '@/utils/getErrorMessage'
+import { locationFieldsFromWorkMode } from '@/utils/jobLocationPayload'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
@@ -232,15 +233,15 @@ export const EditJobTab = () => {
       aiConfig: aiConfigValues,
       status,
       maxSalary,
+      workMode,
       ...rest
     } = values
     void status
     const jobPayload = {
       ...rest,
+      workMode,
       ...(maxSalary ? { maxSalary } : {}),
-      locationCountry: location.country.name,
-      ...(location.state.name ? { locationState: location.state.name } : {}),
-      ...(location.city.name ? { locationCity: location.city.name } : {}),
+      ...locationFieldsFromWorkMode(location, workMode),
     }
 
     const cleanedAiConfig: Partial<AiConfigFieldValues> = { ...aiConfigValues }

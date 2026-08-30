@@ -10,6 +10,7 @@ import {
   useJobPostCreationMutation,
 } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
+import { locationFieldsFromWorkMode } from '@/utils/jobLocationPayload'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
@@ -61,13 +62,12 @@ const PostJob: React.FC = () => {
     values: PostJobFormValues,
     { setSubmitting }: FormikHelpers<PostJobFormValues>,
   ) => {
-    const { location, maxSalary, ...rest } = values
+    const { location, maxSalary, workMode, ...rest } = values
     const payload = {
       ...rest,
+      workMode,
       ...(maxSalary ? { maxSalary } : {}),
-      locationCountry: location.country.name,
-      ...(location.state.name ? { locationState: location.state.name } : {}),
-      ...(location.city.name ? { locationCity: location.city.name } : {}),
+      ...locationFieldsFromWorkMode(location, workMode),
     }
 
     try {
