@@ -33,9 +33,24 @@ interface PostAnswerResponse {
   }
 }
 
-const PersonalizedTest: React.FC = () => {
+export type PersonalizedTestProps = {
+  jobId?: string
+  talentId?: string
+  onComplete?: () => void
+}
+
+const PersonalizedTest: React.FC<PersonalizedTestProps> = ({
+  jobId: jobIdProp,
+  talentId: talentIdProp,
+  onComplete,
+}) => {
   const navigate = useNavigate()
-  const { jobId, talentId } = useParams<{ jobId: string; talentId: string }>()
+  const { jobId: jobIdParam, talentId: talentIdParam } = useParams<{
+    jobId: string
+    talentId: string
+  }>()
+  const jobId = jobIdProp || jobIdParam
+  const talentId = talentIdProp || talentIdParam
   const [personalizedQuestions, setPersonalizedQuestions] = useState<
     Question[]
   >([])
@@ -86,7 +101,7 @@ const PersonalizedTest: React.FC = () => {
           autoClose: 2000,
         },
       )
-      navigate(`/talentDashboard/applicationPipeline/${jobId}`)
+      navigate(`/talentDashboard/job/${jobId}`)
     }
   }, [isValidTalentId, jobId, navigate])
 
@@ -153,7 +168,11 @@ const PersonalizedTest: React.FC = () => {
           },
         )
       }
-      navigate(`/talentDashboard/applicationPipeline/${jobId}`)
+      if (onComplete) {
+        onComplete()
+      } else {
+        navigate(`/talentDashboard/job/${jobId}`)
+      }
     } catch (error) {
       notify('error', 'Error submitting quiz', {
         autoClose: 2000,

@@ -8,6 +8,9 @@ export interface AllJobTypes {
     role?: {
       name: string
     }
+    organization?: {
+      name?: string | null
+    } | null
     postedBy?: {
       firstName: string
     }

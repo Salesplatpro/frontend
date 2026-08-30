@@ -36,9 +36,18 @@ interface PostPersonalityResponse {
   }
 }
 
-const PersonalityTest: React.FC = () => {
+export type PersonalityTestProps = {
+  jobId?: string
+  onComplete?: () => void
+}
+
+const PersonalityTest: React.FC<PersonalityTestProps> = ({
+  jobId: jobIdProp,
+  onComplete,
+}) => {
   const navigate = useNavigate()
-  const { jobId } = useParams()
+  const { jobId: jobIdParam } = useParams()
+  const jobId = jobIdProp || jobIdParam
   const [personalityQuestions, setPersonalityQuestions] = useState<Question[]>(
     [],
   )
@@ -158,7 +167,11 @@ const PersonalityTest: React.FC = () => {
           { autoClose: 2000 },
         )
       }
-      navigate(`/talentDashboard/applicationPipeline/${jobId}`)
+      if (onComplete) {
+        onComplete()
+      } else {
+        navigate(`/talentDashboard/job/${jobId}`)
+      }
     } catch (error) {
       console.error(error)
       notify(
