@@ -111,7 +111,7 @@ export const ViewCvPage = () => {
             review.
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className={styles.actions}>
           {!hasEmbedding && (
             <Button
               variant="outline"
