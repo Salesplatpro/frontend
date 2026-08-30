@@ -42,7 +42,7 @@ export const Chat = () => {
                   {group.threads.map((thread) => (
                     <Link
                       key={thread.applicationId}
-                      to={`/recruiterDashboard/singleJobPost/${group.jobId}/${thread.applicationId}`}
+                      to={`/recruiterDashboard/singleJobPost/${group.jobId}?applicationId=${thread.applicationId}`}
                       className={styles.thread}>
                       <span className={styles.talentName}>
                         {thread.talentName}

@@ -66,6 +66,9 @@ export type SingleJobDetails = {
     cvFileName?: string | null
     cvUploadedAt?: string | null
     prescreeningScore?: number | null
+    locationCity?: string | null
+    locationState?: string | null
+    locationCountry?: string | null
   }
   applicationType: string
   status: string
@@ -83,6 +86,21 @@ export type SingleJobDetails = {
   matchStrengths?: string[] | null
   matchWeaknesses?: string[] | null
   matchRisks?: string[] | null
+  matchAnalysis?: {
+    overallFitScore?: number
+    whyFit?: string
+    whyHire?: string
+    strongestQualifications?: string[]
+    relevantExperience?: string[]
+    prescreeningInsights?: { strengths?: string[]; weaknesses?: string[] }
+    assessmentInsights?: string
+    missingRequirements?: string[]
+    conflictingRequirements?: string[]
+    keyEvidence?: string[]
+    hiringRationale?: string
+  } | null
+  mbtiType?: string | null
+  stages?: Record<string, string> | null
 }
 
 export interface JobProfileProps {

@@ -13,6 +13,8 @@ import {
 import { EmptyState } from '@/components/ui/EmptyState'
 import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
+import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
+import { notify } from '@/utils/toastNotifications'
 
 import { useGetRecruiterShortlistQuery } from '../../../redux/api/recruiter'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
@@ -23,7 +25,7 @@ interface ShortlistedApplication {
   status: string
   createdAt: string
   role?: { name: string } | null
-  talent: { firstName: string; lastName: string }
+  talent: { id: string; firstName: string; lastName: string }
   matchVerdict?: 'high' | 'medium' | 'low' | null
   averageScore?: number | null
 }
@@ -56,11 +58,15 @@ const SHORTLIST_FILTER_FIELDS: FilterFieldConfig<ShortlistFilterValues>[] = [
 
 export const Shortlist = () => {
   const { data, isLoading } = useGetRecruiterShortlistQuery({})
+  const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
   const [filters, setFilters] = useState<ShortlistFilterValues>(
     defaultShortlistFilters,
   )
   const [sortKey, setSortKey] = useState('verdict')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Set<string>>(new Set())
+  const [messageOpen, setMessageOpen] = useState(false)
+  const [messageContent, setMessageContent] = useState('')
 
   const handleSortChange = (key: string, direction: SortDirection) => {
     setSortKey(key)
@@ -126,7 +132,8 @@ export const Shortlist = () => {
       header: '',
       align: 'center',
       render: (row) => (
-        <Link to={`/recruiterDashboard/singleJobPost/${row.jobId}/${row.id}`}>
+        <Link
+          to={`/recruiterDashboard/singleJobPost/${row.jobId}?applicationId=${row.id}`}>
           <Button size="sm">Details</Button>
         </Link>
       ),
@@ -141,6 +148,38 @@ export const Shortlist = () => {
         sortDirection,
       )
     : filteredApplications
+
+  const handleMessageSelected = async () => {
+    if (!messageContent.trim()) {
+      notify('error', 'Message cannot be empty', { autoClose: 2000 })
+      return
+    }
+    const selected = applications.filter((row) => selectedRowKeys.has(row.id))
+    if (selected.length === 0) return
+    const byJob = new Map<string, ShortlistedApplication[]>()
+    for (const row of selected) {
+      const list = byJob.get(row.jobId) ?? []
+      list.push(row)
+      byJob.set(row.jobId, list)
+    }
+    try {
+      for (const rows of byJob.values()) {
+        const first = rows[0]
+        if (!first) continue
+        await sendBroadcast({
+          application: first.id,
+          content: messageContent,
+          talentIds: rows.map((row) => row.talent.id),
+        })
+      }
+      notify('success', 'Message sent to selected talents', { autoClose: 2000 })
+      setMessageContent('')
+      setMessageOpen(false)
+      setSelectedRowKeys(new Set())
+    } catch {
+      notify('error', 'Failed to send message', { autoClose: 2000 })
+    }
+  }
 
   return (
     <PageShell wide>
@@ -172,6 +211,19 @@ export const Shortlist = () => {
             data={applications}
             isLoading={isLoading}
             getRowKey={(row) => row.id}
+            selectedRowKeys={selectedRowKeys}
+            onToggleRow={(key) => {
+              setSelectedRowKeys((prev) => {
+                const next = new Set(prev)
+                const id = String(key)
+                if (next.has(id)) next.delete(id)
+                else next.add(id)
+                return next
+              })
+            }}
+            onToggleAll={(keys) =>
+              setSelectedRowKeys(new Set(keys.map(String)))
+            }
             ariaLabel="Shortlisted applications"
             emptyState={
               <EmptyState
@@ -180,6 +232,36 @@ export const Shortlist = () => {
               />
             }
           />
+          {selectedRowKeys.size > 0 && (
+            <div className="flex justify-end">
+              <Button
+                size="sm"
+                loading={isBroadcasting}
+                onClick={() => setMessageOpen(true)}>
+                Message selected
+              </Button>
+            </div>
+          )}
+          {messageOpen && (
+            <div className="flex flex-col gap-3">
+              <textarea
+                className="w-full min-h-[120px] border rounded-lg p-3"
+                placeholder="Type your message..."
+                value={messageContent}
+                onChange={(event) => setMessageContent(event.target.value)}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setMessageOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  loading={isBroadcasting}
+                  onClick={handleMessageSelected}>
+                  Send
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </PageShell>
