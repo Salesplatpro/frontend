@@ -7,6 +7,7 @@ import {
 } from '@/components/features/jobs/JobDetailsView'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { firstRemainingStep } from '@/pages/TalentProfile/Job/jobPipeline'
 import {
   useApplyToJobMutation,
   useIndividualJobQuery,
@@ -25,8 +26,19 @@ const ApplyStep: React.FC = () => {
   const handleApply = async () => {
     if (!jobId) return
     try {
-      await applyToJob(jobId).unwrap()
-      navigate('/talentDashboard')
+      const result = await applyToJob(jobId).unwrap()
+      const application = result?.data?.application as
+        | { currentStage?: string; stages?: Record<string, string> }
+        | undefined
+      const step = firstRemainingStep(
+        application?.currentStage,
+        application?.stages,
+      )
+      navigate(
+        `/talentDashboard/job/${jobId}${
+          step && step !== 'details' ? `?step=${step}` : ''
+        }`,
+      )
     } catch (err) {
       notify('error', getErrorMessage(err, 'Failed to apply for this job'), {
         autoClose: 2000,

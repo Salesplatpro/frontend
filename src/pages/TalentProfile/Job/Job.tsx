@@ -28,6 +28,7 @@ interface JobType {
   currency?: string | null
   compensationPeriod?: string | null
   hasApplied?: boolean
+  applicationStage?: string | null
   organization?: JobOrganization | null
 }
 
@@ -108,6 +109,7 @@ const Job = () => {
                   jobExperience={job.experienceLevel}
                   jobSalary={formatCompensation(job)}
                   isApplied={job.hasApplied}
+                  applicationStage={job.applicationStage}
                   organization={job.organization}
                 />
               ))}

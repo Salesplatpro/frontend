@@ -44,6 +44,9 @@ export interface JobDetailsJob {
   organization?: JobOrganization | null
   status?: string
   hasApplied?: boolean
+  applicationStage?: string | null
+  applicationId?: string | null
+  applicationStages?: Record<string, string> | null
   aiConfigId?: string | null
   aiConfig?: { id?: string } | null
 }

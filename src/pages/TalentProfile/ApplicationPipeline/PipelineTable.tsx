@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { EmptyState } from '@/components/ui/EmptyState'
+import { humanStage, humanStatus } from '@/pages/TalentProfile/Job/jobPipeline'
 
 import { Button, DataTable, StatusBadge } from '../../../components'
 import { ColumnDef } from '../../../components'
@@ -10,43 +11,37 @@ import { calculateDaysFromCreation } from '../../../utils'
 import { AllJobTypes } from '../../../utils/types'
 import { getStatusBadge } from '../../RecruiterProfile/getJobStatus'
 
-const STATUS_LABELS: Record<string, string> = {
-  awaiting_decision: 'Awaiting Decision',
-}
-
-const getStatusLabel = (status: string) => STATUS_LABELS[status] ?? status
-
 const columns: ColumnDef<AllJobTypes>[] = [
   {
     key: 'jobTitle',
-    header: 'Job Title',
+    header: 'Job',
     align: 'left',
     render: (app) => app.job?.role?.name ?? '—',
   },
   {
     key: 'company',
-    header: 'Company Name',
+    header: 'Company',
     align: 'left',
-    render: (app) => app.job?.postedBy?.firstName ?? '—',
+    render: (app) => app.job?.organization?.name ?? '—',
+  },
+  {
+    key: 'status',
+    header: 'Status',
+    align: 'left',
+    hideBelow: 768,
+    render: (app) => (
+      <StatusBadge
+        status={humanStatus(app.status)}
+        {...getStatusBadge(app.status ?? 'unknown')}
+      />
+    ),
   },
   {
     key: 'stage',
     header: 'Stage',
     align: 'left',
     hideBelow: 768,
-    render: (app) => app.currentStage ?? '—',
-  },
-  {
-    key: 'status',
-    header: 'Job Status',
-    align: 'left',
-    hideBelow: 768,
-    render: (app) => (
-      <StatusBadge
-        status={getStatusLabel(app.status ?? 'unknown')}
-        {...getStatusBadge(app.status ?? 'unknown')}
-      />
-    ),
+    render: (app) => humanStage(app.currentStage),
   },
   {
     key: 'dateApplied',
@@ -55,21 +50,12 @@ const columns: ColumnDef<AllJobTypes>[] = [
     hideBelow: 768,
     render: (app) => `${calculateDaysFromCreation(app.createdAt)} days ago`,
   },
-  {
-    key: 'details',
-    header: 'Details',
-    align: 'left',
-    render: (app) => (
-      <Link to={`/talentDashboard/applicationPipeline/${app.job?.id}`}>
-        <Button>View More</Button>
-      </Link>
-    ),
-  },
 ]
 
 export const PipelineTable = () => {
   const { data, isLoading } = useAllJobApplicationsQuery({})
   const [allJobs, setAllJobs] = useState<AllJobTypes[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (data) {
@@ -84,14 +70,18 @@ export const PipelineTable = () => {
       isLoading={isLoading}
       getRowKey={(app) => app.id ?? ''}
       ariaLabel="Application pipeline"
+      onRowClick={(app) => {
+        const jobId = app.job?.id
+        if (jobId) navigate(`/talentDashboard/job/${jobId}`)
+      }}
       emptyState={
         <EmptyState
           title="No applications yet"
           description="Apply to open roles and track every stage of your pipeline here."
           action={
-            <Link to="/talentDashboard/job">
-              <Button>Browse jobs</Button>
-            </Link>
+            <Button onClick={() => navigate('/talentDashboard/job')}>
+              Browse jobs
+            </Button>
           }
         />
       }

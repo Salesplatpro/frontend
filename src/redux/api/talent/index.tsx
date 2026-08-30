@@ -159,6 +159,7 @@ export const {
   useGeneratePersonalizedTestQuery,
   usePostPersonalizedTestMutation,
   usePersonalityTestQuery,
+  usePersonalizedTestQuery,
   usePostPersonalityTestMutation,
   useEnsurePersonalityQuestionsMutation,
   useAllJobApplicationsQuery,

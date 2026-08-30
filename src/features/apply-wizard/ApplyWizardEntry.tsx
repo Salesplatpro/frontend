@@ -62,6 +62,18 @@ const ApplyWizardEntry: React.FC = () => {
       return
     }
 
+    if (job?.applicationStage && job.applicationStage !== 'completed') {
+      navigate(`/talentDashboard/job/${jobId}?step=${job.applicationStage}`, {
+        replace: true,
+      })
+      return
+    }
+
+    if (job?.applicationStage === 'completed') {
+      navigate(`/talentDashboard/job/${jobId}`, { replace: true })
+      return
+    }
+
     if (assessment?.status !== 'completed') {
       navigate('prescreen', { replace: true })
       return
@@ -79,6 +91,7 @@ const ApplyWizardEntry: React.FC = () => {
     isLoading,
     isProfileIncomplete,
     assessment?.status,
+    job?.applicationStage,
     navigate,
   ])
 

@@ -53,6 +53,7 @@ interface DataTableProps<T> {
   sortKey?: string | null
   sortDirection?: SortDirection
   onSortChange?: (key: string, direction: SortDirection) => void
+  onRowClick?: (row: T) => void
 }
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -138,6 +139,7 @@ export function DataTable<T>({
   sortKey,
   sortDirection,
   onSortChange,
+  onRowClick,
 }: DataTableProps<T>) {
   const screenWidth = useScreenWidth()
   const [internalSort, setInternalSort] = useState<{
@@ -194,6 +196,7 @@ export function DataTable<T>({
             checked={allSelected}
             indeterminate={someSelected}
             onChange={() => onToggleAll?.(allSelected ? [] : allKeys)}
+            onClick={(event) => event.stopPropagation()}
             inputProps={{ 'aria-label': 'Select all rows' }}
           />
         ),
@@ -205,6 +208,7 @@ export function DataTable<T>({
               size="small"
               checked={selectedRowKeys?.has(key) ?? false}
               onChange={() => onToggleRow?.(key)}
+              onClick={(event) => event.stopPropagation()}
               inputProps={{ 'aria-label': 'Select row' }}
             />
           )
@@ -281,7 +285,9 @@ export function DataTable<T>({
                 key={getRowKey ? getRowKey(row, index) : index}
                 className={
                   getRowClassName ? getRowClassName(row, index) : undefined
-                }>
+                }
+                onClick={onRowClick ? () => onRowClick(row) : undefined}
+                sx={onRowClick ? { cursor: 'pointer' } : undefined}>
                 {visibleColumns.map((col) => (
                   <StyledTableCell key={col.key} align={col.align ?? 'left'}>
                     {col.render(row, index)}
