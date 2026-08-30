@@ -234,7 +234,7 @@ const PreAssessmentPage: React.FC = () => {
 
   if (isProfileIncomplete) {
     return (
-      <div className="lg:w-[60%] md:w-[75%] mx-auto mt-10">
+      <div className="w-full max-w-full px-4 lg:w-[60%] md:w-[75%] mx-auto mt-10 box-border">
         <ResultCard variant="profileIncomplete" />
       </div>
     )
@@ -242,7 +242,7 @@ const PreAssessmentPage: React.FC = () => {
 
   if (assessment?.status === 'completed') {
     return (
-      <div className="lg:w-[60%] md:w-[75%] mx-auto mt-10">
+      <div className="w-full max-w-full px-4 lg:w-[60%] md:w-[75%] mx-auto mt-10 box-border">
         <ResultCard
           variant="completed"
           score={assessment.score ?? undefined}
@@ -298,7 +298,7 @@ const PreAssessmentPage: React.FC = () => {
     return (
       <div className="flex flex-col h-full overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-grey-200 bg-white flex-shrink-0">
+        <div className="flex items-center justify-between flex-wrap gap-3 px-4 sm:px-6 py-4 border-b border-grey-200 bg-white flex-shrink-0">
           <div className="flex items-center gap-2">
             <MdOutlineAssessment className="text-blue-500 text-2xl" />
             <h1 className="text-xl font-bold text-grey-900 font-raleway">
@@ -319,7 +319,7 @@ const PreAssessmentPage: React.FC = () => {
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto p-4 sm:p-6">
           {/* Progress */}
           <div className="mb-6">
             <div className="flex justify-between text-sm font-raleway text-grey-600 mb-2">
@@ -337,13 +337,13 @@ const PreAssessmentPage: React.FC = () => {
           </div>
 
           {/* Two-column layout */}
-          <div className="flex gap-6">
+          <div className="flex flex-col lg:flex-row gap-6">
             {/* Left: question */}
             <div className="flex-1 flex flex-col gap-4 min-w-0">
               <Questions questions={questions} />
 
               {/* Navigation */}
-              <div className="flex justify-between">
+              <div className="flex justify-between gap-3 flex-wrap">
                 <button
                   type="button"
                   disabled={isFirst}
@@ -384,7 +384,7 @@ const PreAssessmentPage: React.FC = () => {
             </div>
 
             {/* Right panel */}
-            <div className="w-64 flex-shrink-0 flex flex-col gap-4">
+            <div className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-4">
               {/* Guidelines */}
               <div className="bg-white rounded-2xl border border-grey-200 p-4">
                 <div className="flex items-center gap-2 mb-3">

@@ -19,6 +19,7 @@ $warning-tint: #fff8ef;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: var(--space-4);
   background-color: $warning-tint;
 }
@@ -94,16 +95,23 @@ $warning-tint: #fff8ef;
 
 .itemCard {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
 }
 
 .itemInfo {
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  min-width: 0;
 }
 
 .itemIcon {
@@ -156,6 +164,7 @@ $warning-tint: #fff8ef;
 
 .skeletonHeading {
   width: 220px;
+  max-width: 100%;
   height: 28px;
   border-radius: var(--radius-sm);
   margin-bottom: var(--space-2);

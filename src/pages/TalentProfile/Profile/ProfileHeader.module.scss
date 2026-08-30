@@ -2,6 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
   margin: var(--space-3) 0;
 }
 
@@ -23,6 +25,11 @@
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   margin-top: var(--space-1);
+  min-width: 0;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
 }
 
 .info {

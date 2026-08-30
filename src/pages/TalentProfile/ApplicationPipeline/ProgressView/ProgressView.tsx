@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { AllJobTypes } from '@/utils/types'
@@ -259,7 +260,7 @@ const ProgressView: React.FC = () => {
   const progressPercentage = Math.round((completedStages / totalStages) * 100)
 
   return (
-    <div className={styles.page}>
+    <PageShell>
       <BackButton />
       <ProgressHeader
         progressPercentage={progressPercentage}
@@ -284,7 +285,7 @@ const ProgressView: React.FC = () => {
       <div className={styles.footer}>
         <Button onClick={homePage}>Back to Homepage</Button>
       </div>
-    </div>
+    </PageShell>
   )
 }
 

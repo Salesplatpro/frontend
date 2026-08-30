@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { EmptyState } from '@/components/ui/EmptyState'
+
 import { Button, DataTable, StatusBadge } from '../../../components'
 import { ColumnDef } from '../../../components'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
@@ -82,6 +84,17 @@ export const PipelineTable = () => {
       isLoading={isLoading}
       getRowKey={(app) => app.id ?? ''}
       ariaLabel="Application pipeline"
+      emptyState={
+        <EmptyState
+          title="No applications yet"
+          description="Apply to open roles and track every stage of your pipeline here."
+          action={
+            <Link to="/talentDashboard/job">
+              <Button>Browse jobs</Button>
+            </Link>
+          }
+        />
+      }
     />
   )
 }
