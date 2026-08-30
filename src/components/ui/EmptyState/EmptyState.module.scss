@@ -3,20 +3,48 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: 10px;
   width: 100%;
-  padding: var(--space-12) var(--space-4);
+  padding: 40px 20px;
   text-align: center;
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 4px;
+  border-radius: 18px;
+  background: var(--color-brand-50);
+  color: var(--color-brand-800);
+  box-shadow: 0 10px 24px rgba(36, 65, 171, 0.08);
 }
 
 .icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-2);
-  color: var(--color-text-muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-heading);
+  letter-spacing: -0.02em;
 }
 
 .description {
+  margin: 0;
   max-width: 28rem;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.action {
+  margin-top: 8px;
 }

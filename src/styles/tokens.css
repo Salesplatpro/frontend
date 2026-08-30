@@ -37,6 +37,7 @@
   --color-grey-600: #525c68;
   --color-grey-700: #344054;
   --color-grey-900: #101828;
+  --color-navy: #1e2a4d;
 
   --color-charcoal: #4b4b4b;
   --color-midnight: #0d0c22;
@@ -56,10 +57,25 @@
   --color-text-body: var(--color-charcoal);
   --color-text-muted: var(--color-grey-500);
   --color-text-inverse: var(--color-white);
+  --color-text-on-dark: var(--color-white);
+  --color-text-on-dark-muted: rgba(255, 255, 255, 0.78);
 
   --color-bg-page: var(--color-white);
   --color-bg-subtle: var(--color-grey-50);
   --color-bg-dark: var(--color-grey-900);
+  --color-bg-sidebar: var(--color-navy);
+  --color-bg-hero: linear-gradient(
+    135deg,
+    var(--color-navy) 0%,
+    var(--color-brand-800) 48%,
+    var(--color-brand-500) 100%
+  );
+  --color-hero-glow: rgba(255, 255, 255, 0.08);
+  --color-hero-highlight: radial-gradient(
+    1200px 280px at 90% -40%,
+    rgba(255, 255, 255, 0.22),
+    transparent 55%
+  );
 
   --color-border: var(--color-grey-200);
   --color-border-strong: var(--color-grey-300);
@@ -122,12 +138,16 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-panel: 20px;
   --radius-full: 9999px;
 
   /* ── Shadows (ported from tailwind.config.js customs) ──────────────── */
   --shadow-sm: 0px 1.52px 3.05px 0px rgba(16, 24, 40, 0.05);
   --shadow-md: 0px 4.09px 6.14px -2.05px rgba(16, 24, 40, 0.05);
   --shadow-lg: 0px 12.28px 16.38px -4.09px rgba(16, 24, 40, 0.1);
+  --shadow-panel: 0 8px 24px rgba(16, 24, 40, 0.04);
+  --shadow-hero: 0 18px 40px rgba(36, 65, 171, 0.22);
   --shadow-glow: 0 4px 200px rgba(60, 111, 212, 0.6);
 
   /* ── Z-index registry ──────────────────────────────────────────────── */

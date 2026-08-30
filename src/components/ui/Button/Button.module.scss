@@ -1,53 +1,63 @@
 .button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: 8px;
   cursor: pointer;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease,
+    opacity 0.12s ease;
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+    transform: none;
   }
 }
 
 .primary {
-  background-color: var(--color-primary-strong);
-  color: var(--color-white);
+  background: var(--color-bg-hero);
+  color: var(--color-text-on-dark);
   border: 1px solid transparent;
+  box-shadow: 0 8px 18px rgba(36, 65, 171, 0.22);
 
   &:hover:not(:disabled) {
-    opacity: 0.7;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(36, 65, 171, 0.28);
   }
 }
 
 .secondary {
-  background-color: var(--color-white);
-  color: var(--color-grey-700);
+  background: var(--color-white);
+  color: var(--color-brand-800);
   border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
 
   &:hover:not(:disabled) {
-    opacity: 0.7;
+    transform: translateY(-1px);
+    border-color: var(--color-brand-200);
   }
 }
 
 .outline {
-  background-color: transparent;
-  color: var(--color-primary-strong);
-  border: 1px solid var(--color-primary-strong);
+  background: var(--color-white);
+  color: var(--color-brand-800);
+  border: 1px solid rgba(36, 65, 171, 0.22);
 
   &:hover:not(:disabled) {
-    opacity: 0.7;
+    transform: translateY(-1px);
+    background: var(--color-brand-50);
   }
 }
 
-// "boxed" sizes — compact buttons sized by font-size only
 .sm,
 .md,
 .lg {
-  padding: 6px 20px;
+  padding: 10px 16px;
   width: max-content;
 
   @media (max-width: 768px) {
@@ -57,20 +67,21 @@
 }
 
 .sm {
-  font-size: var(--text-xs);
+  padding: 8px 12px;
+  font-size: 12px;
 }
 
 .md {
-  font-size: var(--text-sm);
+  font-size: 13px;
 }
 
 .lg {
-  font-size: var(--text-md);
+  font-size: 14px;
+  padding: 12px 20px;
 }
 
-// "wide" size — full-width form-action buttons with their own type scale
 .wide {
-  padding: 12px 0;
+  padding: 12px 20px;
   margin: 20px auto 36px;
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
@@ -80,7 +91,6 @@
 
 .primary.wide:hover:not(:disabled) {
   opacity: 1;
-  background-color: var(--color-primary-hover);
 }
 
 .fullWidth {

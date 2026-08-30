@@ -57,12 +57,27 @@ interface DataTableProps<T> {
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: 'var(--color-grey-50)',
-    color: 'var(--color-grey-900)',
+    backgroundColor: 'transparent',
+    color: 'var(--color-text-on-dark)',
     fontSize: 'var(--text-sm)',
     fontFamily: 'var(--font-heading)',
     fontWeight: 600,
-    borderBottom: '2px solid var(--color-border-strong)',
+    borderBottom: '0',
+    '& .MuiTableSortLabel-root': {
+      color: 'var(--color-text-on-dark)',
+    },
+    '& .MuiTableSortLabel-root:hover': {
+      color: 'var(--color-text-on-dark)',
+    },
+    '& .MuiTableSortLabel-root.Mui-active': {
+      color: 'var(--color-text-on-dark)',
+    },
+    '& .MuiTableSortLabel-icon': {
+      color: 'rgba(255, 255, 255, 0.7) !important',
+    },
+    '& .MuiCheckbox-root': {
+      color: 'rgba(255, 255, 255, 0.7)',
+    },
   },
   [`&.${tableCellClasses.body}`]: {
     color: 'var(--color-grey-900)',
@@ -219,12 +234,18 @@ export function DataTable<T>({
     <TableContainer
       component={Paper}
       sx={{
-        borderRadius: 'var(--radius-lg)',
-        boxShadow: 'var(--shadow-sm)',
-        overflow: allowOverflow ? 'visible' : 'hidden',
+        borderRadius: 'var(--radius-panel)',
+        boxShadow: 'var(--shadow-panel)',
+        border: '1px solid var(--color-border)',
+        maxWidth: '100%',
+        overflowX: allowOverflow ? 'visible' : 'auto',
+        overflowY: allowOverflow ? 'visible' : 'hidden',
       }}>
       <Table aria-label={ariaLabel}>
-        <TableHead>
+        <TableHead
+          sx={{
+            background: 'var(--color-bg-hero)',
+          }}>
           <TableRow>
             {visibleColumns.map((col) => (
               <StyledTableCell key={col.key} align={col.align ?? 'left'}>
@@ -248,8 +269,8 @@ export function DataTable<T>({
               <StyledTableCell colSpan={visibleColumns.length}>
                 {emptyState ?? (
                   <EmptyState
-                    title="No data"
-                    description="Nothing to show here yet."
+                    title="Nothing here yet"
+                    description="When records arrive, they will show up in this table."
                   />
                 )}
               </StyledTableCell>

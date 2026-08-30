@@ -36,15 +36,40 @@ export interface ChartProps {
 }
 
 const DEFAULT_COLORS = [
-  'var(--color-brand-500)',
-  'var(--color-success-600)',
-  'var(--color-info-600)',
-  'var(--color-warning-600)',
-  'var(--color-danger-600)',
-  'var(--color-accent-600)',
+  '#4985df',
+  '#2441ab',
+  '#1e2a4d',
+  '#3c6fd4',
+  '#1b7b44',
+  '#b54708',
 ]
 
-const axisTick = { fontSize: 'var(--text-xs)', fill: 'var(--color-text-muted)' }
+const axisTick = { fontSize: 11, fill: '#667085' }
+
+type TooltipPayload = {
+  name?: string
+  value?: number
+  payload?: ChartDatum
+  color?: string
+}
+
+const ChartTooltip = ({
+  active,
+  payload,
+}: {
+  active?: boolean
+  payload?: TooltipPayload[]
+}) => {
+  if (!active || !payload?.length) return null
+  const item = payload[0]
+  const label = item.payload?.label ?? item.name
+  return (
+    <div className={styles.tooltip}>
+      <span className={styles.tooltipLabel}>{label}</span>
+      <span className={styles.tooltipValue}>{item.value ?? 0}</span>
+    </div>
+  )
+}
 
 export const Chart = ({
   type,
@@ -53,6 +78,8 @@ export const Chart = ({
   height = 240,
   colors = DEFAULT_COLORS,
 }: ChartProps) => {
+  const total = data.reduce((sum, item) => sum + item.value, 0)
+
   return (
     <Card className={styles.chartCard}>
       {title && (
@@ -60,58 +87,91 @@ export const Chart = ({
           {title}
         </Heading>
       )}
-      <ResponsiveContainer width="100%" height={height}>
-        {type === 'pie' ? (
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="label"
-              innerRadius="55%"
-              outerRadius="80%"
-              paddingAngle={2}>
-              {data.map((entry, index) => (
-                <Cell key={entry.label} fill={colors[index % colors.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        ) : type === 'line' ? (
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-            <XAxis
-              dataKey="label"
-              tick={axisTick}
-              stroke="var(--color-border)"
-            />
-            <YAxis tick={axisTick} stroke="var(--color-border)" />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={colors[0]}
-              strokeWidth={2}
-              dot={{ r: 3 }}
-            />
-          </LineChart>
-        ) : (
-          <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-            <XAxis
-              dataKey="label"
-              tick={axisTick}
-              stroke="var(--color-border)"
-            />
-            <YAxis tick={axisTick} stroke="var(--color-border)" />
-            <Tooltip />
-            <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-              {data.map((entry, index) => (
-                <Cell key={entry.label} fill={colors[index % colors.length]} />
-              ))}
-            </Bar>
-          </BarChart>
-        )}
-      </ResponsiveContainer>
+      <div className={type === 'pie' ? styles.pieLayout : undefined}>
+        <ResponsiveContainer width="100%" height={height}>
+          {type === 'pie' ? (
+            <PieChart>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="label"
+                innerRadius="58%"
+                outerRadius="82%"
+                paddingAngle={3}
+                stroke="none">
+                {data.map((entry, index) => (
+                  <Cell
+                    key={entry.label}
+                    fill={colors[index % colors.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<ChartTooltip />} />
+            </PieChart>
+          ) : type === 'line' ? (
+            <LineChart data={data}>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--color-border)"
+              />
+              <XAxis
+                dataKey="label"
+                tick={axisTick}
+                stroke="var(--color-border)"
+              />
+              <YAxis tick={axisTick} stroke="var(--color-border)" />
+              <Tooltip content={<ChartTooltip />} />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={colors[0]}
+                strokeWidth={3}
+                dot={{ r: 4, fill: colors[0] }}
+              />
+            </LineChart>
+          ) : (
+            <BarChart data={data}>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--color-border)"
+              />
+              <XAxis
+                dataKey="label"
+                tick={axisTick}
+                stroke="var(--color-border)"
+              />
+              <YAxis tick={axisTick} stroke="var(--color-border)" />
+              <Tooltip content={<ChartTooltip />} />
+              <Bar dataKey="value" radius={[8, 8, 0, 0]}>
+                {data.map((entry, index) => (
+                  <Cell
+                    key={entry.label}
+                    fill={colors[index % colors.length]}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          )}
+        </ResponsiveContainer>
+        <ul className={styles.legend}>
+          {data.map((item, index) => {
+            const pct = total > 0 ? Math.round((item.value / total) * 100) : 0
+            return (
+              <li key={item.label} className={styles.legendItem}>
+                <span
+                  className={styles.swatch}
+                  style={{ background: colors[index % colors.length] }}
+                />
+                <span className={styles.legendLabel}>{item.label}</span>
+                <span className={styles.legendValue}>
+                  {item.value}
+                  {type === 'pie' ? ` · ${pct}%` : ''}
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     </Card>
   )
 }

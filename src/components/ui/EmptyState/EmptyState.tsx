@@ -1,7 +1,6 @@
 import cn from 'classnames'
 import React, { ReactNode } from 'react'
-
-import { Heading, Text } from '@/components/ui/Typography'
+import { HiOutlineInbox } from 'react-icons/hi'
 
 import styles from './EmptyState.module.scss'
 
@@ -21,13 +20,11 @@ export const EmptyState = ({
   className,
 }: EmptyStateProps) => (
   <div className={cn(styles.container, className)}>
-    {icon && <div className={styles.icon}>{icon}</div>}
-    <Heading level={3}>{title}</Heading>
-    {description && (
-      <Text size="fs-sm" color="primary" className={styles.description}>
-        {description}
-      </Text>
-    )}
-    {action && <div>{action}</div>}
+    <div className={styles.iconWrap}>
+      <div className={styles.icon}>{icon ?? <HiOutlineInbox size={28} />}</div>
+    </div>
+    <h3 className={styles.title}>{title}</h3>
+    {description && <p className={styles.description}>{description}</p>}
+    {action && <div className={styles.action}>{action}</div>}
   </div>
 )

@@ -1,21 +1,16 @@
+@use '../../../styles/form-field' as *;
+
 .container {
-  display: flex;
-  flex-direction: column;
+  @extend %form-field-group;
   width: 100%;
 }
 
 .label {
-  font-family: var(--font-heading);
-  font-size: var(--text-md);
-  font-weight: var(--weight-medium);
-  color: var(--color-grey-700);
-  margin-bottom: var(--space-2);
-  display: block;
+  @extend %form-label;
 }
 
 .required {
-  color: var(--color-danger);
-  margin-left: var(--space-1);
+  @extend %form-required;
 }
 
 .inputWrapper {
@@ -116,7 +111,5 @@
 }
 
 .errorText {
-  margin-top: var(--space-1);
-  color: var(--color-danger);
-  font-size: var(--text-sm);
+  @extend %form-error;
 }

@@ -37,7 +37,7 @@ export const TextInput = ({
     <div className={styles.container}>
       <div className={styles.label}>
         <label htmlFor={label}>{title}</label>
-        {required && <div>*</div>}
+        {required && <span className={styles.required}>*</span>}
       </div>
       <div>
         <input

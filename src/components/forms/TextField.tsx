@@ -1,8 +1,8 @@
 import { Field } from 'formik'
 import React from 'react'
 
-import LabelWithAsterisk from '../../utils/LabelWithAstericks'
 import RichTextEditor from './RichTextEditor'
+import styles from './TextField.module.scss'
 
 interface TextFieldProps {
   label: string
@@ -12,7 +12,6 @@ interface TextFieldProps {
   type?: string
   MAX_WORDS?: number
   disabled?: boolean
-  /** Rendered under the input, e.g. to explain why a field is locked. */
   hint?: string
 }
 
@@ -27,22 +26,36 @@ const TextField = ({
   hint,
 }: TextFieldProps) => {
   return (
-    <div className="mb-4">
-      <LabelWithAsterisk label={label} asterick={asterick} />
+    <div className={styles.field}>
+      <label htmlFor={name} className={styles.label}>
+        {label}
+        {asterick && (
+          <span className={styles.required} aria-hidden>
+            *
+          </span>
+        )}
+      </label>
       {type === 'textarea' ? (
         <Field name={name}>
-          {({ field }: any) => (
-            <div>
-              <RichTextEditor
-                id={name}
-                value={field.value}
-                onChange={(value: string) => {
-                  field.onChange({ target: { name, value } })
-                }}
-                placeholder={placeholder}
-                maxLength={MAX_WORDS}
-              />
-            </div>
+          {({
+            field,
+          }: {
+            field: {
+              value: string
+              onChange: (event: {
+                target: { name: string; value: string }
+              }) => void
+            }
+          }) => (
+            <RichTextEditor
+              id={name}
+              value={field.value}
+              onChange={(value: string) => {
+                field.onChange({ target: { name, value } })
+              }}
+              placeholder={placeholder}
+              maxLength={MAX_WORDS}
+            />
           )}
         </Field>
       ) : (
@@ -52,12 +65,12 @@ const TextField = ({
           name={name}
           placeholder={placeholder}
           disabled={disabled}
-          className={`block border border-grey-300 p-4 rounded w-full mt-1 ${
-            disabled ? 'bg-grey-100 text-grey-600 cursor-not-allowed' : ''
-          }`}
+          className={
+            disabled ? `${styles.input} ${styles.disabled}` : styles.input
+          }
         />
       )}
-      {hint && <p className="text-sm text-grey-600 mt-1">{hint}</p>}
+      {hint && <p className={styles.hint}>{hint}</p>}
     </div>
   )
 }

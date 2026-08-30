@@ -1,3 +1,6 @@
 export * from './lists'
 export * from './PageHeaderTitle'
+export * from './PageHero'
+export * from './PagePanel'
+export * from './PageShell'
 export * from './sidebar'
