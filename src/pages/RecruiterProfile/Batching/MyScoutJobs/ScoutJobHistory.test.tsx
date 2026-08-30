@@ -54,8 +54,11 @@ describe('ScoutJobHistory (persisted batch results for a scout job)', () => {
     })
     renderAt()
 
+    expect(screen.getByText('No CVs scored yet')).toBeTruthy()
     expect(
-      screen.getByText('No CVs have been scored for this job yet.'),
+      screen.getByText(
+        'Upload CVs for this campaign and scores will appear in this table.',
+      ),
     ).toBeTruthy()
   })
 
