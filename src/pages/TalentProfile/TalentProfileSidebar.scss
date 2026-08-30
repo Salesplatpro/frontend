@@ -12,9 +12,10 @@
   grid-template-areas:
     'sidebar header'
     'sidebar body';
-  grid-template-columns: 298px 3fr;
-  grid-template-rows: 70px auto;
+  grid-template-columns: 298px minmax(0, 1fr);
+  grid-template-rows: 70px minmax(0, 1fr);
   height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar-container {
@@ -24,25 +25,30 @@
   flex-direction: row;
   align-items: start;
   overflow: hidden;
+  min-width: 0;
 }
 
 .outlet {
   flex: 1;
   grid-area: body;
+  min-width: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   padding: 10px 14px;
+  background: var(--color-bg-subtle);
 }
 
 .dashboard-nav {
   grid-area: header;
+  min-width: 0;
   height: 80px;
   box-shadow: rgba(0, 0, 0, 0.09) 0 3px 5px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background-color: #fcfcfc;
+  background-color: var(--color-white);
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   padding: 0 24px;
 
   .menu {
@@ -50,26 +56,31 @@
   }
 }
 
+.sidebar-backdrop {
+  display: none;
+}
+
 @media (max-width: 980px) {
   .dashboard {
     grid-template-areas:
       'header'
       'body';
-    grid-template-columns: 1fr;
-    grid-template-rows: 70px auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 70px minmax(0, 1fr);
 
     .sidebar-container {
       position: fixed;
       top: 0;
       left: 0;
-      width: 298px;
+      width: min(298px, 86vw);
       height: 100%;
-      z-index: 1;
+      z-index: 40;
       transition: transform 0.3s ease;
     }
 
     .sidebar-container.closed {
       transform: translateX(-100%);
+      pointer-events: none;
     }
 
     .sidebar-container.open {
@@ -80,26 +91,56 @@
       position: relative;
       right: 3rem;
       top: 1rem;
-      color: white;
+      color: var(--color-text-on-dark);
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
   }
-  .outlet {
-    margin-top: 1rem;
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(16, 24, 40, 0.4);
+    cursor: pointer;
   }
+
+  .outlet {
+    margin-top: 0;
+    padding: 8px 10px 16px;
+  }
+
   .dashboard-nav {
     width: 100%;
+    height: 70px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding: 0 12px;
+    gap: 8px;
 
     .menu {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #4884df;
+      color: var(--color-brand-500);
       border: 0.5px solid var(--color-grey-300);
+      background: var(--color-white);
+      border-radius: 8px;
+      cursor: pointer;
     }
   }
 }
