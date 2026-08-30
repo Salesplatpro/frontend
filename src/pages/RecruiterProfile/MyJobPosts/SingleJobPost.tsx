@@ -3,7 +3,12 @@ import 'react-responsive-modal/styles.css'
 import React, { useMemo, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 import Modal from 'react-responsive-modal'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom'
 
 import { HeroGhost, PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
@@ -20,15 +25,13 @@ import {
   retryMissingVerdicts,
 } from '@/features/applications/services/applicationService'
 import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
-import {
-  exportRankingPdf,
-  RankingExportMode,
-  selectRankedApplicants,
-} from './exportRankingPdf'
+import { CandidateDossierPanel } from './CandidateDossierPanel'
+import { exportBoardReport } from './exportRankingPdf'
 import { Pagination } from './Pagination'
 import styles from './SingleJobPost.module.scss'
 import {
@@ -166,6 +169,8 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50]
 export const SingleJobPost = () => {
   const { jobId } = useParams()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { profile } = useProfile()
   const { data, error, isLoading, mutate } = useJobApplications(jobId)
   const location = useLocation()
   const jobName = location.state?.jobName
@@ -206,8 +211,6 @@ export const SingleJobPost = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0])
-  const [rankingMode, setRankingMode] = useState<RankingExportMode>('top')
-  const [rankingCount, setRankingCount] = useState('5')
 
   const { bulkUpdateStatus, isBulkUpdating } = useBulkUpdateApplicationStatus()
   const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
@@ -361,6 +364,73 @@ export const SingleJobPost = () => {
     }
   }
 
+  const handleMessageShortlisted = () => {
+    const shortlisted = applications.filter(
+      (item) => item.status === 'shortlisted',
+    )
+    if (shortlisted.length === 0) {
+      notify('error', 'No shortlisted applicants on this job', {
+        autoClose: 2000,
+      })
+      return
+    }
+    setSelectedRowKeys(new Set(shortlisted.map((item) => item.id)))
+    setIsMessageModalOpen(true)
+  }
+
+  const openDossier = (item: SingleJobDetails) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.set('applicationId', item.id)
+      return next
+    })
+  }
+
+  const closeDossier = () => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.delete('applicationId')
+      return next
+    })
+  }
+
+  const dossierApplication = applications.find(
+    (item) => item.id === searchParams.get('applicationId'),
+  )
+
+  const handleBoardPdf = (scope: 'selected' | 'all') => {
+    const rows =
+      scope === 'selected'
+        ? sortedApplications.filter((item) => selectedRowKeys.has(item.id))
+        : sortedApplications
+    if (rows.length === 0) {
+      notify('error', 'No applicants to include in this report', {
+        autoClose: 2000,
+      })
+      return
+    }
+    try {
+      exportBoardReport({
+        recruiterName: `${profile?.firstName ?? ''} ${
+          profile?.lastName ?? ''
+        }`.trim(),
+        jobTitle: jobName || 'Job',
+        companyName: profile?.activeOrganization?.name ?? '',
+        companyLogoUrl: profile?.activeOrganization?.logoUrl,
+        applicants: rows,
+        totalApplicants: applications.length,
+        scopeLabel:
+          scope === 'selected' ? 'Selected candidates' : 'Filtered applicants',
+      })
+    } catch (err) {
+      notify(
+        'error',
+        err instanceof Error ? err.message : 'Failed to export report',
+        { autoClose: 3000 },
+      )
+    }
+  }
+
   const missingVerdictCount = useMemo(
     () =>
       applications.filter(
@@ -433,39 +503,6 @@ export const SingleJobPost = () => {
     )
   }
 
-  const handleRankingPdfExport = () => {
-    const count = Number(rankingCount)
-    if (!Number.isFinite(count) || count < 1) {
-      notify('error', 'Enter how many candidates to include', {
-        autoClose: 2000,
-      })
-      return
-    }
-
-    const selected = selectRankedApplicants(applications, rankingMode, count)
-    if (selected.length === 0) {
-      notify('error', 'No ranked candidates available for export', {
-        autoClose: 2000,
-      })
-      return
-    }
-
-    try {
-      exportRankingPdf({
-        jobName: jobName || 'Job',
-        mode: rankingMode,
-        count,
-        applicants: selected,
-      })
-    } catch (err) {
-      notify(
-        'error',
-        err instanceof Error ? err.message : 'Failed to export ranking PDF',
-        { autoClose: 3000 },
-      )
-    }
-  }
-
   if (error) {
     return <div>Error loading job details</div>
   }
@@ -494,6 +531,9 @@ export const SingleJobPost = () => {
                 Retry all missing AI matches ({missingVerdictCount})
               </Button>
             )}
+            <HeroGhost onClick={handleMessageShortlisted}>
+              Message all shortlisted
+            </HeroGhost>
             <HeroGhost
               onClick={() =>
                 navigate(
@@ -566,33 +606,17 @@ export const SingleJobPost = () => {
           )}
 
           <div className={styles.rankingExport}>
-            <label className={styles.rankingLabel} htmlFor="ranking-mode">
-              Ranking export
-            </label>
-            <select
-              id="ranking-mode"
-              className={styles.rankingSelect}
-              value={rankingMode}
-              onChange={(event) =>
-                setRankingMode(event.target.value as RankingExportMode)
-              }>
-              <option value="top">Top ranked</option>
-              <option value="lowest">Lowest ranked</option>
-            </select>
-            <input
-              id="ranking-count"
-              className={styles.rankingCount}
-              type="number"
-              min={1}
-              value={rankingCount}
-              onChange={(event) => setRankingCount(event.target.value)}
-              aria-label="Number of candidates"
-            />
             <Button
               variant="outline"
               size="sm"
-              onClick={handleRankingPdfExport}>
-              Download PDF
+              onClick={() => handleBoardPdf('selected')}>
+              Download report (selected)
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleBoardPdf('all')}>
+              Download report (all)
             </Button>
           </div>
 
@@ -641,6 +665,7 @@ export const SingleJobPost = () => {
             onShortlist={(id) => handleRowStatus(id, 'shortlisted')}
             onReject={(id) => handleRowStatus(id, 'rejected')}
             onMessage={handleRowMessage}
+            onOpenDossier={openDossier}
             loadingRowId={loadingRowId}
             onVerdictRegenerated={async () => {
               await mutate()
@@ -724,6 +749,16 @@ export const SingleJobPost = () => {
           </div>
         </div>
       </Modal>
+      {dossierApplication && (
+        <CandidateDossierPanel
+          application={dossierApplication}
+          jobAiConfig={jobAiConfig}
+          onClose={closeDossier}
+          onChanged={async () => {
+            await mutate()
+          }}
+        />
+      )}
     </PageShell>
   )
 }

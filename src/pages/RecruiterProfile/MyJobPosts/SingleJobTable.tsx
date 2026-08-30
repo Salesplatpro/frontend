@@ -1,10 +1,8 @@
 import React from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
 
 import {
   Avatar,
-  Button,
   ColumnDef,
   DataTable,
   Dropdown,
@@ -19,7 +17,6 @@ import { JobAiConfigThresholds } from '../../../features/applications/services/a
 import { openTalentCv } from '../../../features/profile/services/openTalentCv'
 import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
-import { AiMatchPanel } from './AiMatchPanel'
 
 type SingleJobTableProps = {
   applications: SingleJobDetails[]
@@ -30,6 +27,7 @@ type SingleJobTableProps = {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
+  onOpenDossier?: (item: SingleJobDetails) => void
   /** Application id currently being updated (e.g. via a row-level shortlist/reject) — shows a spinner in that row's actions cell instead of a static disabled state. */
   loadingRowId?: string | null
   /** Called after a successful AI match regenerate so the caller can refetch the applications list — useRegenerateVerdict's own SWR key doesn't cover this table's data. */
@@ -160,10 +158,9 @@ const ApplicantActionsCell = ({
   ]
 
   return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-      <Link to={`/recruiterDashboard/singleJobPost/${item.jobId}/${item.id}`}>
-        <Button size="sm">View Application</Button>
-      </Link>
+    <div
+      style={{ display: 'flex', gap: 8, justifyContent: 'center' }}
+      onClick={(event) => event.stopPropagation()}>
       <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
     </div>
   )
@@ -330,7 +327,7 @@ export const buildColumns = ({
 
 export const SingleJobTable = ({
   applications,
-  jobAiConfig,
+  jobAiConfig: _jobAiConfig,
   selectedRowKeys,
   onToggleRow,
   onToggleAll,
@@ -343,17 +340,15 @@ export const SingleJobTable = ({
   sortKey,
   sortDirection,
   onSortChange,
+  onOpenDossier,
 }: SingleJobTableProps) => {
-  const [aiMatchApplicant, setAiMatchApplicant] =
-    React.useState<SingleJobDetails | null>(null)
-
   const allColumns = buildColumns({
     onShortlist,
     onReject,
     onMessage,
     onVerdictRegenerated,
     loadingRowId,
-    onOpenAiMatch: setAiMatchApplicant,
+    onOpenAiMatch: onOpenDossier,
   })
   const columns = visibleColumnKeys
     ? allColumns.filter(
@@ -364,34 +359,25 @@ export const SingleJobTable = ({
     : allColumns
 
   return (
-    <>
-      <DataTable
-        columns={columns}
-        data={applications}
-        getRowKey={(item) => item.id}
-        ariaLabel="Job applications table"
-        selectedRowKeys={selectedRowKeys}
-        onToggleRow={onToggleRow}
-        onToggleAll={onToggleAll}
-        allowOverflow
-        sortKey={sortKey}
-        sortDirection={sortDirection}
-        onSortChange={onSortChange}
-        emptyState={
-          <EmptyState
-            title="No applications yet"
-            description="Applications for this job will appear here once candidates apply."
-          />
-        }
-      />
-      {aiMatchApplicant && (
-        <AiMatchPanel
-          application={aiMatchApplicant}
-          jobAiConfig={jobAiConfig}
-          onClose={() => setAiMatchApplicant(null)}
-          onRegenerated={onVerdictRegenerated}
+    <DataTable
+      columns={columns}
+      data={applications}
+      getRowKey={(item) => item.id}
+      ariaLabel="Job applications table"
+      selectedRowKeys={selectedRowKeys}
+      onToggleRow={onToggleRow}
+      onToggleAll={onToggleAll}
+      onRowClick={onOpenDossier}
+      allowOverflow
+      sortKey={sortKey}
+      sortDirection={sortDirection}
+      onSortChange={onSortChange}
+      emptyState={
+        <EmptyState
+          title="No applications yet"
+          description="Applications for this job will appear here once candidates apply."
         />
-      )}
-    </>
+      }
+    />
   )
 }
