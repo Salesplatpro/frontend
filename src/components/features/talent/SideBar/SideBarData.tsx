@@ -3,7 +3,6 @@ import { BiMessageDetail } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
 import { IoBagOutline } from 'react-icons/io5'
 import { MdSpaceDashboard } from 'react-icons/md'
-import { MdPersonOutline } from 'react-icons/md'
 import { MdOutlineAssessment } from 'react-icons/md'
 import { RiFlowChart } from 'react-icons/ri'
 
@@ -14,11 +13,6 @@ export const sidebarData = [
     name: 'Dashboard',
     icon: <MdSpaceDashboard size={ICON_SIZE} />,
     link: '/talentDashboard/',
-  },
-  {
-    name: 'Profile',
-    icon: <MdPersonOutline size={ICON_SIZE} />,
-    link: '/talentDashboard/TalentProfile',
   },
   {
     name: 'Pre-Assessment test',

@@ -7,6 +7,7 @@ export interface AuthUser {
   email?: string
   userRole?: UserRole
   emailVerifiedAt?: string | null
+  billingPlan?: 'free' | 'paid' | string
   profile?: Record<string, any>
   [key: string]: unknown
 }

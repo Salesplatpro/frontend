@@ -11,7 +11,15 @@ export const validationSchema = Yup.object({
     city: Yup.object({ name: Yup.string() }),
   }),
 
-  currency: Yup.string(),
+  workType: Yup.array()
+    .of(Yup.string())
+    .min(1, 'Select at least one work type'),
+
+  currency: Yup.string().test(
+    'supported-currency',
+    'Select NGN or USD',
+    (value) => !value || value === 'NGN' || value === 'USD',
+  ),
 
   compensationPeriod: Yup.string(),
 

@@ -9,6 +9,7 @@ import {
   useAiConfigMutation,
   useGetAiConfigQuery,
   usePatchAiConfigMutation,
+  useUpdateJobMutation,
 } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
@@ -59,6 +60,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
 
   const [aiConfigMutation] = useAiConfigMutation()
   const [patchAiConfig] = usePatchAiConfigMutation()
+  const [updateJob] = useUpdateJobMutation()
   const { drafts, saveDraft, clearDraft } = useAiConfigDraftStore()
   const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
@@ -163,9 +165,20 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
       } else {
         await aiConfigMutation(payload).unwrap()
         clearDraft(jobId ?? '')
+        let published = false
+        if (jobId) {
+          try {
+            await updateJob({ jobId, data: { status: 'active' } }).unwrap()
+            published = true
+          } catch {
+            published = false
+          }
+        }
         notify(
           'success',
-          'AI config saved. Your job is still a draft — publish it from My Job Posts to make it visible to talents.',
+          published
+            ? 'AI config saved and job published. Talents can now apply from the job link.'
+            : 'AI config saved. Your job is still a draft — publish it from My Job Posts to make it visible to talents.',
         )
         navigate('/recruiterDashboard/myjobposts')
       }

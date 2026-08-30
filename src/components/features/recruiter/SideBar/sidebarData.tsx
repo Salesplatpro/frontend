@@ -1,6 +1,5 @@
 import React from 'react'
 import { BsChatDots } from 'react-icons/bs'
-import { CgProfile } from 'react-icons/cg'
 import { CiBoxList, CiSearch } from 'react-icons/ci'
 import { FiDownload } from 'react-icons/fi'
 import { MdWorkOutline } from 'react-icons/md'
@@ -43,11 +42,6 @@ export const sidebarData = [
     name: 'Chat',
     icon: <BsChatDots size={ICON_SIZE} />,
     link: '/recruiterDashboard/chat',
-  },
-  {
-    name: 'Profile',
-    icon: <CgProfile size={ICON_SIZE} />,
-    link: '/recruiterDashboard/profile',
   },
   {
     name: 'Shortlist',

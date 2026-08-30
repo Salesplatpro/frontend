@@ -64,6 +64,7 @@ import Dashboard from '@/pages/RecruiterProfile/Dashboard/Dashboard'
 import { EditJobTab } from '@/pages/RecruiterProfile/EditJob'
 import JobDetail from '@/pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from '@/pages/RecruiterProfile/MyJobPosts/SingleJobPost'
+import RecruiterPlanPage from '@/pages/RecruiterProfile/Plan/RecruiterPlanPage'
 import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
 import SearchResult from '@/pages/RecruiterProfile/TalentSearch/SearchResult'
@@ -128,20 +129,12 @@ export const routeConfig: RouteObject[] = [
             element: <AboutUs />,
           },
           {
-            path: 'payment/verify',
-            element: <VerifyPaymentPage />,
-          },
-          {
             path: paths.login,
             element: <LoginPage />,
           },
           {
             path: paths.register,
             element: <SignupPage />,
-          },
-          {
-            path: paths.verifyEmail,
-            element: <AccountEmailVerification />,
           },
           {
             path: 'faq',
@@ -168,6 +161,14 @@ export const routeConfig: RouteObject[] = [
             element: <TermsAndCondition />,
           },
         ],
+      },
+      {
+        path: '/payment/verify',
+        element: <VerifyPaymentPage />,
+      },
+      {
+        path: `/${paths.verifyEmail}`,
+        element: <AccountEmailVerification />,
       },
       {
         element: <ProtectedRoute allowedRoles={['recruiter', 'admin']} />,
@@ -393,6 +394,10 @@ export const routeConfig: RouteObject[] = [
                   {
                     path: 'profile',
                     element: <RecruiterProfilePage />,
+                  },
+                  {
+                    path: 'plan',
+                    element: <RecruiterPlanPage />,
                   },
                 ],
               },

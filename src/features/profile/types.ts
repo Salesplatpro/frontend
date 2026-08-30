@@ -23,6 +23,9 @@ export interface ProfileUser {
   country?: string | null
   activeOrganizationId?: string | null
   emailVerifiedAt?: string | null
+  billingPlan?: string | null
+  billingInterval?: string | null
+  billingStatus?: string | null
   active?: boolean
   bio?: string
   cvFileName?: string | null

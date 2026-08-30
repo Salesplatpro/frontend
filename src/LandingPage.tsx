@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
+import { Navigate } from 'react-router-dom'
 
 import {
   HowItWorks,
@@ -11,22 +11,15 @@ import {
 } from '@/components/features/landing/landingPageComponents'
 import { howItWorksData } from '@/components/features/landing/landingPageComponents/utils'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { dashboardPathForRole } from '@/features/auth/utils/dashboardPath'
 
 export const LandingPage = () => {
-  const navigate = useNavigate()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const userRole = useAuthStore((state) => state.user?.userRole)
 
-  useEffect(() => {
-    if (!isLoggedIn) return
-    navigate(
-      userRole === 'recruiter'
-        ? '/recruiterDashboard/dashboard'
-        : userRole === 'talent'
-        ? '/talentDashboard'
-        : '/adminDashboard/viewcandidates',
-    )
-  }, [isLoggedIn, userRole, navigate])
+  if (isLoggedIn) {
+    return <Navigate to={dashboardPathForRole(userRole)} replace />
+  }
 
   return (
     <div style={{ overflowX: 'hidden' }}>

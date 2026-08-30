@@ -34,6 +34,7 @@ const EXACT_TITLES: Record<string, string> = {
   '/recruiterDashboard/shortlist': 'Shortlist',
   '/recruiterDashboard/chat': 'Chat',
   '/recruiterDashboard/profile': 'Profile',
+  '/recruiterDashboard/plan': 'Plan',
   '/adminDashboard': 'Talents',
   '/adminDashboard/talents': 'Talents',
   '/adminDashboard/recruiters': 'Recruiters',

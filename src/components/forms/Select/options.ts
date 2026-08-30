@@ -19,6 +19,12 @@ export const CURRENCY_OPTIONS: SelectOption[] = [
   { value: 'EUR', label: 'EUR' },
 ]
 
+/** PATCH /user/me only accepts the backend Currency enum (NGN, USD). */
+export const PROFILE_CURRENCY_OPTIONS: SelectOption[] = [
+  { value: 'NGN', label: 'NGN' },
+  { value: 'USD', label: 'USD' },
+]
+
 export const COMPENSATION_PERIOD_OPTIONS: SelectOption[] = [
   { value: 'monthly', label: 'Monthly' },
   { value: 'yearly', label: 'Yearly' },

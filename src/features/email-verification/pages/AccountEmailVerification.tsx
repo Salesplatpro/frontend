@@ -7,6 +7,10 @@ import logo from '@/assets/logo.png'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import {
+  dashboardPathForRole,
+  loginPathWithNext,
+} from '@/features/auth/utils/dashboardPath'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { EmailVerificationPanel } from '../components/EmailVerificationPanel'
@@ -14,13 +18,6 @@ import { useEmailVerification } from '../hooks/useEmailVerification'
 import styles from './AccountEmailVerification.module.scss'
 
 type TokenStatus = 'verifying' | 'success' | 'already-verified' | 'error'
-
-const dashboardPathForRole = (userRole?: string): string =>
-  userRole === 'recruiter'
-    ? '/recruiterDashboard/dashboard'
-    : userRole === 'talent'
-    ? '/talentDashboard'
-    : '/adminDashboard/viewcandidates'
 
 // Only ever resume into the apply wizard — anything else is rejected so this
 // query param can never be turned into an open redirect.
@@ -92,7 +89,7 @@ const AccountEmailVerification: React.FC = () => {
               <h1 className={styles.title}>Email verified</h1>
               <p className={styles.subtitle}>Your email has been verified.</p>
               {!isLoggedIn && (
-                <Link to="/login">
+                <Link to={loginPathWithNext(safeRedirect)}>
                   <Button>Log in</Button>
                 </Link>
               )}
@@ -127,7 +124,7 @@ const AccountEmailVerification: React.FC = () => {
                   Resend verification email
                 </Button>
               ) : (
-                <Link to="/login">
+                <Link to={loginPathWithNext(safeRedirect)}>
                   <Button>Log in to resend</Button>
                 </Link>
               )}

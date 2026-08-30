@@ -7,13 +7,19 @@ import { useAiConfigDraftStore } from '@/features/jobs/store/useAiConfigDraftSto
 
 import AiConfig from './AiConfig'
 
-const { aiConfigMutationMock, patchAiConfigMock, navigateMock, notifyMock } =
-  vi.hoisted(() => ({
-    aiConfigMutationMock: vi.fn(),
-    patchAiConfigMock: vi.fn(),
-    navigateMock: vi.fn(),
-    notifyMock: vi.fn(),
-  }))
+const {
+  aiConfigMutationMock,
+  patchAiConfigMock,
+  updateJobMock,
+  navigateMock,
+  notifyMock,
+} = vi.hoisted(() => ({
+  aiConfigMutationMock: vi.fn(),
+  patchAiConfigMock: vi.fn(),
+  updateJobMock: vi.fn(),
+  navigateMock: vi.fn(),
+  notifyMock: vi.fn(),
+}))
 
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual<typeof import('react-router-dom')>(
@@ -29,6 +35,7 @@ vi.mock('react-router-dom', async () => {
 vi.mock('@/redux/api/recruiter', () => ({
   useAiConfigMutation: () => [aiConfigMutationMock, { isLoading: false }],
   usePatchAiConfigMutation: () => [patchAiConfigMock, { isLoading: false }],
+  useUpdateJobMutation: () => [updateJobMock, { isLoading: false }],
   useGetAiConfigQuery: () => ({ data: undefined, isLoading: false }),
   useGenJpPersonalityMutation: () => [vi.fn(), { isLoading: false }],
   useDeletePersonalityQuestionMutation: () => [vi.fn(), { isLoading: false }],
@@ -71,6 +78,9 @@ describe('AiConfig', () => {
   beforeEach(() => {
     useAiConfigDraftStore.getState().clearAllDrafts()
     vi.clearAllMocks()
+    updateJobMock.mockReturnValue({
+      unwrap: () => Promise.resolve({ data: { job: { status: 'active' } } }),
+    })
   })
 
   it('blocks submission when required fields are empty', async () => {
@@ -171,8 +181,12 @@ describe('AiConfig', () => {
     await waitFor(() => {
       expect(notifyMock).toHaveBeenCalledWith(
         'success',
-        expect.stringContaining('AI config saved'),
+        expect.stringContaining('job published'),
       )
+      expect(updateJobMock).toHaveBeenCalledWith({
+        jobId: 'job-1',
+        data: { status: 'active' },
+      })
       expect(navigateMock).toHaveBeenCalledWith(
         '/recruiterDashboard/myjobposts',
       )

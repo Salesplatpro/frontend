@@ -14,3 +14,24 @@
     background-color: var(--color-primary-strong);
   }
 }
+
+.unavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 60vh;
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.message {
+  color: var(--color-grey-500, #667085);
+  max-width: 420px;
+}

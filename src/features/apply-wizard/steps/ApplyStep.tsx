@@ -11,6 +11,7 @@ import {
   useApplyToJobMutation,
   useIndividualJobQuery,
 } from '@/redux/api/talent'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 const ApplyStep: React.FC = () => {
@@ -27,10 +28,9 @@ const ApplyStep: React.FC = () => {
       await applyToJob(jobId).unwrap()
       navigate('/talentDashboard')
     } catch (err) {
-      const message =
-        (err as { data?: { message?: string } })?.data?.message ||
-        'Failed to apply for this job'
-      notify('error', message, { autoClose: 2000 })
+      notify('error', getErrorMessage(err, 'Failed to apply for this job'), {
+        autoClose: 2000,
+      })
     }
   }
 

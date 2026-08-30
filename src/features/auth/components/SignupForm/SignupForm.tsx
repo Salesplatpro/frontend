@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Alert } from '@/components/feedback'
 import { CheckBox, PasswordInput, TextInput } from '@/components/forms'
 import { Button } from '@/components/ui/Button'
+import { loginPathWithNext } from '@/features/auth/utils/dashboardPath'
 import { paths } from '@/paths'
 
 import { useSignup } from '../../hooks/useSignup'
@@ -159,7 +160,12 @@ export const SignupForm = ({
 
         <div className={styles.already}>
           Already have an account?{' '}
-          <Link to={{ pathname: `/${paths.login}`, search: location.search }}>
+          <Link
+            to={
+              redirectPath
+                ? loginPathWithNext(redirectPath)
+                : { pathname: `/${paths.login}`, search: location.search }
+            }>
             Log In
           </Link>
         </div>

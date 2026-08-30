@@ -1,21 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import PricePlan from '@/pages/Pricing/PricePlan'
-import PricingHero from '@/pages/Pricing/PricingHero'
-import PricingNotification from '@/pages/Pricing/PricingNotification'
-
-import QuoteSection from './QuoteSection'
+import { PricingContent } from '@/features/pricing/components/PricingContent'
 
 const Pricing = () => {
-  const [isFlipped, setIsFlipped] = useState(false)
-  return (
-    <div className="min-h-screen">
-      <PricingHero isFlipped={isFlipped} setIsFlipped={setIsFlipped} />
-      <PricePlan isFlipped={isFlipped} setIsFlipped={setIsFlipped} />
-      <PricingNotification />
-      <QuoteSection />
-    </div>
-  )
+  return <PricingContent variant="public" />
 }
 
 export default Pricing
