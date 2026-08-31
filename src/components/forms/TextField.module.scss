@@ -7,6 +7,17 @@
 
 .label {
   @extend %form-label;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.tooltipTrigger {
+  display: inline-flex;
+  color: var(--color-text-muted);
+  cursor: help;
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 .required {
@@ -21,6 +32,10 @@
   margin-top: var(--space-1);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+.error {
+  @extend %form-error;
 }
 
 .disabled {

@@ -1,5 +1,7 @@
-import { Field } from 'formik'
+import { ErrorMessage, Field } from 'formik'
 import React from 'react'
+import { IoIosInformationCircle } from 'react-icons/io'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import RichTextEditor from './RichTextEditor'
 import styles from './TextField.module.scss'
@@ -13,6 +15,7 @@ interface TextFieldProps {
   MAX_WORDS?: number
   disabled?: boolean
   hint?: string
+  tooltip?: string
 }
 
 const TextField = ({
@@ -24,7 +27,9 @@ const TextField = ({
   MAX_WORDS,
   disabled,
   hint,
+  tooltip,
 }: TextFieldProps) => {
+  const tooltipId = `${name}-field-tooltip`
   return (
     <div className={styles.field}>
       <label htmlFor={name} className={styles.label}>
@@ -34,7 +39,23 @@ const TextField = ({
             *
           </span>
         )}
+        {tooltip && (
+          <span
+            className={styles.tooltipTrigger}
+            data-tooltip-id={tooltipId}
+            aria-label={tooltip}>
+            <IoIosInformationCircle aria-hidden />
+          </span>
+        )}
       </label>
+      {tooltip && (
+        <ReactTooltip
+          id={tooltipId}
+          content={tooltip}
+          place="top"
+          variant="info"
+        />
+      )}
       {type === 'textarea' ? (
         <Field name={name}>
           {({
@@ -71,6 +92,7 @@ const TextField = ({
         />
       )}
       {hint && <p className={styles.hint}>{hint}</p>}
+      <ErrorMessage name={name} component="div" className={styles.error} />
     </div>
   )
 }
