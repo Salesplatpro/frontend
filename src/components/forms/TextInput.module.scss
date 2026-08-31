@@ -21,6 +21,10 @@
   @extend %form-input;
 }
 
+.invalid {
+  @extend %form-input-invalid;
+}
+
 .inputError {
   @extend %form-error;
 }

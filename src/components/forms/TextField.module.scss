@@ -28,6 +28,10 @@
   @extend %form-input;
 }
 
+.invalid {
+  @extend %form-input-invalid;
+}
+
 .hint {
   margin-top: var(--space-1);
   font-size: var(--text-sm);

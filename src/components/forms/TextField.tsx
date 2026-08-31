@@ -1,4 +1,4 @@
-import { ErrorMessage, Field } from 'formik'
+import { ErrorMessage, Field, FieldProps } from 'formik'
 import React from 'react'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
@@ -30,8 +30,11 @@ const TextField = ({
   tooltip,
 }: TextFieldProps) => {
   const tooltipId = `${name}-field-tooltip`
+  const errorId = `${name}-error`
+  const hintId = `${name}-hint`
+
   return (
-    <div className={styles.field}>
+    <div className={styles.field} data-field={name}>
       <label htmlFor={name} className={styles.label}>
         {label}
         {asterick && (
@@ -58,16 +61,7 @@ const TextField = ({
       )}
       {type === 'textarea' ? (
         <Field name={name}>
-          {({
-            field,
-          }: {
-            field: {
-              value: string
-              onChange: (event: {
-                target: { name: string; value: string }
-              }) => void
-            }
-          }) => (
+          {({ field, meta }: FieldProps<string>) => (
             <RichTextEditor
               id={name}
               value={field.value}
@@ -76,23 +70,53 @@ const TextField = ({
               }}
               placeholder={placeholder}
               maxLength={MAX_WORDS}
+              invalid={meta.touched && !!meta.error}
             />
           )}
         </Field>
       ) : (
-        <Field
-          type={type}
-          id={name}
-          name={name}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={
-            disabled ? `${styles.input} ${styles.disabled}` : styles.input
-          }
-        />
+        <Field name={name}>
+          {({ field, meta }: FieldProps<string>) => {
+            const hasError = meta.touched && !!meta.error
+            return (
+              <input
+                {...field}
+                type={type || 'text'}
+                id={name}
+                name={name}
+                placeholder={placeholder}
+                disabled={disabled}
+                aria-invalid={hasError || undefined}
+                aria-required={asterick || undefined}
+                aria-describedby={
+                  [hasError ? errorId : null, hint ? hintId : null]
+                    .filter(Boolean)
+                    .join(' ') || undefined
+                }
+                className={[
+                  styles.input,
+                  disabled ? styles.disabled : '',
+                  hasError ? styles.invalid : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              />
+            )
+          }}
+        </Field>
       )}
-      {hint && <p className={styles.hint}>{hint}</p>}
-      <ErrorMessage name={name} component="div" className={styles.error} />
+      {hint && (
+        <p id={hintId} className={styles.hint}>
+          {hint}
+        </p>
+      )}
+      <ErrorMessage name={name}>
+        {(message) => (
+          <div id={errorId} className={styles.error} role="alert">
+            {message}
+          </div>
+        )}
+      </ErrorMessage>
     </div>
   )
 }

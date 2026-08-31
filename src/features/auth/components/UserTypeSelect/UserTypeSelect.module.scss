@@ -30,6 +30,10 @@
   cursor: pointer;
   transition: border-color 0.15s ease;
 
+  &.error {
+    border-color: var(--color-danger);
+  }
+
   &:focus {
     outline: none;
     border-color: var(--color-primary);
@@ -70,4 +74,10 @@
   &:hover {
     background-color: var(--color-bg-subtle);
   }
+}
+
+.errorText {
+  margin-top: var(--space-1);
+  color: var(--color-danger);
+  font-size: var(--text-sm);
 }

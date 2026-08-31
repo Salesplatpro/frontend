@@ -2,6 +2,7 @@ import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { Button } from '@/components/ui/Button'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
@@ -156,7 +157,8 @@ const PostJob: React.FC = () => {
         onSubmit={onSubmit}
         enableReinitialize>
         {({ values, setFieldValue, errors, touched }) => (
-          <Form>
+          <Form noValidate>
+            <FormikFocusOnError />
             <FormObserver saveDraft={saveDraft} />
 
             <JobDetailsFields

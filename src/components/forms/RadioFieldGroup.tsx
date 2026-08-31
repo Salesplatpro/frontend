@@ -27,7 +27,9 @@ const RadioFieldGroup = ({
   tooltipVariant = 'info',
 }: RadioFieldGroupProps) => {
   return (
-    <div className="flex flex-row items-center space-x-4 mb-4">
+    <div
+      className="flex flex-row items-center space-x-4 mb-4"
+      data-field={name}>
       <p className="font-semibold text-base text-[#434144] flex-1">{label}</p>
       {options.map((option) => (
         <label
@@ -57,11 +59,16 @@ const RadioFieldGroup = ({
         </>
       )}
 
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="text-red-500 text-sm"
-      />
+      <ErrorMessage name={name}>
+        {(message) => (
+          <div
+            id={`${name}-error`}
+            className="text-red-500 text-sm"
+            role="alert">
+            {message}
+          </div>
+        )}
+      </ErrorMessage>
     </div>
   )
 }

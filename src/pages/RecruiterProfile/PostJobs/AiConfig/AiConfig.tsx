@@ -2,6 +2,7 @@ import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
 import React, { useCallback, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAiConfigDraftStore } from '@/features/jobs/store/useAiConfigDraftStore'
@@ -210,7 +211,8 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
         onSubmit={onSubmit}
         enableReinitialize>
         {({ values, errors, setFieldValue, isSubmitting }) => (
-          <Form>
+          <Form noValidate>
+            <FormikFocusOnError />
             {!isEditMode && <FormObserver saveDraft={draftSaver} />}
 
             {hadDraft && (

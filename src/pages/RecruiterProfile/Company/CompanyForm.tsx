@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import { BsBuilding } from 'react-icons/bs'
 import * as Yup from 'yup'
 
+import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
 
@@ -100,7 +101,7 @@ const FormField: React.FC<FormFieldProps> = ({
   placeholder,
   type = 'text',
 }) => (
-  <div className={styles.field}>
+  <div className={styles.field} data-field={name}>
     <label htmlFor={name} className={styles.label}>
       {label}
       {required && (
@@ -118,14 +119,32 @@ const FormField: React.FC<FormFieldProps> = ({
           type={type}
           disabled={disabled}
           placeholder={placeholder}
+          aria-invalid={meta.touched && meta.error ? true : undefined}
+          aria-describedby={
+            meta.touched && meta.error
+              ? `${name}-error`
+              : hint
+              ? `${name}-hint`
+              : undefined
+          }
           className={`${styles.input} ${
             meta.touched && meta.error ? styles.inputError : ''
           }`}
         />
       )}
     </Field>
-    {hint && <p className={styles.hint}>{hint}</p>}
-    <ErrorMessage name={name} component="p" className={styles.error} />
+    {hint && (
+      <p id={`${name}-hint`} className={styles.hint}>
+        {hint}
+      </p>
+    )}
+    <ErrorMessage name={name}>
+      {(message) => (
+        <p id={`${name}-error`} className={styles.error} role="alert">
+          {message}
+        </p>
+      )}
+    </ErrorMessage>
   </div>
 )
 
@@ -220,7 +239,8 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
       validationSchema={isEdit ? editValidationSchema : createValidationSchema}
       onSubmit={onSubmit}>
       <div className={styles.layout}>
-        <Form className={styles.form}>
+        <Form className={styles.form} noValidate>
+          <FormikFocusOnError />
           <PagePanel>
             <div className={styles.sectionHead}>
               <span className={styles.step}>1</span>

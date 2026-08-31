@@ -22,7 +22,7 @@ const ApplyWizardLayout: React.FC = () => {
   )
 
   return (
-    <div className={styles.page}>
+    <div className={`wizard-page ${styles.page}`}>
       <WizardStepper
         steps={WIZARD_STEPS.map(({ label }) => ({ label }))}
         currentIndex={currentIndex}

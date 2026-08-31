@@ -21,14 +21,16 @@ const VerifyStep: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <p className={styles.intro}>
-        Please verify your email address before continuing your application.
-      </p>
-      <EmailVerificationPanel redirectPath={`/apply/${jobId}`} />
-      <div className={styles.continueBar}>
-        <Button onClick={() => void handleContinue()}>
-          I&apos;ve verified — Continue
-        </Button>
+      <div className={styles.inner}>
+        <p className={styles.intro}>
+          Please verify your email address before continuing your application.
+        </p>
+        <EmailVerificationPanel redirectPath={`/apply/${jobId}`} />
+        <div className={styles.continueBar}>
+          <Button onClick={() => void handleContinue()}>
+            I&apos;ve verified — Continue
+          </Button>
+        </div>
       </div>
     </div>
   )

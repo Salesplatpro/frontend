@@ -2,6 +2,7 @@ import { Form, Formik } from 'formik'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
 import { TextInput } from '@/components/forms/TextInput'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
@@ -64,7 +65,8 @@ const CreateJD = () => {
             handleBlur,
             setFieldValue,
           }) => (
-            <Form className={styles.form}>
+            <Form className={styles.form} noValidate>
+              <FormikFocusOnError />
               <TextInput
                 title="Campaign Name"
                 label="name"
@@ -108,10 +110,18 @@ const CreateJD = () => {
                   onBlur={handleBlur}
                   rows={4}
                   placeholder="Describe the role you're scouting for"
+                  aria-invalid={
+                    touched.jobBrief && errors.jobBrief ? true : undefined
+                  }
                   className={styles.textarea}
                 />
                 {touched.jobBrief && typeof errors.jobBrief === 'string' && (
-                  <div className={styles.error}>{errors.jobBrief}</div>
+                  <div
+                    id="jobBrief-error"
+                    className={styles.error}
+                    role="alert">
+                    {errors.jobBrief}
+                  </div>
                 )}
               </div>
 
@@ -127,11 +137,21 @@ const CreateJD = () => {
                   onBlur={handleBlur}
                   rows={3}
                   placeholder="How should CVs be assessed against this role?"
+                  aria-invalid={
+                    touched.recruiterGuide && errors.recruiterGuide
+                      ? true
+                      : undefined
+                  }
                   className={styles.textarea}
                 />
                 {touched.recruiterGuide &&
                   typeof errors.recruiterGuide === 'string' && (
-                    <div className={styles.error}>{errors.recruiterGuide}</div>
+                    <div
+                      id="recruiterGuide-error"
+                      className={styles.error}
+                      role="alert">
+                      {errors.recruiterGuide}
+                    </div>
                   )}
               </div>
 

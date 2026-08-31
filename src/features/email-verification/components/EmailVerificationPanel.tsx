@@ -9,6 +9,7 @@ import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { focusFieldByName } from '@/utils/focusField'
 import { notify } from '@/utils/toastNotifications'
 
 import { useEmailVerification } from '../hooks/useEmailVerification'
@@ -32,6 +33,10 @@ export const EmailVerificationPanel = ({
   const [newEmail, setNewEmail] = useState('')
   const [currentPassword, setCurrentPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{
+    newEmail?: string
+    currentPassword?: string
+  }>({})
 
   useEffect(() => {
     if (cooldown <= 0) return
@@ -55,10 +60,19 @@ export const EmailVerificationPanel = ({
   }
 
   const handleChangeEmail = async () => {
-    if (!newEmail || !currentPassword) {
-      setError('Please fill in both fields.')
+    const nextErrors: { newEmail?: string; currentPassword?: string } = {}
+    if (!newEmail.trim()) nextErrors.newEmail = 'Enter a new email address.'
+    if (!currentPassword)
+      nextErrors.currentPassword = 'Enter your current password.'
+
+    if (nextErrors.newEmail || nextErrors.currentPassword) {
+      setFieldErrors(nextErrors)
+      setError(null)
+      focusFieldByName(nextErrors.newEmail ? 'newEmail' : 'currentPassword')
       return
     }
+
+    setFieldErrors({})
     setError(null)
     try {
       await submitChangeEmail({ newEmail, currentPassword })
@@ -147,10 +161,15 @@ export const EmailVerificationPanel = ({
               title="New email"
               label="newEmail"
               name="newEmail"
+              type="email"
               autoComplete="email"
               placeholder="Enter new email address"
               value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
+              onChange={(e) => {
+                setNewEmail(e.target.value)
+                setFieldErrors((prev) => ({ ...prev, newEmail: undefined }))
+              }}
+              error={fieldErrors.newEmail}
             />
             <PasswordInput
               title="Current password"
@@ -159,7 +178,14 @@ export const EmailVerificationPanel = ({
               autoComplete="current-password"
               placeholder="Enter current password"
               value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
+              onChange={(e) => {
+                setCurrentPassword(e.target.value)
+                setFieldErrors((prev) => ({
+                  ...prev,
+                  currentPassword: undefined,
+                }))
+              }}
+              error={fieldErrors.currentPassword}
             />
           </div>
 

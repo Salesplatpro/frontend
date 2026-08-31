@@ -7,6 +7,7 @@ interface TagInputProps {
   value: string[]
   onChange: (value: string[]) => void
   label?: string
+  name?: string
   required?: boolean
   placeholder?: string
   error?: string
@@ -18,6 +19,7 @@ export const TagInput: React.FC<TagInputProps> = ({
   value,
   onChange,
   label,
+  name,
   required,
   placeholder = 'Type and press Enter to add',
   error,
@@ -70,9 +72,9 @@ export const TagInput: React.FC<TagInputProps> = ({
     .join(' ')
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-field={name}>
       {label && (
-        <label className={styles.label}>
+        <label className={styles.label} htmlFor={name}>
           {label}
           {required && <span className={styles.required}>*</span>}
         </label>
@@ -99,6 +101,8 @@ export const TagInput: React.FC<TagInputProps> = ({
 
         <input
           ref={inputRef}
+          id={name}
+          name={name}
           type="text"
           className={styles.input}
           value={inputValue}
@@ -107,12 +111,21 @@ export const TagInput: React.FC<TagInputProps> = ({
           onPaste={handlePaste}
           placeholder={value.length === 0 ? placeholder : ''}
           aria-label={label}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error && name ? `${name}-error` : undefined}
         />
       </div>
 
       <span className={styles.hint}>Press Enter to add each item</span>
 
-      {error && <div className={styles.errorText}>{error}</div>}
+      {error && (
+        <div
+          id={name ? `${name}-error` : undefined}
+          className={styles.errorText}
+          role="alert">
+          {error}
+        </div>
+      )}
     </div>
   )
 }

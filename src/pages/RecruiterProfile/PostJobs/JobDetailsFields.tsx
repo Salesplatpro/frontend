@@ -123,6 +123,7 @@ export const JobDetailsFields = ({
 
       <div className={styles.fieldGroup}>
         <Select
+          name="experienceLevel"
           label="Experience Level"
           required
           options={EXPERIENCE_LEVEL_OPTIONS}
@@ -148,6 +149,7 @@ export const JobDetailsFields = ({
           Work Mode<span className={styles.required}>*</span>
         </p>
         <WorkTypeCheckboxes
+          name="workMode"
           value={values.workMode}
           onChange={(value) => {
             setFieldValue('workMode', value)
@@ -196,16 +198,19 @@ export const JobDetailsFields = ({
       <div className={styles.compensationRow}>
         <div className={styles.compensationFieldThird}>
           <Select
+            name="currency"
             label="Currency"
             required
             options={CURRENCY_OPTIONS}
             value={values.currency}
             onChange={(value) => setFieldValue('currency', value)}
             placeholder="Select currency"
+            error={
+              Boolean(touched.currency) && typeof errors.currency === 'string'
+                ? (errors.currency as string)
+                : undefined
+            }
           />
-          {Boolean(touched.currency) && typeof errors.currency === 'string' && (
-            <div className={styles.errorText}>{errors.currency}</div>
-          )}
         </div>
 
         <div className={styles.compensationFieldThird}>
@@ -229,19 +234,20 @@ export const JobDetailsFields = ({
 
         <div className={styles.compensationFieldThird}>
           <Select
+            name="compensationPeriod"
             label="Compensation Period"
             required
             options={COMPENSATION_PERIOD_OPTIONS}
             value={values.compensationPeriod}
             onChange={(value) => setFieldValue('compensationPeriod', value)}
             placeholder="Select period"
+            error={
+              Boolean(touched.compensationPeriod) &&
+              typeof errors.compensationPeriod === 'string'
+                ? (errors.compensationPeriod as string)
+                : undefined
+            }
           />
-          {Boolean(touched.compensationPeriod) &&
-            typeof errors.compensationPeriod === 'string' && (
-              <div className={styles.errorText}>
-                {errors.compensationPeriod}
-              </div>
-            )}
         </div>
       </div>
     </section>
@@ -252,6 +258,7 @@ export const JobDetailsFields = ({
 
       <div className={styles.fieldGroup}>
         <TagInput
+          name="skills"
           label="Required Skills"
           required
           value={values.skills}
@@ -268,6 +275,7 @@ export const JobDetailsFields = ({
 
       <div className={styles.fieldGroup}>
         <TagInput
+          name="goals"
           label="Top Goals"
           required
           value={values.goals}
