@@ -34,7 +34,12 @@ const columns: ColumnDef<Row>[] = [
 describe('DataTable sorting', () => {
   it('sorts ascending on first header click, and reverses on the second', () => {
     render(
-      <DataTable columns={columns} data={rows} getRowKey={(row) => row.id} />,
+      <DataTable
+        columns={columns}
+        data={rows}
+        getRowKey={(row) => row.id}
+        showRowNumber={false}
+      />,
     )
 
     const getBodyRowNames = () =>
@@ -54,7 +59,12 @@ describe('DataTable sorting', () => {
 
   it('sorts null values last regardless of direction', () => {
     render(
-      <DataTable columns={columns} data={rows} getRowKey={(row) => row.id} />,
+      <DataTable
+        columns={columns}
+        data={rows}
+        getRowKey={(row) => row.id}
+        showRowNumber={false}
+      />,
     )
 
     fireEvent.click(screen.getByText('Score'))
@@ -86,6 +96,7 @@ describe('DataTable row selection', () => {
         selectedRowKeys={new Set()}
         onToggleRow={onToggleRow}
         onToggleAll={onToggleAll}
+        showRowNumber={false}
       />,
     )
 
@@ -109,6 +120,7 @@ describe('DataTable row selection', () => {
         selectedRowKeys={new Set(['1', '2', '3'])}
         onToggleRow={vi.fn()}
         onToggleAll={vi.fn()}
+        showRowNumber={false}
       />,
     )
 
@@ -125,6 +137,7 @@ describe('DataTable row selection', () => {
         selectedRowKeys={new Set()}
         onToggleRow={vi.fn()}
         onToggleAll={vi.fn()}
+        showRowNumber={false}
       />,
     )
     expect(
@@ -134,7 +147,12 @@ describe('DataTable row selection', () => {
 
   it('does not render a checkbox column when selection props are absent', () => {
     render(
-      <DataTable columns={columns} data={rows} getRowKey={(row) => row.id} />,
+      <DataTable
+        columns={columns}
+        data={rows}
+        getRowKey={(row) => row.id}
+        showRowNumber={false}
+      />,
     )
     expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
   })

@@ -185,6 +185,7 @@ export const MyScoutJobs = () => {
             isLoading={isLoading}
             getRowKey={(row) => row.id}
             allowOverflow
+            rowNumberOffset={(page - 1) * ROWS_PER_PAGE}
           />
           <Pagination
             totalItems={scoutJobs.length}
