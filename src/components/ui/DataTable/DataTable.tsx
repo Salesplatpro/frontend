@@ -245,7 +245,9 @@ export function DataTable<T>({
         overflowX: allowOverflow ? 'visible' : 'auto',
         overflowY: allowOverflow ? 'visible' : 'hidden',
       }}>
-      <Table aria-label={ariaLabel}>
+      <Table
+        aria-label={ariaLabel}
+        sx={allowOverflow ? undefined : { minWidth: 720 }}>
         <TableHead
           sx={{
             background: 'var(--color-bg-hero)',

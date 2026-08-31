@@ -13,10 +13,8 @@ import {
   Spinner,
   StatusBadge,
 } from '../../../components'
-import { useRegenerateVerdict } from '../../../features/applications/hooks/useRegenerateVerdict'
 import { JobAiConfigThresholds } from '../../../features/applications/services/applicationService'
-import { openTalentCv } from '../../../features/profile/services/openTalentCv'
-import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
+import { formatTimeAgo, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
 
 type SingleJobTableProps = {
@@ -31,27 +29,10 @@ type SingleJobTableProps = {
   onOpenDossier?: (item: SingleJobDetails) => void
   /** Application id currently being updated (e.g. via a row-level shortlist/reject) — shows a spinner in that row's actions cell instead of a static disabled state. */
   loadingRowId?: string | null
-  /** Called after a successful AI match regenerate so the caller can refetch the applications list — useRegenerateVerdict's own SWR key doesn't cover this table's data. */
-  onVerdictRegenerated?: () => void | Promise<void>
   visibleColumnKeys?: string[]
   sortKey?: string | null
   sortDirection?: 'asc' | 'desc'
   onSortChange?: (key: string, direction: 'asc' | 'desc') => void
-}
-
-const getStatusStage = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'Stage 1'
-    case 'not-proceeding':
-      return 'Stage 2'
-    case 'retake_assessment':
-      return 'Stage 3'
-    case 'shortlisted':
-      return 'Stage 4'
-    default:
-      return ''
-  }
 }
 
 const formatAbsoluteDate = (dateString: string) =>
@@ -66,7 +47,6 @@ const formatAbsoluteDate = (dateString: string) =>
 // (via each column's `toggleable`/`sortAccessor`/`header`), so they can't drift.
 const COLUMN_LABELS: Record<string, string> = {
   name: 'Name',
-  stage: 'Stage',
   status: 'Job Status',
   cvRanking: 'Completion order',
   aiMatch: 'AI Match',
@@ -113,7 +93,6 @@ interface ApplicantActionsCellProps {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
-  onVerdictRegenerated?: () => void | Promise<void>
   isLoading?: boolean
 }
 
@@ -122,12 +101,9 @@ const ApplicantActionsCell = ({
   onShortlist,
   onReject,
   onMessage,
-  onVerdictRegenerated,
   isLoading,
 }: ApplicantActionsCellProps) => {
-  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(item.id)
-
-  if (isLoading || isRegenerating) {
+  if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Spinner size="sm" />
@@ -135,27 +111,10 @@ const ApplicantActionsCell = ({
     )
   }
 
-  const handleRegenerate = async () => {
-    await regenerateVerdict()
-    await onVerdictRegenerated?.()
-  }
-
   const items: DropdownItem[] = [
     { label: 'Shortlist', onClick: () => onShortlist(item.id) },
     { label: 'Reject', onClick: () => onReject(item.id) },
     { label: 'Message', onClick: () => onMessage(item.id) },
-    ...(item.talent.cvFileName || item.talent.cvUploadedAt
-      ? [
-          {
-            label: 'View CV',
-            onClick: () => openTalentCv(item.talent.id),
-          },
-        ]
-      : []),
-    {
-      label: 'Regenerate AI Match',
-      onClick: () => handleRegenerate(),
-    },
   ]
 
   return (
@@ -199,14 +158,12 @@ export const buildColumns = ({
   onShortlist,
   onReject,
   onMessage,
-  onVerdictRegenerated,
   loadingRowId,
   onOpenAiMatch,
 }: {
   onShortlist: (applicationId: string) => void
   onReject: (applicationId: string) => void
   onMessage: (applicationId: string) => void
-  onVerdictRegenerated?: () => void | Promise<void>
   loadingRowId?: string | null
   onOpenAiMatch?: (item: SingleJobDetails) => void
 }): ColumnDef<SingleJobDetails>[] => [
@@ -234,13 +191,6 @@ export const buildColumns = ({
       </div>
     ),
     sortAccessor: (item) => `${item.talent.firstName} ${item.talent.lastName}`,
-  },
-  {
-    key: 'stage',
-    header: COLUMN_LABELS.stage,
-    align: 'center',
-    toggleable: true,
-    render: (item) => getStatusStage(item.status),
   },
   {
     key: 'status',
@@ -297,7 +247,7 @@ export const buildColumns = ({
     toggleable: true,
     render: (item) => (
       <div>
-        <div>{calculateDaysFromCreation(item.createdAt)} days ago</div>
+        <div>{formatTimeAgo(item.createdAt)}</div>
         <div
           style={{
             fontSize: 'var(--text-xs)',
@@ -332,7 +282,6 @@ export const buildColumns = ({
           onShortlist={onShortlist}
           onReject={onReject}
           onMessage={onMessage}
-          onVerdictRegenerated={onVerdictRegenerated}
           isLoading={item.id === loadingRowId}
         />
       </div>
@@ -350,7 +299,6 @@ export const SingleJobTable = ({
   onReject,
   onMessage,
   loadingRowId,
-  onVerdictRegenerated,
   visibleColumnKeys,
   sortKey,
   sortDirection,
@@ -361,7 +309,6 @@ export const SingleJobTable = ({
     onShortlist,
     onReject,
     onMessage,
-    onVerdictRegenerated,
     loadingRowId,
     onOpenAiMatch: onOpenDossier,
   })
@@ -383,7 +330,6 @@ export const SingleJobTable = ({
       onToggleRow={onToggleRow}
       onToggleAll={onToggleAll}
       onRowClick={onOpenDossier}
-      allowOverflow
       sortKey={sortKey}
       sortDirection={sortDirection}
       onSortChange={onSortChange}
