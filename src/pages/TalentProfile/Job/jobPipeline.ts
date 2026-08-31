@@ -73,8 +73,11 @@ export type PipelineCrumb = {
   label: string
 }
 
-/** Prescreening is a one-time global score — it is not a job-details crumb. */
-const HIDDEN_JOB_CRUMB_STAGES = new Set<PipelineStageId>(['prescreening'])
+/** Auto stages the talent never sees as crumbs — prescreening is global, CV match is recruiter-only. */
+const HIDDEN_JOB_CRUMB_STAGES = new Set<PipelineStageId>([
+  'prescreening',
+  'cv_similarity',
+])
 
 export const buildPipelineCrumbs = (
   stages: Record<string, string> | null | undefined,
@@ -108,7 +111,9 @@ export const firstRemainingStep = (
   stages: Record<string, string> | null | undefined,
 ): PipelineStepId => {
   if (!currentStage || currentStage === 'completed') return 'details'
-  if (currentStage === 'prescreening') return 'details'
+  if (isStageId(currentStage) && HIDDEN_JOB_CRUMB_STAGES.has(currentStage)) {
+    return 'details'
+  }
   if (isStageId(currentStage)) return currentStage
   const ordered = orderedStageKeys(stages).filter(
     (id) => !HIDDEN_JOB_CRUMB_STAGES.has(id),
@@ -125,10 +130,10 @@ export const canVisitStep = ({
   currentStage: string | null | undefined
   stages: Record<string, string> | null | undefined
 }): boolean => {
+  if (isStageId(step) && HIDDEN_JOB_CRUMB_STAGES.has(step)) return false
   if (!currentStage) return step === 'details'
   if (currentStage === 'completed') return true
   if (step === 'details') return true
-  if (step === 'prescreening') return false
 
   const ordered = orderedStageKeys(stages)
   const currentIndex = ordered.indexOf(currentStage as PipelineStageId)

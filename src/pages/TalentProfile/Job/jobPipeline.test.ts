@@ -20,7 +20,6 @@ describe('jobPipeline', () => {
       'details',
       'personality',
       'personalized',
-      'cv_similarity',
     ])
   })
 
@@ -57,14 +56,21 @@ describe('jobPipeline', () => {
     ).toBe(true)
   })
 
-  it('allows free navigation when complete', () => {
+  it('allows free navigation of visible crumbs when complete', () => {
+    expect(
+      canVisitStep({
+        step: 'personalized',
+        currentStage: 'completed',
+        stages,
+      }),
+    ).toBe(true)
     expect(
       canVisitStep({
         step: 'cv_similarity',
         currentStage: 'completed',
         stages,
       }),
-    ).toBe(true)
+    ).toBe(false)
   })
 
   it('uses currentStage as the next crumb after apply', () => {
@@ -74,5 +80,9 @@ describe('jobPipeline', () => {
 
   it('keeps the talent on job details while the global prescreening gate runs', () => {
     expect(firstRemainingStep('prescreening', stages)).toBe('details')
+  })
+
+  it('keeps the talent on job details while CV match runs in the background', () => {
+    expect(firstRemainingStep('cv_similarity', stages)).toBe('details')
   })
 })
