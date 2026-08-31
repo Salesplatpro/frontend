@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
@@ -9,20 +9,18 @@ import {
   usePostPersonalizedTestMutation,
 } from '../../../redux/api/talent'
 import { notify } from '../../../utils/toastNotifications'
+import {
+  allQuestionsAnswered,
+  AssessmentForm,
+  AssessmentQuestion,
+  AssessmentStatus,
+} from './AssessmentForm'
 
-// Mirrors the poll/timeout shape already proven in
-// features/pre-assessment/hooks.ts.
 const GENERATION_TIMEOUT_MS = 60000
 
-// Type definitions
 interface FormData {
   jobId: string
   answers: { [key: string]: string }
-}
-
-interface Question {
-  id: string
-  question: string
 }
 
 interface PostAnswerResponse {
@@ -52,7 +50,7 @@ const PersonalizedTest: React.FC<PersonalizedTestProps> = ({
   const jobId = jobIdProp || jobIdParam
   const talentId = talentIdProp || talentIdParam
   const [personalizedQuestions, setPersonalizedQuestions] = useState<
-    Question[]
+    AssessmentQuestion[]
   >([])
   const [postAnswer] = usePostPersonalizedTestMutation()
   const [formData, setFormData] = useState<FormData>({
@@ -80,9 +78,6 @@ const PersonalizedTest: React.FC<PersonalizedTestProps> = ({
     !personalizedError &&
     personalizedQuestions.length === 0
 
-  // POST /questions/personalized is idempotent (returns existing questions if
-  // already generated), so a plain refetch is a safe, real retry — no risk of
-  // duplicate generation.
   useEffect(() => {
     if (!questionsEmpty) {
       setWaitTimedOut(false)
@@ -105,11 +100,6 @@ const PersonalizedTest: React.FC<PersonalizedTestProps> = ({
     }
   }, [isValidTalentId, jobId, navigate])
 
-  // Check if all questions are answered
-  const allAnswered =
-    personalizedQuestions.length > 0 &&
-    Object.keys(formData.answers).length === personalizedQuestions.length
-
   useEffect(() => {
     if (personalizedData) {
       const questions =
@@ -120,60 +110,32 @@ const PersonalizedTest: React.FC<PersonalizedTestProps> = ({
       }
     }
     if (personalizedError) {
-      notify('error', 'DisplayError loading personalized test data', {
+      notify('error', 'Error loading personalized test data', {
         autoClose: 2000,
       })
-
-      console.error(personalizedError)
     }
   }, [personalizedData, personalizedError])
 
-  const handleChange = (
-    e: ChangeEvent<HTMLTextAreaElement>,
-    questionId: string,
-  ) => {
-    const { value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      answers: {
-        ...prevData.answers,
-        [questionId]: value,
-      },
-    }))
-    console.log(formData.answers)
-  }
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!allQuestionsAnswered(personalizedQuestions, formData.answers)) return
     setIsSubmitting(true)
     try {
       const response = (await postAnswer(
         formData,
       ).unwrap()) as PostAnswerResponse
-      if (response.status) {
-        notify(
-          'success',
-          `${response.message} ${response.data.scorePercent}%`,
-          {
-            autoClose: 2000,
-          },
-        )
-        console.log(response.data.scorePercent)
-      } else {
-        notify(
-          'error',
-          response.message || 'DisplayError submitting question',
-          {
-            autoClose: 2000,
-          },
-        )
+      if (!response.status) {
+        notify('error', response.message || 'Error submitting question', {
+          autoClose: 2000,
+        })
+        return
       }
       if (onComplete) {
-        onComplete()
+        await Promise.resolve(onComplete())
       } else {
         navigate(`/talentDashboard/job/${jobId}`)
       }
-    } catch (error) {
+    } catch {
       notify('error', 'Error submitting quiz', {
         autoClose: 2000,
       })
@@ -188,98 +150,58 @@ const PersonalizedTest: React.FC<PersonalizedTestProps> = ({
 
   if (personalizedError) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
-        <p className="text-red-500 font-raleway text-center">
-          {getErrorMessage(
-            personalizedError,
-            'Unable to load your personalized test.',
-          )}
-        </p>
-        <button
-          type="button"
-          onClick={() => refetchPersonalizedTest()}
-          className="px-4 py-2 rounded font-raleway font-medium bg-blue-500 text-white hover:bg-blue-700">
-          Retry
-        </button>
-      </div>
+      <AssessmentStatus
+        error
+        message={getErrorMessage(
+          personalizedError,
+          'Unable to load your personalized test.',
+        )}
+        actionLabel="Retry"
+        onAction={() => void refetchPersonalizedTest()}
+      />
     )
   }
 
   if (questionsEmpty) {
     if (waitTimedOut) {
       return (
-        <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
-          <p className="text-grey-700 font-raleway font-medium text-center">
-            Still preparing your assessment questions.
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              setWaitTimedOut(false)
-              void refetchPersonalizedTest()
-            }}
-            className="px-4 py-2 rounded font-raleway font-medium bg-blue-500 text-white hover:bg-blue-700">
-            Tap to retry
-          </button>
-        </div>
+        <AssessmentStatus
+          message="Still preparing your assessment questions."
+          actionLabel="Tap to retry"
+          onAction={() => {
+            setWaitTimedOut(false)
+            void refetchPersonalizedTest()
+          }}
+        />
       )
     }
     return (
-      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
-        <Spinner />
-        <p className="text-grey-700 font-raleway font-medium">
-          Preparing your assessment questions...
-        </p>
-      </div>
+      <AssessmentStatus
+        loading
+        message="Preparing your assessment questions..."
+      />
     )
   }
 
   return (
-    <div className="w-full max-w-full px-4 lg:w-[70%] md:w-[80%] mx-auto mt-8 box-border">
-      <div className="ml-0 sm:ml-8">
-        <h2 className="text-2xl md:text-3xl font-raleway text-grey-900 font-bold">
-          Personalized Test
-        </h2>
-        <p className="text-xl text-grey-900 font-medium mt-3 font-raleway">
-          Welcome to your Personalized test, you have these Questions to answer
-          in this stage.
-        </p>
-      </div>
-
-      <div className="md:mt-6 mt-2">
-        <form onSubmit={handleSubmit}>
-          <ul>
-            {personalizedQuestions.map((question, i) => (
-              <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
-                <div className="flex justify-center items-start space-x-3 text-grey-900 font-raleway font-medium">
-                  <h3 className="text-lg leading-[150%]">{i + 1}.</h3>
-                  <h3 className="text-lg leading-[150%]">
-                    {question.question}
-                  </h3>
-                </div>
-                <textarea
-                  className="w-full bg-white border border-grey-300 rounded-lg h-[93px] p-3 mt-4"
-                  placeholder="Answer here"
-                  name={`answer-${question.id}`}
-                  onChange={(e) => handleChange(e, question.id)}
-                  required
-                />
-              </div>
-            ))}
-            <button
-              type="submit"
-              disabled={!allAnswered} // Disable until all questions are answered
-              className={`px-4 py-2 rounded font-raleway text-normal font-medium ${
-                allAnswered
-                  ? 'bg-blue-500 text-white hover:bg-blue-700'
-                  : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-              }`}>
-              {isSubmitting ? 'submitting' : 'submit'}
-            </button>
-          </ul>
-        </form>
-      </div>
-    </div>
+    <AssessmentForm
+      variant="role"
+      emoji="🎯"
+      kicker="This role, your way"
+      title="Show how you would do this job"
+      lead="These questions are written for this role. Walk through what you would do — specifics beat slogans."
+      questions={personalizedQuestions}
+      answers={formData.answers}
+      onChange={(questionId, value) =>
+        setFormData((prev) => ({
+          ...prev,
+          answers: { ...prev.answers, [questionId]: value },
+        }))
+      }
+      onSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
+      placeholder="Describe what you would do…"
+    />
   )
 }
 
