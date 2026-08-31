@@ -2,19 +2,25 @@
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: var(--space-4) 0 var(--space-10);
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
   min-width: 0;
+  flex: 1 1 auto;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
-    padding: var(--space-3) 0 var(--space-8);
     gap: 16px;
   }
 }
 
 .wide {
   max-width: 1200px;
+}
+
+.centered {
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-4);
 }
