@@ -2,12 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { EmptyState } from '@/components/ui/EmptyState'
-import { humanStage, humanStatus } from '@/pages/TalentProfile/Job/jobPipeline'
+import {
+  humanStatus,
+  humanTalentStage,
+} from '@/pages/TalentProfile/Job/jobPipeline'
 
 import { Button, DataTable, StatusBadge } from '../../../components'
 import { ColumnDef } from '../../../components'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
-import { calculateDaysFromCreation } from '../../../utils'
+import { formatTimeAgo } from '../../../utils'
 import { AllJobTypes } from '../../../utils/types'
 import { getStatusBadge } from '../../RecruiterProfile/getJobStatus'
 
@@ -53,14 +56,14 @@ export const PipelineTable = () => {
         header: 'Stage',
         align: 'left',
         hideBelow: 768,
-        render: (app) => humanStage(app.currentStage),
+        render: (app) => humanTalentStage(app.currentStage, app.stages),
       },
       {
         key: 'dateApplied',
         header: 'Date Applied',
         align: 'left',
         hideBelow: 768,
-        render: (app) => `${calculateDaysFromCreation(app.createdAt)} days ago`,
+        render: (app) => formatTimeAgo(app.createdAt),
       },
       {
         key: 'openJob',

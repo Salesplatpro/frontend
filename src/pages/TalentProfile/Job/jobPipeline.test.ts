@@ -4,7 +4,9 @@ import {
   buildPipelineCrumbs,
   canVisitStep,
   firstRemainingStep,
+  humanTalentStage,
   orderedStageKeys,
+  talentFacingStage,
 } from './jobPipeline'
 
 const stages = {
@@ -84,5 +86,28 @@ describe('jobPipeline', () => {
 
   it('keeps the talent on job details while CV match runs in the background', () => {
     expect(firstRemainingStep('cv_similarity', stages)).toBe('details')
+  })
+
+  it('surfaces talent-owned stages and hides CV match / prescreening', () => {
+    expect(talentFacingStage('personality', stages)).toBe('personality')
+    expect(talentFacingStage('personalized', stages)).toBe('personalized')
+    expect(talentFacingStage('prescreening', stages)).toBe('completed')
+    expect(talentFacingStage('cv_similarity', stages)).toBe('completed')
+    expect(talentFacingStage('cv_similarity')).toBe('completed')
+    expect(talentFacingStage('prescreening')).toBe('completed')
+    expect(talentFacingStage('completed', stages)).toBe('completed')
+    expect(talentFacingStage(null)).toBeNull()
+    expect(humanTalentStage('personality', stages)).toBe('Personality')
+    expect(humanTalentStage('cv_similarity', stages)).toBe('Complete')
+  })
+
+  it('skips a leading CV match stage to the next talent-owned step', () => {
+    const inverted = {
+      cv_similarity: 'personalized',
+      personalized: 'personality',
+      personality: 'completed',
+    }
+    expect(talentFacingStage('cv_similarity', inverted)).toBe('personalized')
+    expect(humanTalentStage('cv_similarity', inverted)).toBe('Personalized')
   })
 })

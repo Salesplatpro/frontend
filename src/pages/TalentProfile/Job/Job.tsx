@@ -29,6 +29,7 @@ interface JobType {
   compensationPeriod?: string | null
   hasApplied?: boolean
   applicationStage?: string | null
+  applicationStages?: Record<string, string> | null
   organization?: JobOrganization | null
 }
 
@@ -110,6 +111,7 @@ const Job = () => {
                   jobSalary={formatCompensation(job)}
                   isApplied={job.hasApplied}
                   applicationStage={job.applicationStage}
+                  applicationStages={job.applicationStages}
                   organization={job.organization}
                 />
               ))}

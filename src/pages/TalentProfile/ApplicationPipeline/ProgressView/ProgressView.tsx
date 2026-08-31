@@ -4,10 +4,13 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
+import {
+  HIDDEN_TALENT_STAGES,
+  talentFacingStage,
+} from '@/pages/TalentProfile/Job/jobPipeline'
 import { AllJobTypes } from '@/utils/types'
 
 import resultIcon from '../../../../assets/CheckIcon.svg'
-import cvmatchIcon from '../../../../assets/cvmatchIcon.webp'
 import personalizedIcon from '../../../../assets/personalizedIcon.webp'
 import {
   useAllJobApplicationsQuery,
@@ -28,7 +31,6 @@ type StageKey = keyof Application['stages']
 
 export const getProgresses = (application: Application): Progress[] => {
   const stagesMapping = {
-    cv_similarity: { icon: cvmatchIcon, title: 'CV-Matching' },
     personalized: { icon: personalizedIcon, title: 'Personalized Test' },
     personality: { icon: personalizedIcon, title: 'Personality Test' },
   }
@@ -52,6 +54,11 @@ export const getProgresses = (application: Application): Progress[] => {
   let currentStageFound = false
 
   orderedStages.forEach((stage) => {
+    if (HIDDEN_TALENT_STAGES.has(stage)) {
+      if (stage === currentStage) currentStageFound = true
+      return
+    }
+
     let status
     if (stage === currentStage) {
       status = 'current'
@@ -84,7 +91,7 @@ export const getProgresses = (application: Application): Progress[] => {
     }
   })
 
-  if (currentStage === 'completed') {
+  if (talentFacingStage(currentStage, application.stages) === 'completed') {
     const resultStatus =
       application.status === 'shortlisted' || application.status === 'rejected'
         ? application.status
