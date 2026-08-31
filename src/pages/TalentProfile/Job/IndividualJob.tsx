@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
 import {
@@ -22,12 +22,15 @@ import {
 } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
 
+import { ApplicationSuccessModal } from './ApplicationSuccessModal'
 import {
   type PipelineStepId,
   buildPipelineCrumbs,
   canVisitStep,
   firstRemainingStep,
   isStageComplete,
+  orderedStageKeys,
+  TALENT_OWNED_STAGES,
 } from './jobPipeline'
 import styles from './JobWorkspace.module.scss'
 
@@ -46,6 +49,8 @@ type SavedQuestion = {
   question: string
   answer?: string | null
 }
+
+const successStorageKey = (jobId: string) => `application-success:${jobId}`
 
 const parseStep = (value: string | null): PipelineStepId | null => {
   if (
@@ -95,6 +100,7 @@ const IndividualJob = () => {
   const { jobId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const talentId = useAuthStore((state) => state.user)?.id
+  const [showSuccess, setShowSuccess] = useState(false)
   const {
     data,
     error,
@@ -139,20 +145,13 @@ const IndividualJob = () => {
   const personalityDone = isStageComplete('personality', currentStage, stages)
   const personalizedDone = isStageComplete('personalized', currentStage, stages)
 
-  const loadPersonality =
-    resolvedStep === 'personality' ||
-    (resolvedStep === 'details' && personalityDone)
-  const loadPersonalized =
-    resolvedStep === 'personalized' ||
-    (resolvedStep === 'details' && personalizedDone)
-
   const { data: personalityData } = usePersonalityTestQuery(jobId, {
-    skip: !jobId || !loadPersonality,
+    skip: !jobId || resolvedStep !== 'personality',
   })
   const { data: personalizedData } = usePersonalizedTestQuery(
     { jobId, talentId },
     {
-      skip: !jobId || !talentId || !loadPersonalized,
+      skip: !jobId || !talentId || resolvedStep !== 'personalized',
     },
   )
 
@@ -205,6 +204,29 @@ const IndividualJob = () => {
     setSearchParams(step === 'details' ? {} : { step }, { replace: true })
   }
 
+  const talentWorkDone = (
+    stage: string | null | undefined,
+    stageMap: Record<string, string> | null | undefined,
+  ) =>
+    orderedStageKeys(stageMap)
+      .filter((id) => TALENT_OWNED_STAGES.includes(id))
+      .every((id) => isStageComplete(id, stage, stageMap))
+
+  const maybeShowSuccess = (
+    stage: string | null | undefined,
+    stageMap: Record<string, string> | null | undefined,
+  ) => {
+    if (!jobId || !talentWorkDone(stage, stageMap)) return
+    try {
+      const key = successStorageKey(jobId)
+      if (sessionStorage.getItem(key)) return
+      sessionStorage.setItem(key, '1')
+      setShowSuccess(true)
+    } catch {
+      setShowSuccess(true)
+    }
+  }
+
   const handleApply = async () => {
     if (isComplete || applying || !jobId) return
     try {
@@ -218,7 +240,7 @@ const IndividualJob = () => {
         nextApplication?.currentStage,
         nextApplication?.stages ?? stages,
       )
-      setStep(next === 'details' ? 'details' : next)
+      setStep(next)
     } catch (err) {
       const message =
         (err as { data?: { message?: string } })?.data?.message ||
@@ -228,8 +250,21 @@ const IndividualJob = () => {
   }
 
   const handleStageComplete = async () => {
-    await refetchJob()
-    await refetchApplication()
+    const [, appResult] = await Promise.all([
+      refetchJob(),
+      refetchApplication(),
+    ])
+    const nextApplication = (appResult.data?.data?.application ??
+      application) as ApplicationRecord | null
+    const next = firstRemainingStep(
+      nextApplication?.currentStage ?? currentStage,
+      nextApplication?.stages ?? stages,
+    )
+    setStep(next)
+    maybeShowSuccess(
+      nextApplication?.currentStage ?? currentStage,
+      nextApplication?.stages ?? stages,
+    )
   }
 
   if (isLoading) return <Spinner fullPage />
@@ -243,33 +278,6 @@ const IndividualJob = () => {
     <Button fullWidth onClick={handleApply} loading={applying}>
       Apply for this position
     </Button>
-  )
-
-  const submittedAnswers = (
-    <>
-      {showPersonalityReview && personalityQuestions?.length ? (
-        <StageReview
-          title="Personality — your submitted answers"
-          meta={
-            application?.mbtiType
-              ? `Result: ${application.mbtiType}`
-              : 'Saved. You can revisit these answers anytime.'
-          }
-          questions={personalityQuestions}
-        />
-      ) : null}
-      {showPersonalizedReview && personalizedQuestions?.length ? (
-        <StageReview
-          title="Role assessment — your submitted answers"
-          meta={
-            application?.personalizedScore != null
-              ? 'Submitted. Your recruiter can see how you scored on this stage.'
-              : 'Saved. You can revisit these answers anytime.'
-          }
-          questions={personalizedQuestions}
-        />
-      ) : null}
-    </>
   )
 
   return (
@@ -310,10 +318,7 @@ const IndividualJob = () => {
       )}
 
       {resolvedStep === 'details' && (
-        <>
-          <JobDetailsView jobId={jobId} job={job} action={applyAction} />
-          {hasApplication && submittedAnswers}
-        </>
+        <JobDetailsView jobId={jobId} job={job} action={applyAction} />
       )}
 
       {resolvedStep === 'personality' &&
@@ -350,19 +355,10 @@ const IndividualJob = () => {
           />
         ))}
 
-      {resolvedStep === 'cv_similarity' && (
-        <StageReview
-          title="Application review"
-          meta={
-            application?.cvSimilarityScore != null ||
-            currentStage === 'completed'
-              ? 'This stage is complete. Your recruiter can review how your CV aligns with the role.'
-              : currentStage === 'cv_similarity'
-              ? 'We’re reviewing your application. You can keep browsing this job while that finishes.'
-              : 'Not started'
-          }
-        />
-      )}
+      <ApplicationSuccessModal
+        open={showSuccess}
+        onClose={() => setShowSuccess(false)}
+      />
     </PageShell>
   )
 }
