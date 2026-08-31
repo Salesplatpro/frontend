@@ -45,7 +45,6 @@ const EXACT_TITLES: Record<string, string> = {
 }
 
 const PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [
-  { pattern: /^\/view-cv\//, title: 'Candidate CV' },
   { pattern: /^\/job\/postedjob\//, title: 'Job' },
   { pattern: /^\/talentDashboard\/job\//, title: 'Job' },
   {
