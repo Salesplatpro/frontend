@@ -130,7 +130,7 @@ export function DataTable<T>({
   getRowKey,
   getRowClassName,
   ariaLabel = 'data table',
-  showRowNumber,
+  showRowNumber = true,
   rowNumberOffset = 0,
   allowOverflow,
   selectedRowKeys,
