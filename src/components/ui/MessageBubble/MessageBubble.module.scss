@@ -18,6 +18,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  min-width: 0;
 }
 
 .received .bubble {
@@ -36,6 +37,7 @@
   font-size: var(--text-md);
   line-height: var(--leading-normal);
   color: var(--color-text-heading);
+  overflow-wrap: anywhere;
   word-break: break-word;
 }
 
@@ -44,4 +46,15 @@
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   align-self: flex-end;
+}
+
+@media (max-width: 768px) {
+  .bubble {
+    max-width: 90%;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .content {
+    font-size: var(--text-sm);
+  }
 }
