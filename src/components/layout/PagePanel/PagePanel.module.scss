@@ -98,6 +98,14 @@
   line-height: 1.1;
 }
 
+.statCaption {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-text-heading);
+}
+
 .statLabel {
   display: block;
   margin-top: 4px;

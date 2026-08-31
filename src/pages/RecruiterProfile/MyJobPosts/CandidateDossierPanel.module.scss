@@ -79,6 +79,20 @@
   cursor: help;
 }
 
+.comingSoon {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-50);
+  color: var(--color-brand-800);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .mbtiTooltip {
   max-width: min(420px, calc(100vw - 32px)) !important;
   padding: var(--space-3) !important;
@@ -124,24 +138,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.qaItem {
-  background: var(--color-grey-50);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-}
-
-.qaQuestion {
-  margin: 0 0 var(--space-2);
-  font-weight: var(--weight-medium);
-}
-
-.qaAnswer {
-  margin: 0;
-  white-space: pre-wrap;
-  color: var(--color-text-muted);
-  line-height: 1.5;
 }
 
 .insightGrid {
@@ -209,5 +205,13 @@
 @media (max-width: 768px) {
   .insightGrid {
     grid-template-columns: 1fr;
+  }
+
+  .heroActions {
+    width: 100%;
+  }
+
+  .heroActions :global(button) {
+    width: 100%;
   }
 }
