@@ -2,7 +2,7 @@ import React from 'react'
 
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
 
-import { calculateDaysFromCreation } from '../../../utils'
+import { formatTimeAgo } from '../../../utils'
 import styles from './InboxItem.module.scss'
 
 interface Sender {
@@ -48,9 +48,7 @@ export const InboxItem: React.FC<InboxItemProps> = ({
 
   return (
     <div className={styles.card}>
-      <div className={styles.timestamp}>
-        {calculateDaysFromCreation(createdAt)} days ago
-      </div>
+      <div className={styles.timestamp}>{formatTimeAgo(createdAt)}</div>
       <div className={styles.body}>
         <div className={styles.sender}>
           {sender.firstName} {sender.lastName}

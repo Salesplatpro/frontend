@@ -5,10 +5,7 @@ import { Link } from 'react-router-dom'
 import { CompanyTag } from '@/components/features/jobs/CompanyTag'
 import { CountBadge } from '@/components/ui/Badge'
 
-import {
-  calculateDaysFromCreation,
-  recruiterJobPostsTypes,
-} from '../../../utils'
+import { formatTimeAgo, recruiterJobPostsTypes } from '../../../utils'
 import {
   getStatusBadge,
   getStatusDotColor,
@@ -55,7 +52,7 @@ export const JobsCardList = ({ data }: JobsCardListProps) => {
               <CompanyTag organization={job.organization} />
               <p className={styles.subtext}>
                 {job.noOfApplicants} applicants &bull;{' '}
-                {calculateDaysFromCreation(job.createdAt)} days ago
+                {formatTimeAgo(job.createdAt)}
               </p>
             </div>
             <IoChevronForward className={styles.chevron} />
