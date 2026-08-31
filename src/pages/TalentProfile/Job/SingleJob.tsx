@@ -9,7 +9,10 @@ import {
 } from '@/components/features/jobs/CompanyTag'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
-import { humanStage } from '@/pages/TalentProfile/Job/jobPipeline'
+import {
+  humanStage,
+  talentFacingStage,
+} from '@/pages/TalentProfile/Job/jobPipeline'
 
 import { capitalizeFirstWord } from '../../../utils'
 import { JobDetails } from './JobDetails'
@@ -34,6 +37,7 @@ export type SingleJobProps = {
   jobSalary?: string
   isApplied?: boolean
   applicationStage?: string | null
+  applicationStages?: Record<string, string> | null
   organization?: JobOrganization | null
 }
 
@@ -48,10 +52,12 @@ export const SingleJob = ({
   jobSalary,
   isApplied: _isApplied,
   applicationStage,
+  applicationStages,
   organization,
 }: SingleJobProps) => {
-  const isComplete = applicationStage === 'completed'
-  const inProgress = !!applicationStage && !isComplete
+  const facingStage = talentFacingStage(applicationStage, applicationStages)
+  const isComplete = facingStage === 'completed'
+  const inProgress = !!facingStage && !isComplete
   return (
     <Card className={styles.card}>
       <PiBuildingOfficeBold size={36} className={styles.icon} />
@@ -85,9 +91,7 @@ export const SingleJob = ({
             </Button>
           ) : inProgress ? (
             <Link to={`/talentDashboard/job/${jobId}`}>
-              <Button size="sm">
-                Continue · {humanStage(applicationStage)}
-              </Button>
+              <Button size="sm">Continue · {humanStage(facingStage)}</Button>
             </Link>
           ) : (
             <Link to={`/talentDashboard/job/${jobId}`}>

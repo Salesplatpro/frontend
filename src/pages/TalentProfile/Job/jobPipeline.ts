@@ -49,6 +49,12 @@ export const TALENT_OWNED_STAGES: PipelineStageId[] = [
   'personalized',
 ]
 
+/** Auto stages the talent never sees — prescreening is global, CV match is recruiter-only. */
+export const HIDDEN_TALENT_STAGES = new Set<PipelineStageId>([
+  'prescreening',
+  'cv_similarity',
+])
+
 /** Walk the linked-list stages map the same way createStages built it. */
 export const orderedStageKeys = (
   stages: Record<string, string> | null | undefined,
@@ -73,18 +79,40 @@ export type PipelineCrumb = {
   label: string
 }
 
-/** Auto stages the talent never sees as crumbs — prescreening is global, CV match is recruiter-only. */
-const HIDDEN_JOB_CRUMB_STAGES = new Set<PipelineStageId>([
-  'prescreening',
-  'cv_similarity',
-])
+/**
+ * Stage the talent should see on CTAs and pipeline copy.
+ * CV match / prescreening skip to the next talent-owned step, or complete.
+ */
+export const talentFacingStage = (
+  currentStage: string | null | undefined,
+  stages?: Record<string, string> | null,
+): string | null => {
+  if (!currentStage) return null
+  if (currentStage === 'completed') return 'completed'
+  if (isStageId(currentStage) && TALENT_OWNED_STAGES.includes(currentStage)) {
+    return currentStage
+  }
+
+  const ordered = orderedStageKeys(stages)
+  const currentIndex = ordered.indexOf(currentStage as PipelineStageId)
+  const searchFrom = currentIndex < 0 ? 0 : currentIndex + 1
+  const nextOwned = ordered
+    .slice(searchFrom)
+    .find((id) => TALENT_OWNED_STAGES.includes(id))
+  return nextOwned ?? 'completed'
+}
+
+export const humanTalentStage = (
+  currentStage?: string | null,
+  stages?: Record<string, string> | null,
+) => humanStage(talentFacingStage(currentStage, stages))
 
 export const buildPipelineCrumbs = (
   stages: Record<string, string> | null | undefined,
 ): PipelineCrumb[] => [
   { id: 'details', label: 'Job details' },
   ...orderedStageKeys(stages)
-    .filter((id) => !HIDDEN_JOB_CRUMB_STAGES.has(id))
+    .filter((id) => !HIDDEN_TALENT_STAGES.has(id))
     .map((id) => ({
       id,
       label: STAGE_LABELS[id],
@@ -111,12 +139,12 @@ export const firstRemainingStep = (
   stages: Record<string, string> | null | undefined,
 ): PipelineStepId => {
   if (!currentStage || currentStage === 'completed') return 'details'
-  if (isStageId(currentStage) && HIDDEN_JOB_CRUMB_STAGES.has(currentStage)) {
+  if (isStageId(currentStage) && HIDDEN_TALENT_STAGES.has(currentStage)) {
     return 'details'
   }
   if (isStageId(currentStage)) return currentStage
   const ordered = orderedStageKeys(stages).filter(
-    (id) => !HIDDEN_JOB_CRUMB_STAGES.has(id),
+    (id) => !HIDDEN_TALENT_STAGES.has(id),
   )
   return ordered[0] ?? 'details'
 }
@@ -130,7 +158,7 @@ export const canVisitStep = ({
   currentStage: string | null | undefined
   stages: Record<string, string> | null | undefined
 }): boolean => {
-  if (isStageId(step) && HIDDEN_JOB_CRUMB_STAGES.has(step)) return false
+  if (isStageId(step) && HIDDEN_TALENT_STAGES.has(step)) return false
   if (!currentStage) return step === 'details'
   if (currentStage === 'completed') return true
   if (step === 'details') return true

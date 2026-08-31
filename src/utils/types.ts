@@ -1,5 +1,6 @@
 export interface AllJobTypes {
   currentStage?: string
+  stages?: Record<string, string> | null
   status?: string
   applicationType?: string
   createdAt?: any

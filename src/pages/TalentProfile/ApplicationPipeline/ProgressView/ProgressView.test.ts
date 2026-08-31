@@ -20,15 +20,13 @@ const buildApplication = (
 })
 
 describe('getProgresses', () => {
-  it('never surfaces the CV-matching or personalized-test scores', () => {
+  it('never surfaces CV-matching as a talent-facing stage', () => {
     const progresses = getProgresses(buildApplication())
 
-    const cvMatching = progresses.find((p) => p.title === 'CV-Matching')
+    expect(progresses.find((p) => p.title === 'CV-Matching')).toBeUndefined()
     const personalizedTest = progresses.find(
       (p) => p.title === 'Personalized Test',
     )
-
-    expect(cvMatching?.result).toBeNull()
     expect(personalizedTest?.result).toBeNull()
   })
 
@@ -40,7 +38,7 @@ describe('getProgresses', () => {
     expect(personality?.result).toBe('INTJ')
   })
 
-  it('marks earlier stages completed once the pipeline has advanced past them', () => {
+  it('marks earlier talent stages completed once the pipeline has advanced past them', () => {
     const progresses = getProgresses(
       buildApplication({
         currentStage: 'personality',
@@ -48,9 +46,7 @@ describe('getProgresses', () => {
       }),
     )
 
-    expect(progresses.find((p) => p.title === 'CV-Matching')?.status).toBe(
-      'completed',
-    )
+    expect(progresses.find((p) => p.title === 'CV-Matching')).toBeUndefined()
     expect(
       progresses.find((p) => p.title === 'Personalized Test')?.status,
     ).toBe('completed')
@@ -82,12 +78,23 @@ describe('getProgresses', () => {
     expect(result?.status).toBe('rejected')
   })
 
-  it('does not add a Result step while the pipeline is still in progress', () => {
+  it('treats a trailing CV match stage as complete for the talent Result step', () => {
     const progresses = getProgresses(
-      buildApplication({ currentStage: 'cv_similarity', status: undefined }),
+      buildApplication({
+        currentStage: 'cv_similarity',
+        status: undefined,
+        stages: {
+          personality: 'personalized',
+          personalized: 'cv_similarity',
+          cv_similarity: 'completed',
+        },
+      }),
     )
 
-    expect(progresses.find((p) => p.title === 'Result')).toBeUndefined()
+    expect(progresses.find((p) => p.title === 'CV-Matching')).toBeUndefined()
+    expect(progresses.find((p) => p.title === 'Result')?.status).toBe(
+      'awaiting-decision',
+    )
   })
 
   it('survives a cyclic stages map without hanging', () => {
