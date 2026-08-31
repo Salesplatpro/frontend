@@ -5,14 +5,12 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { JobStatusControl } from './JobStatusControl'
 
-const { updateJobMock, deleteJobMock } = vi.hoisted(() => ({
+const { updateJobMock } = vi.hoisted(() => ({
   updateJobMock: vi.fn(),
-  deleteJobMock: vi.fn(),
 }))
 
 vi.mock('@/redux/api/recruiter', () => ({
   useUpdateJobMutation: () => [updateJobMock, { isLoading: false }],
-  useDeleteJobMutation: () => [deleteJobMock, { isLoading: false }],
 }))
 
 const renderControl = (
@@ -90,5 +88,11 @@ describe('JobStatusControl', () => {
         'Add an AI screening configuration before activating this job.',
       ),
     ).toBeNull()
+  })
+
+  it('does not offer a delete-job action', () => {
+    renderControl()
+    expect(screen.queryByText('Delete Job')).toBeNull()
+    expect(screen.queryByText('Delete this job')).toBeNull()
   })
 })
