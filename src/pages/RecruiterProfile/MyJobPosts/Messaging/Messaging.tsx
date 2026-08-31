@@ -19,11 +19,15 @@ const isContentEmpty = (html: string) => !html.replace(/<[^>]*>/g, '').trim()
 
 export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   const [content, setContent] = useState('')
+  const [composerOpen, setComposerOpen] = useState(false)
   const { messages, isLoading, sendMessage, isSending, currentUserId } =
     useMessaging(applicationId, talentId)
   const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
 
+  const busy = isSending || isBroadcasting
+
   const handleSendMessage = async () => {
+    if (busy) return
     if (isContentEmpty(content)) {
       notify('error', 'Message cannot be empty', { autoClose: 2000 })
       return
@@ -37,6 +41,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   }
 
   const handleBroadcast = async () => {
+    if (busy) return
     if (isContentEmpty(content) || !applicationId) {
       notify('error', 'Message cannot be empty', { autoClose: 2000 })
       return
@@ -56,37 +61,57 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   return (
     <div className={styles.container}>
       <div>
-        <div className={styles.heading}>Messages</div>
         {isLoading ? (
           <Spinner />
         ) : (
           <DisplayMessage messages={messages} currentUserId={currentUserId} />
         )}
       </div>
-      <div className={styles.editor}>
-        <RichTextEditor
-          value={content}
-          onChange={setContent}
-          placeholder="Type here..."
-          size="compact"
-        />
-      </div>
-      <div className={styles.actions}>
-        <Button
-          variant="primary"
-          size="wide"
-          onClick={handleSendMessage}
-          loading={isSending}>
-          Send
-        </Button>
-        <Button
-          variant="outline"
-          size="wide"
-          onClick={handleBroadcast}
-          loading={isBroadcasting}>
-          Broadcast
-        </Button>
-      </div>
+
+      {composerOpen ? (
+        <div className={styles.composer}>
+          <RichTextEditor
+            value={content}
+            onChange={setContent}
+            placeholder="Write a message to this talent…"
+            size="compact"
+          />
+          <div className={styles.actions}>
+            <Button
+              variant="outline"
+              size="wide"
+              onClick={() => setComposerOpen(false)}
+              disabled={busy}>
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              size="wide"
+              onClick={handleBroadcast}
+              loading={isBroadcasting}
+              disabled={isSending}>
+              Broadcast
+            </Button>
+            <Button
+              variant="primary"
+              size="wide"
+              onClick={handleSendMessage}
+              loading={isSending}
+              disabled={isBroadcasting}>
+              Send
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.toggleRow}>
+          <Button
+            variant="primary"
+            size="wide"
+            onClick={() => setComposerOpen(true)}>
+            Send talent a message
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

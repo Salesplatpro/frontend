@@ -1,17 +1,9 @@
 import 'react-quill/dist/quill.snow.css'
 
-import Quill from 'quill'
 import React, { useRef } from 'react'
 import ReactQuill from 'react-quill'
 
 import styles from './RichTextEditor.module.scss'
-
-// Register custom font families once
-const Font = Quill.import('formats/font') as {
-  whitelist: string[]
-} & typeof Quill
-Font.whitelist = ['inter', 'raleway', 'poppins', 'serif', 'monospace']
-Quill.register(Font, true)
 
 interface RichTextEditorProps {
   id?: string
@@ -20,42 +12,18 @@ interface RichTextEditorProps {
   placeholder?: string
   maxLength?: number
   size?: 'compact' | 'standard'
+  invalid?: boolean
 }
 
 const TOOLBAR_MODULES = {
   toolbar: [
-    [
-      { font: ['inter', 'raleway', 'poppins', 'serif', 'monospace'] },
-      { size: ['small', false, 'large', 'huge'] },
-    ],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ color: [] }, { background: [] }],
-    [{ align: [] }],
-    [
-      { list: 'ordered' },
-      { list: 'bullet' },
-      { indent: '-1' },
-      { indent: '+1' },
-    ],
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'clean'],
   ],
 }
 
-const FORMATS = [
-  'font',
-  'size',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'color',
-  'background',
-  'align',
-  'list',
-  'bullet',
-  'indent',
-  'link',
-]
+const FORMATS = ['bold', 'italic', 'underline', 'list', 'bullet', 'link']
 
 function countWords(html: string): number {
   const text = html.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ')
@@ -70,24 +38,36 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   placeholder,
   maxLength,
   size = 'standard',
+  invalid,
 }) => {
   const quillRef = useRef<ReactQuill | null>(null)
 
   const wordCount = value ? countWords(value) : 0
   const isAtLimit = !!maxLength && wordCount >= maxLength
 
-  const handleChange = (content: string) => {
+  const handleChange = (html: string) => {
     if (maxLength) {
-      const count = countWords(content)
+      const count = countWords(html)
       if (count > maxLength) return
     }
-    onChange(content)
+    onChange(html)
   }
 
-  const wrapperClass = [styles.wrapper, styles[size]].filter(Boolean).join(' ')
+  const wrapperClass = [
+    styles.wrapper,
+    styles[size],
+    invalid ? styles.invalid : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <div id={id} className={wrapperClass}>
+    <div
+      id={id}
+      data-field={id}
+      tabIndex={-1}
+      className={wrapperClass}
+      aria-invalid={invalid || undefined}>
       <ReactQuill
         ref={quillRef}
         value={value}
@@ -95,7 +75,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         placeholder={placeholder}
         modules={TOOLBAR_MODULES}
         formats={FORMATS}
-        className="flex-1 border-none custom-quill"
+        className={styles.editor}
       />
       {maxLength && (
         <div className={styles.footer}>

@@ -1,27 +1,22 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-}
-
-.heading {
-  font-family: var(--font-heading);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-medium);
-  color: var(--color-text-heading);
-  margin-bottom: var(--space-3);
+  gap: var(--space-5);
+  min-width: 0;
 }
 
 .messageList {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  width: 100%;
   max-width: 803px;
 }
 
 .emptyMessages {
+  width: 100%;
   max-width: 803px;
-  min-height: 171px;
+  min-height: 120px;
   border: 1px solid var(--color-border-strong);
   background: var(--color-bg-subtle);
   border-radius: var(--radius-md);
@@ -33,19 +28,32 @@
   font-family: var(--font-body);
 }
 
-.editor {
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
   max-width: 803px;
+}
+
+.toggleRow {
+  display: flex;
+  max-width: 803px;
+}
+
+.toggleRow > * {
+  width: 100%;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
-  max-width: 803px;
+  gap: var(--space-3);
+  justify-content: flex-end;
 }
 
 .actions > * {
-  flex: 1 1 140px;
+  flex: 1 1 120px;
   min-width: 0;
 }
 
@@ -56,6 +64,10 @@
 
   .actions > * {
     flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .toggleRow > * {
     width: 100%;
   }
 }

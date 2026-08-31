@@ -1,6 +1,7 @@
 import React from 'react'
 
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
+import { formatTimeAgo } from '@/utils'
 
 import styles from './MessageBubble.module.scss'
 
@@ -17,14 +18,6 @@ interface MessageBubbleProps {
   currentUserId?: string
 }
 
-const formatTimestamp = (createdAt: string) =>
-  new Date(createdAt).toLocaleString([], {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-
 export const MessageBubble = ({
   message,
   currentUserId,
@@ -39,9 +32,11 @@ export const MessageBubble = ({
       }`}>
       <div className={styles.bubble}>
         <RichTextDisplay content={message.content} className={styles.content} />
-        <span className={styles.timestamp}>
-          {formatTimestamp(message.createdAt)}
-        </span>
+        {message.createdAt ? (
+          <span className={styles.timestamp}>
+            {formatTimeAgo(message.createdAt)}
+          </span>
+        ) : null}
       </div>
     </div>
   )

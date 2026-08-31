@@ -1,24 +1,92 @@
 .wrapper {
   width: 100%;
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   background-color: var(--color-white);
   box-sizing: border-box;
-  transition: border-color var(--duration-fast) var(--ease-standard);
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 
   &:focus-within {
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(36, 65, 171, 0.12);
+  }
+
+  &.invalid {
+    border-color: var(--color-danger);
   }
 
   &.compact {
-    min-height: 180px;
+    min-height: 160px;
   }
 
   &.standard {
-    min-height: 260px;
+    min-height: 220px;
+  }
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+
+  :global(.ql-toolbar.ql-snow) {
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg-subtle);
+    padding: 8px 12px;
+    font-family: var(--font-body);
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  :global(.ql-toolbar.ql-snow .ql-formats) {
+    margin-right: 8px;
+  }
+
+  :global(.ql-container.ql-snow) {
+    border: none;
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  :global(.ql-editor) {
+    min-height: 96px;
+    padding: var(--space-3);
+    font-size: var(--text-md);
+    font-family: var(--font-body);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-heading);
+    line-height: var(--leading-normal);
+  }
+
+  :global(.ql-editor.ql-blank::before) {
+    color: var(--color-text-muted);
+    font-style: normal;
+  }
+
+  :global(.ql-snow .ql-stroke) {
+    stroke: var(--color-text-heading);
+  }
+
+  :global(.ql-snow .ql-fill) {
+    fill: var(--color-text-heading);
+  }
+
+  :global(.ql-snow.ql-toolbar button) {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -40,5 +108,22 @@
   &.atLimit {
     color: var(--color-danger);
     font-weight: var(--weight-medium);
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper.compact,
+  .wrapper.standard {
+    min-height: 180px;
+  }
+
+  .editor :global(.ql-snow.ql-toolbar button) {
+    width: 44px;
+    height: 44px;
+  }
+
+  .editor :global(.ql-editor) {
+    font-size: var(--text-sm);
+    min-height: 88px;
   }
 }
