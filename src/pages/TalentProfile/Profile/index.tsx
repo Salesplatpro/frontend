@@ -1,8 +1,9 @@
 import { Alert } from '@mui/material'
-import { Field, Form, Formik, FormikProps } from 'formik'
-import React, { useEffect } from 'react'
+import { Field, Form, Formik, FormikProps, useFormikContext } from 'formik'
+import React, { useEffect, useRef } from 'react'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
+import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { LocationSelect } from '@/components/forms/LocationSelect'
 import { RoleMultiSelect } from '@/components/forms/Roles/RoleMultiSelect'
 import {
@@ -17,6 +18,8 @@ import { Button } from '@/components/ui/Button'
 import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
 import { ProfileFormValues } from '@/features/profile/types'
+import { getIncompleteProfileFields } from '@/utils/calculateProgress'
+import { focusFieldByName } from '@/utils/focusField'
 
 import BioTextArea from './BioTextArea'
 import styles from './Profile.module.scss'
@@ -27,6 +30,24 @@ import { useProfileForm } from './useProfileForm'
 
 type TalentProfileProps = {
   formikRef?: React.Ref<FormikProps<ProfileFormValues>>
+}
+
+const FocusFirstIncompleteField = ({ hasCv }: { hasCv: boolean }) => {
+  const { values } = useFormikContext<ProfileFormValues>()
+  const didFocus = useRef(false)
+
+  useEffect(() => {
+    if (didFocus.current) return
+    const first = getIncompleteProfileFields(values, hasCv)[0]
+    if (!first) return
+    didFocus.current = true
+    const frame = window.requestAnimationFrame(() => {
+      focusFieldByName(first.name)
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [hasCv, values])
+
+  return null
 }
 
 const TalentProfile = ({ formikRef }: TalentProfileProps) => {
@@ -69,20 +90,35 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
             dirty,
             isSubmitting,
             setFieldValue,
+            status,
           }) => {
             useEffect(() => {
               updateFormProgress(values)
             }, [values])
 
+            const hasCv = !!(profile?.cvFileName || profile?.cvUploadedAt)
+            const fieldError = (name: keyof ProfileFormValues) => {
+              const error = errors[name]
+              const isTouched = touched[name]
+              return isTouched && typeof error === 'string' ? error : undefined
+            }
+
             return (
-              <Form>
+              <Form noValidate>
+                <FormikFocusOnError />
+                <FocusFirstIncompleteField hasCv={hasCv} />
                 <div className={styles.fieldGroup}>
                   <label className={styles.label} htmlFor="bio">
                     Bio
                   </label>
                   <BioTextArea />
                   {errors.bio && touched.bio && (
-                    <div className={styles.errorText}>{errors.bio}</div>
+                    <div
+                      id="bio-error"
+                      className={styles.errorText}
+                      role="alert">
+                      {errors.bio}
+                    </div>
                   )}
                 </div>
 
@@ -114,6 +150,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                       name="role"
                       value={values.role}
                       onChange={(value) => setFieldValue('role', value)}
+                      error={fieldError('role')}
                     />
                   </div>
                 </div>
@@ -121,11 +158,13 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                 <div className={styles.row}>
                   <div className={styles.field}>
                     <Select
+                      name="experience"
                       label="Experience Level"
                       options={EXPERIENCE_LEVEL_OPTIONS}
                       value={values.experience}
                       onChange={(value) => setFieldValue('experience', value)}
                       placeholder="Select experience level"
+                      error={fieldError('experience')}
                     />
                   </div>
                 </div>
@@ -134,6 +173,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                   <div className={styles.fullField}>
                     <div className={styles.label}>Work Type</div>
                     <WorkTypeCheckboxes
+                      name="workType"
                       value={values.workType}
                       onChange={(value) => setFieldValue('workType', value)}
                       error={
@@ -169,11 +209,13 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                 <div className={`${styles.row} ${styles.salaryRow}`}>
                   <div className={styles.salaryField}>
                     <Select
+                      name="currency"
                       label="Currency"
                       options={PROFILE_CURRENCY_OPTIONS}
                       value={values.currency}
                       onChange={(value) => setFieldValue('currency', value)}
                       placeholder="Select currency"
+                      error={fieldError('currency')}
                     />
                   </div>
                   <div className={styles.salaryField}>
@@ -185,10 +227,23 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                       id="minSalary"
                       name="minSalary"
                       placeholder="Your minimum salary"
-                      className={styles.input}
+                      inputMode="numeric"
+                      aria-invalid={
+                        errors.minSalary && touched.minSalary ? true : undefined
+                      }
+                      className={
+                        errors.minSalary && touched.minSalary
+                          ? `${styles.input} ${styles.inputInvalid}`
+                          : styles.input
+                      }
                     />
                     {errors.minSalary && touched.minSalary && (
-                      <div className={styles.errorText}>{errors.minSalary}</div>
+                      <div
+                        id="minSalary-error"
+                        className={styles.errorText}
+                        role="alert">
+                        {errors.minSalary}
+                      </div>
                     )}
                   </div>
                   <div className={styles.salaryField}>
@@ -200,14 +255,28 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                       id="maxSalary"
                       name="maxSalary"
                       placeholder="Your maximum salary"
-                      className={styles.input}
+                      inputMode="numeric"
+                      aria-invalid={
+                        errors.maxSalary && touched.maxSalary ? true : undefined
+                      }
+                      className={
+                        errors.maxSalary && touched.maxSalary
+                          ? `${styles.input} ${styles.inputInvalid}`
+                          : styles.input
+                      }
                     />
                     {errors.maxSalary && touched.maxSalary && (
-                      <div className={styles.errorText}>{errors.maxSalary}</div>
+                      <div
+                        id="maxSalary-error"
+                        className={styles.errorText}
+                        role="alert">
+                        {errors.maxSalary}
+                      </div>
                     )}
                   </div>
                   <div className={styles.salaryField}>
                     <Select
+                      name="compensationPeriod"
                       label="Compensation Period"
                       options={COMPENSATION_PERIOD_OPTIONS}
                       value={values.compensationPeriod}
@@ -215,12 +284,17 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                         setFieldValue('compensationPeriod', value)
                       }
                       placeholder="Select period"
+                      error={fieldError('compensationPeriod')}
                     />
                   </div>
                 </div>
 
                 <div className={styles.row}>
-                  <div className={styles.fullField}>
+                  <div
+                    className={styles.fullField}
+                    data-field="cv"
+                    id="cv-field"
+                    tabIndex={-1}>
                     <label className={styles.label} htmlFor="cv">
                       {profile?.cvFileName || profile?.cvUploadedAt
                         ? 'CV / Resume'
@@ -256,6 +330,14 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                           progress={progress}
                         />
                       </label>
+                    )}
+                    {typeof status?.cv === 'string' && (
+                      <div
+                        id="cv-error"
+                        className={styles.errorText}
+                        role="alert">
+                        {status.cv}
+                      </div>
                     )}
                   </div>
                 </div>

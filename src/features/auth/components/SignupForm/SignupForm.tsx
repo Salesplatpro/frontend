@@ -1,9 +1,15 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { Alert } from '@/components/feedback'
-import { CheckBox, PasswordInput, TextInput } from '@/components/forms'
+import {
+  CheckBox,
+  FormikFocusOnError,
+  PasswordInput,
+  TextInput,
+  useFocusFieldOnMount,
+} from '@/components/forms'
 import { Button } from '@/components/ui/Button'
 import { loginPathWithNext } from '@/features/auth/utils/dashboardPath'
 import { paths } from '@/paths'
@@ -42,6 +48,7 @@ export const SignupForm = ({
   const { submitSignup, isLoading } = useSignup()
   const error = useAuthStore((state) => state.error)
   const location = useLocation()
+  useFocusFieldOnMount('firstName')
 
   const initialValues: SignupFormValues = {
     email: '',
@@ -73,7 +80,8 @@ export const SignupForm = ({
       initialValues={initialValues}
       validationSchema={SignUpSchema}
       onSubmit={handleSubmit}>
-      <Form>
+      <Form noValidate>
+        <FormikFocusOnError />
         {error && (
           <Alert variant="error" className={styles.alert}>
             {error}
@@ -88,7 +96,6 @@ export const SignupForm = ({
           as={TextInput}
           placeholder="Enter your First Name"
         />
-        <ErrorMessage name="firstName" component="p" className={styles.error} />
 
         <Field
           title="Last Name"
@@ -98,17 +105,16 @@ export const SignupForm = ({
           as={TextInput}
           placeholder="Enter your Last Name"
         />
-        <ErrorMessage name="lastName" component="p" className={styles.error} />
 
         <Field
           title="Email"
           label="email"
           name="email"
+          type="email"
           as={TextInput}
           autoComplete="email"
           placeholder="Email"
         />
-        <ErrorMessage name="email" component="p" className={styles.error} />
 
         {!forceTalent && (
           <div className={styles.userType}>
@@ -117,11 +123,6 @@ export const SignupForm = ({
               label="Register as:"
               component={UserTypeSelect}
               options={userTypeOptions}
-            />
-            <ErrorMessage
-              name="userType"
-              component="p"
-              className={styles.error}
             />
           </div>
         )}
@@ -134,7 +135,6 @@ export const SignupForm = ({
           as={PasswordInput}
           placeholder="Enter your password"
         />
-        <ErrorMessage name="password" component="p" className={styles.error} />
 
         <Field
           title="Confirm Password"
@@ -143,11 +143,6 @@ export const SignupForm = ({
           autoComplete="new-password"
           as={PasswordInput}
           placeholder="Confirm your password"
-        />
-        <ErrorMessage
-          name="confirmPassword"
-          component="p"
-          className={styles.error}
         />
 
         <div className={styles.rememberMe}>

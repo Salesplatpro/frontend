@@ -6,6 +6,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { usePreAssessment } from '@/features/pre-assessment/hooks'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { firstRemainingStep } from '@/pages/TalentProfile/Job/jobPipeline'
 import { useIndividualJobQuery } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
 
@@ -62,15 +63,15 @@ const ApplyWizardEntry: React.FC = () => {
       return
     }
 
-    if (job?.applicationStage && job.applicationStage !== 'completed') {
-      navigate(`/talentDashboard/job/${jobId}?step=${job.applicationStage}`, {
+    if (job?.applicationStage) {
+      const step = firstRemainingStep(
+        job.applicationStage,
+        job.applicationStages,
+      )
+      const suffix = step === 'details' ? '' : `?step=${step}`
+      navigate(`/talentDashboard/job/${jobId}${suffix}`, {
         replace: true,
       })
-      return
-    }
-
-    if (job?.applicationStage === 'completed') {
-      navigate(`/talentDashboard/job/${jobId}`, { replace: true })
       return
     }
 
@@ -92,6 +93,7 @@ const ApplyWizardEntry: React.FC = () => {
     isProfileIncomplete,
     assessment?.status,
     job?.applicationStage,
+    job?.applicationStages,
     navigate,
   ])
 

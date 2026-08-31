@@ -154,6 +154,17 @@
   border-color: var(--color-primary);
 }
 
+.invalid {
+  border-color: var(--color-danger);
+  background: var(--color-white);
+}
+
+.fieldError {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;

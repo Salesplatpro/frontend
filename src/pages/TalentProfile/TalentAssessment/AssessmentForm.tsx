@@ -2,6 +2,7 @@ import React, { FormEvent } from 'react'
 
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { focusFieldByName } from '@/utils/focusField'
 
 import styles from './AssessmentForm.module.scss'
 
@@ -55,10 +56,25 @@ export const AssessmentForm = ({
   const filled = answeredCount(questions, answers)
   const total = questions.length
   const progress = total === 0 ? 0 : Math.round((filled / total) * 100)
-  const canSubmit = allQuestionsAnswered(questions, answers) && !isSubmitting
+  const [submitAttempted, setSubmitAttempted] = React.useState(false)
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (!allQuestionsAnswered(questions, answers)) {
+      event.preventDefault()
+      setSubmitAttempted(true)
+      const firstEmpty = questions.find(
+        (item) => !(answers[item.id] ?? '').trim(),
+      )
+      if (firstEmpty) {
+        focusFieldByName(`answer-${firstEmpty.id}`)
+      }
+      return
+    }
+    onSubmit(event)
+  }
 
   return (
-    <form className={styles.shell} onSubmit={onSubmit}>
+    <form className={styles.shell} onSubmit={handleSubmit} noValidate>
       <header
         className={`${styles.intro} ${
           variant === 'personality' ? styles.personality : styles.role
@@ -99,19 +115,34 @@ export const AssessmentForm = ({
               <p className={styles.question}>{question.question}</p>
             </div>
             <textarea
-              className={styles.textarea}
+              className={`${styles.textarea} ${
+                submitAttempted && !(answers[question.id] ?? '').trim()
+                  ? styles.invalid
+                  : ''
+              }`}
+              id={`answer-${question.id}`}
               name={`answer-${question.id}`}
               value={answers[question.id] ?? ''}
               placeholder={placeholder}
               required
+              aria-invalid={
+                submitAttempted && !(answers[question.id] ?? '').trim()
+                  ? true
+                  : undefined
+              }
               onChange={(event) => onChange(question.id, event.target.value)}
             />
+            {submitAttempted && !(answers[question.id] ?? '').trim() && (
+              <p className={styles.fieldError} role="alert">
+                Please answer this question to continue.
+              </p>
+            )}
           </li>
         ))}
       </ol>
 
       <div className={styles.actions}>
-        <Button type="submit" disabled={!canSubmit} loading={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} loading={isSubmitting}>
           {isSubmitting ? 'Submitting…' : 'Submit answers'}
         </Button>
       </div>

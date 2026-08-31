@@ -40,6 +40,10 @@
   resize: vertical;
 }
 
+.invalid {
+  border-color: var(--color-danger);
+}
+
 .error {
   margin: 0;
   font-size: var(--text-sm);

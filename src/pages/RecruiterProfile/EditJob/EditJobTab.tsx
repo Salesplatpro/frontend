@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
+import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import {
   EMPTY_LOCATION,
   resolveLocationFromNames,
@@ -330,7 +331,8 @@ export const EditJobTab = () => {
         onSubmit={onSubmit}
         enableReinitialize>
         {({ values, errors, touched, setFieldValue, isSubmitting }) => (
-          <Form>
+          <Form noValidate>
+            <FormikFocusOnError />
             <FormObserver saveDraft={draftSaver} />
 
             <JobDetailsFields

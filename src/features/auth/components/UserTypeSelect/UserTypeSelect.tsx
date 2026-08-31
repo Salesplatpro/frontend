@@ -18,6 +18,7 @@ export const UserTypeSelect: React.FC<UserTypeSelectProps> = ({
   label,
   options,
   field,
+  meta,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -48,10 +49,23 @@ export const UserTypeSelect: React.FC<UserTypeSelectProps> = ({
     })
   }
 
+  const hasError = Boolean(meta?.touched && meta.error)
+
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div
+      className={styles.container}
+      ref={containerRef}
+      data-field={field.name}>
       <div className={styles.label}>{label}</div>
-      <button type="button" className={styles.trigger} onClick={toggleDropdown}>
+      <button
+        type="button"
+        id={field.name}
+        name={field.name}
+        className={`${styles.trigger} ${hasError ? styles.error : ''}`}
+        onClick={toggleDropdown}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-describedby={hasError ? `${field.name}-error` : undefined}>
         <span className={selectedOption ? undefined : styles.placeholder}>
           {selectedOption?.label || 'Choose an option'}
         </span>
@@ -69,6 +83,14 @@ export const UserTypeSelect: React.FC<UserTypeSelectProps> = ({
               {option.label}
             </div>
           ))}
+        </div>
+      )}
+      {hasError && typeof meta.error === 'string' && (
+        <div
+          id={`${field.name}-error`}
+          className={styles.errorText}
+          role="alert">
+          {meta.error}
         </div>
       )}
     </div>

@@ -15,6 +15,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   isLoading,
   placeholder = 'Select options',
   label,
+  name,
   error,
   required,
   disabled,
@@ -90,6 +91,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         </div>
       )}
       <div
+        id={name}
+        data-field={name}
+        tabIndex={disabled ? -1 : 0}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-describedby={error && name ? `${name}-error` : undefined}
         className={cn(
           styles.trigger,
           styles.multiTrigger,
@@ -97,7 +104,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           disabled && styles.disabled,
         )}
         style={height ? { height } : undefined}
-        onClick={toggleDropdown}>
+        onClick={toggleDropdown}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            toggleDropdown()
+          }
+        }}>
         {selectedOptions.length > 0 ? (
           <div className={styles.tags}>
             {visibleOptions.map((option) => (
@@ -157,7 +170,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           )}
         </div>
       )}
-      {error && <div className={styles.errorText}>{error}</div>}
+      {error && (
+        <div
+          id={name ? `${name}-error` : undefined}
+          className={styles.errorText}
+          role="alert">
+          {error}
+        </div>
+      )}
     </div>
   )
 }

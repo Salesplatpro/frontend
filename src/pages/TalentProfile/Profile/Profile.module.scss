@@ -99,6 +99,10 @@
   margin-top: var(--space-1);
 }
 
+.inputInvalid {
+  @extend %form-input-invalid;
+}
+
 .readonlyInput {
   @extend %form-readonly;
   margin-top: var(--space-1);

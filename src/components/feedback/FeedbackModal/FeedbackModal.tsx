@@ -5,6 +5,7 @@ import { Modal } from 'react-responsive-modal'
 
 import { Button } from '@/components/ui/Button'
 import { useSubmitFeedbackMutation } from '@/redux/api/apiSlice'
+import { focusFieldByName } from '@/utils/focusField'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
@@ -19,12 +20,14 @@ export const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [messageError, setMessageError] = useState<string | null>(null)
   const [submitFeedback, { isLoading }] = useSubmitFeedbackMutation()
 
   const reset = () => {
     setSubject('')
     setMessage('')
     setError(null)
+    setMessageError(null)
   }
 
   const handleClose = () => {
@@ -33,7 +36,12 @@ export const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
   }
 
   const handleSubmit = async () => {
-    if (!message.trim()) return
+    if (!message.trim()) {
+      setMessageError('Please enter a message.')
+      focusFieldByName('feedback-message')
+      return
+    }
+    setMessageError(null)
     setError(null)
     try {
       await submitFeedback({
@@ -75,12 +83,24 @@ export const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
           </label>
           <textarea
             id="feedback-message"
-            className={styles.textarea}
+            name="feedback-message"
+            className={`${styles.textarea} ${
+              messageError ? styles.invalid : ''
+            }`}
             rows={5}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            aria-invalid={messageError ? true : undefined}
+            onChange={(e) => {
+              setMessage(e.target.value)
+              if (messageError) setMessageError(null)
+            }}
             placeholder="Tell us what's on your mind..."
           />
+          {messageError && (
+            <p className={styles.error} role="alert">
+              {messageError}
+            </p>
+          )}
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
@@ -97,7 +117,6 @@ export const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
             type="button"
             variant="primary"
             loading={isLoading}
-            disabled={!message.trim() || isLoading}
             onClick={handleSubmit}>
             Submit
           </Button>

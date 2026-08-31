@@ -9,6 +9,7 @@ import { TextInput } from '@/components/forms'
 import { Button } from '@/components/ui/Button'
 import { useRolesStore } from '@/features/admin/store/useRolesStore'
 import { AdminRole } from '@/features/admin/types'
+import { focusFieldByName } from '@/utils/focusField'
 
 import styles from './Roles.module.scss'
 
@@ -26,25 +27,42 @@ const Roles = () => {
   const [editingRole, setEditingRole] = useState<AdminRole | null>(null)
   const [form, setForm] = useState<RoleFormState>(EMPTY_FORM)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [nameError, setNameError] = useState('')
 
   useEffect(() => {
     void fetchRoles()
   }, [fetchRoles])
 
+  useEffect(() => {
+    if (!isModalOpen) return
+    const frame = window.requestAnimationFrame(() => {
+      focusFieldByName('name')
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [isModalOpen])
+
   const openCreateModal = () => {
     setEditingRole(null)
     setForm(EMPTY_FORM)
+    setNameError('')
     setIsModalOpen(true)
   }
 
   const openEditModal = (role: AdminRole) => {
     setEditingRole(role)
     setForm({ name: role.name, description: role.description ?? '' })
+    setNameError('')
     setIsModalOpen(true)
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    if (!form.name.trim()) {
+      setNameError('Role name is required.')
+      focusFieldByName('name')
+      return
+    }
+    setNameError('')
     setIsSubmitting(true)
     const payload = {
       name: form.name,
@@ -115,7 +133,7 @@ const Roles = () => {
       />
 
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} center>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
           <h3 className={styles.modalTitle}>
             {editingRole ? 'Edit Role' : 'Create Role'}
           </h3>
@@ -126,7 +144,11 @@ const Roles = () => {
             autoComplete="off"
             required
             value={form.name}
-            onChange={(event) => setForm({ ...form, name: event.target.value })}
+            error={nameError}
+            onChange={(event) => {
+              setForm({ ...form, name: event.target.value })
+              if (nameError) setNameError('')
+            }}
           />
           <TextInput
             title="Description"

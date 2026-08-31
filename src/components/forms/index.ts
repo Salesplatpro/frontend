@@ -1,4 +1,5 @@
 export * from './CheckBox'
+export * from './FormikFocusOnError'
 export * from './PasswordInput'
 export { default as RadioFieldGroup } from './RadioFieldGroup'
 export * from './SearchBox'

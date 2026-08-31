@@ -6,6 +6,10 @@
   margin-top: var(--space-1);
 }
 
+.invalid {
+  @extend %form-input-invalid;
+}
+
 .count {
   margin-top: var(--space-1);
   font-size: var(--text-sm);

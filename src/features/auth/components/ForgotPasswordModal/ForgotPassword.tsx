@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoArrowBackOutline } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,6 +7,7 @@ import logo from '@/assets/logo.png'
 import { Alert } from '@/components/feedback'
 import { PasswordInput, TextInput } from '@/components/forms'
 import { Button } from '@/components/ui/Button'
+import { focusFieldByName } from '@/utils/focusField'
 
 import { useForgotPasswordFlow } from '../../hooks/useForgotPasswordFlow'
 import styles from './ForgotPasswordModal.module.scss'
@@ -30,36 +31,61 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
 
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [password, setPassword] = useState('')
   const [otp, setOtp] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
+  useEffect(() => {
+    if (currentScreen === 'confirmation') return
+    const frame = window.requestAnimationFrame(() => {
+      focusFieldByName('email')
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [currentScreen])
+
   const handleRequestOtp = async () => {
-    if (!email) {
-      setError('Please enter a valid email.')
+    if (!email.trim()) {
+      setFieldErrors({ email: 'Please enter a valid email.' })
+      setError(null)
+      focusFieldByName('email')
       return
     }
 
+    setFieldErrors({})
     setError(null)
     try {
       await submitRequestOtp({ email })
       setCurrentScreen('confirmation')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
+      focusFieldByName('email')
     }
   }
 
   const handleResetPassword = async () => {
-    if (!email || !otp || !password || !confirmPassword) {
-      setError('All fields are required.')
+    const nextErrors: Record<string, string> = {}
+    if (!email.trim()) nextErrors.email = 'Email is required.'
+    if (!otp.trim()) nextErrors.otp = 'Enter the code we sent you.'
+    if (!password) nextErrors.password = 'Enter a new password.'
+    if (!confirmPassword)
+      nextErrors.confirmPassword = 'Confirm your new password.'
+    else if (password !== confirmPassword) {
+      nextErrors.confirmPassword = 'Passwords do not match.'
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
+      setFieldErrors(nextErrors)
+      setError(null)
+      focusFieldByName(
+        ['email', 'otp', 'password', 'confirmPassword'].find(
+          (name) => nextErrors[name],
+        ) || 'email',
+      )
       return
     }
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.')
-      return
-    }
-
+    setFieldErrors({})
     setError(null)
     try {
       await submitResetPassword({ email, otp, password })
@@ -92,10 +118,15 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               title="Email"
               label="email"
               name="email"
+              type="email"
               autoComplete="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setFieldErrors((prev) => ({ ...prev, email: '' }))
+              }}
+              error={fieldErrors.email}
             />
             {error && <Alert variant="error">{error}</Alert>}
           </div>
@@ -172,10 +203,15 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               title="Email"
               label="email"
               name="email"
+              type="email"
               autoComplete="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setFieldErrors((prev) => ({ ...prev, email: '' }))
+              }}
+              error={fieldErrors.email}
             />
 
             <TextInput
@@ -185,7 +221,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               autoComplete="one-time-code"
               placeholder="One time OTP"
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => {
+                setOtp(e.target.value)
+                setFieldErrors((prev) => ({ ...prev, otp: '' }))
+              }}
+              error={fieldErrors.otp}
             />
 
             <PasswordInput
@@ -195,7 +235,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               autoComplete="new-password"
               placeholder="New Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setFieldErrors((prev) => ({ ...prev, password: '' }))
+              }}
+              error={fieldErrors.password}
             />
 
             <PasswordInput
@@ -205,7 +249,11 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleClose }) => {
               autoComplete="new-password"
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value)
+                setFieldErrors((prev) => ({ ...prev, confirmPassword: '' }))
+              }}
+              error={fieldErrors.confirmPassword}
             />
 
             {error ? (

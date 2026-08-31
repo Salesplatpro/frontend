@@ -73,7 +73,11 @@ export const Select: React.FC<SelectProps> = ({
   }
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div
+      className={styles.container}
+      ref={containerRef}
+      data-field={name}
+      aria-invalid={error ? true : undefined}>
       {label && (
         <div className={styles.label}>
           {label}
@@ -82,6 +86,7 @@ export const Select: React.FC<SelectProps> = ({
       )}
       <button
         type="button"
+        id={name}
         name={name}
         className={cn(
           styles.trigger,
@@ -90,7 +95,10 @@ export const Select: React.FC<SelectProps> = ({
         )}
         style={height ? { height } : undefined}
         onClick={toggleDropdown}
-        disabled={disabled}>
+        disabled={disabled}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-describedby={error && name ? `${name}-error` : undefined}>
         <span className={selectedLabel ? undefined : styles.placeholder}>
           {isLoading ? 'Loading...' : selectedLabel || placeholder}
         </span>
@@ -127,7 +135,14 @@ export const Select: React.FC<SelectProps> = ({
           )}
         </div>
       )}
-      {error && <div className={styles.errorText}>{error}</div>}
+      {error && (
+        <div
+          id={name ? `${name}-error` : undefined}
+          className={styles.errorText}
+          role="alert">
+          {error}
+        </div>
+      )}
     </div>
   )
 }

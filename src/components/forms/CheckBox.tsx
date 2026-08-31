@@ -19,18 +19,20 @@ export const CheckBox = ({
   label,
   onChange,
 }: CheckBoxProps) => {
+  const inputId = value ? `${name}-${value}` : name
+
   return (
     <div className={styles.container}>
       <input
         type="checkbox"
-        id={value}
+        id={inputId}
         name={name}
         value={value}
         checked={checked}
         onChange={onChange}
         className={styles.input}
       />
-      <label htmlFor={value} className={styles.label} style={{ color }}>
+      <label htmlFor={inputId} className={styles.label} style={{ color }}>
         {label}
       </label>
     </div>

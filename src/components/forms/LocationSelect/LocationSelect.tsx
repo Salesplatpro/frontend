@@ -71,6 +71,7 @@ export const LocationSelect: React.FC<LocationSelectProps> = ({
     <div className={styles.row}>
       <div className={styles.field}>
         <Select
+          name="location.country.name"
           label={countryLabel}
           required={countryRequired}
           value={value.country.isoCode || null}
@@ -84,6 +85,7 @@ export const LocationSelect: React.FC<LocationSelectProps> = ({
       </div>
       <div className={styles.field}>
         <Select
+          name="location.state.name"
           label={stateLabel}
           required={stateRequired}
           value={value.state.isoCode || null}
@@ -98,6 +100,7 @@ export const LocationSelect: React.FC<LocationSelectProps> = ({
       </div>
       <div className={styles.field}>
         <Select
+          name="location.city.name"
           label={cityLabel}
           required={cityRequired}
           value={value.city.name || null}

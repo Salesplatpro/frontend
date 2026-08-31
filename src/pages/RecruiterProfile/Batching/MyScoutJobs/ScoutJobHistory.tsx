@@ -22,6 +22,7 @@ import {
   useGetCampaignNameQuery,
   useGetScoutJobScoutsQuery,
 } from '@/redux/api/recruiter'
+import { focusFieldByName } from '@/utils/focusField'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
@@ -60,11 +61,26 @@ const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
   const [jobId, setJobId] = useState('')
   const [talentEmail, setTalentEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{
+    jobId?: string
+    talentEmail?: string
+  }>({})
 
   const jobs = Array.isArray(jobsData?.data?.jobs) ? jobsData.data.jobs : []
 
   const handleSubmit = async () => {
-    if (!jobId || !talentEmail) return
+    const nextErrors: { jobId?: string; talentEmail?: string } = {}
+    if (!jobId) nextErrors.jobId = 'Select a job.'
+    if (!talentEmail.trim()) nextErrors.talentEmail = 'Enter the talent email.'
+
+    if (nextErrors.jobId || nextErrors.talentEmail) {
+      setFieldErrors(nextErrors)
+      setError(null)
+      focusFieldByName(nextErrors.jobId ? 'jobId' : 'talentEmail')
+      return
+    }
+
+    setFieldErrors({})
     setError(null)
     try {
       await addToPipeline({ scoutId: scout.id, jobId, talentEmail }).unwrap()
@@ -77,6 +93,7 @@ const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
           'No talent account found with that email — ask them to create a profile first.',
         ),
       )
+      focusFieldByName('talentEmail')
     }
   }
 
@@ -100,12 +117,17 @@ const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
 
       <div className={styles.field}>
         <Select
+          name="jobId"
           label="Job"
           options={jobOptions}
           value={jobId}
-          onChange={setJobId}
+          onChange={(value) => {
+            setJobId(value)
+            setFieldErrors((prev) => ({ ...prev, jobId: undefined }))
+          }}
           placeholder="Select an active job"
           disabled={isLoadingJobs}
+          error={fieldErrors.jobId}
         />
       </div>
 
@@ -113,10 +135,15 @@ const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
         title="Talent's email"
         label="pipeline-email"
         name="talentEmail"
+        type="email"
         autoComplete="email"
         placeholder="candidate@example.com"
         value={talentEmail}
-        onChange={(event) => setTalentEmail(event.target.value)}
+        error={fieldErrors.talentEmail}
+        onChange={(event) => {
+          setTalentEmail(event.target.value)
+          setFieldErrors((prev) => ({ ...prev, talentEmail: undefined }))
+        }}
       />
 
       {error && <p className={styles.error}>{error}</p>}
@@ -125,11 +152,7 @@ const AddToPipelineModal = ({ scout, onClose }: AddToPipelineModalProps) => {
         <Button variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          variant="primary"
-          loading={isSubmitting}
-          disabled={!jobId || !talentEmail || isSubmitting}
-          onClick={handleSubmit}>
+        <Button variant="primary" loading={isSubmitting} onClick={handleSubmit}>
           Add to pipeline
         </Button>
       </div>
