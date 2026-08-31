@@ -101,6 +101,15 @@ export type SingleJobDetails = {
   } | null
   mbtiType?: string | null
   stages?: Record<string, string> | null
+  personalityAnswers?: Array<{
+    question: string
+    answer: string
+    dichotomy?: string
+  }> | null
+  personalizedAnswers?: Array<{
+    question: string
+    answer: string
+  }> | null
 }
 
 export interface JobProfileProps {
