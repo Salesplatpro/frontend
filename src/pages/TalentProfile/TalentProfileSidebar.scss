@@ -36,6 +36,8 @@
   overflow-y: auto;
   padding: 16px;
   background: var(--color-bg-subtle);
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-nav {

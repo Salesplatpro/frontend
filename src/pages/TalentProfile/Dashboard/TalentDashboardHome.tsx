@@ -16,7 +16,7 @@ import { EmailVerifiedModal } from '@/features/email-verification/components/Ema
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { useAllJobApplicationsQuery } from '@/redux/api/talent'
-import { calculateDaysFromCreation } from '@/utils'
+import { formatTimeAgo } from '@/utils'
 import { AllJobTypes } from '@/utils/types'
 
 import styles from './TalentDashboardHome.module.scss'
@@ -52,7 +52,7 @@ const columns: ColumnDef<AllJobTypes>[] = [
     key: 'dateApplied',
     header: 'Date Applied',
     align: 'center',
-    render: (row) => `${calculateDaysFromCreation(row.createdAt)} days ago`,
+    render: (row) => formatTimeAgo(row.createdAt),
   },
   {
     key: 'openJob',
@@ -121,78 +121,79 @@ const TalentDashboardHome = () => {
     return <Spinner fullPage />
   }
 
+  if (!isVerified) {
+    return (
+      <PageShell wide centered>
+        <EmailVerificationPanel />
+        <WelcomeModal />
+        <EmailVerifiedModal />
+      </PageShell>
+    )
+  }
+
   return (
     <PageShell wide>
-      {isVerified ? (
+      <PageHero
+        kicker="Talent dashboard"
+        title={`Welcome back, ${user?.firstName ?? ''}`.trim()}
+        lead="Here's what's happening with your job search today."
+        meta={[
+          {
+            label: 'Applications',
+            value: applications.length,
+          },
+          {
+            label: 'Profile',
+            value: `${profile?.profileCompletion?.percentage ?? 0}% complete`,
+          },
+          {
+            label: 'Shortlisted',
+            value: shortlisted,
+          },
+        ]}
+      />
+
+      {isLoading ? (
+        <Spinner fullPage />
+      ) : (
         <>
-          <PageHero
-            kicker="Talent dashboard"
-            title={`Welcome back, ${user?.firstName ?? ''}`.trim()}
-            lead="Here's what's happening with your job search today."
-            meta={[
-              {
-                label: 'Applications',
-                value: applications.length,
-              },
-              {
-                label: 'Profile',
-                value: `${
-                  profile?.profileCompletion?.percentage ?? 0
-                }% complete`,
-              },
-              {
-                label: 'Shortlisted',
-                value: shortlisted,
-              },
-            ]}
-          />
+          <StatGrid columns={4}>
+            {tiles.map((tile) => (
+              <StatCard
+                key={tile.label}
+                value={tile.value}
+                label={tile.label}
+              />
+            ))}
+          </StatGrid>
 
-          {isLoading ? (
-            <Spinner fullPage />
-          ) : (
-            <>
-              <StatGrid columns={4}>
-                {tiles.map((tile) => (
-                  <StatCard
-                    key={tile.label}
-                    value={tile.value}
-                    label={tile.label}
-                  />
-                ))}
-              </StatGrid>
-
-              <div className={styles.grid}>
-                <Chart
-                  type="pie"
-                  title="Applications by Status"
-                  data={statusBreakdown}
-                />
-                <PagePanel title="Recent Applications">
-                  <DataTable
-                    columns={columns}
-                    data={recentApplications}
-                    getRowKey={(row) => row.id ?? ''}
-                    ariaLabel="Recent applications"
-                    emptyState={
-                      <EmptyState
-                        title="No applications yet"
-                        description="Start applying — roles that match your profile will show up here."
-                        action={
-                          <Button
-                            onClick={() => navigate('/talentDashboard/job')}>
-                            Browse jobs
-                          </Button>
-                        }
-                      />
+          <div className={styles.grid}>
+            <Chart
+              type="pie"
+              title="Applications by Status"
+              data={statusBreakdown}
+            />
+            <PagePanel title="Recent Applications">
+              <DataTable
+                columns={columns}
+                data={recentApplications}
+                getRowKey={(row) => row.id ?? ''}
+                ariaLabel="Recent applications"
+                emptyState={
+                  <EmptyState
+                    title="No applications yet"
+                    description="Start applying — roles that match your profile will show up here."
+                    action={
+                      <Button onClick={() => navigate('/talentDashboard/job')}>
+                        Browse jobs
+                      </Button>
                     }
                   />
-                </PagePanel>
-              </div>
-            </>
-          )}
+                }
+              />
+            </PagePanel>
+          </div>
         </>
-      ) : (
-        <EmailVerificationPanel />
       )}
 
       <WelcomeModal />
