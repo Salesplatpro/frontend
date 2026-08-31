@@ -14,10 +14,11 @@ import styles from './RecentCompilation.module.scss'
 interface CompilationTypes {
   applicantName: string
   role: string
-  cvSimilarityScore: string
-  prescreeningScore: string
-  personalizedAss: string
-  mbtiType: string
+  cvSimilarityScore: number | string | null
+  prescreeningScore: number | string | null
+  personalizedScore?: number | string | null
+  personalizedAss?: number | string | null
+  mbtiType: string | null
 }
 
 const METRICS: {
@@ -27,16 +28,17 @@ const METRICS: {
 }[] = [
   { key: 'cvSimilarityScore', label: 'CV match', isScore: true },
   { key: 'prescreeningScore', label: 'Prescreening', isScore: true },
-  { key: 'personalizedAss', label: 'Personalised', isScore: true },
+  { key: 'personalizedScore', label: 'Personalised', isScore: true },
   { key: 'mbtiType', label: 'Personality', isScore: false },
 ]
 
-const parseScore = (value?: string) => {
-  if (
-    !value ||
-    value.toLowerCase() === 'nill' ||
-    value.toLowerCase() === 'null'
-  ) {
+const parseScore = (value?: number | string | null) => {
+  if (value == null || value === '') return null
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : null
+  }
+  const normalized = String(value).trim().toLowerCase()
+  if (normalized === 'nill' || normalized === 'null' || normalized === '—') {
     return null
   }
   const numeric = Number(String(value).replace(/[^0-9.]/g, ''))
@@ -110,8 +112,14 @@ const RecentCompilation = () => {
 
               <div className={styles.metrics}>
                 {METRICS.map((metric) => {
-                  const raw = row[metric.key]
-                  const score = metric.isScore ? parseScore(raw) : null
+                  const raw =
+                    metric.key === 'personalizedScore'
+                      ? row.personalizedScore ?? row.personalizedAss
+                      : row[metric.key]
+                  const score = metric.isScore
+                    ? parseScore(raw as number | string | null)
+                    : null
+                  const personality = raw == null ? '' : String(raw).trim()
                   return (
                     <div key={metric.key} className={styles.metric}>
                       <span className={styles.metricLabel}>{metric.label}</span>
@@ -129,7 +137,9 @@ const RecentCompilation = () => {
                         </>
                       ) : (
                         <span className={styles.personality}>
-                          {raw && raw.toLowerCase() !== 'nill' ? raw : '—'}
+                          {personality && personality.toLowerCase() !== 'nill'
+                            ? personality
+                            : '—'}
                         </span>
                       )}
                     </div>
