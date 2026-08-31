@@ -9,7 +9,7 @@ import { CountBadge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Spinner } from '@/components/ui/Spinner'
 import { useChatSessions } from '@/features/messaging/hooks/useChatSessions'
-import { calculateDaysFromCreation } from '@/utils'
+import { formatTimeAgo } from '@/utils'
 
 import styles from './Chat.module.scss'
 
@@ -48,8 +48,7 @@ export const Chat = () => {
                         {thread.talentName}
                       </span>
                       <span className={styles.meta}>
-                        {calculateDaysFromCreation(thread.lastMessageAt)} days
-                        ago
+                        {formatTimeAgo(thread.lastMessageAt)}
                       </span>
                       <CountBadge item={thread.unreadCount} />
                     </Link>

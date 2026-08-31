@@ -16,10 +16,7 @@ import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import { ColumnDef, DataTable } from '../../../components'
-import {
-  calculateDaysFromCreation,
-  recruiterJobPostsTypes,
-} from '../../../utils'
+import { formatTimeAgo, recruiterJobPostsTypes } from '../../../utils'
 import { getStatusBadge, JOB_STATUS_OPTIONS } from '../getJobStatus'
 import styles from './JobsTable.module.scss'
 
@@ -189,9 +186,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         header: 'Date Created',
         align: 'center',
         render: (job) => (
-          <p className={styles.dateText}>
-            {`${calculateDaysFromCreation(job.createdAt)} days ago`}
-          </p>
+          <p className={styles.dateText}>{formatTimeAgo(job.createdAt)}</p>
         ),
       },
       {

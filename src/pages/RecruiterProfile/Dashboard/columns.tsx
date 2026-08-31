@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { ColumnDef } from '@/components/ui/DataTable'
 
-import { calculateDaysFromCreation } from '../../../utils'
+import { formatTimeAgo } from '../../../utils'
 
 export interface ApplicationColumnRow {
   id?: string
@@ -46,7 +46,7 @@ export const buildApplicationColumns =
       header: 'Date Applied',
       align: 'center',
       sortLabel: 'Date Applied',
-      render: (row) => `${calculateDaysFromCreation(row.dateApplied)} days ago`,
+      render: (row) => formatTimeAgo(row.dateApplied),
       sortAccessor: (row) => new Date(row.dateApplied).getTime(),
     },
     {

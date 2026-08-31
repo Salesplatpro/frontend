@@ -10,7 +10,7 @@ import { useMarkNotificationRead } from '@/features/notifications/hooks/useMarkN
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { stripHtml } from '@/utils/truncateTexts'
 
-import { calculateDaysFromCreation } from '../../../utils'
+import { formatTimeAgo } from '../../../utils'
 import styles from './NotificationsList.module.scss'
 
 const NotificationsList: React.FC = () => {
@@ -70,7 +70,7 @@ const NotificationsList: React.FC = () => {
                 <p className={styles.message}>{messageText}</p>
               ) : null}
               <span className={styles.timestamp}>
-                {calculateDaysFromCreation(notification.createdAt)} days ago
+                {formatTimeAgo(notification.createdAt)}
               </span>
             </button>
           )
