@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { Chart, ColumnDef, DataTable } from '@/components'
 import { PageHero } from '@/components/layout/PageHero'
@@ -53,6 +53,17 @@ const columns: ColumnDef<AllJobTypes>[] = [
     header: 'Date Applied',
     align: 'center',
     render: (row) => `${calculateDaysFromCreation(row.createdAt)} days ago`,
+  },
+  {
+    key: 'openJob',
+    header: '',
+    align: 'right',
+    render: (row) =>
+      row.job?.id ? (
+        <Link to={`/talentDashboard/job/${row.job.id}`}>
+          <Button size="sm">View job</Button>
+        </Link>
+      ) : null,
   },
 ]
 

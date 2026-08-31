@@ -113,6 +113,13 @@ export const CandidateDossierPanel = ({
     await onChanged?.()
   }
 
+  const decision =
+    application.status === 'shortlisted'
+      ? { label: 'Accepted', className: styles.decisionAccepted }
+      : application.status === 'rejected'
+      ? { label: 'Rejected', className: styles.decisionRejected }
+      : { label: 'Decision Pending', className: styles.decisionPending }
+
   const rationale =
     analysis?.hiringRationale ||
     analysis?.whyFit ||
@@ -142,6 +149,10 @@ export const CandidateDossierPanel = ({
                   talent.email}
               </p>
               <div className={styles.chips}>
+                <span
+                  className={`${styles.decisionChip} ${decision.className}`}>
+                  {decision.label}
+                </span>
                 <StatusBadge
                   status={humanStatus(application.status)}
                   {...getStatusBadge(application.status)}
@@ -186,6 +197,31 @@ export const CandidateDossierPanel = ({
             <Spinner />
           ) : (
             <>
+              <section className={styles.decisionBanner}>
+                <div>
+                  <p className={styles.decisionKicker}>Recruiter decision</p>
+                  <p
+                    className={`${styles.decisionValue} ${decision.className}`}>
+                    {decision.label}
+                  </p>
+                </div>
+                <div className={styles.heroActions}>
+                  <Button
+                    size="sm"
+                    loading={isUpdating}
+                    onClick={() => void handleStatus('shortlisted')}>
+                    Accept
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    loading={isUpdating}
+                    onClick={() => void handleStatus('rejected')}>
+                    Reject
+                  </Button>
+                </div>
+              </section>
+
               <section className={`${styles.hero} ${hero?.className ?? ''}`}>
                 <h3 className={styles.heroTitle}>
                   {hero
@@ -207,24 +243,9 @@ export const CandidateDossierPanel = ({
                     AI recommendation appears after the pipeline completes.
                   </p>
                 )}
-                <div className={styles.heroActions}>
-                  <Button
-                    size="sm"
-                    loading={isUpdating}
-                    onClick={() => void handleStatus('shortlisted')}>
-                    Shortlist
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    loading={isUpdating}
-                    onClick={() => void handleStatus('rejected')}>
-                    Reject
-                  </Button>
-                </div>
               </section>
 
-              <div className={styles.scoreStrip}>
+              <div className={styles.scoreStrip} aria-label="Stage scores">
                 <div className={styles.scoreCard}>
                   <div className={styles.scoreLabel}>Prescreening</div>
                   <div className={styles.scoreValue}>
