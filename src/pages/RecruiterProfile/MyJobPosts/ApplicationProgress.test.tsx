@@ -18,12 +18,6 @@ vi.mock('@/features/applications/hooks/useApplication', () => ({
 vi.mock('@/features/applications/hooks/useUpdateApplicationStatus', () => ({
   useUpdateApplicationStatus: useUpdateApplicationStatusMock,
 }))
-vi.mock('@/features/applications/hooks/useRegenerateVerdict', () => ({
-  useRegenerateVerdict: () => ({
-    regenerateVerdict: vi.fn(),
-    isRegenerating: false,
-  }),
-}))
 vi.mock('./Messaging/Messaging', () => ({
   Messaging: () => <div>messaging-stub</div>,
 }))
@@ -126,7 +120,7 @@ describe('ApplicationProgress', () => {
     expect(screen.getByText(/Match failed/)).toBeTruthy()
   })
 
-  it('renders a CV open control when the talent has an uploaded CV', () => {
+  it('renders the CV file name when the talent has an uploaded CV', () => {
     useApplicationMock.mockReturnValue({
       data: { data: { application: baseApplication } },
       error: null,
@@ -139,7 +133,7 @@ describe('ApplicationProgress', () => {
 
     renderPage()
 
-    expect(screen.getByRole('button', { name: 'ada-cv.pdf' })).toBeTruthy()
+    expect(screen.getByText('ada-cv.pdf')).toBeTruthy()
   })
 
   it('calls updateStatus with "shortlisted" when the Shortlist button is clicked', () => {

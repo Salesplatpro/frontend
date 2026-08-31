@@ -9,9 +9,7 @@ import { CvFile } from '@/components/ui/CvFile'
 import { Spinner } from '@/components/ui/Spinner'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
 import { useApplication } from '@/features/applications/hooks/useApplication'
-import { useRegenerateVerdict } from '@/features/applications/hooks/useRegenerateVerdict'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
-import { openTalentCv } from '@/features/profile/services/openTalentCv'
 
 import { Button } from '../../../components'
 import styles from './ApplicationProgress.module.scss'
@@ -27,9 +25,6 @@ export const ApplicationProgress = () => {
   const { applicationId } = useParams()
   const { data, error, isLoading } = useApplication(applicationId)
   const { updateStatus, isUpdating } = useUpdateApplicationStatus(
-    applicationId ?? '',
-  )
-  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(
     applicationId ?? '',
   )
 
@@ -55,11 +50,6 @@ export const ApplicationProgress = () => {
     matchWeaknesses,
     matchRisks,
   } = getApplicationDetails(data)
-
-  const handleOpenCv = () => {
-    if (!talentId) return
-    openTalentCv(talentId)
-  }
 
   const progress = [
     {
@@ -144,21 +134,12 @@ export const ApplicationProgress = () => {
             pending={pending}
             failed={failed}
           />
-          {(pending || failed) && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => regenerateVerdict()}
-              loading={isRegenerating}>
-              Regenerate AI Match
-            </Button>
-          )}
         </div>
       )}
 
-      {hasCv && talentId && (
+      {hasCv && (
         <div className={styles.cvSection}>
-          <CvFile fileName={cvFileName || 'CV.pdf'} onOpen={handleOpenCv} />
+          <CvFile fileName={cvFileName || 'CV.pdf'} />
         </div>
       )}
 
