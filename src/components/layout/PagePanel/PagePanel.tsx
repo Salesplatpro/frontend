@@ -74,12 +74,19 @@ type StatCardProps = {
   icon?: React.ReactNode
   value: React.ReactNode
   label: string
+  caption?: React.ReactNode
 }
 
-export const StatCard: React.FC<StatCardProps> = ({ icon, value, label }) => (
+export const StatCard: React.FC<StatCardProps> = ({
+  icon,
+  value,
+  label,
+  caption,
+}) => (
   <div className={styles.statCard}>
     {icon ? <span className={styles.statIcon}>{icon}</span> : null}
     <span className={styles.statValue}>{value}</span>
+    {caption ? <span className={styles.statCaption}>{caption}</span> : null}
     <span className={styles.statLabel}>{label}</span>
   </div>
 )

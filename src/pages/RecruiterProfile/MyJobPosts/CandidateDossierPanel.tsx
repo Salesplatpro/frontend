@@ -10,16 +10,14 @@ import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useApplication } from '@/features/applications/hooks/useApplication'
-import { useRegenerateVerdict } from '@/features/applications/hooks/useRegenerateVerdict'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
 import type { JobAiConfigThresholds } from '@/features/applications/services/applicationService'
-import { openTalentCv } from '@/features/profile/services/openTalentCv'
-import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
-import { humanStage, humanStatus } from '@/pages/TalentProfile/Job/jobPipeline'
+import { humanStage } from '@/pages/TalentProfile/Job/jobPipeline'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
 
+import { AssessmentChat } from './AssessmentChat'
 import styles from './CandidateDossierPanel.module.scss'
-import { MBTI_DICHOTOMIES, MBTI_TYPES } from './mbtiLegend'
+import { MBTI_TYPES } from './mbtiLegend'
 import { Messaging } from './Messaging/Messaging'
 
 const HERO: Record<
@@ -68,30 +66,11 @@ const BulletList = ({ items }: { items?: string[] | null }) => {
   )
 }
 
-const AnswerList = ({
-  items,
-}: {
-  items?: Array<{ question: string; answer: string }> | null
-}) => {
-  if (!items?.length) {
-    return <p className={styles.empty}>No answers submitted yet.</p>
-  }
-  return (
-    <ol className={styles.qaList}>
-      {items.map((item, index) => (
-        <li key={`${item.question}-${index}`} className={styles.qaItem}>
-          <p className={styles.qaQuestion}>
-            {index + 1}. {item.question}
-          </p>
-          <p className={styles.qaAnswer}>{item.answer?.trim() || '—'}</p>
-        </li>
-      ))}
-    </ol>
-  )
-}
-
 const scoreLabel = (value?: number | null, suffix = '%') =>
   value == null ? '—' : `${value}${suffix}`
+
+const personalityCaption = (mbtiType?: string | null) =>
+  MBTI_TYPES.find((item) => item.type === mbtiType)?.summary ?? null
 
 export const CandidateDossierPanel = ({
   application: row,
@@ -114,20 +93,12 @@ export const CandidateDossierPanel = ({
   ]
     .filter(Boolean)
     .join(', ')
-  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(
-    application.id,
-  )
   const { updateStatus, isUpdating } = useUpdateApplicationStatus(
     application.id,
   )
 
   const handleStatus = async (status: 'shortlisted' | 'rejected') => {
     await updateStatus(status)
-    await onChanged?.()
-  }
-
-  const handleRegenerate = async () => {
-    await regenerateVerdict()
     await onChanged?.()
   }
 
@@ -147,6 +118,8 @@ export const CandidateDossierPanel = ({
   const recommendationLabel = application.matchRecommendation
     ? RECOMMENDATION_LABELS[application.matchRecommendation]
     : null
+
+  const typeCaption = personalityCaption(application.mbtiType)
 
   const personalityValue = (
     <span className={styles.mbtiValue}>
@@ -184,10 +157,6 @@ export const CandidateDossierPanel = ({
               {decision.label}
             </span>
             <StatusBadge
-              status={humanStatus(application.status)}
-              {...getStatusBadge(application.status)}
-            />
-            <StatusBadge
               status={humanStage(application.currentStage)}
               backgroundColor="#f3f4f6"
               color="#374151"
@@ -196,21 +165,9 @@ export const CandidateDossierPanel = ({
         }
         actions={
           <div className={styles.heroActions}>
-            {(talent.cvFileName || talent.cvUploadedAt) && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => openTalentCv(talent.id)}>
-                Download CV
-              </Button>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              loading={isRegenerating}
-              disabled={application.currentStage !== 'completed'}
-              onClick={handleRegenerate}>
-              Regenerate match
+            <Button variant="outline" size="sm" disabled>
+              Download CV
+              <span className={styles.comingSoon}>Coming soon</span>
             </Button>
             <Button
               size="sm"
@@ -280,37 +237,20 @@ export const CandidateDossierPanel = ({
               label="Personalized"
               value={scoreLabel(application.personalizedScore)}
             />
-            <StatCard label="Personality" value={personalityValue} />
+            <StatCard
+              label="Personality"
+              value={personalityValue}
+              caption={typeCaption}
+            />
           </StatGrid>
 
           <ReactTooltip
             id="mbti-legend"
             place="bottom"
-            className={styles.mbtiTooltip}
-            clickable>
-            <div className={styles.mbtiTooltipBody}>
-              <p className={styles.mbtiIntro}>
-                Personality is scored as a four-letter type. Each letter is one
-                side of a pair:
-              </p>
-              <ul className={styles.mbtiList}>
-                {MBTI_DICHOTOMIES.map((item) => (
-                  <li key={item.letters}>
-                    <span className={styles.mbtiCode}>{item.letters}</span>
-                    {item.title} — {item.meaning}
-                  </li>
-                ))}
-              </ul>
-              <p className={styles.mbtiIntro}>All possible types</p>
-              <ul className={styles.mbtiList}>
-                {MBTI_TYPES.map((item) => (
-                  <li key={item.type}>
-                    <span className={styles.mbtiCode}>{item.type}</span>
-                    {item.summary}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            className={styles.mbtiTooltip}>
+            <p className={styles.mbtiIntro}>
+              A four-letter snapshot of how they prefer to work and decide.
+            </p>
           </ReactTooltip>
 
           <PagePanel
@@ -320,13 +260,13 @@ export const CandidateDossierPanel = ({
                 ? `Typed as ${application.mbtiType}`
                 : 'Workplace scenarios the talent answered for this job.'
             }>
-            <AnswerList items={application.personalityAnswers} />
+            <AssessmentChat items={application.personalityAnswers} />
           </PagePanel>
 
           <PagePanel
             title="Role assessment answers"
             hint="How they said they would do this job.">
-            <AnswerList items={application.personalizedAnswers} />
+            <AssessmentChat items={application.personalizedAnswers} />
           </PagePanel>
 
           <PagePanel title="Why they fit">
@@ -338,7 +278,8 @@ export const CandidateDossierPanel = ({
               </p>
             ) : (
               <p className={styles.empty}>
-                No structured analysis yet. Regenerate match to refresh.
+                No structured analysis yet. It appears after screening
+                completes.
               </p>
             )}
           </PagePanel>
@@ -370,7 +311,7 @@ export const CandidateDossierPanel = ({
             </PagePanel>
           </div>
 
-          <PagePanel title="Thread">
+          <PagePanel title="Messages">
             <Messaging applicationId={application.id} talentId={talent.id} />
           </PagePanel>
         </>
