@@ -27,6 +27,7 @@ import {
   buildPipelineCrumbs,
   canVisitStep,
   firstRemainingStep,
+  isStageComplete,
 } from './jobPipeline'
 import styles from './JobWorkspace.module.scss'
 
@@ -40,18 +41,26 @@ type ApplicationRecord = {
   talent?: { prescreeningScore?: number | null }
 }
 
+type SavedQuestion = {
+  id: string
+  question: string
+  answer?: string | null
+}
+
 const parseStep = (value: string | null): PipelineStepId | null => {
   if (
     value === 'details' ||
     value === 'personality' ||
     value === 'personalized' ||
-    value === 'prescreening' ||
     value === 'cv_similarity'
   ) {
     return value
   }
   return null
 }
+
+const questionsHaveAnswers = (questions?: SavedQuestion[]) =>
+  !!questions?.some((item) => (item.answer ?? '').trim().length > 0)
 
 const StageReview = ({
   title,
@@ -60,7 +69,7 @@ const StageReview = ({
 }: {
   title: string
   meta?: string
-  questions?: Array<{ id: string; question: string; answer?: string | null }>
+  questions?: SavedQuestion[]
 }) => (
   <div className={styles.stagePanel}>
     <h2 className={styles.stageTitle}>{title}</h2>
@@ -127,19 +136,38 @@ const IndividualJob = () => {
   const cvMatchTriggeredFor = useRef<string | null>(null)
   const prescreeningTriggeredFor = useRef<string | null>(null)
 
-  const reviewPersonality = resolvedStep === 'personality' && isComplete
-  const reviewPersonalized = resolvedStep === 'personalized' && isComplete
+  const personalityDone = isStageComplete('personality', currentStage, stages)
+  const personalizedDone = isStageComplete('personalized', currentStage, stages)
+
+  const loadPersonality =
+    resolvedStep === 'personality' ||
+    (resolvedStep === 'details' && personalityDone)
+  const loadPersonalized =
+    resolvedStep === 'personalized' ||
+    (resolvedStep === 'details' && personalizedDone)
 
   const { data: personalityData } = usePersonalityTestQuery(jobId, {
-    skip: !jobId || resolvedStep !== 'personality' || !isComplete,
+    skip: !jobId || !loadPersonality,
   })
   const { data: personalizedData } = usePersonalizedTestQuery(
     { jobId, talentId },
     {
-      skip:
-        !jobId || !talentId || resolvedStep !== 'personalized' || !isComplete,
+      skip: !jobId || !talentId || !loadPersonalized,
     },
   )
+
+  const personalityQuestions = personalityData?.data?.questions as
+    | SavedQuestion[]
+    | undefined
+  const personalizedQuestions = (personalizedData?.data?.questions ??
+    personalizedData?.data?.application?.questions) as
+    | SavedQuestion[]
+    | undefined
+
+  const showPersonalityReview =
+    personalityDone || questionsHaveAnswers(personalityQuestions)
+  const showPersonalizedReview =
+    personalizedDone || questionsHaveAnswers(personalizedQuestions)
 
   useEffect(() => {
     if (error) {
@@ -217,11 +245,38 @@ const IndividualJob = () => {
     </Button>
   )
 
+  const submittedAnswers = (
+    <>
+      {showPersonalityReview && personalityQuestions?.length ? (
+        <StageReview
+          title="Personality — your submitted answers"
+          meta={
+            application?.mbtiType
+              ? `Result: ${application.mbtiType}`
+              : 'Saved. You can revisit these answers anytime.'
+          }
+          questions={personalityQuestions}
+        />
+      ) : null}
+      {showPersonalizedReview && personalizedQuestions?.length ? (
+        <StageReview
+          title="Role assessment — your submitted answers"
+          meta={
+            application?.personalizedScore != null
+              ? 'Submitted. Your recruiter can see how you scored on this stage.'
+              : 'Saved. You can revisit these answers anytime.'
+          }
+          questions={personalizedQuestions}
+        />
+      ) : null}
+    </>
+  )
+
   return (
     <PageShell>
       {hasApplication && (
         <nav className={styles.crumbs} aria-label="Application stages">
-          {crumbs.map((crumb) => {
+          {crumbs.map((crumb, index) => {
             const enabled = canVisitStep({
               step: crumb.id,
               currentStage,
@@ -229,39 +284,48 @@ const IndividualJob = () => {
             })
             const isCurrent = crumb.id === resolvedStep
             return (
-              <button
-                key={crumb.id}
-                type="button"
-                className={`${styles.crumb} ${
-                  isCurrent
-                    ? styles.crumbCurrent
-                    : enabled
-                    ? styles.crumbDone
-                    : ''
-                }`}
-                disabled={!enabled}
-                onClick={() => enabled && setStep(crumb.id)}>
-                {crumb.label}
-              </button>
+              <React.Fragment key={crumb.id}>
+                {index > 0 ? (
+                  <span className={styles.crumbSep} aria-hidden>
+                    /
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  className={`${styles.crumb} ${
+                    isCurrent
+                      ? styles.crumbCurrent
+                      : enabled
+                      ? styles.crumbDone
+                      : ''
+                  }`}
+                  disabled={!enabled}
+                  onClick={() => enabled && setStep(crumb.id)}>
+                  {crumb.label}
+                </button>
+              </React.Fragment>
             )
           })}
         </nav>
       )}
 
       {resolvedStep === 'details' && (
-        <JobDetailsView jobId={jobId} job={job} action={applyAction} />
+        <>
+          <JobDetailsView jobId={jobId} job={job} action={applyAction} />
+          {hasApplication && submittedAnswers}
+        </>
       )}
 
       {resolvedStep === 'personality' &&
-        (reviewPersonality ? (
+        (showPersonalityReview ? (
           <StageReview
             title="Personality"
             meta={
               application?.mbtiType
                 ? `Result: ${application.mbtiType}`
-                : undefined
+                : 'Your submitted answers are saved below.'
             }
-            questions={personalityData?.data?.questions}
+            questions={personalityQuestions}
           />
         ) : (
           <PersonalityTest
@@ -272,18 +336,11 @@ const IndividualJob = () => {
 
       {resolvedStep === 'personalized' &&
         talentId &&
-        (reviewPersonalized ? (
+        (showPersonalizedReview ? (
           <StageReview
-            title="Personalized"
-            meta={
-              application?.personalizedScore != null
-                ? `Score: ${application.personalizedScore}%`
-                : undefined
-            }
-            questions={
-              personalizedData?.data?.questions ??
-              personalizedData?.data?.application?.questions
-            }
+            title="Role assessment"
+            meta="Your submitted answers are saved below."
+            questions={personalizedQuestions}
           />
         ) : (
           <PersonalizedTest
@@ -293,25 +350,15 @@ const IndividualJob = () => {
           />
         ))}
 
-      {resolvedStep === 'prescreening' && (
-        <StageReview
-          title="Prescreening"
-          meta={
-            application?.talent?.prescreeningScore != null
-              ? `Score: ${application.talent.prescreeningScore}%`
-              : 'You already completed the global pre-assessment. Waiting for this job to accept that score.'
-          }
-        />
-      )}
-
       {resolvedStep === 'cv_similarity' && (
         <StageReview
-          title="CV match"
+          title="Application review"
           meta={
-            application?.cvSimilarityScore != null
-              ? `Done — score ${application.cvSimilarityScore}%`
+            application?.cvSimilarityScore != null ||
+            currentStage === 'completed'
+              ? 'This stage is complete. Your recruiter can review how your CV aligns with the role.'
               : currentStage === 'cv_similarity'
-              ? 'Running…'
+              ? 'We’re reviewing your application. You can keep browsing this job while that finishes.'
               : 'Not started'
           }
         />

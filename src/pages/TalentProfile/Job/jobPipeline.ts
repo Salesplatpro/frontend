@@ -73,23 +73,46 @@ export type PipelineCrumb = {
   label: string
 }
 
+/** Prescreening is a one-time global score — it is not a job-details crumb. */
+const HIDDEN_JOB_CRUMB_STAGES = new Set<PipelineStageId>(['prescreening'])
+
 export const buildPipelineCrumbs = (
   stages: Record<string, string> | null | undefined,
 ): PipelineCrumb[] => [
   { id: 'details', label: 'Job details' },
-  ...orderedStageKeys(stages).map((id) => ({
-    id,
-    label: STAGE_LABELS[id],
-  })),
+  ...orderedStageKeys(stages)
+    .filter((id) => !HIDDEN_JOB_CRUMB_STAGES.has(id))
+    .map((id) => ({
+      id,
+      label: STAGE_LABELS[id],
+    })),
 ]
+
+export const isStageComplete = (
+  stage: PipelineStageId,
+  currentStage: string | null | undefined,
+  stages: Record<string, string> | null | undefined,
+): boolean => {
+  if (!currentStage) return false
+  const ordered = orderedStageKeys(stages)
+  if (!ordered.includes(stage)) return false
+  if (currentStage === 'completed') return true
+  const currentIndex = ordered.indexOf(currentStage as PipelineStageId)
+  const stageIndex = ordered.indexOf(stage)
+  if (currentIndex < 0) return false
+  return stageIndex < currentIndex
+}
 
 export const firstRemainingStep = (
   currentStage: string | null | undefined,
   stages: Record<string, string> | null | undefined,
 ): PipelineStepId => {
   if (!currentStage || currentStage === 'completed') return 'details'
+  if (currentStage === 'prescreening') return 'details'
   if (isStageId(currentStage)) return currentStage
-  const ordered = orderedStageKeys(stages)
+  const ordered = orderedStageKeys(stages).filter(
+    (id) => !HIDDEN_JOB_CRUMB_STAGES.has(id),
+  )
   return ordered[0] ?? 'details'
 }
 
@@ -105,6 +128,7 @@ export const canVisitStep = ({
   if (!currentStage) return step === 'details'
   if (currentStage === 'completed') return true
   if (step === 'details') return true
+  if (step === 'prescreening') return false
 
   const ordered = orderedStageKeys(stages)
   const currentIndex = ordered.indexOf(currentStage as PipelineStageId)
