@@ -197,9 +197,11 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
 
   return (
     <div className={styles.page}>
-      <h2 className={styles.heading}>AI Configs</h2>
+      <h2 className={styles.heading}>Screening setup</h2>
       <p className={styles.subheading}>
-        {isEditMode ? 'Edit your configurations' : 'Select your configurations'}
+        {isEditMode
+          ? 'Adjust how candidates are assessed for this role. Each toggle adds or removes a stage they must complete.'
+          : 'Choose how this job screens applicants. Hover the info icons to see what candidates experience at each step.'}
       </p>
 
       <Formik

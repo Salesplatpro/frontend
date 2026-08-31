@@ -29,37 +29,47 @@
 .tabList {
   display: flex;
   flex-direction: row;
-  gap: var(--space-4);
+  gap: var(--space-3);
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   margin-top: var(--space-8);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: var(--space-2);
 
   @media (min-width: 768px) {
-    gap: var(--space-10);
+    gap: var(--space-4);
     justify-content: center;
   }
 }
 
+.tabChain {
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  flex-shrink: 0;
+}
+
 .tabItem {
-  min-width: 140px;
+  min-width: 160px;
   flex: 0 0 auto;
-  padding-top: var(--space-2);
-  border-top: 4px solid transparent;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
   color: var(--color-grey-700);
+  background: var(--color-white);
 
   @media (min-width: 768px) {
-    min-width: 232px;
+    min-width: 220px;
   }
 
   &.active {
-    border-top-color: var(--color-info);
-    color: var(--color-info);
+    border-color: var(--color-primary);
+    background: var(--color-primary-tint);
+    color: var(--color-primary-strong);
   }
 
   &.disabled {
@@ -70,7 +80,9 @@
 
 .tabButton {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
   background: none;
   border: none;
   cursor: inherit;
@@ -78,6 +90,30 @@
   padding: 0;
   width: 100%;
   color: inherit;
+}
+
+.tabIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--color-grey-100);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  flex-shrink: 0;
+}
+
+.tabItem.active .tabIndex {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.tabCopy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .tabTitle {
