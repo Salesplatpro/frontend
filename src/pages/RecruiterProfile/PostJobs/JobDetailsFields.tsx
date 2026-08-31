@@ -1,4 +1,3 @@
-import { Field } from 'formik'
 import React from 'react'
 
 import {
@@ -52,6 +51,11 @@ export const JobDetailsFields = ({
   <>
     {/* Section 1: Job Overview */}
     <section className={styles.formSection}>
+      <h3 className={styles.sectionTitle}>Role overview</h3>
+      <p className={styles.sectionNote}>
+        Start with the role. You can generate a brief with AI, then edit it
+        before publishing.
+      </p>
       <div className={styles.fieldGroup}>
         <RoleSelect
           label="Role"
@@ -97,6 +101,7 @@ export const JobDetailsFields = ({
           placeholder="Describe the role in up to 600 words"
           type="textarea"
           MAX_WORDS={600}
+          tooltip="What the candidate reads first. Be specific about the work, team, and outcomes — this also drives AI screening questions and CV matching."
         />
       </div>
     </section>
@@ -112,6 +117,7 @@ export const JobDetailsFields = ({
           name="requirements"
           placeholder="List the qualifications and skills needed"
           type="textarea"
+          tooltip="Must-haves and nice-to-haves. CV match and personalized questions are grounded in this text."
         />
       </div>
 
@@ -203,37 +209,22 @@ export const JobDetailsFields = ({
         </div>
 
         <div className={styles.compensationFieldThird}>
-          <label className={styles.label} htmlFor="minSalary">
-            Min Salary<span className={styles.required}>*</span>
-          </label>
-          <Field
-            id="minSalary"
+          <TextField
+            label="Min Salary"
+            asterick
             name="minSalary"
-            type="text"
             placeholder="e.g. 300000"
-            className={styles.input}
+            tooltip="Lowest compensation you will offer in the selected currency and period. Shown to candidates on the job post."
           />
-          {Boolean(touched.minSalary) &&
-            typeof errors.minSalary === 'string' && (
-              <div className={styles.errorText}>{errors.minSalary}</div>
-            )}
         </div>
 
         <div className={styles.compensationFieldThird}>
-          <label className={styles.label} htmlFor="maxSalary">
-            Max Salary
-          </label>
-          <Field
-            id="maxSalary"
+          <TextField
+            label="Max Salary"
             name="maxSalary"
-            type="text"
             placeholder="e.g. 600000"
-            className={styles.input}
+            tooltip="Optional upper bound. Leave blank if you prefer not to publish a range ceiling."
           />
-          {Boolean(touched.maxSalary) &&
-            typeof errors.maxSalary === 'string' && (
-              <div className={styles.errorText}>{errors.maxSalary}</div>
-            )}
         </div>
 
         <div className={styles.compensationFieldThird}>

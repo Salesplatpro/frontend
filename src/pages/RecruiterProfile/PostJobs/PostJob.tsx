@@ -136,8 +136,11 @@ const PostJob: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.pageHeader}>
         <div className={styles.pageTitleGroup}>
-          <h2 className={styles.pageHeading}>Job details</h2>
-          <p className={styles.pageSubheading}>Tell us about your job</p>
+          <h2 className={styles.pageHeading}>Tell candidates about the role</h2>
+          <p className={styles.pageSubheading}>
+            A clear brief and requirements help the right people apply — and
+            give AI better material to screen them.
+          </p>
         </div>
       </div>
 
@@ -176,7 +179,7 @@ const PostJob: React.FC = () => {
                 variant="primary"
                 size="lg"
                 loading={isSubmitting}>
-                Submit Job
+                Submit job details
               </Button>
             </div>
           </Form>

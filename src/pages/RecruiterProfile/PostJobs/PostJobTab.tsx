@@ -13,13 +13,13 @@ const tabs = [
     id: '1',
     tab: 'jobdetails',
     title: 'Job details',
-    description: 'Enter job details',
+    description: 'Describe the role',
   },
   {
     id: '2',
     tab: 'aiconfig',
-    title: 'AI config',
-    description: 'Select AI config',
+    title: 'Screening setup',
+    description: 'Configure assessments',
   },
 ]
 
@@ -46,12 +46,12 @@ const PostJobTab = () => {
     <PageShell>
       <PageHero
         compact
-        title="Create a new job"
-        lead="Input information needed to land a role with your organization"
+        title="Create a job"
+        lead="Two steps: describe the role, then choose how applicants are screened."
       />
 
       <div className={styles.tabList} role="tablist">
-        {tabs.map((tab) => {
+        {tabs.map((tab, index) => {
           const isDisabled = tab.tab === 'aiconfig' && !jobId
           const isActive = activeTab === tab.tab
           const tabItemClass = [
@@ -63,17 +63,27 @@ const PostJobTab = () => {
             .join(' ')
 
           return (
-            <div key={tab.id} className={tabItemClass}>
-              <button
-                className={styles.tabButton}
-                onClick={() => !isDisabled && setActiveTab(tab.tab)}
-                disabled={isDisabled}
-                role="tab"
-                aria-selected={isActive}>
-                <span className={styles.tabTitle}>{tab.title}</span>
-                <span className={styles.tabDesc}>{tab.description}</span>
-              </button>
-            </div>
+            <React.Fragment key={tab.id}>
+              {index > 0 ? (
+                <span className={styles.tabChain} aria-hidden>
+                  /
+                </span>
+              ) : null}
+              <div className={tabItemClass}>
+                <button
+                  className={styles.tabButton}
+                  onClick={() => !isDisabled && setActiveTab(tab.tab)}
+                  disabled={isDisabled}
+                  role="tab"
+                  aria-selected={isActive}>
+                  <span className={styles.tabIndex}>{tab.id}</span>
+                  <span className={styles.tabCopy}>
+                    <span className={styles.tabTitle}>{tab.title}</span>
+                    <span className={styles.tabDesc}>{tab.description}</span>
+                  </span>
+                </button>
+              </div>
+            </React.Fragment>
           )
         })}
       </div>
