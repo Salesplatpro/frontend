@@ -3,6 +3,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 
 import {
   Avatar,
+  Button,
   ColumnDef,
   DataTable,
   Dropdown,
@@ -313,14 +314,28 @@ export const buildColumns = ({
     header: COLUMN_LABELS.details,
     align: 'center',
     render: (item) => (
-      <ApplicantActionsCell
-        item={item}
-        onShortlist={onShortlist}
-        onReject={onReject}
-        onMessage={onMessage}
-        onVerdictRegenerated={onVerdictRegenerated}
-        isLoading={item.id === loadingRowId}
-      />
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onClick={(event) => event.stopPropagation()}>
+        {onOpenAiMatch ? (
+          <Button size="sm" onClick={() => onOpenAiMatch(item)}>
+            View Application
+          </Button>
+        ) : null}
+        <ApplicantActionsCell
+          item={item}
+          onShortlist={onShortlist}
+          onReject={onReject}
+          onMessage={onMessage}
+          onVerdictRegenerated={onVerdictRegenerated}
+          isLoading={item.id === loadingRowId}
+        />
+      </div>
     ),
   },
 ]

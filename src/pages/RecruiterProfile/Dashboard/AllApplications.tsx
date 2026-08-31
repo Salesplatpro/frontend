@@ -15,10 +15,14 @@ import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
 import { ApplicationColumnRow, buildApplicationColumns } from './columns'
 
 interface RawApplicationRow {
+  id?: string
+  jobId?: string
+  job?: { id?: string }
   talent?: {
     firstName: string
     lastName: string
-    profile: {
+    prescreeningScore?: number
+    profile?: {
       prescreeningScore?: number
     }
   }
@@ -27,10 +31,13 @@ interface RawApplicationRow {
 }
 
 const toColumnRow = (row: RawApplicationRow): ApplicationColumnRow => ({
+  id: row.id,
+  jobId: row.jobId ?? row.job?.id,
   applicantName: `${row.talent?.firstName ?? ''} ${
     row.talent?.lastName ?? ''
   }`.trim(),
-  prescreeningScore: row.talent?.profile.prescreeningScore,
+  prescreeningScore:
+    row.talent?.prescreeningScore ?? row.talent?.profile?.prescreeningScore,
   cvSimilarityScore: row.cvSimilarityScore,
   dateApplied: row.createdAt,
 })

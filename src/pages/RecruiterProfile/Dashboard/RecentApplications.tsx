@@ -9,7 +9,7 @@ import { ApplicationColumnRow, buildApplicationColumns } from './columns'
 import styles from './RecentApplications.module.scss'
 
 interface RecentApplicationsProps {
-  infoData: ApplicationColumnRow[]
+  infoData?: ApplicationColumnRow[]
   embed?: boolean
 }
 
@@ -30,7 +30,7 @@ const RecentApplications: React.FC<RecentApplicationsProps> = ({
     )}
     <DataTable
       columns={columns}
-      data={infoData}
+      data={infoData ?? []}
       ariaLabel="Recent applications"
       emptyState={
         <EmptyState

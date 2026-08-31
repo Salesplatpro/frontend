@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -11,47 +11,6 @@ import { calculateDaysFromCreation } from '../../../utils'
 import { AllJobTypes } from '../../../utils/types'
 import { getStatusBadge } from '../../RecruiterProfile/getJobStatus'
 
-const columns: ColumnDef<AllJobTypes>[] = [
-  {
-    key: 'jobTitle',
-    header: 'Job',
-    align: 'left',
-    render: (app) => app.job?.role?.name ?? '—',
-  },
-  {
-    key: 'company',
-    header: 'Company',
-    align: 'left',
-    render: (app) => app.job?.organization?.name ?? '—',
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    align: 'left',
-    hideBelow: 768,
-    render: (app) => (
-      <StatusBadge
-        status={humanStatus(app.status)}
-        {...getStatusBadge(app.status ?? 'unknown')}
-      />
-    ),
-  },
-  {
-    key: 'stage',
-    header: 'Stage',
-    align: 'left',
-    hideBelow: 768,
-    render: (app) => humanStage(app.currentStage),
-  },
-  {
-    key: 'dateApplied',
-    header: 'Date Applied',
-    align: 'left',
-    hideBelow: 768,
-    render: (app) => `${calculateDaysFromCreation(app.createdAt)} days ago`,
-  },
-]
-
 export const PipelineTable = () => {
   const { data, isLoading } = useAllJobApplicationsQuery({})
   const [allJobs, setAllJobs] = useState<AllJobTypes[]>([])
@@ -62,6 +21,69 @@ export const PipelineTable = () => {
       setAllJobs(data.data?.applications ?? [])
     }
   }, [data])
+
+  const columns: ColumnDef<AllJobTypes>[] = useMemo(
+    () => [
+      {
+        key: 'jobTitle',
+        header: 'Job',
+        align: 'left',
+        render: (app) => app.job?.role?.name ?? '—',
+      },
+      {
+        key: 'company',
+        header: 'Company',
+        align: 'left',
+        render: (app) => app.job?.organization?.name ?? '—',
+      },
+      {
+        key: 'status',
+        header: 'Status',
+        align: 'left',
+        hideBelow: 768,
+        render: (app) => (
+          <StatusBadge
+            status={humanStatus(app.status)}
+            {...getStatusBadge(app.status ?? 'unknown')}
+          />
+        ),
+      },
+      {
+        key: 'stage',
+        header: 'Stage',
+        align: 'left',
+        hideBelow: 768,
+        render: (app) => humanStage(app.currentStage),
+      },
+      {
+        key: 'dateApplied',
+        header: 'Date Applied',
+        align: 'left',
+        hideBelow: 768,
+        render: (app) => `${calculateDaysFromCreation(app.createdAt)} days ago`,
+      },
+      {
+        key: 'openJob',
+        header: '',
+        align: 'right',
+        render: (app) => {
+          const jobId = app.job?.id
+          if (!jobId) return null
+          return (
+            <Button
+              size="sm"
+              onClick={(event) => {
+                event.stopPropagation()
+                navigate(`/talentDashboard/job/${jobId}`)
+              }}>
+              View job
+            </Button>
+          )
+        },
+      },
+    ],
+    [navigate],
+  )
 
   return (
     <DataTable
