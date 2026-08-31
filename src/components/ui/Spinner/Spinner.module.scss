@@ -6,7 +6,16 @@
 }
 
 .fullPage {
-  height: calc(100vh - 70px);
+  width: 100%;
+  height: auto;
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-height: 100dvh;
+}
+
+:global(.dashboard) .fullPage,
+:global(.wizard-page) .fullPage {
+  min-height: 12rem;
 }
 
 .spinner {

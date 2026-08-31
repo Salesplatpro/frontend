@@ -37,7 +37,7 @@ const Dashboard = () => {
 
   if (!isVerified) {
     return (
-      <PageShell wide>
+      <PageShell wide centered>
         <EmailVerificationPanel />
         <WelcomeModal />
         <EmailVerifiedModal />
@@ -47,11 +47,11 @@ const Dashboard = () => {
 
   if (dashboardLoading)
     return (
-      <>
+      <PageShell wide>
         <Spinner fullPage />
         <WelcomeModal />
         <EmailVerifiedModal />
-      </>
+      </PageShell>
     )
 
   if (dashboardError)
