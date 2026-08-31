@@ -20,16 +20,13 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Tabs } from '@/components/ui/Tabs'
 import { useBulkUpdateApplicationStatus } from '@/features/applications/hooks/useBulkUpdateApplicationStatus'
 import { useJobApplications } from '@/features/applications/hooks/useJobApplications'
-import {
-  regenerateVerdict,
-  retryMissingVerdicts,
-} from '@/features/applications/services/applicationService'
+import { retryMissingVerdicts } from '@/features/applications/services/applicationService'
 import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
-import { calculateDaysFromCreation, SingleJobDetails } from '../../../utils'
+import { formatTimeAgo, SingleJobDetails } from '../../../utils'
 import { CandidateDossierPanel } from './CandidateDossierPanel'
 import { exportBoardReport } from './exportRankingPdf'
 import { Pagination } from './Pagination'
@@ -271,19 +268,11 @@ export const SingleJobPost = () => {
   // used for both the bulk-selection confirm modal and the toolbar's
   // "retry all missing" button, so the AI provider isn't hit with an
   // unbounded burst of requests.
-  const retryVerdictsForIds = async (ids: string[]) => {
-    const CONCURRENCY = 3
-    for (let i = 0; i < ids.length; i += CONCURRENCY) {
-      const batch = ids.slice(i, i + CONCURRENCY)
-      await Promise.all(batch.map((id) => regenerateVerdict(id)))
-    }
-  }
-
   const handleRetryMissingForSelection = async () => {
-    const ids = getMissingVerdictIds(selectedRowKeys)
+    if (!jobId) return
     setIsRetryingVerdicts(true)
     try {
-      await retryVerdictsForIds(ids)
+      await retryMissingVerdicts(jobId)
       notify('success', 'AI matches retried for selected talents', {
         autoClose: 2000,
       })
@@ -534,7 +523,7 @@ export const SingleJobPost = () => {
         title={jobName}
         lead={`${applications.length || 0} ${
           applications.length > 1 ? 'applicants' : 'applicant'
-        } · Posted ${calculateDaysFromCreation(postedAt)} days ago`}
+        } · Posted ${formatTimeAgo(postedAt)}`}
         actions={
           <>
             {missingVerdictCount > 0 && (
@@ -682,9 +671,6 @@ export const SingleJobPost = () => {
             onMessage={handleRowMessage}
             onOpenDossier={openDossier}
             loadingRowId={loadingRowId}
-            onVerdictRegenerated={async () => {
-              await mutate()
-            }}
             visibleColumnKeys={visibleColumnKeys}
             sortKey={sortKey}
             sortDirection={sortDirection}

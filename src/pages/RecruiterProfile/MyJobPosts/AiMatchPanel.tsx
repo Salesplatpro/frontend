@@ -3,12 +3,9 @@ import { IoClose } from 'react-icons/io5'
 
 import { Avatar } from '@/components/ui/Avatar'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
-import { useRegenerateVerdict } from '@/features/applications/hooks/useRegenerateVerdict'
 import type { JobAiConfigThresholds } from '@/features/applications/services/applicationService'
-import { openTalentCv } from '@/features/profile/services/openTalentCv'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
 
-import { Button } from '../../../components'
 import styles from './AiMatchPanel.module.scss'
 
 const RECOMMENDATION_LABELS: Record<string, string> = {
@@ -27,8 +24,6 @@ type AiMatchPanelProps = {
   application: SingleJobDetails
   jobAiConfig?: JobAiConfigThresholds | null
   onClose: () => void
-  /** Called after a successful regenerate so the caller can refetch the applications list. */
-  onRegenerated?: () => void | Promise<void>
 }
 
 const Section = ({
@@ -88,18 +83,9 @@ export const AiMatchPanel = ({
   application,
   jobAiConfig,
   onClose,
-  onRegenerated,
 }: AiMatchPanelProps) => {
   const { talent } = application
   const fullName = `${talent.firstName} ${talent.lastName}`.trim()
-  const { regenerateVerdict, isRegenerating } = useRegenerateVerdict(
-    application.id,
-  )
-
-  const handleRegenerate = async () => {
-    await regenerateVerdict()
-    await onRegenerated?.()
-  }
 
   const profileDetails = [
     talent.experience ? `Experience: ${talent.experience}` : null,
@@ -148,14 +134,6 @@ export const AiMatchPanel = ({
             </div>
           </div>
           <div className={styles.headerActions}>
-            <Button
-              variant="outline"
-              size="sm"
-              loading={isRegenerating}
-              disabled={application.currentStage !== 'completed'}
-              onClick={handleRegenerate}>
-              Regenerate match
-            </Button>
             <button
               type="button"
               className={styles.closeButton}
@@ -190,14 +168,6 @@ export const AiMatchPanel = ({
               </ul>
             ) : (
               <EmptyNote text="No profile or CV details are available for this applicant." />
-            )}
-            {(talent.cvFileName || talent.cvUploadedAt) && (
-              <button
-                type="button"
-                className={styles.cvLink}
-                onClick={() => openTalentCv(talent.id)}>
-                Open CV
-              </button>
             )}
           </Section>
 
