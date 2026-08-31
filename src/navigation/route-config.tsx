@@ -67,7 +67,6 @@ import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
 import SearchResult from '@/pages/RecruiterProfile/TalentSearch/SearchResult'
 import SearchTalent from '@/pages/RecruiterProfile/TalentSearch/SearchTalent'
-import { ViewCvPage } from '@/pages/RecruiterProfile/ViewCv/ViewCvPage'
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
 import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
 import Inbox from '@/pages/TalentProfile/Inbox/InboxList'
@@ -170,15 +169,6 @@ export const routeConfig: RouteObject[] = [
       {
         path: `/${paths.verifyEmail}`,
         element: <AccountEmailVerification />,
-      },
-      {
-        element: <ProtectedRoute allowedRoles={['recruiter', 'admin']} />,
-        children: [
-          {
-            path: '/view-cv/:talentId',
-            element: <ViewCvPage />,
-          },
-        ],
       },
       {
         path: '/apply/:jobId',
