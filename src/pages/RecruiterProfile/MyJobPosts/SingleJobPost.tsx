@@ -511,6 +511,21 @@ export const SingleJobPost = () => {
     return <Spinner fullPage />
   }
 
+  if (dossierApplication) {
+    return (
+      <PageShell wide>
+        <CandidateDossierPanel
+          application={dossierApplication}
+          jobAiConfig={jobAiConfig}
+          onClose={closeDossier}
+          onChanged={async () => {
+            await mutate()
+          }}
+        />
+      </PageShell>
+    )
+  }
+
   return (
     <PageShell wide>
       <BackButton />
@@ -749,16 +764,6 @@ export const SingleJobPost = () => {
           </div>
         </div>
       </Modal>
-      {dossierApplication && (
-        <CandidateDossierPanel
-          application={dossierApplication}
-          jobAiConfig={jobAiConfig}
-          onClose={closeDossier}
-          onChanged={async () => {
-            await mutate()
-          }}
-        />
-      )}
     </PageShell>
   )
 }
