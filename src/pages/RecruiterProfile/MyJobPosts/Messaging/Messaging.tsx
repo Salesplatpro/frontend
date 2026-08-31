@@ -31,7 +31,6 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
     try {
       await sendMessage(content)
       setContent('')
-      notify('success', 'Message sent successfully', { autoClose: 2000 })
     } catch {
       notify('error', 'Failed to send message', { autoClose: 2000 })
     }

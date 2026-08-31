@@ -61,9 +61,12 @@ const renderAiConfig = () =>
  * explicitly turned off — each toggle starts blank and must be clicked twice
  * to land on an explicit "false" (Yup requires a defined 'true'/'false', not blank). */
 const fillMinimumValidForm = () => {
-  fireEvent.change(screen.getByPlaceholderText('Name of Job'), {
-    target: { value: 'Software Engineer Screening' },
-  })
+  fireEvent.change(
+    screen.getByPlaceholderText(/backend engineer — default screen/i),
+    {
+      target: { value: 'Software Engineer Screening' },
+    },
+  )
   fireEvent.change(screen.getByPlaceholderText('Enter score (%)'), {
     target: { value: '60' },
   })
