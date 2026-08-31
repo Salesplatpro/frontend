@@ -15,12 +15,11 @@ const stages = {
 }
 
 describe('jobPipeline', () => {
-  it('orders crumbs from the stages map with Job details first', () => {
+  it('orders crumbs from the stages map with Job details first, omitting prescreening and CV match', () => {
     expect(buildPipelineCrumbs(stages).map((c) => c.id)).toEqual([
       'details',
       'personality',
       'personalized',
-      'prescreening',
       'cv_similarity',
     ])
   })
@@ -71,5 +70,9 @@ describe('jobPipeline', () => {
   it('uses currentStage as the next crumb after apply', () => {
     expect(firstRemainingStep('personality', stages)).toBe('personality')
     expect(firstRemainingStep('completed', stages)).toBe('details')
+  })
+
+  it('keeps the talent on job details while the global prescreening gate runs', () => {
+    expect(firstRemainingStep('prescreening', stages)).toBe('details')
   })
 })
