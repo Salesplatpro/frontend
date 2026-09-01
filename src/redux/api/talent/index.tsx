@@ -86,6 +86,7 @@ export const talentApi = createApi({
         method: 'POST',
         body: { jobId, talentId },
       }),
+      providesTags: ['Applications'],
     }),
     postPersonalizedTest: builder.mutation({
       query: (testAnswer) => ({
@@ -100,12 +101,14 @@ export const talentApi = createApi({
         url: `/questions?limit=20&offset=0&questionType=personalized&jobId=${jobId}&talentId=${talentId}`,
         method: 'GET',
       }),
+      providesTags: ['Applications'],
     }),
     personalityTest: builder.query({
       query: (jobId) => ({
         url: `/questions?limit=200&offset=0&jobId=${jobId}&questionType=personality`,
         method: 'GET',
       }),
+      providesTags: ['Applications'],
     }),
     // Talent-safe (unlike POST /questions/personality, which is recruiter-only)
     // and idempotent — safe to call as a retry when generation hasn't happened
