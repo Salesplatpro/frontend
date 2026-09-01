@@ -1,26 +1,22 @@
 .shell {
   width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   min-width: 0;
   flex: 1 1 auto;
   box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    gap: 16px;
-  }
 }
 
 .wide {
-  max-width: 1200px;
+  max-width: none;
 }
 
 .centered {
   justify-content: center;
   align-items: center;
-  padding: var(--space-4);
+  padding: 16px;
 }
