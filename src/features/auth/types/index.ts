@@ -28,6 +28,10 @@ export interface LoginRequest {
   password: string
 }
 
+export type LoginFormValues = LoginRequest & {
+  remember: boolean
+}
+
 export interface TalentRegisterRequest {
   email: string
   password: string
@@ -47,16 +51,35 @@ export interface ForgotPasswordResponse {
   message?: string
 }
 
+export interface ValidateResetTokenRequest {
+  token: string
+}
+
+export interface ValidateResetTokenResponse {
+  status?: boolean
+  message?: string
+  data?: {
+    valid: boolean
+  }
+}
+
 export interface ResetPasswordRequest {
-  email: string
-  otp: string | number
+  token: string
   password: string
 }
 
 export interface ResetPasswordResponse {
   status?: boolean
   message?: string
+  data?: AuthResponseData
 }
+
+export interface ChangePasswordRequest {
+  oldPassword: string
+  newPassword: string
+}
+
+export type ChangePasswordResponse = AuthApiResponse
 
 export interface VerifyEmailRequest {
   token: string
