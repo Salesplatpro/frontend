@@ -6,7 +6,7 @@ import { notify } from '@/utils/toastNotifications'
 
 import { loginRequest } from '../services/authService'
 import { useAuthStore } from '../store/useAuthStore'
-import { LoginRequest } from '../types'
+import { LoginFormValues, LoginRequest } from '../types'
 
 export const useLogin = () => {
   const setSubmitting = useAuthStore((state) => state.setSubmitting)
@@ -19,12 +19,13 @@ export const useLogin = () => {
     (_key, { arg }: { arg: LoginRequest }) => loginRequest(arg),
   )
 
-  const submitLogin = async (values: LoginRequest) => {
+  const submitLogin = async (values: LoginFormValues) => {
+    const { remember, ...credentials } = values
     setError(null)
     setSubmitting(true)
     try {
-      const { data } = await trigger(values)
-      setSession(data.data)
+      const { data } = await trigger(credentials)
+      setSession(data.data, { persist: remember })
       notify('success', 'Logged in successfully', { autoClose: 2000 })
       return data
     } catch (err) {

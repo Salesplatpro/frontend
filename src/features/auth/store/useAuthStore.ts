@@ -1,6 +1,16 @@
 import { create } from 'zustand'
 
 import { AuthResponseData, AuthUser } from '../types'
+import {
+  clearPersistedSession,
+  readPersistedSession,
+  writePersistedSession,
+  writePersistedUser,
+} from '../utils/authPersistence'
+
+type SetSessionOptions = {
+  persist?: boolean
+}
 
 type AuthState = {
   user: AuthUser | null
@@ -10,36 +20,31 @@ type AuthState = {
   error: string | null
   setSubmitting: (isSubmitting: boolean) => void
   setError: (error: string | null) => void
-  setSession: (data: AuthResponseData) => void
+  setSession: (data: AuthResponseData, options?: SetSessionOptions) => void
   setUser: (user: AuthUser) => void
   logout: () => void
 }
 
-const persistedUser: AuthUser | null = JSON.parse(
-  localStorage.getItem('user') || 'null',
-)
-const persistedToken = localStorage.getItem('token')
+const persisted = readPersistedSession()
 
 export const useAuthStore = create<AuthState>()((set) => ({
-  user: persistedUser,
-  token: persistedToken,
-  isLoggedIn: !!persistedToken,
+  user: persisted.user,
+  token: persisted.token,
+  isLoggedIn: !!persisted.token,
   isSubmitting: false,
   error: null,
   setSubmitting: (isSubmitting) => set({ isSubmitting }),
   setError: (error) => set({ error }),
-  setSession: ({ user, token }) => {
-    localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(user))
+  setSession: ({ user, token }, options) => {
+    writePersistedSession(user, token, options?.persist)
     set({ user, token, isLoggedIn: true, error: null })
   },
   setUser: (user) => {
-    localStorage.setItem('user', JSON.stringify(user))
+    writePersistedUser(user)
     set({ user, isLoggedIn: true })
   },
   logout: () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    clearPersistedSession()
     set({ user: null, token: null, isLoggedIn: false, error: null })
 
     void Promise.all([
