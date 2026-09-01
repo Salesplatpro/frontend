@@ -8,7 +8,12 @@ import {
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { destinationAfterAuth } from '@/features/auth/utils/dashboardPath'
 
-const AUTH_ENTRY_PATHS = new Set(['/', '/login', '/register'])
+const AUTH_ENTRY_PATHS = new Set([
+  '/',
+  '/login',
+  '/register',
+  '/forgot-password',
+])
 
 export const MainLayout = () => {
   const location = useLocation()
