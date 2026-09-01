@@ -42,6 +42,8 @@ type ApplicationRecord = {
   personalizedScore?: number | null
   mbtiType?: string | null
   talent?: { prescreeningScore?: number | null }
+  personalityAnswers?: Array<{ question: string; answer: string }>
+  personalizedAnswers?: Array<{ question: string; answer: string }>
 }
 
 type SavedQuestion = {
@@ -64,8 +66,19 @@ const parseStep = (value: string | null): PipelineStepId | null => {
   return null
 }
 
-const questionsHaveAnswers = (questions?: SavedQuestion[]) =>
-  !!questions?.some((item) => (item.answer ?? '').trim().length > 0)
+const toSavedQuestions = (
+  items?: Array<{ question: string; answer: string }> | null,
+  fallback?: SavedQuestion[],
+): SavedQuestion[] | undefined => {
+  if (items?.some((item) => (item.answer ?? '').trim().length > 0)) {
+    return items.map((item, index) => ({
+      id: `saved-${index}`,
+      question: item.question,
+      answer: item.answer,
+    }))
+  }
+  return fallback
+}
 
 const StageReview = ({
   title,
@@ -155,18 +168,28 @@ const IndividualJob = () => {
     },
   )
 
-  const personalityQuestions = personalityData?.data?.questions as
-    | SavedQuestion[]
-    | undefined
-  const personalizedQuestions = (personalizedData?.data?.questions ??
-    personalizedData?.data?.application?.questions) as
-    | SavedQuestion[]
-    | undefined
+  const personalityQuestions = toSavedQuestions(
+    application?.personalityAnswers,
+    personalityData?.data?.questions as SavedQuestion[] | undefined,
+  )
+  const personalizedQuestions = toSavedQuestions(
+    application?.personalizedAnswers,
+    (personalizedData?.data?.questions ??
+      personalizedData?.data?.application?.questions) as
+      | SavedQuestion[]
+      | undefined,
+  )
 
   const showPersonalityReview =
-    personalityDone || questionsHaveAnswers(personalityQuestions)
+    personalityDone ||
+    !!personalityQuestions?.some(
+      (item) => (item.answer ?? '').trim().length > 0,
+    )
   const showPersonalizedReview =
-    personalizedDone || questionsHaveAnswers(personalizedQuestions)
+    personalizedDone ||
+    !!personalizedQuestions?.some(
+      (item) => (item.answer ?? '').trim().length > 0,
+    )
 
   useEffect(() => {
     if (error) {
