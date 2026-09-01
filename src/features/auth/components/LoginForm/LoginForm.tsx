@@ -15,22 +15,22 @@ import { paths } from '@/paths'
 
 import { useLogin } from '../../hooks/useLogin'
 import { useAuthStore } from '../../store/useAuthStore'
-import { LoginRequest } from '../../types'
+import { LoginFormValues } from '../../types'
 import { loginSchema } from '../../validation/AuthValidationSchema'
 import styles from './LoginForm.module.scss'
 
-type LoginFormProps = {
-  onForgotPassword: () => void
+const initialValues: LoginFormValues = {
+  email: '',
+  password: '',
+  remember: false,
 }
 
-const initialValues: LoginRequest = { email: '', password: '' }
-
-export const LoginForm = ({ onForgotPassword }: LoginFormProps) => {
+export const LoginForm = () => {
   const { submitLogin, isLoading } = useLogin()
   const error = useAuthStore((state) => state.error)
   const location = useLocation()
 
-  const formik = useFormik<LoginRequest>({
+  const formik = useFormik<LoginFormValues>({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values) => {
@@ -88,13 +88,17 @@ export const LoginForm = ({ onForgotPassword }: LoginFormProps) => {
         />
 
         <div className={styles.rememberMe}>
-          <CheckBox name="remember" label="Remember me" />
-          <button
-            type="button"
-            className={styles.forgotPassword}
-            onClick={onForgotPassword}>
+          <CheckBox
+            name="remember"
+            label="Remember me"
+            checked={formik.values.remember}
+            onChange={formik.handleChange}
+          />
+          <Link
+            to={`/${paths.forgotPassword}`}
+            className={styles.forgotPassword}>
             Forgot password?
-          </button>
+          </Link>
         </div>
 
         <Button type="submit" fullWidth loading={isLoading}>
