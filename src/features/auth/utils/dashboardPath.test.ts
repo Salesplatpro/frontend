@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  changePasswordPathForRole,
   dashboardPathForRole,
   destinationAfterAuth,
   loginPathWithNext,
@@ -65,5 +66,22 @@ describe('loginPathWithNext', () => {
 
   it('returns /login when next is absent', () => {
     expect(loginPathWithNext()).toBe('/login')
+  })
+})
+
+describe('changePasswordPathForRole', () => {
+  it('returns the dashboard change-password route for talent and recruiter', () => {
+    expect(changePasswordPathForRole('talent')).toBe(
+      '/talentDashboard/change-password',
+    )
+    expect(changePasswordPathForRole('recruiter')).toBe(
+      '/recruiterDashboard/change-password',
+    )
+  })
+
+  it('returns undefined for admin and when the role is missing', () => {
+    expect(changePasswordPathForRole('admin')).toBeUndefined()
+    expect(changePasswordPathForRole()).toBeUndefined()
+    expect(changePasswordPathForRole(null)).toBeUndefined()
   })
 })
