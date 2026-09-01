@@ -24,7 +24,13 @@ import PrescreeningStep from '@/features/apply-wizard/steps/PrescreeningStep'
 import ProfileStep from '@/features/apply-wizard/steps/ProfileStep'
 import SignupStep from '@/features/apply-wizard/steps/SignupStep'
 import VerifyStep from '@/features/apply-wizard/steps/VerifyStep'
-import { LoginPage, SignupPage } from '@/features/auth/pages'
+import {
+  ChangePasswordPage,
+  ForgotPasswordPage,
+  LoginPage,
+  ResetPasswordPage,
+  SignupPage,
+} from '@/features/auth/pages'
 import AccountEmailVerification from '@/features/email-verification/pages/AccountEmailVerification'
 import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
@@ -137,6 +143,14 @@ export const routeConfig: RouteObject[] = [
             element: <SignupPage />,
           },
           {
+            path: paths.forgotPassword,
+            element: <ForgotPasswordPage />,
+          },
+          {
+            path: paths.resetPassword,
+            element: <ResetPasswordPage />,
+          },
+          {
             path: 'faq',
             element: <Faq />,
           },
@@ -218,6 +232,10 @@ export const routeConfig: RouteObject[] = [
                 element: <TalentDashboardHome />,
               },
               {
+                path: paths.changePassword,
+                element: <ChangePasswordPage />,
+              },
+              {
                 element: <RequireEmailVerified redirectTo="/talentDashboard" />,
                 children: [
                   {
@@ -285,6 +303,10 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'dashboard',
                 element: <Dashboard />,
+              },
+              {
+                path: paths.changePassword,
+                element: <ChangePasswordPage />,
               },
               {
                 path: 'verify-email',
