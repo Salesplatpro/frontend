@@ -7,16 +7,12 @@ import styles from './MatchScoreRing.module.scss'
 interface MatchScoreRingProps {
   verdict: Verdict | null
   averageScore: number | null
+  /** Recruiter-facing CV match percent — preferred over the qualitative verdict label. */
+  cvSimilarityScore?: number | null
   /** True when verdict generation has failed — shown instead of "Not Available". */
   failed?: boolean
-  /** The application's screening stage — when set and not 'completed', shows "Screening" instead of "Not Available" so an in-progress applicant isn't mistaken for a failed AI match. */
+  /** The application's screening stage — when set and not 'completed', shows "Screening" if no CV score is ready yet. */
   currentStage?: string
-}
-
-const LABELS: Record<Verdict, string> = {
-  high: 'Strong Match',
-  medium: 'Good Match',
-  low: 'Weak Match',
 }
 
 const COLORS: Record<Verdict, { path: string; trail: string }> = {
@@ -25,13 +21,26 @@ const COLORS: Record<Verdict, { path: string; trail: string }> = {
   low: { path: 'var(--color-danger)', trail: 'rgba(196, 50, 10, 0.1)' },
 }
 
+const DEFAULT_COLORS = {
+  path: 'var(--color-primary)',
+  trail: 'rgba(60, 111, 212, 0.12)',
+}
+
 export const MatchScoreRing = ({
   verdict,
   averageScore,
+  cvSimilarityScore,
   failed,
   currentStage,
 }: MatchScoreRingProps) => {
-  if (!verdict || averageScore == null) {
+  const score =
+    cvSimilarityScore != null
+      ? cvSimilarityScore
+      : averageScore != null
+      ? averageScore
+      : null
+
+  if (score == null) {
     if (failed) {
       return (
         <div className={styles.container}>
@@ -56,18 +65,18 @@ export const MatchScoreRing = ({
     )
   }
 
-  const { path, trail } = COLORS[verdict]
+  const { path, trail } = verdict ? COLORS[verdict] : DEFAULT_COLORS
 
   return (
     <div className={styles.container}>
       <ProgressBar
-        percentage={averageScore}
+        percentage={score}
         size={48}
         textColor={path}
         pathColor={path}
         trailColor={trail}
       />
-      <span className={styles.label}>{LABELS[verdict]}</span>
+      <span className={styles.label}>CV match</span>
     </div>
   )
 }

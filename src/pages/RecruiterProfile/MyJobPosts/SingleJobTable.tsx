@@ -147,6 +147,7 @@ const AiMatchCell = ({
       <MatchScoreRing
         verdict={item.matchVerdict ?? null}
         averageScore={item.averageScore ?? null}
+        cvSimilarityScore={item.cvSimilarityScore ?? null}
         failed={item.matchVerdictStatus === 'failed'}
         currentStage={item.currentStage}
       />
@@ -232,6 +233,7 @@ export const buildColumns = ({
           <MatchScoreRing
             verdict={item.matchVerdict ?? null}
             averageScore={item.averageScore ?? null}
+            cvSimilarityScore={item.cvSimilarityScore ?? null}
             failed={item.matchVerdictStatus === 'failed'}
             currentStage={item.currentStage}
           />
