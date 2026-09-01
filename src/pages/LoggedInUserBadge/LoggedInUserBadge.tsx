@@ -1,6 +1,10 @@
 import cn from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
-import { HiOutlineCreditCard, HiOutlineUser } from 'react-icons/hi'
+import {
+  HiOutlineCreditCard,
+  HiOutlineLockClosed,
+  HiOutlineUser,
+} from 'react-icons/hi'
 import { HiArrowRightOnRectangle } from 'react-icons/hi2'
 import {
   IoIosArrowDown,
@@ -13,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Avatar } from '@/components/ui/Avatar'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { changePasswordPathForRole } from '@/features/auth/utils/dashboardPath'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
@@ -47,6 +52,7 @@ export const LoggedInUserBadge: React.FC = () => {
   const notificationRoute = role ? NOTIFICATION_ROUTE_BY_ROLE[role] : undefined
   const profileRoute = role ? PROFILE_ROUTE_BY_ROLE[role] : undefined
   const planRoute = role ? PLAN_ROUTE_BY_ROLE[role] : undefined
+  const changePasswordRoute = changePasswordPathForRole(role)
 
   const firstName = userInfo?.firstName || user?.firstName || ''
   const lastName = userInfo?.lastName || user?.lastName || ''
@@ -224,6 +230,25 @@ export const LoggedInUserBadge: React.FC = () => {
                 <span className={styles.menuTitle}>Plan & Billing</span>
                 <span className={styles.menuHint}>
                   View your plan details and billing history
+                </span>
+              </span>
+              <IoIosArrowForward className={styles.menuChevron} />
+            </button>
+          )}
+
+          {changePasswordRoute && (
+            <button
+              type="button"
+              className={styles.menuRow}
+              onClick={() => goTo(changePasswordRoute)}
+              role="menuitem">
+              <span className={styles.menuIcon}>
+                <HiOutlineLockClosed size={20} />
+              </span>
+              <span className={styles.menuCopy}>
+                <span className={styles.menuTitle}>Change password</span>
+                <span className={styles.menuHint}>
+                  Update the password for your account
                 </span>
               </span>
               <IoIosArrowForward className={styles.menuChevron} />
