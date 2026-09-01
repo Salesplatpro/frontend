@@ -22,3 +22,5 @@ const context2d = new Proxy(
 
 HTMLCanvasElement.prototype.getContext = (() =>
   context2d) as unknown as typeof HTMLCanvasElement.prototype.getContext
+
+Element.prototype.scrollIntoView = () => undefined
