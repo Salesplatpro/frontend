@@ -5,6 +5,14 @@ export const dashboardPathForRole = (userRole?: string | null): string => {
   return '/'
 }
 
+export const changePasswordPathForRole = (
+  userRole?: string | null,
+): string | undefined => {
+  if (userRole === 'recruiter') return '/recruiterDashboard/change-password'
+  if (userRole === 'talent') return '/talentDashboard/change-password'
+  return undefined
+}
+
 export const safeInternalPath = (value: string | null): string | null => {
   if (!value || !value.startsWith('/') || value.startsWith('//')) return null
   return value
