@@ -104,11 +104,7 @@ export const ForgotPasswordPage = () => {
         open={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
         center
-        animationDuration={0}
-        classNames={{
-          root: 'dashboard-modal-overlay',
-          overlay: 'dashboard-modal-overlay',
-        }}>
+        animationDuration={0}>
         <div
           className={styles.modalContent}
           role="alertdialog"
