@@ -11,7 +11,7 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
   fetchAdminOrganizations,
   rejectAdminOrganization,
@@ -253,62 +253,60 @@ const Organizations = () => {
         description="Review companies recruiters have created and verify them against the email, website, and social details they provided."
       />
 
-      <div className={styles.layout}>
-        <FilterPanel
+      <div className={styles.mainColumn}>
+        <FilterBar
           fields={filterFields}
           filters={filters}
           defaultFilters={defaultOrganizationFilters}
-          onApply={(next) => {
+          onChange={(next) => {
             setFilters(next)
             setPage(1)
           }}
           ariaLabel="Filter organizations"
         />
-        <div className={styles.mainColumn}>
-          {!isLoading && sortedOrganizations.length === 0 ? (
-            <EmptyState
-              title="No organizations found"
-              description="Try adjusting filters, or wait for recruiters to create companies."
+        {!isLoading && sortedOrganizations.length === 0 ? (
+          <EmptyState
+            title="No organizations found"
+            description="Try adjusting filters, or wait for recruiters to create companies."
+          />
+        ) : (
+          <>
+            <TableToolbar
+              columns={columns}
+              resultsCount={sortedOrganizations.length}
+              visibleColumnKeys={visibleKeys}
+              onToggleColumn={(key) =>
+                setVisibleKeys((prev) =>
+                  prev.includes(key)
+                    ? prev.filter((item) => item !== key)
+                    : [...prev, key],
+                )
+              }
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onSortChange={(key, direction) => {
+                setSortKey(key)
+                setSortDirection(direction)
+              }}
             />
-          ) : (
-            <>
-              <TableToolbar
-                columns={columns}
-                resultsCount={sortedOrganizations.length}
-                visibleColumnKeys={visibleKeys}
-                onToggleColumn={(key) =>
-                  setVisibleKeys((prev) =>
-                    prev.includes(key)
-                      ? prev.filter((item) => item !== key)
-                      : [...prev, key],
-                  )
-                }
-                sortKey={sortKey}
-                sortDirection={sortDirection}
-                onSortChange={(key, direction) => {
-                  setSortKey(key)
-                  setSortDirection(direction)
-                }}
-              />
-              <DataTable
-                columns={visibleColumns}
-                data={pagedOrganizations}
-                isLoading={isLoading}
-                getRowKey={(row) => row.id}
-                showRowNumber
-                rowNumberOffset={(page - 1) * ROWS_PER_PAGE}
-                allowOverflow
-                ariaLabel="Organizations table"
-              />
-              <Pagination
-                totalItems={sortedOrganizations.length}
-                itemsPerPage={ROWS_PER_PAGE}
-                currentPage={page}
-                onPageChange={setPage}
-              />
-            </>
-          )}
-        </div>
+            <DataTable
+              columns={visibleColumns}
+              data={pagedOrganizations}
+              isLoading={isLoading}
+              getRowKey={(row) => row.id}
+              showRowNumber
+              rowNumberOffset={(page - 1) * ROWS_PER_PAGE}
+              allowOverflow
+              ariaLabel="Organizations table"
+            />
+            <Pagination
+              totalItems={sortedOrganizations.length}
+              itemsPerPage={ROWS_PER_PAGE}
+              currentPage={page}
+              onPageChange={setPage}
+            />
+          </>
+        )}
       </div>
     </div>
   )

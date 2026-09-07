@@ -1,6 +1,6 @@
-import { Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import { IoChevronDown, IoChevronUp, IoClose, IoRefresh } from 'react-icons/io5'
+import React, { useEffect, useRef, useState } from 'react'
+import { IoClose, IoRefresh } from 'react-icons/io5'
+import { LuChevronDown, LuChevronUp, LuSlidersHorizontal } from 'react-icons/lu'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
@@ -10,7 +10,6 @@ import {
   Select,
   WORK_MODE_OPTIONS,
 } from '@/components/forms/Select'
-import { Button } from '@/components/ui/Button'
 import { useGetRoleQuery } from '@/redux/api/talent'
 import { Role } from '@/utils/types'
 
@@ -37,125 +36,13 @@ export const hasActiveFilter = (filters: JobFiltersTypes) =>
 
 interface JobFilterProps {
   filters: JobFiltersTypes
-  onApply: (filters: JobFiltersTypes) => void
-}
-
-export const JobFilter: React.FC<JobFilterProps> = ({ filters, onApply }) => {
-  const [collapsed, setCollapsed] = useState(false)
-
-  const onSubmit = (values: JobFiltersTypes) => {
-    onApply(values)
-  }
-
-  return (
-    <div className={styles.panel} aria-label="Filter jobs">
-      <Formik initialValues={filters} enableReinitialize onSubmit={onSubmit}>
-        {({ values, setFieldValue, resetForm }) => {
-          const resetAll = () => {
-            resetForm({ values: defaultFilterValues })
-            onApply(defaultFilterValues)
-          }
-
-          return (
-            <Form>
-              <div className={styles.header}>
-                <button
-                  type="button"
-                  className={styles.collapseToggle}
-                  aria-expanded={!collapsed}
-                  aria-label={collapsed ? 'Expand filters' : 'Collapse filters'}
-                  onClick={() => setCollapsed((prev) => !prev)}>
-                  {collapsed ? <IoChevronDown /> : <IoChevronUp />}
-                  <span className={styles.title}>Filters</span>
-                </button>
-                <button
-                  type="button"
-                  className={styles.resetAll}
-                  disabled={!hasActiveFilter(values)}
-                  onClick={resetAll}>
-                  <IoRefresh /> Reset all
-                </button>
-              </div>
-
-              {!collapsed && (
-                <>
-                  <div className={styles.field}>
-                    <label className={styles.fieldLabel} htmlFor="role">
-                      Role
-                    </label>
-                    <RoleSelect
-                      name="role"
-                      value={values.role}
-                      onChange={(value) => setFieldValue('role', value)}
-                      creatable={false}
-                    />
-                  </div>
-
-                  <div className={styles.field}>
-                    <label
-                      className={styles.fieldLabel}
-                      htmlFor="experienceLevel">
-                      Experience Level
-                    </label>
-                    <Select
-                      name="experienceLevel"
-                      options={EXPERIENCE_LEVEL_OPTIONS}
-                      value={values.experienceLevel}
-                      onChange={(value) =>
-                        setFieldValue('experienceLevel', value)
-                      }
-                      placeholder="Select experience level"
-                    />
-                  </div>
-
-                  <div className={styles.field}>
-                    <span className={styles.fieldLabel}>Work Type</span>
-                    <WorkTypeCheckboxes
-                      value={values.workMode}
-                      onChange={(value) => setFieldValue('workMode', value)}
-                    />
-                  </div>
-
-                  <div className={styles.field}>
-                    <span className={styles.fieldLabel}>Location</span>
-                    <LocationTabsSelect
-                      value={values.location}
-                      onChange={(value) => setFieldValue('location', value)}
-                    />
-                  </div>
-
-                  <div className={styles.actions}>
-                    <button
-                      type="button"
-                      className={styles.clearAll}
-                      disabled={!hasActiveFilter(values)}
-                      onClick={resetAll}>
-                      Clear all
-                    </button>
-                    <Button type="submit">Apply filters</Button>
-                  </div>
-                </>
-              )}
-            </Form>
-          )
-        }}
-      </Formik>
-    </div>
-  )
-}
-
-const workModeLabel = (mode: string) =>
-  WORK_MODE_OPTIONS.find((option) => option.value === mode)?.label ?? mode
-
-interface ActiveFilterChipsProps {
-  filters: JobFiltersTypes
   onChange: (filters: JobFiltersTypes) => void
 }
 
-export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
-  filters,
-  onChange,
-}) => {
+export const JobFilter: React.FC<JobFilterProps> = ({ filters, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const { data } = useGetRoleQuery({})
   const roles: Role[] = Array.isArray(data?.data)
     ? data.data
@@ -163,37 +50,66 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
     ? data.data.roles
     : []
 
-  if (!hasActiveFilter(filters)) return null
+  // Close on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [])
 
+  const setField = <K extends keyof JobFiltersTypes>(
+    key: K,
+    value: JobFiltersTypes[K],
+  ) => {
+    onChange({ ...filters, [key]: value })
+  }
+
+  const resetAll = () => onChange(defaultFilterValues)
+
+  const active = hasActiveFilter(filters)
+
+  // Build chips from active filter values
   const chips: { key: string; label: string; remove: () => void }[] = []
 
   if (filters.role) {
     const roleName =
-      roles.find((role) => role.id === filters.role)?.name ?? filters.role
+      roles.find((r) => r.id === filters.role)?.name ?? filters.role
     chips.push({
       key: 'role',
       label: roleName,
-      remove: () => onChange({ ...filters, role: '' }),
+      remove: () => setField('role', ''),
     })
   }
 
   if (filters.experienceLevel) {
+    const expLabel =
+      EXPERIENCE_LEVEL_OPTIONS.find((o) => o.value === filters.experienceLevel)
+        ?.label ?? filters.experienceLevel
     chips.push({
       key: 'experienceLevel',
-      label: filters.experienceLevel,
-      remove: () => onChange({ ...filters, experienceLevel: '' }),
+      label: expLabel,
+      remove: () => setField('experienceLevel', ''),
     })
   }
 
   filters.workMode?.forEach((mode) => {
+    const modeLabel =
+      WORK_MODE_OPTIONS.find((o) => o.value === mode)?.label ?? mode
     chips.push({
       key: `workMode-${mode}`,
-      label: workModeLabel(mode),
+      label: modeLabel,
       remove: () =>
-        onChange({
-          ...filters,
-          workMode: filters.workMode.filter((m) => m !== mode),
-        }),
+        setField(
+          'workMode',
+          filters.workMode.filter((m) => m !== mode),
+        ),
     })
   })
 
@@ -209,30 +125,110 @@ export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
     chips.push({
       key: 'location',
       label: locationLabel,
-      remove: () => onChange({ ...filters, location: { ...EMPTY_LOCATION } }),
+      remove: () => setField('location', { ...EMPTY_LOCATION }),
     })
   }
 
   return (
-    <div className={styles.chipRow}>
-      {chips.map((chip) => (
-        <span key={chip.key} className={styles.chip}>
-          {chip.label}
-          <button
-            type="button"
-            className={styles.chipRemove}
-            aria-label={`Remove ${chip.label} filter`}
-            onClick={chip.remove}>
-            <IoClose />
-          </button>
-        </span>
-      ))}
-      <button
-        type="button"
-        className={styles.chipClearAll}
-        onClick={() => onChange(defaultFilterValues)}>
-        Clear all
-      </button>
+    <div
+      className={styles.container}
+      ref={containerRef}
+      aria-label="Filter jobs">
+      {/* Toggle bar */}
+      <div className={styles.bar}>
+        <button
+          type="button"
+          className={`${styles.toggle} ${isOpen ? styles.toggleOpen : ''}`}
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-expanded={isOpen}>
+          <LuSlidersHorizontal className={styles.toggleIcon} />
+          <span>Filters</span>
+          {isOpen ? (
+            <LuChevronUp className={styles.chevron} />
+          ) : (
+            <LuChevronDown className={styles.chevron} />
+          )}
+        </button>
+
+        {/* Active filter chips — shown when collapsed */}
+        {!isOpen && chips.length > 0 && (
+          <div className={styles.chips}>
+            {chips.map((chip) => (
+              <span key={chip.key} className={styles.chip}>
+                {chip.label}
+                <button
+                  type="button"
+                  className={styles.chipRemove}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    chip.remove()
+                  }}
+                  aria-label={`Remove ${chip.label} filter`}>
+                  <IoClose />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Reset */}
+        <button
+          type="button"
+          className={styles.resetBtn}
+          disabled={!active}
+          onClick={resetAll}>
+          <IoRefresh />
+          Reset
+        </button>
+      </div>
+
+      {/* Expanded filter panel */}
+      {isOpen && (
+        <div className={styles.dropdown}>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="job-filter-role">
+              Role
+            </label>
+            <RoleSelect
+              name="role"
+              value={filters.role}
+              onChange={(value) => setField('role', value)}
+              creatable={false}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label
+              className={styles.fieldLabel}
+              htmlFor="job-filter-experience">
+              Experience Level
+            </label>
+            <Select
+              name="experienceLevel"
+              options={EXPERIENCE_LEVEL_OPTIONS}
+              value={filters.experienceLevel}
+              onChange={(value) => setField('experienceLevel', value)}
+              placeholder="Select experience level"
+            />
+          </div>
+
+          <div className={styles.field}>
+            <span className={styles.fieldLabel}>Work Type</span>
+            <WorkTypeCheckboxes
+              value={filters.workMode}
+              onChange={(value) => setField('workMode', value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <span className={styles.fieldLabel}>Location</span>
+            <LocationTabsSelect
+              value={filters.location}
+              onChange={(value) => setField('location', value)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

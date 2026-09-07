@@ -11,7 +11,7 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import { VerdictBadge } from '@/components/ui/VerdictBadge'
 import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
 import { notify } from '@/utils/toastNotifications'
@@ -188,81 +188,75 @@ export const Shortlist = () => {
         title="Shortlist"
         lead="View shortlisted talents ready for the next stage"
       />
-      <div className="flex flex-col md:flex-row gap-5 items-start">
-        <FilterPanel
+      <div className="flex flex-col gap-3">
+        <FilterBar
           fields={SHORTLIST_FILTER_FIELDS}
           filters={filters}
           defaultFilters={defaultShortlistFilters}
-          onApply={setFilters}
+          onChange={setFilters}
           ariaLabel="Filter shortlist"
         />
-        <div className="flex flex-col gap-3 min-w-0 flex-1">
-          <TableToolbar
-            columns={columns}
-            resultsCount={applications.length}
-            visibleColumnKeys={[]}
-            onToggleColumn={() => {}}
-            sortKey={sortKey}
-            sortDirection={sortDirection}
-            onSortChange={handleSortChange}
-          />
-          <DataTable
-            columns={columns}
-            data={applications}
-            isLoading={isLoading}
-            getRowKey={(row) => row.id}
-            selectedRowKeys={selectedRowKeys}
-            onToggleRow={(key) => {
-              setSelectedRowKeys((prev) => {
-                const next = new Set(prev)
-                const id = String(key)
-                if (next.has(id)) next.delete(id)
-                else next.add(id)
-                return next
-              })
-            }}
-            onToggleAll={(keys) =>
-              setSelectedRowKeys(new Set(keys.map(String)))
-            }
-            ariaLabel="Shortlisted applications"
-            emptyState={
-              <EmptyState
-                title="No shortlisted applications yet"
-                description="Shortlist strong applicants from a job post and they will land here, ready for the next conversation."
-              />
-            }
-          />
-          {selectedRowKeys.size > 0 && (
-            <div className="flex justify-end">
-              <Button
-                size="sm"
-                loading={isBroadcasting}
-                onClick={() => setMessageOpen(true)}>
-                Message selected
+        <TableToolbar
+          columns={columns}
+          resultsCount={applications.length}
+          visibleColumnKeys={[]}
+          onToggleColumn={() => {}}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+        />
+        <DataTable
+          columns={columns}
+          data={applications}
+          isLoading={isLoading}
+          getRowKey={(row) => row.id}
+          selectedRowKeys={selectedRowKeys}
+          onToggleRow={(key) => {
+            setSelectedRowKeys((prev) => {
+              const next = new Set(prev)
+              const id = String(key)
+              if (next.has(id)) next.delete(id)
+              else next.add(id)
+              return next
+            })
+          }}
+          onToggleAll={(keys) => setSelectedRowKeys(new Set(keys.map(String)))}
+          ariaLabel="Shortlisted applications"
+          emptyState={
+            <EmptyState
+              title="No shortlisted applications yet"
+              description="Shortlist strong applicants from a job post and they will land here, ready for the next conversation."
+            />
+          }
+        />
+        {selectedRowKeys.size > 0 && (
+          <div className="flex justify-end">
+            <Button
+              size="sm"
+              loading={isBroadcasting}
+              onClick={() => setMessageOpen(true)}>
+              Message selected
+            </Button>
+          </div>
+        )}
+        {messageOpen && (
+          <div className="flex flex-col gap-3">
+            <textarea
+              className="w-full min-h-[120px] border rounded-lg p-3"
+              placeholder="Type your message..."
+              value={messageContent}
+              onChange={(event) => setMessageContent(event.target.value)}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setMessageOpen(false)}>
+                Cancel
+              </Button>
+              <Button loading={isBroadcasting} onClick={handleMessageSelected}>
+                Send
               </Button>
             </div>
-          )}
-          {messageOpen && (
-            <div className="flex flex-col gap-3">
-              <textarea
-                className="w-full min-h-[120px] border rounded-lg p-3"
-                placeholder="Type your message..."
-                value={messageContent}
-                onChange={(event) => setMessageContent(event.target.value)}
-              />
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setMessageOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  loading={isBroadcasting}
-                  onClick={handleMessageSelected}>
-                  Send
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </PageShell>
   )

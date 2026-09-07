@@ -13,7 +13,7 @@ import { formatCompensation } from '../../../utils/formatCompensation'
 import { JobFiltersTypes } from '../../../utils/jobPostTypes'
 import { notify } from '../../../utils/toastNotifications'
 import styles from './Job.module.scss'
-import { ActiveFilterChips, defaultFilterValues, JobFilter } from './JobFilter'
+import { defaultFilterValues, JobFilter } from './JobFilter'
 import { SingleJob } from './SingleJob'
 
 interface JobType {
@@ -64,7 +64,7 @@ const Job = () => {
     }
   }, [error])
 
-  const handleFilterApply = (nextFilters: JobFiltersTypes) => {
+  const handleFilterChange = (nextFilters: JobFiltersTypes) => {
     setOffset(0)
     setFilters(nextFilters)
   }
@@ -83,7 +83,7 @@ const Job = () => {
       />
 
       <div className={styles.section}>
-        <JobFilter filters={filters} onApply={handleFilterApply} />
+        <JobFilter filters={filters} onChange={handleFilterChange} />
 
         <div className={styles.listing}>
           <div className={styles.resultsRow}>
@@ -91,8 +91,6 @@ const Job = () => {
               Showing {jobs.length} result{jobs.length === 1 ? '' : 's'}
             </span>
           </div>
-
-          <ActiveFilterChips filters={filters} onChange={handleFilterApply} />
 
           {isInitialLoading ? (
             <Spinner fullPage />
