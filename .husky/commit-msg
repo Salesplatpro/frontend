@@ -1,1 +1,4 @@
+# Drop AI co-author trailers Cursor injects even when not requested.
+perl -i -ne 'print unless /^Co-authored-by:\s*(Cursor|Claude)\b/i or /cursoragent@cursor\.com/i or /^Made-with:/i' "$1"
+
 npx --no -- commitlint --edit "$1"
