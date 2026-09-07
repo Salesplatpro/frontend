@@ -1,3 +1,4 @@
+export { FilterBar } from '../FilterBar'
 export type {
   DateRangeFieldConfig,
   FilterFieldConfig,
