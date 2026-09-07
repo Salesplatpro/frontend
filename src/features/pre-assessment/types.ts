@@ -16,6 +16,8 @@ export interface Assessment {
   roles: string[]
   /** True while questions are still being generated server-side (fire-and-forget). */
   generating?: boolean
+  /** True after generation retries are exhausted. */
+  generationFailed?: boolean
 }
 
 export interface ApiResponse<T> {

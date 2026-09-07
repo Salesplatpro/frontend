@@ -12,7 +12,11 @@ import { Spinner } from '@/components/ui/Spinner'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
-import { retakeAssessment, submitAssessment } from './api'
+import {
+  retakeAssessment,
+  retryAssessmentGeneration,
+  submitAssessment,
+} from './api'
 import Questions from './components/Questions'
 import ResultCard from './components/ResultCard'
 import { COUNTDOWN_FROM, SECONDS_PER_QUESTION } from './constants'
@@ -56,6 +60,7 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
   const [isCountingDown, setIsCountingDown] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isRetaking, setIsRetaking] = useState(false)
+  const [isRetryingGeneration, setIsRetryingGeneration] = useState(false)
   const [autoSubmitMessage, setAutoSubmitMessage] = useState('')
 
   const submittingRef = useRef(false)
@@ -228,6 +233,24 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
     isSubmitting,
   )
 
+  const handleRetryGeneration = async () => {
+    setIsRetryingGeneration(true)
+    try {
+      await retryAssessmentGeneration()
+      await refetch({ silent: true })
+    } catch {
+      notify(
+        'error',
+        'Failed to retry assessment generation. Please try again.',
+        {
+          autoClose: 2000,
+        },
+      )
+    } finally {
+      setIsRetryingGeneration(false)
+    }
+  }
+
   const handleRetake = async () => {
     setIsRetaking(true)
     try {
@@ -284,6 +307,23 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
         <p className="text-grey-700 font-raleway font-medium">
           {autoSubmitMessage || 'Submitting assessment...'}
         </p>
+      </div>
+    )
+  }
+
+  if (assessment?.generationFailed) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4 px-4">
+        <p className="text-grey-700 font-raleway font-medium text-center">
+          We couldn&apos;t generate your assessment. Please try again.
+        </p>
+        <button
+          type="button"
+          onClick={() => void handleRetryGeneration()}
+          disabled={isRetryingGeneration}
+          className="px-5 py-2 rounded-lg bg-blue-500 text-white font-raleway font-medium text-sm hover:bg-blue-600 transition-colors disabled:opacity-60">
+          {isRetryingGeneration ? 'Retrying...' : 'Try again'}
+        </button>
       </div>
     )
   }
