@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { ColumnDef, DataTable } from '@/components'
 import { EXPERIENCE_LEVEL_OPTIONS } from '@/components/forms/Select'
 import { Button } from '@/components/ui/Button'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import { useCandidatesStore } from '@/features/admin/store/useCandidatesStore'
 import { useRolesStore } from '@/features/admin/store/useRolesStore'
 import { Candidate } from '@/features/admin/types'
@@ -91,15 +91,15 @@ const ViewCandidates = () => {
     <div className={styles.container}>
       <h2 className={styles.title}>View Candidates</h2>
 
-      <div className={styles.layout}>
-        <FilterPanel
+      <div className={styles.mainColumn}>
+        <FilterBar
           fields={filterFields}
           filters={{
             roleId: filters.roleId ?? '',
             experience: filters.experience ?? '',
           }}
           defaultFilters={defaultCandidateFilters}
-          onApply={(next) =>
+          onChange={(next) =>
             setFilters({
               ...filters,
               roleId: next.roleId || undefined,
@@ -110,43 +110,41 @@ const ViewCandidates = () => {
           ariaLabel="Filter candidates"
         />
 
-        <div className={styles.mainColumn}>
-          <DataTable
-            columns={columns}
-            data={candidates}
-            isLoading={isLoading}
-            getRowKey={(candidate) => candidate.id}
-            ariaLabel="Candidates table"
-            showRowNumber
-            rowNumberOffset={filters.offset ?? 0}
-          />
+        <DataTable
+          columns={columns}
+          data={candidates}
+          isLoading={isLoading}
+          getRowKey={(candidate) => candidate.id}
+          ariaLabel="Candidates table"
+          showRowNumber
+          rowNumberOffset={filters.offset ?? 0}
+        />
 
-          <div className={styles.pagination}>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={(filters.offset ?? 0) === 0}
-              onClick={() =>
-                setFilters({
-                  ...filters,
-                  offset: Math.max((filters.offset ?? 0) - LIMIT, 0),
-                })
-              }>
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={candidates.length < LIMIT}
-              onClick={() =>
-                setFilters({
-                  ...filters,
-                  offset: (filters.offset ?? 0) + LIMIT,
-                })
-              }>
-              Next
-            </Button>
-          </div>
+        <div className={styles.pagination}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={(filters.offset ?? 0) === 0}
+            onClick={() =>
+              setFilters({
+                ...filters,
+                offset: Math.max((filters.offset ?? 0) - LIMIT, 0),
+              })
+            }>
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={candidates.length < LIMIT}
+            onClick={() =>
+              setFilters({
+                ...filters,
+                offset: (filters.offset ?? 0) + LIMIT,
+              })
+            }>
+            Next
+          </Button>
         </div>
       </div>
     </div>

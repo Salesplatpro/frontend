@@ -15,7 +15,7 @@ import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
 import { Button } from '@/components/ui/Button'
 import { sortByAccessor, TableToolbar } from '@/components/ui/DataTable'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import { Spinner } from '@/components/ui/Spinner'
 import { Tabs } from '@/components/ui/Tabs'
 import { useBulkUpdateApplicationStatus } from '@/features/applications/hooks/useBulkUpdateApplicationStatus'
@@ -550,145 +550,142 @@ export const SingleJobPost = () => {
         }
       />
 
-      <div className={styles.layout}>
-        <FilterPanel
+      <div className={styles.mainColumn}>
+        <FilterBar
           fields={APPLICANT_FILTER_FIELDS}
           filters={filters}
           defaultFilters={defaultApplicantFilters}
-          onApply={handleFiltersApply}
+          onChange={handleFiltersApply}
           ariaLabel="Filter applicants"
         />
+        <Tabs
+          tabs={[
+            { key: 'all', label: 'All', count: tabCounts.all },
+            {
+              key: 'shortlisted',
+              label: 'Shortlisted',
+              count: tabCounts.shortlisted,
+            },
+            { key: 'pending', label: 'Pending', count: tabCounts.pending },
+            {
+              key: 'rejected',
+              label: 'Rejected',
+              count: tabCounts.rejected,
+            },
+          ]}
+          activeKey={statusTab}
+          onChange={handleStatusTabChange}
+        />
 
-        <div className={styles.mainColumn}>
-          <Tabs
-            tabs={[
-              { key: 'all', label: 'All', count: tabCounts.all },
-              {
-                key: 'shortlisted',
-                label: 'Shortlisted',
-                count: tabCounts.shortlisted,
-              },
-              { key: 'pending', label: 'Pending', count: tabCounts.pending },
-              {
-                key: 'rejected',
-                label: 'Rejected',
-                count: tabCounts.rejected,
-              },
-            ]}
-            activeKey={statusTab}
-            onChange={handleStatusTabChange}
-          />
-
-          {selectedRowKeys.size > 0 && (
-            <div className={styles.bulkBar}>
-              <div className={styles.bulkBarCount}>
-                {selectedRowKeys.size} selected
-              </div>
-              <div className={styles.bulkBarActions}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  loading={isBulkUpdating}
-                  onClick={() => handleBulkStatus('rejected')}>
-                  Reject
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  loading={isBulkUpdating}
-                  onClick={handleShortlistClick}>
-                  Shortlist
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsMessageModalOpen(true)}>
-                  Message
-                </Button>
-              </div>
+        {selectedRowKeys.size > 0 && (
+          <div className={styles.bulkBar}>
+            <div className={styles.bulkBarCount}>
+              {selectedRowKeys.size} selected
             </div>
-          )}
-
-          <div className={styles.rankingExport}>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleBoardPdf('selected')}>
-              Download report (selected)
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleBoardPdf('all')}>
-              Download report (all)
-            </Button>
+            <div className={styles.bulkBarActions}>
+              <Button
+                variant="outline"
+                size="sm"
+                loading={isBulkUpdating}
+                onClick={() => handleBulkStatus('rejected')}>
+                Reject
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                loading={isBulkUpdating}
+                onClick={handleShortlistClick}>
+                Shortlist
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsMessageModalOpen(true)}>
+                Message
+              </Button>
+            </div>
           </div>
+        )}
 
-          <TableToolbar
-            columns={toolbarColumns}
-            resultsCount={sortedApplications.length}
-            visibleColumnKeys={visibleColumnKeys}
-            onToggleColumn={handleToggleColumn}
-            sortKey={
-              toolbarColumns.some(
-                (col) => col.key === sortKey && col.sortAccessor,
-              )
-                ? sortKey
-                : 'aiMatch'
-            }
-            sortDirection={sortDirection}
-            onSortChange={handleSortChange}
-            exportConfig={{
-              rows: sortedApplications,
-              headers: [
-                'Name',
-                'Email',
-                'Job Status',
-                'CV Ranking',
-                'AI Match',
-                'Date Applied',
-              ],
-              toCsvRow: (item) => [
-                `${item.talent.firstName} ${item.talent.lastName}`,
-                item.talent.email,
-                item.status,
-                item.rank ? `#${item.rank}` : '',
-                item.matchVerdict ?? '',
-                new Date(item.createdAt).toISOString(),
-              ],
-              filename: 'applicants.csv',
-            }}
-          />
-
-          <SingleJobTable
-            applications={paginatedApplications}
-            jobAiConfig={jobAiConfig}
-            selectedRowKeys={selectedRowKeys}
-            onToggleRow={handleToggleRow}
-            onToggleAll={handleToggleAll}
-            onShortlist={(id) => handleRowStatus(id, 'shortlisted')}
-            onReject={(id) => handleRowStatus(id, 'rejected')}
-            onMessage={handleRowMessage}
-            onOpenDossier={openDossier}
-            loadingRowId={loadingRowId}
-            visibleColumnKeys={visibleColumnKeys}
-            sortKey={sortKey}
-            sortDirection={sortDirection}
-            onSortChange={handleSortChange}
-          />
-
-          <Pagination
-            totalItems={sortedApplications.length}
-            itemsPerPage={pageSize}
-            currentPage={page}
-            onPageChange={setPage}
-            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-            onItemsPerPageChange={(size) => {
-              setPageSize(size)
-              setPage(1)
-            }}
-          />
+        <div className={styles.rankingExport}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleBoardPdf('selected')}>
+            Download report (selected)
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleBoardPdf('all')}>
+            Download report (all)
+          </Button>
         </div>
+
+        <TableToolbar
+          columns={toolbarColumns}
+          resultsCount={sortedApplications.length}
+          visibleColumnKeys={visibleColumnKeys}
+          onToggleColumn={handleToggleColumn}
+          sortKey={
+            toolbarColumns.some(
+              (col) => col.key === sortKey && col.sortAccessor,
+            )
+              ? sortKey
+              : 'aiMatch'
+          }
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+          exportConfig={{
+            rows: sortedApplications,
+            headers: [
+              'Name',
+              'Email',
+              'Job Status',
+              'CV Ranking',
+              'AI Match',
+              'Date Applied',
+            ],
+            toCsvRow: (item) => [
+              `${item.talent.firstName} ${item.talent.lastName}`,
+              item.talent.email,
+              item.status,
+              item.rank ? `#${item.rank}` : '',
+              item.matchVerdict ?? '',
+              new Date(item.createdAt).toISOString(),
+            ],
+            filename: 'applicants.csv',
+          }}
+        />
+
+        <SingleJobTable
+          applications={paginatedApplications}
+          jobAiConfig={jobAiConfig}
+          selectedRowKeys={selectedRowKeys}
+          onToggleRow={handleToggleRow}
+          onToggleAll={handleToggleAll}
+          onShortlist={(id) => handleRowStatus(id, 'shortlisted')}
+          onReject={(id) => handleRowStatus(id, 'rejected')}
+          onMessage={handleRowMessage}
+          onOpenDossier={openDossier}
+          loadingRowId={loadingRowId}
+          visibleColumnKeys={visibleColumnKeys}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+        />
+
+        <Pagination
+          totalItems={sortedApplications.length}
+          itemsPerPage={pageSize}
+          currentPage={page}
+          onPageChange={setPage}
+          itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+          onItemsPerPageChange={(size) => {
+            setPageSize(size)
+            setPage(1)
+          }}
+        />
       </div>
 
       <Modal

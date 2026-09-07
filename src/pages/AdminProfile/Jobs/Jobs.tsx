@@ -11,7 +11,7 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
   deleteAdminJob,
   fetchAdminJobs,
@@ -269,62 +269,60 @@ const Jobs = () => {
         messages, and unused AI config.
       </p>
 
-      <div className={styles.layout}>
-        <FilterPanel
+      <div className={styles.mainColumn}>
+        <FilterBar
           fields={jobFilterFields}
           filters={jobFilters}
           defaultFilters={defaultJobFilters}
-          onApply={(next) => {
+          onChange={(next) => {
             setJobFilters(next)
             setJobPage(1)
           }}
           ariaLabel="Filter jobs"
         />
-        <div className={styles.mainColumn}>
-          {!jobsLoading && sortedJobs.length === 0 ? (
-            <EmptyState
-              title="No jobs found"
-              description="Try adjusting filters, or wait for recruiters to post jobs."
+        {!jobsLoading && sortedJobs.length === 0 ? (
+          <EmptyState
+            title="No jobs found"
+            description="Try adjusting filters, or wait for recruiters to post jobs."
+          />
+        ) : (
+          <>
+            <TableToolbar
+              columns={jobColumns}
+              resultsCount={sortedJobs.length}
+              visibleColumnKeys={jobVisibleKeys}
+              onToggleColumn={(key) =>
+                setJobVisibleKeys((prev) =>
+                  prev.includes(key)
+                    ? prev.filter((item) => item !== key)
+                    : [...prev, key],
+                )
+              }
+              sortKey={jobSortKey}
+              sortDirection={jobSortDirection}
+              onSortChange={(key, direction) => {
+                setJobSortKey(key)
+                setJobSortDirection(direction)
+              }}
             />
-          ) : (
-            <>
-              <TableToolbar
-                columns={jobColumns}
-                resultsCount={sortedJobs.length}
-                visibleColumnKeys={jobVisibleKeys}
-                onToggleColumn={(key) =>
-                  setJobVisibleKeys((prev) =>
-                    prev.includes(key)
-                      ? prev.filter((item) => item !== key)
-                      : [...prev, key],
-                  )
-                }
-                sortKey={jobSortKey}
-                sortDirection={jobSortDirection}
-                onSortChange={(key, direction) => {
-                  setJobSortKey(key)
-                  setJobSortDirection(direction)
-                }}
-              />
-              <DataTable
-                columns={visibleJobColumns}
-                data={pagedJobs}
-                isLoading={jobsLoading}
-                getRowKey={(row) => row.id}
-                showRowNumber
-                rowNumberOffset={(jobPage - 1) * ROWS_PER_PAGE}
-                allowOverflow
-                ariaLabel="Jobs table"
-              />
-              <Pagination
-                totalItems={sortedJobs.length}
-                itemsPerPage={ROWS_PER_PAGE}
-                currentPage={jobPage}
-                onPageChange={setJobPage}
-              />
-            </>
-          )}
-        </div>
+            <DataTable
+              columns={visibleJobColumns}
+              data={pagedJobs}
+              isLoading={jobsLoading}
+              getRowKey={(row) => row.id}
+              showRowNumber
+              rowNumberOffset={(jobPage - 1) * ROWS_PER_PAGE}
+              allowOverflow
+              ariaLabel="Jobs table"
+            />
+            <Pagination
+              totalItems={sortedJobs.length}
+              itemsPerPage={ROWS_PER_PAGE}
+              currentPage={jobPage}
+              onPageChange={setJobPage}
+            />
+          </>
+        )}
       </div>
 
       <ConfirmDialog

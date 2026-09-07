@@ -11,7 +11,7 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
   deleteAdminTalent,
   fetchAdminTalents,
@@ -265,62 +265,60 @@ const Talents = () => {
         applications, messages, and related AI data.
       </p>
 
-      <div className={styles.layout}>
-        <FilterPanel
+      <div className={styles.mainColumn}>
+        <FilterBar
           fields={talentFilterFields}
           filters={talentFilters}
           defaultFilters={defaultTalentFilters}
-          onApply={(next) => {
+          onChange={(next) => {
             setTalentFilters(next)
             setTalentPage(1)
           }}
           ariaLabel="Filter talents"
         />
-        <div className={styles.mainColumn}>
-          {!talentsLoading && sortedTalents.length === 0 ? (
-            <EmptyState
-              title="No talents found"
-              description="Try adjusting filters, or wait for talents to register."
+        {!talentsLoading && sortedTalents.length === 0 ? (
+          <EmptyState
+            title="No talents found"
+            description="Try adjusting filters, or wait for talents to register."
+          />
+        ) : (
+          <>
+            <TableToolbar
+              columns={talentColumns}
+              resultsCount={sortedTalents.length}
+              visibleColumnKeys={talentVisibleKeys}
+              onToggleColumn={(key) =>
+                setTalentVisibleKeys((prev) =>
+                  prev.includes(key)
+                    ? prev.filter((item) => item !== key)
+                    : [...prev, key],
+                )
+              }
+              sortKey={talentSortKey}
+              sortDirection={talentSortDirection}
+              onSortChange={(key, direction) => {
+                setTalentSortKey(key)
+                setTalentSortDirection(direction)
+              }}
             />
-          ) : (
-            <>
-              <TableToolbar
-                columns={talentColumns}
-                resultsCount={sortedTalents.length}
-                visibleColumnKeys={talentVisibleKeys}
-                onToggleColumn={(key) =>
-                  setTalentVisibleKeys((prev) =>
-                    prev.includes(key)
-                      ? prev.filter((item) => item !== key)
-                      : [...prev, key],
-                  )
-                }
-                sortKey={talentSortKey}
-                sortDirection={talentSortDirection}
-                onSortChange={(key, direction) => {
-                  setTalentSortKey(key)
-                  setTalentSortDirection(direction)
-                }}
-              />
-              <DataTable
-                columns={visibleTalentColumns}
-                data={pagedTalents}
-                isLoading={talentsLoading}
-                getRowKey={(row) => row.id}
-                showRowNumber
-                rowNumberOffset={(talentPage - 1) * ROWS_PER_PAGE}
-                allowOverflow
-                ariaLabel="Talents table"
-              />
-              <Pagination
-                totalItems={sortedTalents.length}
-                itemsPerPage={ROWS_PER_PAGE}
-                currentPage={talentPage}
-                onPageChange={setTalentPage}
-              />
-            </>
-          )}
-        </div>
+            <DataTable
+              columns={visibleTalentColumns}
+              data={pagedTalents}
+              isLoading={talentsLoading}
+              getRowKey={(row) => row.id}
+              showRowNumber
+              rowNumberOffset={(talentPage - 1) * ROWS_PER_PAGE}
+              allowOverflow
+              ariaLabel="Talents table"
+            />
+            <Pagination
+              totalItems={sortedTalents.length}
+              itemsPerPage={ROWS_PER_PAGE}
+              currentPage={talentPage}
+              onPageChange={setTalentPage}
+            />
+          </>
+        )}
       </div>
 
       <ConfirmDialog

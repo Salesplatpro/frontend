@@ -8,7 +8,7 @@ import {
   sortByAccessor,
   TableToolbar,
 } from '@/components/ui/DataTable'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 
 import { DisplayError } from '../../../components'
 import { useFetchAllApplicationsQuery } from '../../../redux/api/recruiter'
@@ -104,31 +104,29 @@ const AllApplications: React.FC = () => {
         title="Applications"
         lead="Every application across your jobs, with search and sort."
       />
-      <div className="flex flex-col md:flex-row gap-5 items-start">
-        <FilterPanel
+      <div className="flex flex-col gap-3">
+        <FilterBar
           fields={APPLICATIONS_FILTER_FIELDS}
           filters={filters}
           defaultFilters={defaultApplicationsFilters}
-          onApply={setFilters}
+          onChange={setFilters}
           ariaLabel="Filter applications"
         />
-        <div className="flex flex-col gap-3 min-w-0 flex-1">
-          <TableToolbar
-            columns={columns}
-            resultsCount={applications.length}
-            visibleColumnKeys={[]}
-            onToggleColumn={() => {}}
-            sortKey={sortKey}
-            sortDirection={sortDirection}
-            onSortChange={handleSortChange}
-          />
-          <DataTable
-            columns={columns}
-            data={applications}
-            isLoading={isLoading}
-            ariaLabel="All applications"
-          />
-        </div>
+        <TableToolbar
+          columns={columns}
+          resultsCount={applications.length}
+          visibleColumnKeys={[]}
+          onToggleColumn={() => {}}
+          sortKey={sortKey}
+          sortDirection={sortDirection}
+          onSortChange={handleSortChange}
+        />
+        <DataTable
+          columns={columns}
+          data={applications}
+          isLoading={isLoading}
+          ariaLabel="All applications"
+        />
       </div>
     </PageShell>
   )

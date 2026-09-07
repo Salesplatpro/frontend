@@ -10,7 +10,7 @@ import {
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { FilterFieldConfig, FilterPanel } from '@/components/ui/FilterPanel'
+import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
   deleteAdminRecruiter,
   fetchAdminRecruiters,
@@ -185,62 +185,60 @@ const Recruiters = () => {
         scout data, messages, and related AI configs.
       </p>
 
-      <div className={styles.layout}>
-        <FilterPanel
+      <div className={styles.mainColumn}>
+        <FilterBar
           fields={recruiterFilterFields}
           filters={recruiterFilters}
           defaultFilters={defaultRecruiterFilters}
-          onApply={(next) => {
+          onChange={(next) => {
             setRecruiterFilters(next)
             setRecruiterPage(1)
           }}
           ariaLabel="Filter recruiters"
         />
-        <div className={styles.mainColumn}>
-          {!recruitersLoading && sortedRecruiters.length === 0 ? (
-            <EmptyState
-              title="No recruiters found"
-              description="Try adjusting filters, or wait for recruiters to register."
+        {!recruitersLoading && sortedRecruiters.length === 0 ? (
+          <EmptyState
+            title="No recruiters found"
+            description="Try adjusting filters, or wait for recruiters to register."
+          />
+        ) : (
+          <>
+            <TableToolbar
+              columns={recruiterColumns}
+              resultsCount={sortedRecruiters.length}
+              visibleColumnKeys={recruiterVisibleKeys}
+              onToggleColumn={(key) =>
+                setRecruiterVisibleKeys((prev) =>
+                  prev.includes(key)
+                    ? prev.filter((item) => item !== key)
+                    : [...prev, key],
+                )
+              }
+              sortKey={recruiterSortKey}
+              sortDirection={recruiterSortDirection}
+              onSortChange={(key, direction) => {
+                setRecruiterSortKey(key)
+                setRecruiterSortDirection(direction)
+              }}
             />
-          ) : (
-            <>
-              <TableToolbar
-                columns={recruiterColumns}
-                resultsCount={sortedRecruiters.length}
-                visibleColumnKeys={recruiterVisibleKeys}
-                onToggleColumn={(key) =>
-                  setRecruiterVisibleKeys((prev) =>
-                    prev.includes(key)
-                      ? prev.filter((item) => item !== key)
-                      : [...prev, key],
-                  )
-                }
-                sortKey={recruiterSortKey}
-                sortDirection={recruiterSortDirection}
-                onSortChange={(key, direction) => {
-                  setRecruiterSortKey(key)
-                  setRecruiterSortDirection(direction)
-                }}
-              />
-              <DataTable
-                columns={visibleRecruiterColumns}
-                data={pagedRecruiters}
-                isLoading={recruitersLoading}
-                getRowKey={(row) => row.id}
-                showRowNumber
-                rowNumberOffset={(recruiterPage - 1) * ROWS_PER_PAGE}
-                allowOverflow
-                ariaLabel="Recruiters table"
-              />
-              <Pagination
-                totalItems={sortedRecruiters.length}
-                itemsPerPage={ROWS_PER_PAGE}
-                currentPage={recruiterPage}
-                onPageChange={setRecruiterPage}
-              />
-            </>
-          )}
-        </div>
+            <DataTable
+              columns={visibleRecruiterColumns}
+              data={pagedRecruiters}
+              isLoading={recruitersLoading}
+              getRowKey={(row) => row.id}
+              showRowNumber
+              rowNumberOffset={(recruiterPage - 1) * ROWS_PER_PAGE}
+              allowOverflow
+              ariaLabel="Recruiters table"
+            />
+            <Pagination
+              totalItems={sortedRecruiters.length}
+              itemsPerPage={ROWS_PER_PAGE}
+              currentPage={recruiterPage}
+              onPageChange={setRecruiterPage}
+            />
+          </>
+        )}
       </div>
 
       <ConfirmDialog
