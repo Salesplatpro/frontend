@@ -19,3 +19,8 @@ export const retakeAssessment = () =>
   httpClient
     .post<ApiResponse<Assessment>>(`${PRESCREENING_ENDPOINT}/retake`, {})
     .then((res) => res.data)
+
+export const retryAssessmentGeneration = () =>
+  httpClient
+    .post<ApiResponse<unknown>>(`${PRESCREENING_ENDPOINT}/retry-generation`, {})
+    .then((res) => res.data)

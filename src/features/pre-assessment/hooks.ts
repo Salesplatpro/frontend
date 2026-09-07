@@ -72,34 +72,25 @@ export function usePreAssessment() {
   }, [load])
 
   // Brand-new talents get a fire-and-forget stub (generating: true, no
-  // questions). Also poll if we somehow have a pending assessment with an
-  // empty question list and no generating flag, so the UI cannot stick on
-  // "Generating..." forever without a network refresh.
+  // questions). Poll until questions arrive or generation is marked failed.
   useEffect(() => {
     const needsPoll =
       assessment?.status === 'pending' &&
+      assessment.generationFailed !== true &&
       (assessment.generating === true ||
         (assessment.questions?.length ?? 0) === 0)
     if (!needsPoll) return
 
     const POLL_INTERVAL_MS = 3000
-    const MAX_WAIT_MS = 60000
-    const startedAt = Date.now()
 
     const id = setInterval(() => {
-      if (Date.now() - startedAt >= MAX_WAIT_MS) {
-        clearInterval(id)
-        setFetchError(
-          'Your assessment is taking longer than expected to generate. Please refresh the page in a moment.',
-        )
-        return
-      }
       void load({ silent: true })
     }, POLL_INTERVAL_MS)
 
     return () => clearInterval(id)
   }, [
     assessment?.generating,
+    assessment?.generationFailed,
     assessment?.status,
     assessment?.questions?.length,
     load,
