@@ -23,6 +23,21 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
+  color: var(--color-text-heading);
+  background: var(--color-white);
+  pointer-events: auto;
+  cursor: text;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-tint);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: var(--color-bg-subtle);
+  }
 }
 
 .list {
