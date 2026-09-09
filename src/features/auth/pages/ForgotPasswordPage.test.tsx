@@ -55,6 +55,13 @@ describe('ForgotPasswordPage', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'talent@example.com' },
     })
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Send reset link' }),
+      ).not.toHaveProperty('disabled', true),
+    )
+
     fireEvent.click(screen.getByRole('button', { name: 'Send reset link' }))
 
     await waitFor(() =>
@@ -62,14 +69,17 @@ describe('ForgotPasswordPage', () => {
         email: 'talent@example.com',
       }),
     )
-    expect(screen.getByText('Check your mailbox')).toBeTruthy()
-    expect(
-      screen.getByText(
-        'A password reset email was sent. Check your mailbox for a link to continue.',
-      ),
-    ).toBeTruthy()
-    expect(screen.getByRole('button', { name: 'Close' })).toBeTruthy()
-    expect(screen.getByTestId('close-button')).toBeTruthy()
+
+    await waitFor(() => {
+      expect(screen.getByText('Check your mailbox')).toBeTruthy()
+      expect(
+        screen.getByText(
+          'A password reset email was sent. Check your mailbox for a link to continue.',
+        ),
+      ).toBeTruthy()
+      expect(screen.getByRole('button', { name: 'Close' })).toBeTruthy()
+      expect(screen.getByTestId('close-button')).toBeTruthy()
+    })
   })
 
   it('rejects an invalid email format without calling the API', async () => {
