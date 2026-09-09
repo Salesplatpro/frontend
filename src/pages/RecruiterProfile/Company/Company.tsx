@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BsBuilding } from 'react-icons/bs'
 import { FiEdit2, FiTrash2 } from 'react-icons/fi'
@@ -20,10 +20,26 @@ import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import styles from './Company.module.scss'
 import { CompanyLogo } from './CompanyLogo'
+import { JoinCompanyModal } from './JoinCompanyModal'
+import { PendingJoinRequests } from './PendingJoinRequests'
 
 const titleCase = (value?: string | null) => {
   if (!value) return '—'
   return value.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+const isPublicEmailDomain = (email?: string | null) => {
+  const domain = email?.split('@')[1]?.toLowerCase() ?? ''
+  const publicDomains = new Set([
+    'gmail.com',
+    'googlemail.com',
+    'yahoo.com',
+    'hotmail.com',
+    'outlook.com',
+    'icloud.com',
+    'aol.com',
+  ])
+  return publicDomains.has(domain)
 }
 
 const Company = () => {
@@ -34,11 +50,30 @@ const Company = () => {
   const { deleteOrganization, isDeleting } = useDeleteOrganization()
 
   const [pendingDelete, setPendingDelete] = useState<Organization | null>(null)
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false)
 
   const activeOrg =
     organizations.find((org) => org.id === profile?.activeOrganizationId) ??
     profile?.activeOrganization ??
     null
+
+  const ownedOrganizations = useMemo(
+    () => organizations.filter((org) => org.ownerId === profile?.id),
+    [organizations, profile?.id],
+  )
+
+  const joinReviewOrg = useMemo(() => {
+    const verifiedOwned = ownedOrganizations.filter(
+      (org) =>
+        org.status === 'verified' &&
+        org.email &&
+        !isPublicEmailDomain(org.email),
+    )
+    if (activeOrg && verifiedOwned.some((org) => org.id === activeOrg.id)) {
+      return activeOrg
+    }
+    return verifiedOwned[0] ?? null
+  }, [ownedOrganizations, activeOrg])
 
   const handleDelete = async () => {
     if (!pendingDelete) return
@@ -66,8 +101,8 @@ const Company = () => {
         title={activeOrg?.name ?? 'No active company'}
         lead={
           activeOrg
-            ? 'This is the brand candidates will see on new jobs. Create another company if you hire for a different organisation.'
-            : 'Create a company to start posting jobs under your brand. You can add more later and switch between them.'
+            ? 'This is the brand candidates will see on new jobs. Create another company or join a verified team with a matching corporate email.'
+            : 'Create a company or join a verified team to start posting jobs under your brand.'
         }
         pills={
           activeOrg ? (
@@ -85,7 +120,11 @@ const Company = () => {
               <AiOutlinePlus size={16} />
               Create company
             </HeroAction>
-            {activeOrg && (
+            <HeroGhost onClick={() => setIsJoinModalOpen(true)}>
+              <BsBuilding size={14} />
+              Join company
+            </HeroGhost>
+            {activeOrg && activeOrg.ownerId === profile?.id && (
               <HeroGhost
                 onClick={() =>
                   navigate(`/recruiterDashboard/company/${activeOrg.id}/edit`)
@@ -106,6 +145,8 @@ const Company = () => {
         ]}
       />
 
+      {joinReviewOrg && <PendingJoinRequests organization={joinReviewOrg} />}
+
       <PagePanel
         title="Your companies"
         hint="Switch to the company you want jobs to belong to, then post or edit as usual.">
@@ -118,17 +159,27 @@ const Company = () => {
             </div>
             <p className={styles.emptyTitle}>No companies yet</p>
             <p className={styles.emptyCopy}>
-              Add your first company so job posts, applications, and candidate
-              messages sit under the right brand.
+              Add your first company or join a verified team with a matching
+              corporate email so job posts, applications, and candidate messages
+              sit under the right brand.
             </p>
-            <Button onClick={() => navigate('/recruiterDashboard/company/new')}>
-              Create company
-            </Button>
+            <div className={styles.emptyActions}>
+              <Button
+                onClick={() => navigate('/recruiterDashboard/company/new')}>
+                Create company
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setIsJoinModalOpen(true)}>
+                Join company
+              </Button>
+            </div>
           </div>
         ) : (
           <div className={styles.list}>
             {organizations.map((org) => {
               const isActive = org.id === profile?.activeOrganizationId
+              const isOwner = org.ownerId === profile?.id
               return (
                 <article
                   key={org.id}
@@ -142,6 +193,9 @@ const Company = () => {
                         <h3 className={styles.name}>{org.name}</h3>
                         {isActive && (
                           <span className={styles.activeChip}>Working as</span>
+                        )}
+                        {!isOwner && (
+                          <span className={styles.memberChip}>Team member</span>
                         )}
                         <StatusBadge
                           status={titleCase(org.status)}
@@ -169,22 +223,28 @@ const Company = () => {
                         Work as this company
                       </button>
                     )}
-                    <button
-                      type="button"
-                      className={styles.editBtn}
-                      onClick={() =>
-                        navigate(`/recruiterDashboard/company/${org.id}/edit`)
-                      }>
-                      <FiEdit2 size={14} />
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.deleteBtn}
-                      onClick={() => setPendingDelete(org)}>
-                      <FiTrash2 size={14} />
-                      Delete
-                    </button>
+                    {isOwner && (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.editBtn}
+                          onClick={() =>
+                            navigate(
+                              `/recruiterDashboard/company/${org.id}/edit`,
+                            )
+                          }>
+                          <FiEdit2 size={14} />
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.deleteBtn}
+                          onClick={() => setPendingDelete(org)}>
+                          <FiTrash2 size={14} />
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </div>
                 </article>
               )
@@ -192,6 +252,11 @@ const Company = () => {
           </div>
         )}
       </PagePanel>
+
+      <JoinCompanyModal
+        open={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
 
       <ConfirmDialog
         open={!!pendingDelete}
