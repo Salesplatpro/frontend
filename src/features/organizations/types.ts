@@ -1,5 +1,7 @@
 export type OrganizationStatus = 'pending' | 'verified' | 'rejected'
 
+export type OrganizationJoinRequestStatus = 'pending' | 'approved' | 'rejected'
+
 export interface Organization {
   id: string
   ownerId: string
@@ -17,6 +19,21 @@ export interface Organization {
   verifiedAt?: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface OrganizationJoinRequest {
+  id: string
+  userId: string
+  organizationId: string
+  workEmail: string
+  status: OrganizationJoinRequestStatus
+  createdAt: string
+  user: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+  }
 }
 
 export interface CreateOrganizationPayload {
@@ -54,4 +71,14 @@ export interface OrganizationApiResponse {
   status: boolean
   message: string
   data: { organization: Organization }
+}
+
+export interface JoinRequestsApiResponse {
+  status: boolean
+  message: string
+  data: { joinRequests: OrganizationJoinRequest[] }
+}
+
+export interface JoinOrganizationRequestPayload {
+  workEmail: string
 }
