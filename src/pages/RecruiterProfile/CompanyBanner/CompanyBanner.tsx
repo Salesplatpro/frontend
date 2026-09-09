@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BsBuilding } from 'react-icons/bs'
-import { HiOutlineUserGroup } from 'react-icons/hi2'
+import { HiOutlineCreditCard, HiOutlineUserGroup } from 'react-icons/hi2'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
 
@@ -87,7 +87,7 @@ export const CompanyBanner: React.FC = () => {
             className={styles.dropdownRow}
             onClick={() => goTo('/recruiterDashboard/plan')}>
             <div className={styles.iconBox}>
-              <HiOutlineUserGroup size={16} />
+              <HiOutlineCreditCard size={16} />
             </div>
             <span>View plan</span>
           </button>

@@ -7,6 +7,7 @@ import {
   InvitesApiResponse,
   JoinOrganizationRequestPayload,
   JoinRequestsApiResponse,
+  MembersApiResponse,
   OrganizationApiResponse,
   OrganizationsApiResponse,
   SendOrganizationInvitePayload,
@@ -91,6 +92,11 @@ export const sendOrganizationInvite = (
       `/organizations/${organizationId}/invites`,
       payload,
     )
+    .then((response) => response.data)
+
+export const fetchOrganizationMembers = (organizationId: string) =>
+  httpClient
+    .get<MembersApiResponse>(`/organizations/${organizationId}/members`)
     .then((response) => response.data)
 
 export const fetchOrganizationInvites = (organizationId: string) =>

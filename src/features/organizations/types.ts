@@ -105,6 +105,27 @@ export interface OrganizationInvitePreview {
   expiresAt: string
 }
 
+export interface OrganizationMember {
+  id: string
+  userId: string
+  organizationId: string
+  workEmail: string
+  role: string
+  createdAt: string
+  user: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+  }
+}
+
+export interface MembersApiResponse {
+  status: boolean
+  message: string
+  data: { members: OrganizationMember[] }
+}
+
 export interface SendOrganizationInvitePayload {
   email: string
 }

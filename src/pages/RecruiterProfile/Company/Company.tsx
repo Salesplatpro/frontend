@@ -21,6 +21,7 @@ import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import styles from './Company.module.scss'
 import { CompanyLogo } from './CompanyLogo'
+import { CompanyMembersPanel } from './CompanyMembersPanel'
 import { InviteTeamPanel } from './InviteTeamPanel'
 import { JoinCompanyModal } from './JoinCompanyModal'
 import { PendingJoinRequests } from './PendingJoinRequests'
@@ -63,14 +64,14 @@ const Company = () => {
     return verifiedOwned[0] ?? null
   }, [ownedOrganizations, activeOrg])
 
-  const inviteOrg = useMemo(() => {
-    const ownedCorporate = ownedOrganizations.filter(
-      (org) => org.email && !isPublicEmailDomain(org.email),
-    )
-    if (activeOrg && ownedCorporate.some((org) => org.id === activeOrg.id)) {
+  const teamOrg = useMemo(() => {
+    if (
+      activeOrg &&
+      ownedOrganizations.some((org) => org.id === activeOrg.id)
+    ) {
       return activeOrg
     }
-    return ownedCorporate[0] ?? null
+    return ownedOrganizations[0] ?? null
   }, [ownedOrganizations, activeOrg])
 
   const handleDelete = async () => {
@@ -143,8 +144,11 @@ const Company = () => {
         ]}
       />
 
-      {inviteOrg && inviteOrg.ownerId === profile?.id && (
-        <InviteTeamPanel organization={inviteOrg} />
+      {teamOrg && teamOrg.ownerId === profile?.id && (
+        <>
+          <CompanyMembersPanel organization={teamOrg} />
+          <InviteTeamPanel organization={teamOrg} />
+        </>
       )}
 
       {joinReviewOrg && <PendingJoinRequests organization={joinReviewOrg} />}

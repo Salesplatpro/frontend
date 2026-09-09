@@ -167,8 +167,9 @@
   border-radius: var(--radius-md);
   font-family: var(--font-body);
   font-size: var(--text-md);
-  background-color: var(--color-white);
-  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-on-dark);
+  background-color: var(--color-brand-800);
+  border: 1px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,7 +177,7 @@
   transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    background-color: var(--color-bg-subtle);
+    background-color: var(--color-brand-700, #1f3d8a);
   }
 }
 
