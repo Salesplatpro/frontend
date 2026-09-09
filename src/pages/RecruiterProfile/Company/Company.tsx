@@ -74,6 +74,10 @@ const Company = () => {
     return ownedOrganizations[0] ?? null
   }, [ownedOrganizations, activeOrg])
 
+  const isCompanyCreator = Boolean(
+    teamOrg && profile?.id && teamOrg.ownerId === profile.id,
+  )
+
   const handleDelete = async () => {
     if (!pendingDelete) return
     const removed = await deleteOrganization(pendingDelete.id)
@@ -144,7 +148,7 @@ const Company = () => {
         ]}
       />
 
-      {teamOrg && teamOrg.ownerId === profile?.id && (
+      {isCompanyCreator && teamOrg && (
         <>
           <CompanyMembersPanel organization={teamOrg} />
           <InviteTeamPanel organization={teamOrg} />
