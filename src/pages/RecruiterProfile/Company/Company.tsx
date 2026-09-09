@@ -15,31 +15,19 @@ import { useDeleteOrganization } from '@/features/organizations/hooks/useDeleteO
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import { useSwitchOrganization } from '@/features/organizations/hooks/useSwitchOrganization'
 import { Organization } from '@/features/organizations/types'
+import { isPublicEmailDomain } from '@/features/organizations/utils/emailDomain'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import styles from './Company.module.scss'
 import { CompanyLogo } from './CompanyLogo'
+import { InviteTeamPanel } from './InviteTeamPanel'
 import { JoinCompanyModal } from './JoinCompanyModal'
 import { PendingJoinRequests } from './PendingJoinRequests'
 
 const titleCase = (value?: string | null) => {
   if (!value) return '—'
   return value.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
-}
-
-const isPublicEmailDomain = (email?: string | null) => {
-  const domain = email?.split('@')[1]?.toLowerCase() ?? ''
-  const publicDomains = new Set([
-    'gmail.com',
-    'googlemail.com',
-    'yahoo.com',
-    'hotmail.com',
-    'outlook.com',
-    'icloud.com',
-    'aol.com',
-  ])
-  return publicDomains.has(domain)
 }
 
 const Company = () => {
@@ -73,6 +61,16 @@ const Company = () => {
       return activeOrg
     }
     return verifiedOwned[0] ?? null
+  }, [ownedOrganizations, activeOrg])
+
+  const inviteOrg = useMemo(() => {
+    const ownedCorporate = ownedOrganizations.filter(
+      (org) => org.email && !isPublicEmailDomain(org.email),
+    )
+    if (activeOrg && ownedCorporate.some((org) => org.id === activeOrg.id)) {
+      return activeOrg
+    }
+    return ownedCorporate[0] ?? null
   }, [ownedOrganizations, activeOrg])
 
   const handleDelete = async () => {
@@ -144,6 +142,10 @@ const Company = () => {
           { label: 'Companies', value: organizations.length },
         ]}
       />
+
+      {inviteOrg && inviteOrg.ownerId === profile?.id && (
+        <InviteTeamPanel organization={inviteOrg} />
+      )}
 
       {joinReviewOrg && <PendingJoinRequests organization={joinReviewOrg} />}
 

@@ -2,10 +2,14 @@ import { httpClient } from '@/features/auth/services/httpClient'
 
 import {
   CreateOrganizationPayload,
+  InviteApiResponse,
+  InvitePreviewApiResponse,
+  InvitesApiResponse,
   JoinOrganizationRequestPayload,
   JoinRequestsApiResponse,
   OrganizationApiResponse,
   OrganizationsApiResponse,
+  SendOrganizationInvitePayload,
   UpdateOrganizationPayload,
 } from '../types'
 
@@ -76,4 +80,40 @@ export const rejectJoinRequest = (requestId: string) =>
     .patch<{ status: boolean; message: string }>(
       `/organizations/join-requests/${requestId}/reject`,
     )
+    .then((response) => response.data)
+
+export const sendOrganizationInvite = (
+  organizationId: string,
+  payload: SendOrganizationInvitePayload,
+) =>
+  httpClient
+    .post<InviteApiResponse>(
+      `/organizations/${organizationId}/invites`,
+      payload,
+    )
+    .then((response) => response.data)
+
+export const fetchOrganizationInvites = (organizationId: string) =>
+  httpClient
+    .get<InvitesApiResponse>(`/organizations/${organizationId}/invites`)
+    .then((response) => response.data)
+
+export const revokeOrganizationInvite = (
+  organizationId: string,
+  inviteId: string,
+) =>
+  httpClient
+    .delete<{ status: boolean; message: string }>(
+      `/organizations/${organizationId}/invites/${inviteId}`,
+    )
+    .then((response) => response.data)
+
+export const fetchOrganizationInvitePreview = (token: string) =>
+  httpClient
+    .get<InvitePreviewApiResponse>(`/organizations/invites/${token}`)
+    .then((response) => response.data)
+
+export const acceptOrganizationInvite = (token: string) =>
+  httpClient
+    .post<OrganizationApiResponse>(`/organizations/invites/${token}/accept`)
     .then((response) => response.data)

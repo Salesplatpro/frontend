@@ -11,8 +11,15 @@ import { BsBuilding } from 'react-icons/bs'
 import * as Yup from 'yup'
 
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
+import { Select } from '@/components/forms/Select'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
+import { INDUSTRY_OPTIONS } from '@/features/organizations/constants/industries'
+import {
+  emailDomainMatchesWebsite,
+  extractWebsiteDomain,
+  isPublicEmailDomain,
+} from '@/features/organizations/utils/emailDomain'
 
 import styles from './CompanyForm.module.scss'
 
@@ -56,9 +63,30 @@ const baseShape = {
 
 const createValidationSchema = Yup.object({
   ...baseShape,
+  industry: Yup.string().required('Industry is required'),
   email: Yup.string()
     .email('Must be a valid email')
-    .required('Email is required'),
+    .required('Email is required')
+    .test(
+      'corporate-email',
+      'Use a corporate work email, not a personal address (Gmail, Yahoo, etc.)',
+      (value) => !!value && !isPublicEmailDomain(value),
+    )
+    .test(
+      'email-matches-website',
+      'Contact email domain must match your website domain',
+      function (value) {
+        const website = this.parent.website?.trim()
+        if (!value || !website) return true
+        if (emailDomainMatchesWebsite(value, website)) return true
+        const websiteDomain = extractWebsiteDomain(website)
+        return this.createError({
+          message: `Contact email must use @${
+            websiteDomain || 'your website domain'
+          }`,
+        })
+      },
+    ),
   website: Yup.string().test(
     'website-or-linkedin',
     'Provide a website or a LinkedIn URL',
@@ -258,11 +286,26 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 required
                 placeholder="Acme Inc."
               />
-              <FormField
-                label="Industry"
-                name="industry"
-                placeholder="Technology"
-              />
+              <Field name="industry">
+                {({ field, form, meta }: FieldProps<string>) => (
+                  <div className={styles.field} data-field="industry">
+                    <Select
+                      name="industry"
+                      label="Industry"
+                      required={!isEdit}
+                      placeholder="Select an industry"
+                      options={INDUSTRY_OPTIONS}
+                      value={field.value}
+                      onChange={(value) =>
+                        form.setFieldValue('industry', value)
+                      }
+                      error={
+                        meta.touched && meta.error ? meta.error : undefined
+                      }
+                    />
+                  </div>
+                )}
+              </Field>
               <div className={styles.span2}>
                 <FormField
                   label="Address"
@@ -296,7 +339,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 hint={
                   isEdit
                     ? 'Email cannot be changed after the company is created.'
-                    : undefined
+                    : 'Use a work email on the same domain as your website (e.g. name@acme.com for acme.com).'
                 }
               />
               <FormField

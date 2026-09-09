@@ -82,3 +82,47 @@ export interface JoinRequestsApiResponse {
 export interface JoinOrganizationRequestPayload {
   workEmail: string
 }
+
+export type OrganizationInviteStatus =
+  | 'pending'
+  | 'accepted'
+  | 'revoked'
+  | 'expired'
+
+export interface OrganizationInvite {
+  id: string
+  organizationId: string
+  email: string
+  status: OrganizationInviteStatus
+  expiresAt: string
+  createdAt: string
+}
+
+export interface OrganizationInvitePreview {
+  organizationName: string
+  invitedEmail: string
+  status: OrganizationInviteStatus
+  expiresAt: string
+}
+
+export interface SendOrganizationInvitePayload {
+  email: string
+}
+
+export interface InvitesApiResponse {
+  status: boolean
+  message: string
+  data: { invites: OrganizationInvite[] }
+}
+
+export interface InviteApiResponse {
+  status: boolean
+  message: string
+  data: { invite: OrganizationInvite }
+}
+
+export interface InvitePreviewApiResponse {
+  status: boolean
+  message: string
+  data: { invite: OrganizationInvitePreview }
+}

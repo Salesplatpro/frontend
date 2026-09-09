@@ -37,12 +37,16 @@ const userTypeOptions = [
 type SignupFormProps = {
   onSuccess: (lastName: string, userType: 'talent' | 'recruiter') => void
   forceTalent?: boolean
+  forceRecruiter?: boolean
+  lockedEmail?: string
   redirectPath?: string
 }
 
 export const SignupForm = ({
   onSuccess,
   forceTalent = false,
+  forceRecruiter = false,
+  lockedEmail,
   redirectPath,
 }: SignupFormProps) => {
   const { submitSignup, isLoading } = useSignup()
@@ -51,12 +55,12 @@ export const SignupForm = ({
   useFocusFieldOnMount('firstName')
 
   const initialValues: SignupFormValues = {
-    email: '',
+    email: lockedEmail ?? '',
     password: '',
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    userType: forceTalent ? 'talent' : '',
+    userType: forceTalent ? 'talent' : forceRecruiter ? 'recruiter' : '',
   }
 
   const handleSubmit = async (values: SignupFormValues) => {
@@ -114,9 +118,10 @@ export const SignupForm = ({
           as={TextInput}
           autoComplete="email"
           placeholder="Email"
+          disabled={!!lockedEmail}
         />
 
-        {!forceTalent && (
+        {!forceTalent && !forceRecruiter && (
           <div className={styles.userType}>
             <Field
               name="userType"

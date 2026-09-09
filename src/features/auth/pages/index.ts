@@ -1,5 +1,6 @@
 export * from './ChangePasswordPage'
 export * from './ForgotPasswordPage'
+export * from './JoinCompanyInvitePage'
 export * from './LoginPage'
 export * from './ResetPasswordPage'
 export * from './SignupPage'

@@ -27,6 +27,7 @@ import VerifyStep from '@/features/apply-wizard/steps/VerifyStep'
 import {
   ChangePasswordPage,
   ForgotPasswordPage,
+  JoinCompanyInvitePage,
   LoginPage,
   ResetPasswordPage,
   SignupPage,
@@ -141,6 +142,10 @@ export const routeConfig: RouteObject[] = [
           {
             path: paths.register,
             element: <SignupPage />,
+          },
+          {
+            path: 'join-company/:token',
+            element: <JoinCompanyInvitePage />,
           },
           {
             path: paths.forgotPassword,
