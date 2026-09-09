@@ -3,7 +3,9 @@ import React, { useState } from 'react'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { MAX_COMPANY_TEAMMATES } from '@/features/organizations/constants/team'
 import { useOrganizationInvites } from '@/features/organizations/hooks/useOrganizationInvites'
+import { useOrganizationMembers } from '@/features/organizations/hooks/useOrganizationMembers'
 import { Organization } from '@/features/organizations/types'
 
 import styles from './InviteTeamPanel.module.scss'
@@ -24,6 +26,15 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
     isSending,
     isRevoking,
   } = useOrganizationInvites(organization.id)
+  const { members } = useOrganizationMembers(organization.id)
+
+  const teammateCount = members.filter(
+    (member) => member.role !== 'owner',
+  ).length
+  const pendingCount = invites.length
+  const seatsUsed = teammateCount + pendingCount
+  const seatsRemaining = Math.max(0, MAX_COMPANY_TEAMMATES - seatsUsed)
+  const isFull = seatsRemaining === 0
 
   const companyDomain =
     organization.email?.split('@')[1] ?? 'your company domain'
@@ -31,7 +42,7 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const trimmed = email.trim()
-    if (!trimmed) return
+    if (!trimmed || isFull) return
     const sent = await sendInvite(trimmed)
     if (sent) {
       setEmail('')
@@ -41,7 +52,9 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
   return (
     <PagePanel
       title="Invite team"
-      hint={`Invite recruiters by email. Only you, the company creator, can send invites to join ${organization.name}.`}>
+      hint={`Invite up to ${MAX_COMPANY_TEAMMATES} recruiters in addition to you, the creator. ${seatsRemaining} seat${
+        seatsRemaining === 1 ? '' : 's'
+      } remaining.`}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.label} htmlFor="invite-email">
           Work email
@@ -56,9 +69,9 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
             placeholder={`name@${companyDomain}`}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            disabled={isSending}
+            disabled={isSending || isFull}
           />
-          <Button type="submit" loading={isSending}>
+          <Button type="submit" loading={isSending} disabled={isFull}>
             Send invite
           </Button>
         </div>
@@ -68,8 +81,9 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
         <Spinner />
       ) : invites.length === 0 ? (
         <p className={styles.empty}>
-          No pending invites. Send a link to add teammates without waiting for
-          them to request access.
+          {isFull
+            ? `This company already has ${MAX_COMPANY_TEAMMATES} recruiters plus the creator.`
+            : 'No pending invites. Send a link to add teammates without waiting for them to request access.'}
         </p>
       ) : (
         <div className={styles.list}>

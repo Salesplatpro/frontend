@@ -19,8 +19,8 @@ import styles from './AccountEmailVerification.module.scss'
 
 type TokenStatus = 'verifying' | 'success' | 'already-verified' | 'error'
 
-// Only ever resume into the apply wizard — anything else is rejected so this
-// query param can never be turned into an open redirect.
+// Only resume into the apply wizard or a company invite — anything else is
+// rejected so this query param can never be turned into an open redirect.
 const SAFE_REDIRECT_PATTERN =
   /^\/apply\/[A-Za-z0-9-]+$|^\/join-company\/[a-f0-9]+$/
 

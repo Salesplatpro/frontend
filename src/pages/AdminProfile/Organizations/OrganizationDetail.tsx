@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -8,6 +9,7 @@ import { Card } from '@/components/ui/Card'
 import { Spinner } from '@/components/ui/Spinner'
 import { Text } from '@/components/ui/Typography'
 import {
+  deleteAdminOrganization,
   fetchAdminOrganization,
   rejectAdminOrganization,
   verifyAdminOrganization,
@@ -36,6 +38,8 @@ const OrganizationDetail = () => {
   )
   const [isLoading, setIsLoading] = useState(true)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   const load = useCallback(async () => {
     if (!organizationId) return
@@ -82,6 +86,21 @@ const OrganizationDetail = () => {
     }
   }
 
+  const handleDelete = async () => {
+    if (!organizationId || !organization) return
+    setIsDeleting(true)
+    try {
+      await deleteAdminOrganization(organizationId)
+      notify('success', `${organization.name} permanently deleted`)
+      setConfirmDelete(false)
+      navigate('/adminDashboard/organizations')
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to delete organization'))
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   if (isLoading) {
     return <Spinner fullPage />
   }
@@ -118,6 +137,13 @@ const OrganizationDetail = () => {
               disabled={organization.status === 'rejected' || isUpdating}
               onClick={handleReject}>
               Reject
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={isUpdating || isDeleting}
+              onClick={() => setConfirmDelete(true)}>
+              Delete
             </Button>
           </div>
         </div>
@@ -208,6 +234,17 @@ const OrganizationDetail = () => {
           </div>
         )}
       </Card>
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title="Permanently delete this company?"
+        message={`Deleting "${organization.name}" removes the company, every job posted under it, and team memberships. Recruiter accounts are not deleted. This cannot be undone.`}
+        confirmLabel="Delete company"
+        variant="danger"
+        isConfirming={isDeleting}
+        onConfirm={() => void handleDelete()}
+        onCancel={() => setConfirmDelete(false)}
+      />
     </div>
   )
 }

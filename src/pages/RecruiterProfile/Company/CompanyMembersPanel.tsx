@@ -2,6 +2,7 @@ import React from 'react'
 
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Spinner } from '@/components/ui/Spinner'
+import { MAX_COMPANY_TEAMMATES } from '@/features/organizations/constants/team'
 import { useOrganizationMembers } from '@/features/organizations/hooks/useOrganizationMembers'
 import { Organization } from '@/features/organizations/types'
 
@@ -31,7 +32,7 @@ export const CompanyMembersPanel: React.FC<CompanyMembersPanelProps> = ({
   return (
     <PagePanel
       title="Team"
-      hint={`The creator and recruiters in ${organization.name}.`}>
+      hint={`The creator plus up to ${MAX_COMPANY_TEAMMATES} recruiters in ${organization.name}.`}>
       {members.length === 0 ? (
         <p className={styles.empty}>
           No one is on this company yet. Invite a recruiter to add them here.

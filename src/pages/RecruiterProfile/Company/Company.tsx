@@ -272,7 +272,7 @@ const Company = () => {
         open={!!pendingDelete}
         variant="danger"
         title={`Delete ${pendingDelete?.name ?? 'company'}?`}
-        message="This permanently deletes the company along with every job posted under it, and all applications, assessments and messages on those jobs. This cannot be undone."
+        message="This permanently deletes the company along with every job posted under it, and all applications, assessments and messages on those jobs. Recruiters on the team keep their accounts. This cannot be undone."
         confirmLabel="Delete company"
         isConfirming={isDeleting}
         onConfirm={handleDelete}

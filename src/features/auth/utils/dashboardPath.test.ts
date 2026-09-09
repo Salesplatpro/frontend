@@ -41,6 +41,17 @@ describe('destinationAfterAuth', () => {
     ).toBe('/recruiterDashboard/plan?checkout=paid&interval=monthly')
   })
 
+  it('resumes a company invite path for recruiters', () => {
+    expect(
+      destinationAfterAuth(
+        'recruiter',
+        '/join-company/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      ),
+    ).toBe(
+      '/join-company/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    )
+  })
+
   it('falls back to the role dashboard when next is missing', () => {
     expect(destinationAfterAuth('talent', null)).toBe(
       dashboardPathForRole('talent'),
