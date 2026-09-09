@@ -1,7 +1,8 @@
-import useSWR from 'swr'
+import useSWR, { mutate as mutateSWR } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
+import { organizationMembersKey } from '@/features/organizations/hooks/useOrganizationMembers'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
@@ -41,7 +42,13 @@ export const useOrganizationJoinRequests = (organizationId: string | null) => {
   const approve = async (requestId: string) => {
     try {
       await triggerApprove(requestId)
-      await Promise.all([mutate(), mutateOrganizations()])
+      await Promise.all([
+        mutate(),
+        mutateOrganizations(),
+        organizationId
+          ? mutateSWR(organizationMembersKey(organizationId))
+          : Promise.resolve(),
+      ])
       notify('success', 'Recruiter approved and added to your company')
       return true
     } catch (error) {

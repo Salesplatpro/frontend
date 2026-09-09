@@ -17,6 +17,8 @@ import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOr
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
+import styles from './OrganizationDetail.module.scss'
+
 const Field = ({ label, value }: { label: string; value: string }) => (
   <div className="flex flex-col">
     <Text size="fs-sm" color="secondary">
@@ -150,6 +152,61 @@ const OrganizationDetail = () => {
             }
           />
         </div>
+      </Card>
+
+      <Card className="max-w-[700px] p-6 flex flex-col space-y-4">
+        <div>
+          <Text size="fs-lg" weight="bold">
+            Team
+          </Text>
+          <Text size="fs-sm" color="secondary">
+            The company creator and recruiters who belong to this company.
+          </Text>
+        </div>
+        {(organization.members ?? []).length === 0 && !organization.owner ? (
+          <Text size="fs-sm" color="secondary">
+            No team members recorded for this company.
+          </Text>
+        ) : (organization.members ?? []).length === 0 && organization.owner ? (
+          <article className={styles.member}>
+            <div>
+              <p className={styles.memberName}>
+                {`${organization.owner.firstName} ${organization.owner.lastName}`.trim() ||
+                  'Creator'}
+              </p>
+              <p className={styles.memberEmail}>{organization.owner.email}</p>
+            </div>
+            <span className={styles.ownerChip}>Creator</span>
+          </article>
+        ) : (
+          <div className={styles.list}>
+            {(organization.members ?? []).map((member) => {
+              const fullName =
+                `${member.user.firstName} ${member.user.lastName}`.trim()
+              const isOwner = member.role === 'owner'
+              return (
+                <article key={member.id} className={styles.member}>
+                  <div>
+                    <p className={styles.memberName}>
+                      {fullName || (isOwner ? 'Creator' : 'Recruiter')}
+                    </p>
+                    <p className={styles.memberEmail}>
+                      {member.user.email}
+                      {member.workEmail &&
+                      member.workEmail !== member.user.email
+                        ? ` · ${member.workEmail}`
+                        : ''}
+                    </p>
+                  </div>
+                  <span
+                    className={isOwner ? styles.ownerChip : styles.memberChip}>
+                    {isOwner ? 'Creator' : 'Recruiter'}
+                  </span>
+                </article>
+              )
+            })}
+          </div>
+        )}
       </Card>
     </div>
   )

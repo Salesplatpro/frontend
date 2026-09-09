@@ -33,6 +33,12 @@
   @extend %sharedStyles;
   align-items: center;
   gap: 14px;
+  color: var(--color-text-on-dark);
+  -webkit-text-fill-color: var(--color-text-on-dark);
+
+  svg {
+    color: var(--color-text-on-dark);
+  }
 }
 
 .iconBox {

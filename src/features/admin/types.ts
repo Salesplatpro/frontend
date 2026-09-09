@@ -127,6 +127,20 @@ export interface AdminOrganization {
     lastName: string
     email: string
   } | null
+  members?: {
+    id: string
+    userId: string
+    organizationId: string
+    workEmail: string
+    role: string
+    createdAt: string
+    user: {
+      id: string
+      firstName: string
+      lastName: string
+      email: string
+    }
+  }[]
 }
 
 export interface AdminOrganizationFilters {
