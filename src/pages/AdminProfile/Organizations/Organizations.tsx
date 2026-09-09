@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -13,6 +14,7 @@ import {
 import { EmptyState } from '@/components/ui/EmptyState'
 import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
+  deleteAdminOrganization,
   fetchAdminOrganizations,
   rejectAdminOrganization,
   verifyAdminOrganization,
@@ -64,6 +66,8 @@ const Organizations = () => {
     'createdAt',
   ])
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [orgToDelete, setOrgToDelete] = useState<AdminOrganization | null>(null)
+  const [isDeletingOrg, setIsDeletingOrg] = useState(false)
 
   const load = useCallback(async () => {
     setIsLoading(true)
@@ -120,6 +124,21 @@ const Organizations = () => {
       notify('error', getErrorMessage(err, 'Failed to reject organization'))
     } finally {
       setUpdatingId(null)
+    }
+  }
+
+  const handleDeleteOrganization = async () => {
+    if (!orgToDelete) return
+    setIsDeletingOrg(true)
+    try {
+      await deleteAdminOrganization(orgToDelete.id)
+      notify('success', `${orgToDelete.name} permanently deleted`)
+      setOrgToDelete(null)
+      await load()
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to delete organization'))
+    } finally {
+      setIsDeletingOrg(false)
     }
   }
 
@@ -207,11 +226,18 @@ const Organizations = () => {
               onClick={() => handleReject(row)}>
               Reject
             </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={updatingId === row.id || isDeletingOrg}
+              onClick={() => setOrgToDelete(row)}>
+              Delete
+            </Button>
           </div>
         ),
       },
     ],
-    [updatingId, navigate],
+    [updatingId, navigate, isDeletingOrg],
   )
 
   const visibleColumns = columns.filter(
@@ -252,6 +278,11 @@ const Organizations = () => {
         title="Organizations"
         description="Review companies recruiters have created and verify them against the email, website, and social details they provided."
       />
+
+      <p className={styles.sectionDescription}>
+        Deleting a company removes its jobs and applications. Recruiter accounts
+        stay; they are only detached from the company.
+      </p>
 
       <div className={styles.mainColumn}>
         <FilterBar
@@ -308,6 +339,19 @@ const Organizations = () => {
           </>
         )}
       </div>
+
+      <ConfirmDialog
+        open={Boolean(orgToDelete)}
+        title="Permanently delete this company?"
+        message={`Deleting "${
+          orgToDelete?.name ?? 'this company'
+        }" removes the company, every job posted under it, and team memberships. Recruiter accounts are not deleted. This cannot be undone.`}
+        confirmLabel="Delete company"
+        variant="danger"
+        isConfirming={isDeletingOrg}
+        onConfirm={() => void handleDeleteOrganization()}
+        onCancel={() => setOrgToDelete(null)}
+      />
     </div>
   )
 }

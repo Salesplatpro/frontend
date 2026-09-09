@@ -27,7 +27,9 @@ const isAllowedResumePath = (
   }
   if (userRole === 'recruiter') {
     return (
-      path.startsWith('/recruiterDashboard') || path.startsWith('/payment/')
+      path.startsWith('/recruiterDashboard') ||
+      path.startsWith('/payment/') ||
+      path.startsWith('/join-company/')
     )
   }
   if (userRole === 'admin') {

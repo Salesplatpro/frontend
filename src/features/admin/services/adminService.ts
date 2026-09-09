@@ -155,6 +155,11 @@ export const rejectAdminOrganization = (id: string) =>
     )
     .then((response) => response.data)
 
+export const deleteAdminOrganization = (id: string) =>
+  httpClient
+    .delete<ApiEnvelope<null>>(`/admin/organizations/${id}`)
+    .then((response) => response.data)
+
 export const fetchAdminFeedback = (filters: AdminFeedbackFilters = {}) => {
   const params = Object.fromEntries(
     Object.entries(filters).filter(
