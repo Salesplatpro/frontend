@@ -325,10 +325,6 @@ export const routeConfig: RouteObject[] = [
                 ),
                 children: [
                   {
-                    path: 'dashboard/allapplications',
-                    element: <AllApplications />,
-                  },
-                  {
                     path: 'company',
                     element: <Company />,
                   },
@@ -344,6 +340,10 @@ export const routeConfig: RouteObject[] = [
                     element: <RequireActiveCompany />,
                     children: [
                       {
+                        path: 'dashboard/allapplications',
+                        element: <AllApplications />,
+                      },
+                      {
                         path: 'postjob',
                         element: <PostJobTab />,
                       },
@@ -351,63 +351,63 @@ export const routeConfig: RouteObject[] = [
                         path: 'postjob/:jobId',
                         element: <PostJobTab />,
                       },
+                      {
+                        path: 'myJobPosts',
+                        element: <MyJobPosts />,
+                      },
+                      {
+                        path: 'scout',
+                        element: <MyScoutJobs />,
+                      },
+                      {
+                        path: 'scout/history/:scoutJobId',
+                        element: <ScoutJobHistory />,
+                      },
+                      {
+                        path: 'scout/:id',
+                        element: <ChooseMethod />,
+                      },
+                      {
+                        path: 'talent-search',
+                        element: <SearchTalent />,
+                      },
+                      {
+                        path: 'talent-search/results',
+                        element: <SearchResult />,
+                      },
+                      {
+                        path: 'scout/create-jd',
+                        element: <CreateJD />,
+                      },
+                      {
+                        path: 'scout/upload-cv/:id',
+                        element: <UploadCv />,
+                      },
+                      {
+                        path: 'scout/process-cv/:id',
+                        element: <ProcessCV />,
+                      },
+                      {
+                        path: 'singleJobPost/:jobId',
+                        element: <SingleJobPost />,
+                      },
+                      {
+                        path: 'editJob/:jobId',
+                        element: <EditJobTab />,
+                      },
+                      {
+                        path: 'jobdetail/:jobId',
+                        element: <JobDetail />,
+                      },
+                      {
+                        path: 'shortlist',
+                        element: <Shortlist />,
+                      },
+                      {
+                        path: 'chat',
+                        element: <Chat />,
+                      },
                     ],
-                  },
-                  {
-                    path: 'myJobPosts',
-                    element: <MyJobPosts />,
-                  },
-                  {
-                    path: 'scout',
-                    element: <MyScoutJobs />,
-                  },
-                  {
-                    path: 'scout/history/:scoutJobId',
-                    element: <ScoutJobHistory />,
-                  },
-                  {
-                    path: 'scout/:id',
-                    element: <ChooseMethod />,
-                  },
-                  {
-                    path: 'talent-search',
-                    element: <SearchTalent />,
-                  },
-                  {
-                    path: 'talent-search/results',
-                    element: <SearchResult />,
-                  },
-                  {
-                    path: 'scout/create-jd',
-                    element: <CreateJD />,
-                  },
-                  {
-                    path: 'scout/upload-cv/:id',
-                    element: <UploadCv />,
-                  },
-                  {
-                    path: 'scout/process-cv/:id',
-                    element: <ProcessCV />,
-                  },
-                  {
-                    path: 'singleJobPost/:jobId',
-                    element: <SingleJobPost />,
-                  },
-                  {
-                    path: 'editJob/:jobId',
-                    element: <EditJobTab />,
-                  },
-                  {
-                    path: 'jobdetail/:jobId',
-                    element: <JobDetail />,
-                  },
-                  {
-                    path: 'shortlist',
-                    element: <Shortlist />,
-                  },
-                  {
-                    path: 'chat',
-                    element: <Chat />,
                   },
                   {
                     path: 'profile',
