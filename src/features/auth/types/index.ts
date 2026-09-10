@@ -88,6 +88,9 @@ export interface VerifyEmailRequest {
 export interface VerifyEmailResponse {
   status?: boolean
   message?: string
+  data?: {
+    joinedCompanyName?: string
+  }
 }
 
 export interface ChangeEmailRequest {

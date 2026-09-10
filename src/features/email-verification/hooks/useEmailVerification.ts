@@ -33,7 +33,7 @@ export const useEmailVerification = () => {
     try {
       const { data } = await verifyToken.trigger({ token })
       await mutate()
-      return data
+      return data?.data
     } catch (err) {
       throw new Error(
         getErrorMessage(err, 'Verification link is invalid or has expired.'),

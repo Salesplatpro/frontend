@@ -10,9 +10,9 @@ import { Chart } from '@/components/ui/Chart'
 import { Spinner } from '@/components/ui/Spinner'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
 import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
-import { EmailVerifiedModal } from '@/features/email-verification/components/EmailVerifiedModal'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { useRouteToast } from '@/hooks/useRouteToast'
 import { CompanyLogo } from '@/pages/RecruiterProfile/Company/CompanyLogo'
 
 import { useFetchDashboardQuery } from '../../../redux/api/recruiter'
@@ -23,6 +23,7 @@ import RecentCompilation from './RecentCompilation'
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  useRouteToast()
   const { profile, isLoading: isProfileLoading } = useProfile()
   const isVerified = !!profile?.emailVerifiedAt
   const {
@@ -40,7 +41,6 @@ const Dashboard = () => {
       <PageShell wide centered>
         <EmailVerificationPanel />
         <WelcomeModal />
-        <EmailVerifiedModal />
       </PageShell>
     )
   }
@@ -50,7 +50,6 @@ const Dashboard = () => {
       <PageShell wide>
         <Spinner fullPage />
         <WelcomeModal />
-        <EmailVerifiedModal />
       </PageShell>
     )
 
@@ -59,7 +58,6 @@ const Dashboard = () => {
       <>
         <Alert severity="error">Error Fetching Data</Alert>
         <WelcomeModal />
-        <EmailVerifiedModal />
       </>
     )
 
@@ -135,7 +133,6 @@ const Dashboard = () => {
 
       <RecentCompilation />
       <WelcomeModal />
-      <EmailVerifiedModal />
     </PageShell>
   )
 }
