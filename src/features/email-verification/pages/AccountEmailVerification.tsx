@@ -42,7 +42,11 @@ const AccountEmailVerification: React.FC = () => {
   const { mutate } = useProfile()
 
   const [tokenStatus, setTokenStatus] = useState<TokenStatus>('verifying')
+  const [joinedCompanyName, setJoinedCompanyName] = useState<string>()
   const processedTokenRef = useRef<string | null>(null)
+
+  const destinationAfterVerify = (joinedName?: string) =>
+    joinedName ? dashboardPathForRole(userRole) : continueTarget
 
   useEffect(() => {
     if (!token || processedTokenRef.current === token) return
@@ -52,8 +56,12 @@ const AccountEmailVerification: React.FC = () => {
     submitVerifyToken(token)
       .then((result) => {
         setTokenStatus('success')
+        setJoinedCompanyName(result?.joinedCompanyName)
         if (isLoggedIn) {
-          navigate(continueTarget, {
+          const destination = result?.joinedCompanyName
+            ? dashboardPathForRole(userRole)
+            : continueTarget
+          navigate(destination, {
             replace: true,
             state: {
               toast: {
@@ -75,7 +83,15 @@ const AccountEmailVerification: React.FC = () => {
         }
         setTokenStatus('error')
       })
-  }, [token, isLoggedIn, continueTarget, navigate, mutate, submitVerifyToken])
+  }, [
+    token,
+    isLoggedIn,
+    userRole,
+    continueTarget,
+    navigate,
+    mutate,
+    submitVerifyToken,
+  ])
 
   if (token) {
     if (
@@ -94,7 +110,7 @@ const AccountEmailVerification: React.FC = () => {
               <p className={styles.subtitle}>Your email has been verified.</p>
               <Link
                 to={loginPathWithNext(
-                  safeRedirect ?? dashboardPathForRole(userRole),
+                  destinationAfterVerify(joinedCompanyName),
                 )}>
                 <Button>Log in</Button>
               </Link>

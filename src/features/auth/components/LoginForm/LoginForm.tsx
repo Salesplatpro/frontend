@@ -19,19 +19,31 @@ import { LoginFormValues } from '../../types'
 import { loginSchema } from '../../validation/AuthValidationSchema'
 import styles from './LoginForm.module.scss'
 
-const initialValues: LoginFormValues = {
+const defaultValues: LoginFormValues = {
   email: '',
   password: '',
   remember: false,
 }
 
-export const LoginForm = () => {
+type LoginFormProps = {
+  lockedEmail?: string
+  hideSignupLink?: boolean
+}
+
+export const LoginForm = ({
+  lockedEmail,
+  hideSignupLink = false,
+}: LoginFormProps) => {
   const { submitLogin, isLoading } = useLogin()
   const error = useAuthStore((state) => state.error)
   const location = useLocation()
 
   const formik = useFormik<LoginFormValues>({
-    initialValues,
+    initialValues: {
+      ...defaultValues,
+      email: lockedEmail ?? '',
+    },
+    enableReinitialize: !!lockedEmail,
     validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {
@@ -64,6 +76,7 @@ export const LoginForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           placeholder="Email"
+          disabled={!!lockedEmail}
           error={
             formik.touched.email && formik.errors.email
               ? formik.errors.email
@@ -105,13 +118,15 @@ export const LoginForm = () => {
           Log in
         </Button>
 
-        <div className={styles.already}>
-          Don&apos;t have an account?{' '}
-          <Link
-            to={{ pathname: `/${paths.register}`, search: location.search }}>
-            Sign up
-          </Link>
-        </div>
+        {!hideSignupLink && (
+          <div className={styles.already}>
+            Don&apos;t have an account?{' '}
+            <Link
+              to={{ pathname: `/${paths.register}`, search: location.search }}>
+              Sign up
+            </Link>
+          </div>
+        )}
       </form>
     </FormikProvider>
   )

@@ -90,4 +90,18 @@ describe('LoginForm', () => {
     )
     expect(submitLoginMock).not.toHaveBeenCalled()
   })
+
+  it('locks the invited email and hides signup when used on a company invite', () => {
+    render(
+      <MemoryRouter>
+        <LoginForm lockedEmail="joiner@invitecorp.com" hideSignupLink />
+      </MemoryRouter>,
+    )
+
+    expect((screen.getByLabelText('Email') as HTMLInputElement).value).toBe(
+      'joiner@invitecorp.com',
+    )
+    expect(screen.getByLabelText('Email')).toHaveProperty('disabled', true)
+    expect(screen.queryByRole('link', { name: 'Sign up' })).toBeNull()
+  })
 })

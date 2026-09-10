@@ -125,6 +125,32 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     )
   })
 
+  it('sends a verified recruiter to the dashboard after joining even if redirect is the invite link', async () => {
+    submitVerifyTokenMock.mockResolvedValue({
+      joinedCompanyName: 'Invite Corp',
+    })
+    authState.user = { userRole: 'recruiter' }
+
+    renderAt(
+      '?token=abc123&redirect=%2Fjoin-company%2Faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    )
+
+    await waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/recruiterDashboard/dashboard',
+        {
+          replace: true,
+          state: {
+            toast: {
+              type: 'success',
+              message: 'Your email is verified. You joined Invite Corp.',
+            },
+          },
+        },
+      ),
+    )
+  })
+
   it('offers "Continue application" instead of "Go to dashboard" when already verified with a valid redirect', async () => {
     submitVerifyTokenMock.mockRejectedValue(new Error('already verified'))
     mutateMock.mockResolvedValue({
