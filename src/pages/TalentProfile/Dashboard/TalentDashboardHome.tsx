@@ -12,8 +12,8 @@ import { Spinner } from '@/components/ui/Spinner'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
-import { EmailVerifiedModal } from '@/features/email-verification/components/EmailVerifiedModal'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { useRouteToast } from '@/hooks/useRouteToast'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { useAllJobApplicationsQuery } from '@/redux/api/talent'
 import { formatTimeAgo } from '@/utils'
@@ -69,6 +69,7 @@ const columns: ColumnDef<AllJobTypes>[] = [
 
 const TalentDashboardHome = () => {
   const navigate = useNavigate()
+  useRouteToast()
   const user = useAuthStore((state) => state.user)
   const { profile, isLoading: isProfileLoading } = useProfile()
   const isVerified = !!profile?.emailVerifiedAt
@@ -126,7 +127,6 @@ const TalentDashboardHome = () => {
       <PageShell wide centered>
         <EmailVerificationPanel />
         <WelcomeModal />
-        <EmailVerifiedModal />
       </PageShell>
     )
   }
@@ -197,7 +197,6 @@ const TalentDashboardHome = () => {
       )}
 
       <WelcomeModal />
-      <EmailVerifiedModal />
     </PageShell>
   )
 }

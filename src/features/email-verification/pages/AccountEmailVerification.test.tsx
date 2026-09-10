@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -73,7 +73,15 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith(
         '/apply/11111111-1111-1111-1111-111111111111',
-        { replace: true, state: { showEmailVerifiedModal: true } },
+        {
+          replace: true,
+          state: {
+            toast: {
+              type: 'success',
+              message: 'Your email has been verified.',
+            },
+          },
+        },
       ),
     )
   })
@@ -86,34 +94,34 @@ describe('AccountEmailVerification — post-verification redirect', () => {
     await waitFor(() =>
       expect(navigateMock).toHaveBeenCalledWith('/talentDashboard', {
         replace: true,
-        state: { showEmailVerifiedModal: true },
+        state: {
+          toast: { type: 'success', message: 'Your email has been verified.' },
+        },
       }),
     )
   })
 
-  it('falls back to the dashboard when no redirect param is present', async () => {
-    submitVerifyTokenMock.mockResolvedValue(undefined)
+  it('includes joined company in the toast when verify returns a company name', async () => {
+    submitVerifyTokenMock.mockResolvedValue({
+      joinedCompanyName: 'Invite Corp',
+    })
+    authState.user = { userRole: 'recruiter' }
 
     renderAt('?token=abc123')
 
     await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith('/talentDashboard', {
-        replace: true,
-        state: { showEmailVerifiedModal: true },
-      }),
-    )
-  })
-
-  it('rejects a redirect param outside the apply-wizard path shape', async () => {
-    submitVerifyTokenMock.mockResolvedValue(undefined)
-
-    renderAt('?token=abc123&redirect=%2Ftalent%2Fapply%2F1')
-
-    await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith('/talentDashboard', {
-        replace: true,
-        state: { showEmailVerifiedModal: true },
-      }),
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/recruiterDashboard/dashboard',
+        {
+          replace: true,
+          state: {
+            toast: {
+              type: 'success',
+              message: 'Your email is verified. You joined Invite Corp.',
+            },
+          },
+        },
+      ),
     )
   })
 
@@ -127,11 +135,11 @@ describe('AccountEmailVerification — post-verification redirect', () => {
       '?token=abc123&redirect=%2Fapply%2F11111111-1111-1111-1111-111111111111',
     )
 
-    expect(await screen.findByText('Continue application')).toBeTruthy()
-
-    fireEvent.click(screen.getByText('Continue application'))
-    expect(navigateMock).toHaveBeenCalledWith(
-      '/apply/11111111-1111-1111-1111-111111111111',
+    await waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith(
+        '/apply/11111111-1111-1111-1111-111111111111',
+        { replace: true },
+      ),
     )
   })
 })

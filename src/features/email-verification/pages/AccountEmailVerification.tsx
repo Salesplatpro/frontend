@@ -3,7 +3,6 @@ import { HiOutlineMail } from 'react-icons/hi'
 import { HiArrowRightOnRectangle } from 'react-icons/hi2'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
-import logo from '@/assets/logo.png'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
@@ -19,10 +18,13 @@ import styles from './AccountEmailVerification.module.scss'
 
 type TokenStatus = 'verifying' | 'success' | 'already-verified' | 'error'
 
-// Only resume into the apply wizard or a company invite — anything else is
-// rejected so this query param can never be turned into an open redirect.
 const SAFE_REDIRECT_PATTERN =
   /^\/apply\/[A-Za-z0-9-]+$|^\/join-company\/[a-f0-9]+$/
+
+const verifyToastMessage = (joinedCompanyName?: string) =>
+  joinedCompanyName
+    ? `Your email is verified. You joined ${joinedCompanyName}.`
+    : 'Your email has been verified.'
 
 const AccountEmailVerification: React.FC = () => {
   const logout = useAuthStore((state) => state.logout)
@@ -40,9 +42,6 @@ const AccountEmailVerification: React.FC = () => {
   const { mutate } = useProfile()
 
   const [tokenStatus, setTokenStatus] = useState<TokenStatus>('verifying')
-  // Tracks which token value has already been submitted, so the same token
-  // never double-fires (e.g. StrictMode's double-invoke) while a genuinely
-  // different token (a fresh mount via a new emailed link) always does.
   const processedTokenRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -51,49 +50,54 @@ const AccountEmailVerification: React.FC = () => {
     setTokenStatus('verifying')
 
     submitVerifyToken(token)
-      .then(() => setTokenStatus('success'))
+      .then((result) => {
+        setTokenStatus('success')
+        if (isLoggedIn) {
+          navigate(continueTarget, {
+            replace: true,
+            state: {
+              toast: {
+                type: 'success',
+                message: verifyToastMessage(result?.joinedCompanyName),
+              },
+            },
+          })
+        }
+      })
       .catch(async () => {
         if (isLoggedIn) {
           const refreshed = await mutate()
           if (refreshed?.data?.user?.emailVerifiedAt) {
             setTokenStatus('already-verified')
+            navigate(continueTarget, { replace: true })
             return
           }
         }
         setTokenStatus('error')
       })
-  }, [token])
-
-  useEffect(() => {
-    if (token && tokenStatus === 'success' && isLoggedIn) {
-      navigate(continueTarget, {
-        replace: true,
-        state: { showEmailVerifiedModal: true },
-      })
-    }
-  }, [token, tokenStatus, isLoggedIn, continueTarget, navigate])
+  }, [token, isLoggedIn, continueTarget, navigate, mutate, submitVerifyToken])
 
   if (token) {
-    if (tokenStatus === 'verifying') {
+    if (
+      tokenStatus === 'verifying' ||
+      (tokenStatus === 'success' && isLoggedIn)
+    ) {
       return <Spinner fullPage />
     }
 
     return (
       <div className={styles.page}>
-        <div className={styles.topBar}>
-          <img className={styles.logo} src={logo} alt="company" />
-        </div>
-
         <div className={styles.content}>
-          {tokenStatus === 'success' && (
+          {tokenStatus === 'success' && !isLoggedIn && (
             <>
               <h1 className={styles.title}>Email verified</h1>
               <p className={styles.subtitle}>Your email has been verified.</p>
-              {!isLoggedIn && (
-                <Link to={loginPathWithNext(safeRedirect)}>
-                  <Button>Log in</Button>
-                </Link>
-              )}
+              <Link
+                to={loginPathWithNext(
+                  safeRedirect ?? dashboardPathForRole(userRole),
+                )}>
+                <Button>Log in</Button>
+              </Link>
             </>
           )}
 
@@ -139,7 +143,6 @@ const AccountEmailVerification: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
-        <img className={styles.logo} src={logo} alt="company" />
         <Button
           variant="outline"
           size="sm"

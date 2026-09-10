@@ -15,6 +15,7 @@ import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 
 import { AuthLayout } from '../components/AuthLayout'
+import { LoginForm } from '../components/LoginForm'
 import { SignupForm } from '../components/SignupForm'
 import { useAuthStore } from '../store/useAuthStore'
 import styles from './JoinCompanyInvitePage.module.scss'
@@ -72,7 +73,15 @@ export const JoinCompanyInvitePage = () => {
       .then(async () => {
         if (cancelled) return
         await mutateOrganizations()
-        navigate('/recruiterDashboard/company', { replace: true })
+        navigate('/recruiterDashboard/dashboard', {
+          replace: true,
+          state: {
+            toast: {
+              type: 'success',
+              message: `You joined ${preview.organizationName}.`,
+            },
+          },
+        })
       })
       .catch((error) => {
         if (cancelled) return
@@ -151,8 +160,8 @@ export const JoinCompanyInvitePage = () => {
         title="Verify your email"
         subtitle={`Confirm ${preview.invitedEmail} before joining ${preview.organizationName}.`}>
         <Alert variant="warning">
-          Check your inbox for a verification link, then return here to join
-          your team.
+          Check your inbox for a verification link. After verifying, you will
+          join your team automatically.
         </Alert>
         <Button
           type="button"
@@ -174,6 +183,31 @@ export const JoinCompanyInvitePage = () => {
     )
   }
 
+  if (preview.inviteeExists) {
+    return (
+      <AuthLayout
+        title={`Join ${preview.organizationName}`}
+        subtitle="Log in with your recruiter account to accept this invite.">
+        {preview.inviteeHasPaidPlan && (
+          <Alert variant="warning">
+            You are on a paid plan. Switch to the free plan before joining a
+            company team.
+          </Alert>
+        )}
+        <p className={styles.lead}>
+          You were invited to join <strong>{preview.organizationName}</strong>.
+          Log in with <strong>{preview.invitedEmail}</strong> to continue.
+        </p>
+        <LoginForm />
+        <div className={styles.footerLinks}>
+          <Link to={loginPathWithNext(redirectPath!)}>
+            Use a different account
+          </Link>
+        </div>
+      </AuthLayout>
+    )
+  }
+
   return (
     <AuthLayout
       title={`Join ${preview.organizationName}`}
@@ -187,7 +221,6 @@ export const JoinCompanyInvitePage = () => {
       <SignupForm
         forceRecruiter
         lockedEmail={preview.invitedEmail}
-        redirectPath={redirectPath}
         onSuccess={() => navigate('/verify-email')}
       />
 
