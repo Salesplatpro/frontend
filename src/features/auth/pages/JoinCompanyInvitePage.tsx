@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { mutate } from 'swr'
 
 import { Alert } from '@/components/feedback'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { loginPathWithNext } from '@/features/auth/utils/dashboardPath'
-import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import {
   acceptOrganizationInvite,
   fetchOrganizationInvitePreview,
+  MY_ORGANIZATIONS_ENDPOINT,
 } from '@/features/organizations/services/organizationService'
 import { OrganizationInvitePreview } from '@/features/organizations/types'
 import { useProfile } from '@/features/profile/hooks/useProfile'
@@ -20,14 +21,23 @@ import { SignupForm } from '../components/SignupForm'
 import { useAuthStore } from '../store/useAuthStore'
 import styles from './JoinCompanyInvitePage.module.scss'
 
+const verifyEmailPath = (next?: string) =>
+  next ? `/verify-email?redirect=${encodeURIComponent(next)}` : '/verify-email'
+
 export const JoinCompanyInvitePage = () => {
   const { token } = useParams<{ token: string }>()
   const navigate = useNavigate()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const userRole = useAuthStore((state) => state.user?.userRole)
   const userEmail = useAuthStore((state) => state.user?.email)
-  const { profile } = useProfile()
-  const { mutate: mutateOrganizations } = useMyOrganizations()
+  const sessionEmailVerifiedAt = useAuthStore(
+    (state) => state.user?.emailVerifiedAt,
+  )
+  const {
+    profile,
+    isLoading: isLoadingProfile,
+    mutate: mutateProfile,
+  } = useProfile()
 
   const [preview, setPreview] = useState<OrganizationInvitePreview | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -36,6 +46,20 @@ export const JoinCompanyInvitePage = () => {
   const [isLoadingPreview, setIsLoadingPreview] = useState(true)
 
   const redirectPath = token ? `/join-company/${token}` : undefined
+  const isEmailVerified = !!(profile?.emailVerifiedAt || sessionEmailVerifiedAt)
+  const emailsMatch =
+    !!userEmail &&
+    !!preview?.invitedEmail &&
+    userEmail.toLowerCase() === preview.invitedEmail.toLowerCase()
+  const canAutoAccept =
+    !!token &&
+    !!preview &&
+    isLoggedIn &&
+    userRole === 'recruiter' &&
+    emailsMatch &&
+    isEmailVerified
+  const waitingForSessionProfile =
+    isLoggedIn && isLoadingProfile && !isEmailVerified
 
   useEffect(() => {
     if (!token) {
@@ -53,17 +77,12 @@ export const JoinCompanyInvitePage = () => {
   }, [token])
 
   useEffect(() => {
-    if (
-      !token ||
-      !preview ||
-      !isLoggedIn ||
-      userRole !== 'recruiter' ||
-      !profile?.emailVerifiedAt
-    ) {
-      return
-    }
+    if (!isLoggedIn) return
+    void mutateProfile()
+  }, [isLoggedIn, mutateProfile])
 
-    if (userEmail?.toLowerCase() !== preview.invitedEmail.toLowerCase()) {
+  useEffect(() => {
+    if (!canAutoAccept || !token || !preview) {
       return
     }
 
@@ -72,7 +91,7 @@ export const JoinCompanyInvitePage = () => {
     acceptOrganizationInvite(token)
       .then(async () => {
         if (cancelled) return
-        await mutateOrganizations()
+        await mutate(MY_ORGANIZATIONS_ENDPOINT)
         navigate('/recruiterDashboard/dashboard', {
           replace: true,
           state: {
@@ -94,18 +113,14 @@ export const JoinCompanyInvitePage = () => {
     return () => {
       cancelled = true
     }
-  }, [
-    token,
-    preview,
-    isLoggedIn,
-    userRole,
-    userEmail,
-    profile?.emailVerifiedAt,
-    navigate,
-    mutateOrganizations,
-  ])
+  }, [canAutoAccept, token, preview, navigate])
 
-  if (isLoadingPreview || isAccepting) {
+  if (
+    isLoadingPreview ||
+    isAccepting ||
+    waitingForSessionProfile ||
+    (canAutoAccept && !acceptError)
+  ) {
     return <Spinner fullPage />
   }
 
@@ -122,10 +137,7 @@ export const JoinCompanyInvitePage = () => {
     )
   }
 
-  if (
-    isLoggedIn &&
-    userEmail?.toLowerCase() !== preview.invitedEmail.toLowerCase()
-  ) {
+  if (isLoggedIn && !emailsMatch) {
     return (
       <AuthLayout
         title="Wrong account"
@@ -154,7 +166,7 @@ export const JoinCompanyInvitePage = () => {
     )
   }
 
-  if (isLoggedIn && !profile?.emailVerifiedAt) {
+  if (isLoggedIn && !isEmailVerified) {
     return (
       <AuthLayout
         title="Verify your email"
@@ -166,7 +178,7 @@ export const JoinCompanyInvitePage = () => {
         <Button
           type="button"
           fullWidth
-          onClick={() => navigate('/verify-email')}>
+          onClick={() => navigate(verifyEmailPath(redirectPath))}>
           Go to email verification
         </Button>
       </AuthLayout>
@@ -198,7 +210,7 @@ export const JoinCompanyInvitePage = () => {
           You were invited to join <strong>{preview.organizationName}</strong>.
           Log in with <strong>{preview.invitedEmail}</strong> to continue.
         </p>
-        <LoginForm />
+        <LoginForm lockedEmail={preview.invitedEmail} hideSignupLink />
         <div className={styles.footerLinks}>
           <Link to={loginPathWithNext(redirectPath!)}>
             Use a different account
@@ -215,19 +227,16 @@ export const JoinCompanyInvitePage = () => {
       <p className={styles.lead}>
         You were invited to join <strong>{preview.organizationName}</strong> as
         a recruiter. Sign up with <strong>{preview.invitedEmail}</strong> —
-        talent signup is not available for company invites.
+        talent signup is not available for company invites. You must verify your
+        email before you can join the company.
       </p>
 
       <SignupForm
         forceRecruiter
         lockedEmail={preview.invitedEmail}
-        onSuccess={() => navigate('/verify-email')}
+        redirectPath={redirectPath}
+        onSuccess={() => navigate(verifyEmailPath(redirectPath))}
       />
-
-      <div className={styles.footerLinks}>
-        Already have a recruiter account?{' '}
-        <Link to={loginPathWithNext(redirectPath!)}>Log in</Link>
-      </div>
     </AuthLayout>
   )
 }
