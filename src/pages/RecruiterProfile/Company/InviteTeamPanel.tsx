@@ -37,7 +37,9 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
   const isFull = seatsRemaining === 0
 
   const companyDomain =
-    organization.email?.split('@')[1] ?? 'your company domain'
+    organization.domain ??
+    organization.email?.split('@')[1] ??
+    'your company domain'
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()

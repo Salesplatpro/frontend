@@ -6,6 +6,7 @@ export interface Organization {
   id: string
   ownerId: string
   name: string
+  domain?: string | null
   email?: string | null
   phone?: string | null
   address?: string | null
@@ -38,6 +39,7 @@ export interface OrganizationJoinRequest {
 
 export interface CreateOrganizationPayload {
   name: string
+  domain: string
   email: string
   phone?: string
   address?: string
@@ -103,6 +105,8 @@ export interface OrganizationInvitePreview {
   invitedEmail: string
   status: OrganizationInviteStatus
   expiresAt: string
+  inviteeExists: boolean
+  inviteeHasPaidPlan: boolean
 }
 
 export interface OrganizationMember {

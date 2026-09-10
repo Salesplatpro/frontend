@@ -50,6 +50,9 @@ const EditCompany = () => {
     ? {
         ...EMPTY_COMPANY_FORM,
         name: organization.name ?? '',
+        domain: organization.domain
+          ? `@${organization.domain.replace(/^@/, '')}`
+          : '',
         email: organization.email ?? '',
         phone: organization.phone ?? '',
         address: organization.address ?? '',
