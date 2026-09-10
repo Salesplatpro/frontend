@@ -17,14 +17,17 @@ import { Button } from '@/components/ui/Button'
 import { INDUSTRY_OPTIONS } from '@/features/organizations/constants/industries'
 import {
   emailDomainMatchesWebsite,
+  emailMatchesCompanyDomain,
   extractWebsiteDomain,
   isPublicEmailDomain,
+  isValidCompanyDomainInput,
 } from '@/features/organizations/utils/emailDomain'
 
 import styles from './CompanyForm.module.scss'
 
 export interface CompanyFormValues {
   name: string
+  domain: string
   email: string
   phone: string
   address: string
@@ -38,6 +41,7 @@ export interface CompanyFormValues {
 
 export const EMPTY_COMPANY_FORM: CompanyFormValues = {
   name: '',
+  domain: '',
   email: '',
   phone: '',
   address: '',
@@ -64,6 +68,18 @@ const baseShape = {
 const createValidationSchema = Yup.object({
   ...baseShape,
   industry: Yup.string().required('Industry is required'),
+  domain: Yup.string()
+    .required('Company domain is required')
+    .test(
+      'domain-format',
+      'Domain must start with @ and include a dot (e.g. @acme.com)',
+      (value) => !!value && isValidCompanyDomainInput(value),
+    )
+    .test(
+      'domain-not-public',
+      'Use a corporate domain, not a personal email provider',
+      (value) => !!value && !isPublicEmailDomain(`name${value}`),
+    ),
   email: Yup.string()
     .email('Must be a valid email')
     .required('Email is required')
@@ -71,6 +87,18 @@ const createValidationSchema = Yup.object({
       'corporate-email',
       'Use a corporate work email, not a personal address (Gmail, Yahoo, etc.)',
       (value) => !!value && !isPublicEmailDomain(value),
+    )
+    .test(
+      'email-matches-domain',
+      'Contact email must use the company domain',
+      function (value) {
+        const domain = this.parent.domain?.trim()
+        if (!value || !domain) return true
+        if (emailMatchesCompanyDomain(value, domain)) return true
+        return this.createError({
+          message: `Contact email must use ${domain}`,
+        })
+      },
     )
     .test(
       'email-matches-website',
@@ -286,6 +314,15 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 required
                 placeholder="Acme Inc."
               />
+              {!isEdit && (
+                <FormField
+                  label="Company domain"
+                  name="domain"
+                  required
+                  placeholder="@acme.com"
+                  hint="Your work email and contact email must use this domain."
+                />
+              )}
               <Field name="industry">
                 {({ field, form, meta }: FieldProps<string>) => (
                   <div className={styles.field} data-field="industry">
