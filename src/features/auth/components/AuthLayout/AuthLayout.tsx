@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import logo from '@/assets/logo.png'
+import auxHrLogo from '@/assets/aux_logo.png'
 import { Card } from '@/components/ui/Card'
 import { Heading, Text } from '@/components/ui/Typography'
 
@@ -17,7 +17,7 @@ export const AuthLayout = ({ title, subtitle, children }: AuthLayoutProps) => (
   <div className={styles.container}>
     <div className={styles.formColumn}>
       <div className={styles.header}>
-        <img className={styles.logo} src={logo} alt="company" />
+        <img className={styles.logo} src={auxHrLogo} alt="Auxhr" />
         <div>
           <Heading level={1}>{title}</Heading>
           <Text as="p" color="primary">
