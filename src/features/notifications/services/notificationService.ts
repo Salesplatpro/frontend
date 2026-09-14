@@ -19,3 +19,8 @@ export const readNotification = (notificationId: string) =>
       `${notificationsKey}/${notificationId}`,
     )
     .then((response) => response.data)
+
+export const markAllNotificationsRead = () =>
+  httpClient
+    .patch<{ data: { updated: number } }>(`${notificationsKey}/read-all`)
+    .then((response) => response.data)

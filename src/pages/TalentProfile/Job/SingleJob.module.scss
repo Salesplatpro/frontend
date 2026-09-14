@@ -14,6 +14,10 @@
 .icon {
   color: var(--color-primary);
   flex-shrink: 0;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
 }
 
 .body {
@@ -49,8 +53,13 @@
   font-weight: var(--weight-semibold);
   border-radius: var(--radius-full);
   padding: 2px var(--space-2);
-  color: var(--color-primary-strong);
+  color: var(--color-text-heading);
   background-color: var(--color-primary-tint);
+}
+
+.categoryDot {
+  color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 .description {

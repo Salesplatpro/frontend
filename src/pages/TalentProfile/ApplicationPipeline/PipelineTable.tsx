@@ -7,8 +7,13 @@ import {
   humanTalentStage,
 } from '@/pages/TalentProfile/Job/jobPipeline'
 
-import { Button, DataTable, StatusBadge } from '../../../components'
-import { ColumnDef } from '../../../components'
+import {
+  Button,
+  ColumnDef,
+  DataTable,
+  StatusBadge,
+  TableActions,
+} from '../../../components'
 import { useAllJobApplicationsQuery } from '../../../redux/api/talent'
 import { formatTimeAgo } from '../../../utils'
 import { AllJobTypes } from '../../../utils/types'
@@ -73,14 +78,15 @@ export const PipelineTable = () => {
           const jobId = app.job?.id
           if (!jobId) return null
           return (
-            <Button
-              size="sm"
-              onClick={(event) => {
-                event.stopPropagation()
-                navigate(`/talentDashboard/job/${jobId}`)
-              }}>
-              View job
-            </Button>
+            <TableActions onClick={(event) => event.stopPropagation()}>
+              <Button
+                size="sm"
+                onClick={() => {
+                  navigate(`/talentDashboard/job/${jobId}`)
+                }}>
+                View job
+              </Button>
+            </TableActions>
           )
         },
       },

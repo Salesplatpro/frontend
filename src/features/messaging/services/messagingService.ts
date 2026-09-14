@@ -1,6 +1,6 @@
 import { httpClient } from '@/features/auth/services/httpClient'
 
-import { ChatSessionGroup, Message } from '../types'
+import { ChatSessionGroup, Message, TalentChatSession } from '../types'
 
 export const messagesKey = (applicationId: string) =>
   `/messages?application=${applicationId}`
@@ -44,4 +44,9 @@ export const acknowledgeMessage = (messageId: string, acknowledge: boolean) =>
 export const fetchChatSessions = () =>
   httpClient
     .get<{ data: { sessions: ChatSessionGroup[] } }>(chatSessionsKey)
+    .then((response) => response.data)
+
+export const fetchTalentChatSessions = () =>
+  httpClient
+    .get<{ data: { sessions: TalentChatSession[] } }>(chatSessionsKey)
     .then((response) => response.data)

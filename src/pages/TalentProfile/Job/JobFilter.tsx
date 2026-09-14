@@ -212,7 +212,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ filters, onChange }) => {
             />
           </div>
 
-          <div className={styles.field}>
+          <div className={`${styles.field} ${styles.fieldWide}`}>
             <span className={styles.fieldLabel}>Work Type</span>
             <WorkTypeCheckboxes
               value={filters.workMode}
@@ -220,7 +220,7 @@ export const JobFilter: React.FC<JobFilterProps> = ({ filters, onChange }) => {
             />
           </div>
 
-          <div className={styles.field}>
+          <div className={`${styles.field} ${styles.fieldWide}`}>
             <span className={styles.fieldLabel}>Location</span>
             <LocationTabsSelect
               value={filters.location}

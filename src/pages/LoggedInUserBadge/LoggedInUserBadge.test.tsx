@@ -45,7 +45,23 @@ vi.mock('@/features/profile/hooks/useProfile', () => ({
 }))
 
 vi.mock('@/features/notifications/hooks/useNotifications', () => ({
-  useNotifications: () => ({ unReadCount: 0 }),
+  useNotifications: () => ({
+    unReadCount: 0,
+    notifications: [],
+    isLoading: false,
+    mutate: vi.fn(),
+  }),
+}))
+
+vi.mock('@/features/notifications/hooks/useMarkNotificationRead', () => ({
+  useMarkNotificationRead: () => ({ markAsRead: vi.fn() }),
+}))
+
+vi.mock('@/features/notifications/hooks/useMarkAllNotificationsRead', () => ({
+  useMarkAllNotificationsRead: () => ({
+    markAllAsRead: vi.fn(),
+    isMarkingAll: false,
+  }),
 }))
 
 const renderBadge = () =>

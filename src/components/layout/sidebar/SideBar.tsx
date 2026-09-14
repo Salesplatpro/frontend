@@ -1,11 +1,13 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { Link } from 'react-router-dom'
 
 import auxHrLogo from '@/assets/aux_logo.png'
-import { FeedbackModal } from '@/components/feedback'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
-import { dashboardPathForRole } from '@/features/auth/utils/dashboardPath'
+import {
+  dashboardPathForRole,
+  feedbackPathForRole,
+} from '@/features/auth/utils/dashboardPath'
 
 import { SidebarList } from '../lists'
 import styles from './sidebar.module.scss'
@@ -28,9 +30,9 @@ export const SideBar: React.FC<sideBarProps> = ({
   handleClick,
   topSlot,
 }) => {
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const userRole = useAuthStore((state) => state.user?.userRole)
   const homePath = dashboardPathForRole(userRole)
+  const feedbackPath = feedbackPathForRole(userRole)
 
   return (
     <div className={styles.sideBarContainer}>
@@ -62,18 +64,11 @@ export const SideBar: React.FC<sideBarProps> = ({
       <div>
         <SidebarList
           icon={<CgProfile size={20} />}
-          name="Leave us feedBack"
-          onClick={() => {
-            setIsFeedbackOpen(true)
-            handleClick?.()
-          }}
+          name="Leave us feedback"
+          link={feedbackPath}
+          onClick={handleClick}
         />
       </div>
-
-      <FeedbackModal
-        open={isFeedbackOpen}
-        onClose={() => setIsFeedbackOpen(false)}
-      />
     </div>
   )
 }

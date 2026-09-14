@@ -98,6 +98,12 @@ export type SingleJobDetails = {
     conflictingRequirements?: string[]
     keyEvidence?: string[]
     hiringRationale?: string
+    questionFeedback?: Array<{
+      question: string
+      whatTheyAnswered?: string
+      whatItDemonstrates?: string
+      experienceLink?: string
+    }>
   } | null
   mbtiType?: string | null
   stages?: Record<string, string> | null

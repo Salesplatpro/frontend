@@ -45,6 +45,7 @@ import Recruiters from '@/pages/AdminProfile/Recruiters/Recruiters'
 import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
 import Talents from '@/pages/AdminProfile/Talents/Talents'
 import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
+import { FeedbackPage } from '@/pages/Feedback'
 import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
 import {
@@ -241,6 +242,10 @@ export const routeConfig: RouteObject[] = [
                 element: <ChangePasswordPage />,
               },
               {
+                path: 'feedback',
+                element: <FeedbackPage />,
+              },
+              {
                 element: <RequireEmailVerified redirectTo="/talentDashboard" />,
                 children: [
                   {
@@ -260,12 +265,22 @@ export const routeConfig: RouteObject[] = [
                     element: <Support />,
                   },
                   {
-                    path: 'Chat',
+                    path: 'chat',
                     element: <Inbox />,
                   },
                   {
-                    path: 'Notification',
+                    path: 'Chat',
+                    element: <Navigate to="/talentDashboard/chat" replace />,
+                  },
+                  {
+                    path: 'notification',
                     element: <Notifications />,
+                  },
+                  {
+                    path: 'Notification',
+                    element: (
+                      <Navigate to="/talentDashboard/notification" replace />
+                    ),
                   },
                   {
                     path: 'job/:jobId',
@@ -308,6 +323,10 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'dashboard',
                 element: <Dashboard />,
+              },
+              {
+                path: 'feedback',
+                element: <FeedbackPage />,
               },
               {
                 path: paths.changePassword,
@@ -417,6 +436,10 @@ export const routeConfig: RouteObject[] = [
                     path: 'plan',
                     element: <RecruiterPlanPage />,
                   },
+                  {
+                    path: 'notifications',
+                    element: <Notifications />,
+                  },
                 ],
               },
             ],
@@ -466,6 +489,14 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'feedback',
                 element: <Feedback />,
+              },
+              {
+                path: 'leave-feedback',
+                element: <FeedbackPage />,
+              },
+              {
+                path: 'notifications',
+                element: <Notifications />,
               },
             ],
           },

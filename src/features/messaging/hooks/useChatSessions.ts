@@ -6,7 +6,10 @@ import {
 } from '../services/messagingService'
 
 export const useChatSessions = () => {
-  const { data, error, isLoading } = useSWR(chatSessionsKey, fetchChatSessions)
+  const { data, error, isLoading, mutate } = useSWR(
+    chatSessionsKey,
+    fetchChatSessions,
+  )
 
-  return { sessions: data?.data.sessions ?? [], error, isLoading }
+  return { sessions: data?.data.sessions ?? [], error, isLoading, mutate }
 }

@@ -1,0 +1,39 @@
+.root {
+  :global(.MuiTableCell-body) {
+    color: var(--color-text-heading);
+  }
+}
+
+:global([data-theme='dark']) {
+  .root {
+    :global(.MuiTableCell-body) {
+      color: var(--color-white) !important;
+    }
+  }
+
+  .actions {
+    color: var(--color-white);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  min-height: 32px;
+  color: var(--color-icon);
+}
+
+.actionsCenter {
+  justify-content: center;
+}
+
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}

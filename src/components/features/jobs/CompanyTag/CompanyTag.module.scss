@@ -1,0 +1,64 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sm .logo,
+.sm .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.md .logo,
+.md .icon {
+  width: 36px;
+  height: 36px;
+}
+
+.logo {
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  background: var(--color-bg-subtle);
+  flex-shrink: 0;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-tint);
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.sm .name {
+  font-size: var(--text-sm);
+}
+
+.md .name {
+  font-size: var(--text-md);
+}
+
+.fallback {
+  font-weight: var(--weight-medium);
+  font-style: italic;
+  color: var(--color-text-muted);
+}

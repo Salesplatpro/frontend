@@ -2,7 +2,7 @@
 
 .panel {
   width: 100%;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-elevated);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--space-5);
@@ -48,6 +48,10 @@
   &:disabled {
     opacity: 0.5;
     cursor: default;
+  }
+
+  svg {
+    color: currentColor;
   }
 }
 
@@ -113,5 +117,22 @@
     opacity: 0.5;
     cursor: default;
     text-decoration: none;
+  }
+}
+
+:global(html[data-theme='dark']) {
+  .title,
+  .resetAll:not(:disabled),
+  .fieldLabel,
+  .clearAll:not(:disabled) {
+    color: var(--color-white);
+  }
+
+  .resetAll svg {
+    color: var(--color-white);
+  }
+
+  .pill {
+    color: var(--color-white);
   }
 }

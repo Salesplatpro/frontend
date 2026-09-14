@@ -1151,6 +1151,7 @@ $deep-gray: var(--color-grey-600);
       align-items: center;
       gap: 10px;
       border: 1px solid #e7e7e9;
+      color: var(--color-icon);
 
       span {
         font-weight: 400;
@@ -1158,6 +1159,17 @@ $deep-gray: var(--color-grey-600);
         font-size: var(--text-sm);
         line-height: 20px;
       }
+    }
+  }
+}
+
+html[data-theme='dark'] {
+  .job-det-header {
+    color: var(--color-white);
+
+    .share > div {
+      color: var(--color-white);
+      border-color: var(--color-border);
     }
   }
 }

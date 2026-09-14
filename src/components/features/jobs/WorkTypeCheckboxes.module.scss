@@ -2,8 +2,43 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-6);
-  height: 44px;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-input);
+  color: var(--color-text-heading);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
+}
+
+.option:hover {
+  border-color: var(--color-primary);
+}
+
+.optionChecked {
+  border-color: var(--color-primary);
+  background: var(--color-primary-tint);
+  color: var(--color-text-heading);
+}
+
+.input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 .error {

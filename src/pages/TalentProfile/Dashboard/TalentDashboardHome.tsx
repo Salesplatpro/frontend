@@ -5,6 +5,7 @@ import { Chart, ColumnDef, DataTable } from '@/components'
 import { PageHero } from '@/components/layout/PageHero'
 import { PagePanel, StatCard, StatGrid } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
+import { ActivityHeatmap, bucketDates } from '@/components/ui/ActivityHeatmap'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -193,6 +194,14 @@ const TalentDashboardHome = () => {
               />
             </PagePanel>
           </div>
+
+          <PagePanel
+            title="Your application activity"
+            hint="Days you submitted applications over the last 12 weeks.">
+            <ActivityHeatmap
+              data={bucketDates(applications.map((app) => app.createdAt))}
+            />
+          </PagePanel>
         </>
       )}
 

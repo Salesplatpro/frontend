@@ -14,10 +14,14 @@
 
 .tooltipTrigger {
   display: inline-flex;
-  color: var(--color-text-muted);
+  color: var(--color-icon);
   cursor: help;
   font-size: 1.1rem;
   line-height: 1;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
 }
 
 .required {

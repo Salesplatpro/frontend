@@ -6,6 +6,7 @@ import { IoMdMenu } from 'react-icons/io'
 import { Outlet } from 'react-router-dom'
 
 import { sidebarData } from '@/components/features/recruiter/SideBar/sidebarData'
+import { ThemeProvider } from '@/features/theme/ThemeProvider'
 
 import { SideBar } from '../../components'
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
@@ -15,35 +16,37 @@ const RecruiterProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-nav">
-        <button className="menu" onClick={() => setIsOpen(!isOpen)}>
-          {!isOpen && <IoMdMenu className="text-3xl" />}
-        </button>
-        <LoggedInUserBadge />
+    <ThemeProvider>
+      <div className="dashboard">
+        <div className="dashboard-nav">
+          <button className="menu" onClick={() => setIsOpen(!isOpen)}>
+            {!isOpen && <IoMdMenu className="text-3xl" />}
+          </button>
+          <LoggedInUserBadge />
+        </div>
+        {isOpen && (
+          <button
+            type="button"
+            className="sidebar-backdrop"
+            aria-label="Close menu"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+        <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
+          <SideBar
+            sideBarData={sidebarData}
+            handleClick={() => setIsOpen(false)}
+            topSlot={<CompanyBanner />}
+          />
+          <button className="close" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
+          </button>
+        </div>
+        <div className="outlet">
+          <Outlet />
+        </div>
       </div>
-      {isOpen && (
-        <button
-          type="button"
-          className="sidebar-backdrop"
-          aria-label="Close menu"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-      <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
-        <SideBar
-          sideBarData={sidebarData}
-          handleClick={() => setIsOpen(false)}
-          topSlot={<CompanyBanner />}
-        />
-        <button className="close" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
-        </button>
-      </div>
-      <div className="outlet">
-        <Outlet />
-      </div>
-    </div>
+    </ThemeProvider>
   )
 }
 

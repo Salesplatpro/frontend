@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { CheckBox } from '@/components/forms/CheckBox'
-
 import styles from './WorkTypeCheckboxes.module.scss'
 
 export const WORK_TYPE = {
@@ -14,6 +12,12 @@ export type WorkType = (typeof WORK_TYPE)[keyof typeof WORK_TYPE]
 
 export const workModeNeedsLocation = (workMode: readonly string[]): boolean =>
   workMode.includes(WORK_TYPE.HYBRID) || workMode.includes(WORK_TYPE.ONSITE)
+
+const OPTIONS: { value: WorkType; label: string }[] = [
+  { value: WORK_TYPE.REMOTE, label: 'Remote' },
+  { value: WORK_TYPE.HYBRID, label: 'Hybrid' },
+  { value: WORK_TYPE.ONSITE, label: 'On-site' },
+]
 
 interface WorkTypeCheckboxesProps {
   value: WorkType[]
@@ -36,36 +40,44 @@ export const WorkTypeCheckboxes: React.FC<WorkTypeCheckboxesProps> = ({
     }
   }
 
+  const errorId = `${name}-error`
+
   return (
     <div
       className={styles.row}
       data-field={name}
       id={name}
       tabIndex={-1}
-      aria-invalid={error ? true : undefined}>
-      <CheckBox
-        name={`${name}-remote`}
-        value={WORK_TYPE.REMOTE}
-        label="Remote"
-        checked={value.includes(WORK_TYPE.REMOTE)}
-        onChange={(event) => toggle(WORK_TYPE.REMOTE, event.target.checked)}
-      />
-      <CheckBox
-        name={`${name}-hybrid`}
-        value={WORK_TYPE.HYBRID}
-        label="Hybrid"
-        checked={value.includes(WORK_TYPE.HYBRID)}
-        onChange={(event) => toggle(WORK_TYPE.HYBRID, event.target.checked)}
-      />
-      <CheckBox
-        name={`${name}-onSite`}
-        value={WORK_TYPE.ONSITE}
-        label="On-site"
-        checked={value.includes(WORK_TYPE.ONSITE)}
-        onChange={(event) => toggle(WORK_TYPE.ONSITE, event.target.checked)}
-      />
+      role="group"
+      aria-label="Work type"
+      aria-describedby={error ? errorId : undefined}>
+      {OPTIONS.map((option) => {
+        const checked = value.includes(option.value)
+        const inputId = `${name}-${option.value}`
+        return (
+          <label
+            key={option.value}
+            htmlFor={inputId}
+            className={`${styles.option} ${
+              checked ? styles.optionChecked : ''
+            }`}>
+            <input
+              id={inputId}
+              type="checkbox"
+              name={name}
+              value={option.value}
+              checked={checked}
+              className={styles.input}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? errorId : undefined}
+              onChange={(event) => toggle(option.value, event.target.checked)}
+            />
+            <span>{option.label}</span>
+          </label>
+        )
+      })}
       {error && (
-        <div id={`${name}-error`} className={styles.error} role="alert">
+        <div id={errorId} className={styles.error} role="alert">
           {error}
         </div>
       )}

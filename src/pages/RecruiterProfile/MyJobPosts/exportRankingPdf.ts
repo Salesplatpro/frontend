@@ -228,11 +228,50 @@ export const exportBoardReport = ({
           )}</p>
           <h4>Why hire</h4>
           <p>${escapeHtml(analysis?.whyHire || '—')}</p>
+          ${
+            analysis?.relevantExperience?.length
+              ? `<h4>Relevant experience</h4>${listHtml(
+                  analysis.relevantExperience,
+                )}`
+              : ''
+          }
           <h4>Scores</h4>
           <p>Prescreen ${app.talent.prescreeningScore ?? '—'}%
             · CV ${app.cvSimilarityScore ?? '—'}%
             · Personalized ${app.personalizedScore ?? '—'}%
             · Personality ${escapeHtml(app.mbtiType || '—')}</p>
+          ${
+            analysis?.questionFeedback?.length
+              ? `<h4>Screening question feedback</h4>${analysis.questionFeedback
+                  .map(
+                    (item) => `<p><strong>${escapeHtml(
+                      item.question,
+                    )}</strong><br/>
+                    ${
+                      item.whatTheyAnswered
+                        ? `<em>What they answered.</em> ${escapeHtml(
+                            item.whatTheyAnswered,
+                          )}<br/>`
+                        : ''
+                    }
+                    ${
+                      item.whatItDemonstrates
+                        ? `<em>What this demonstrates.</em> ${escapeHtml(
+                            item.whatItDemonstrates,
+                          )}<br/>`
+                        : ''
+                    }
+                    ${
+                      item.experienceLink
+                        ? `<em>Verified experience.</em> ${escapeHtml(
+                            item.experienceLink,
+                          )}`
+                        : ''
+                    }</p>`,
+                  )
+                  .join('')}`
+              : ''
+          }
           <h4>Evidence</h4>
           ${listHtml(analysis?.keyEvidence ?? app.matchStrengths)}
           <h4>Gaps</h4>

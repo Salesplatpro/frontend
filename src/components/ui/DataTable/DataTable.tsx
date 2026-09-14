@@ -13,6 +13,7 @@ import React, { useMemo, useState } from 'react'
 import { useScreenWidth } from '../../../hooks'
 import { EmptyState } from '../EmptyState'
 import { Spinner } from '../Spinner'
+import styles from './DataTable.module.scss'
 
 export interface ColumnDef<T> {
   key: string
@@ -81,20 +82,36 @@ const StyledTableCell = styled(TableCell)(() => ({
     },
   },
   [`&.${tableCellClasses.body}`]: {
-    color: 'var(--color-grey-900)',
+    color: 'var(--color-text-heading)',
     fontSize: 'var(--text-sm)',
     fontFamily: 'var(--font-body)',
     fontWeight: 500,
+    backgroundColor: 'transparent',
     borderBottom: '1px solid var(--color-border)',
+    verticalAlign: 'middle',
+    '& p': {
+      margin: 0,
+      color: 'inherit',
+    },
+    '& .MuiCheckbox-root': {
+      color: 'var(--color-text-muted)',
+    },
+    '[data-theme="dark"] &': {
+      color: 'var(--color-white)',
+    },
   },
 }))
 
 const StyledTableRow = styled(TableRow)(() => ({
+  backgroundColor: 'var(--color-bg-elevated)',
   '&:last-child td, &:last-child th': {
     border: 0,
   },
   '&:hover': {
-    backgroundColor: 'var(--color-bg-subtle)',
+    backgroundColor: 'var(--color-bg-row-hover)',
+  },
+  '&.Mui-selected, &.Mui-selected:hover': {
+    backgroundColor: 'var(--color-bg-row-hover)',
   },
 }))
 
@@ -237,17 +254,24 @@ export function DataTable<T>({
   return (
     <TableContainer
       component={Paper}
+      className={styles.root}
       sx={{
         borderRadius: 'var(--radius-panel)',
         boxShadow: 'var(--shadow-panel)',
         border: '1px solid var(--color-border)',
+        backgroundColor: 'var(--color-bg-elevated)',
+        backgroundImage: 'none',
+        color: 'var(--color-text-heading)',
         maxWidth: '100%',
         overflowX: allowOverflow ? 'visible' : 'auto',
         overflowY: allowOverflow ? 'visible' : 'hidden',
       }}>
       <Table
         aria-label={ariaLabel}
-        sx={allowOverflow ? undefined : { minWidth: 720 }}>
+        sx={{
+          backgroundColor: 'var(--color-bg-elevated)',
+          ...(allowOverflow ? {} : { minWidth: 720 }),
+        }}>
         <TableHead
           sx={{
             background: 'var(--color-bg-hero)',

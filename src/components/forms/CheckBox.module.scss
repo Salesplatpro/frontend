@@ -8,9 +8,12 @@
   font-weight: 500;
   font-size: var(--text-md);
   line-height: 20px;
+  color: var(--color-text-body);
 }
 
 .input {
   width: 16px;
   height: 16px;
+  accent-color: var(--color-primary);
+  flex-shrink: 0;
 }
