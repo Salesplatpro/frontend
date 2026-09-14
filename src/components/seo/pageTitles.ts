@@ -19,11 +19,15 @@ const EXACT_TITLES: Record<string, string> = {
   '/talentDashboard/talentProfile': 'Profile',
   '/talentDashboard/talentQuiz': 'Pre-Assessment',
   '/talentDashboard/job': 'Jobs',
+  '/talentDashboard/feedback': 'Feedback',
   '/talentDashboard/support': 'Support',
-  '/talentDashboard/Chat': 'Chat',
+  '/talentDashboard/chat': 'Inbox',
+  '/talentDashboard/Chat': 'Inbox',
+  '/talentDashboard/notification': 'Notifications',
   '/talentDashboard/Notification': 'Notifications',
   '/talentDashboard/applicationPipeline': 'Application Pipeline',
   '/recruiterDashboard/dashboard': 'Dashboard',
+  '/recruiterDashboard/feedback': 'Feedback',
   '/recruiterDashboard/dashboard/allapplications': 'All Applications',
   '/recruiterDashboard/postjob': 'Post Job',
   '/recruiterDashboard/myJobPosts': 'My Job Posts',
@@ -33,6 +37,7 @@ const EXACT_TITLES: Record<string, string> = {
   '/recruiterDashboard/scout/create-jd': 'Create Job Description',
   '/recruiterDashboard/shortlist': 'Shortlist',
   '/recruiterDashboard/chat': 'Chat',
+  '/recruiterDashboard/notifications': 'Notifications',
   '/recruiterDashboard/profile': 'Profile',
   '/recruiterDashboard/plan': 'Plan',
   '/adminDashboard': 'Talents',
@@ -42,6 +47,8 @@ const EXACT_TITLES: Record<string, string> = {
   '/adminDashboard/viewcandidates': 'View Candidates',
   '/adminDashboard/roles': 'Roles',
   '/adminDashboard/feedback': 'Feedback',
+  '/adminDashboard/leave-feedback': 'Leave Feedback',
+  '/adminDashboard/notifications': 'Notifications',
 }
 
 const PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [

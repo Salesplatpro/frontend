@@ -20,8 +20,10 @@ const isContentEmpty = (html: string) => !html.replace(/<[^>]*>/g, '').trim()
 export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   const [content, setContent] = useState('')
   const [composerOpen, setComposerOpen] = useState(false)
-  const { messages, isLoading, sendMessage, isSending, currentUserId } =
-    useMessaging(applicationId, talentId)
+  const { messages, isLoading, sendMessage, isSending } = useMessaging(
+    applicationId,
+    talentId,
+  )
   const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
 
   const busy = isSending || isBroadcasting
@@ -61,11 +63,7 @@ export const Messaging = ({ applicationId, talentId }: MessagingProps) => {
   return (
     <div className={styles.container}>
       <div>
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <DisplayMessage messages={messages} currentUserId={currentUserId} />
-        )}
+        {isLoading ? <Spinner /> : <DisplayMessage messages={messages} />}
       </div>
 
       {composerOpen ? (

@@ -10,6 +10,7 @@ import {
   ColumnDef,
   DataTable,
   sortByAccessor,
+  TableActions,
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { Dropdown, DropdownItem } from '@/components/ui/Dropdown'
@@ -53,7 +54,7 @@ const ActionsCell = ({
   ]
 
   return (
-    <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+    <TableActions>
       <Button
         variant="primary"
         size="sm"
@@ -61,7 +62,7 @@ const ActionsCell = ({
         Scout
       </Button>
       <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
-    </div>
+    </TableActions>
   )
 }
 

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { HeroAction, HeroGhost, PageHero } from '@/components/layout/PageHero'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
+import { ActivityHeatmap } from '@/components/ui/ActivityHeatmap'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Chart } from '@/components/ui/Chart'
 import { Spinner } from '@/components/ui/Spinner'
@@ -130,6 +131,12 @@ const Dashboard = () => {
           <RecentApplications infoData={stats?.recentApplications} embed />
         </PagePanel>
       </div>
+
+      <PagePanel
+        title="Applications received"
+        hint="Daily volume for your active company over the last 12 weeks.">
+        <ActivityHeatmap data={stats?.applicationHeatmap ?? []} />
+      </PagePanel>
 
       <RecentCompilation />
       <WelcomeModal />

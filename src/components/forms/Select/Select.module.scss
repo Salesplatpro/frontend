@@ -11,6 +11,10 @@
   @extend %form-label;
   display: flex;
   align-items: center;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
 }
 
 .required {
@@ -23,6 +27,14 @@
   padding-right: var(--space-8);
   text-align: left;
   cursor: pointer;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+
+    span {
+      color: var(--color-white);
+    }
+  }
 }
 
 .error {
@@ -43,6 +55,13 @@
   right: var(--space-3);
   top: 50%;
   transform: translateY(-50%);
+  display: inline-flex;
+  color: var(--color-icon);
+  pointer-events: none;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
 }
 
 .options {
@@ -52,7 +71,7 @@
   width: 100%;
   max-height: 220px;
   overflow-y: auto;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-elevated);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
@@ -69,10 +88,15 @@
   font-family: var(--font-body);
   font-size: var(--text-sm);
   color: var(--color-text-heading);
+  background-color: var(--color-bg-elevated);
   box-sizing: border-box;
 
   &:focus {
     outline: none;
+  }
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
   }
 }
 
@@ -83,6 +107,10 @@
 
   &:hover {
     background-color: var(--color-bg-subtle);
+  }
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
   }
 }
 
@@ -130,6 +158,10 @@
   color: var(--color-text-heading);
   font-size: var(--text-sm);
   line-height: 1.4;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
 }
 
 .tagLabel {
@@ -154,10 +186,14 @@
   border: none;
   background: none;
   padding: 0;
-  color: var(--color-text-muted);
+  color: var(--color-icon);
   cursor: pointer;
 
   &:hover {
     color: var(--color-danger);
+  }
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
   }
 }

@@ -11,7 +11,7 @@
   padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 42%);
+  background: var(--color-bg-elevated);
 
   @media (min-width: 900px) {
     flex-direction: row;

@@ -47,6 +47,10 @@
   color: var(--color-text-muted);
   font-size: var(--text-lg);
   flex-shrink: 0;
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+  }
 }
 
 .tabItem {
@@ -76,6 +80,18 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
+    background: var(--color-bg-elevated);
+    border-color: var(--color-border);
+
+    &.active {
+      color: var(--color-white);
+      background: var(--color-primary-tint);
+      border-color: var(--color-primary);
+    }
+  }
 }
 
 .tabButton {
@@ -99,10 +115,15 @@
   width: 28px;
   height: 28px;
   border-radius: var(--radius-full);
-  background: var(--color-grey-100);
+  background: var(--color-grey-200);
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   flex-shrink: 0;
+
+  :global(html[data-theme='dark']) & {
+    background: var(--color-bg-subtle);
+    color: var(--color-white);
+  }
 }
 
 .tabItem.active .tabIndex {
@@ -131,6 +152,10 @@
 
   @media (max-width: 767px) {
     display: none;
+  }
+
+  :global(html[data-theme='dark']) & {
+    color: var(--color-white);
   }
 }
 

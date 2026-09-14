@@ -25,7 +25,7 @@ $amber-700: #b45309;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--color-text-heading);
+  color: inherit;
   font-family: var(--font-heading);
   text-transform: capitalize;
 }
@@ -50,7 +50,7 @@ $amber-700: #b45309;
 
 // ── Applicants cell ────────────────────────────────────────────────────────
 .applicantsButton {
-  color: var(--color-primary-strong);
+  color: inherit;
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
   font-size: var(--text-md);
@@ -63,33 +63,16 @@ $amber-700: #b45309;
   white-space: nowrap;
 }
 
-// ── Details / actions cell ─────────────────────────────────────────────────
-.actionsCell {
-  display: flex;
+.addAiConfigButton {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.viewJobButton {
-  color: var(--color-text-inverse);
+  height: 32px;
+  box-sizing: border-box;
   font-family: var(--font-heading);
   font-weight: var(--weight-semibold);
   font-size: var(--text-sm);
-  line-height: 1.75rem;
-  padding: var(--space-1) var(--space-3);
-  background-color: var(--color-primary-strong);
-  border-radius: var(--radius-md);
-  white-space: nowrap;
-}
-
-.addAiConfigButton {
-  font-family: var(--font-heading);
-  font-weight: var(--weight-semibold);
-  font-size: var(--text-sm);
-  line-height: 1.75rem;
-  padding: var(--space-1) var(--space-3);
+  padding: 0 var(--space-3);
   border-radius: var(--radius-md);
   border: 1px solid $amber-500;
   color: $amber-700;
@@ -100,25 +83,38 @@ $amber-700: #b45309;
   &:hover {
     background-color: $amber-100;
   }
+
+  :global(html[data-theme='dark']) & {
+    background-color: rgba(245, 158, 11, 0.16);
+    color: #fcd34d;
+
+    &:hover {
+      background-color: rgba(245, 158, 11, 0.28);
+    }
+  }
 }
 
 // ── Row status colours ─────────────────────────────────────────────────────
+// Left accent only so rows keep the shared DataTable (scout) surface.
 // Green: job complete (has AI config)
 // Amber: incomplete (no AI config)
 // Gray: paused or closed job
 .rowComplete {
-  border-left: 4px solid #16a34a !important;
-  background-color: #f0fdf4 !important;
+  td:first-child {
+    box-shadow: inset 4px 0 0 #16a34a;
+  }
 }
 
 .rowIncomplete {
-  border-left: 4px solid $amber-500 !important;
-  background-color: $amber-50 !important;
+  td:first-child {
+    box-shadow: inset 4px 0 0 $amber-500;
+  }
 }
 
 .rowClosed {
-  border-left: 4px solid #9ca3af !important;
-  background-color: #f9fafb !important;
+  td:first-child {
+    box-shadow: inset 4px 0 0 #9ca3af;
+  }
 }
 
 // ── Share modal ────────────────────────────────────────────────────────────

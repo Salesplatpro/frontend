@@ -10,26 +10,23 @@ export interface MessageBubbleData {
   content: string
   createdAt: string
   senderId: string
+  sender?: { firstName: string; lastName: string; userRole?: string }
 }
 
 interface MessageBubbleProps {
   message: MessageBubbleData
-  /** The viewer's own user id — determines which side the bubble aligns to. */
-  currentUserId?: string
 }
 
-export const MessageBubble = ({
-  message,
-  currentUserId,
-}: MessageBubbleProps) => {
-  const isOwnMessage =
-    currentUserId != null && message.senderId === currentUserId
+const isRecruiterSide = (message: MessageBubbleData) =>
+  message.sender?.userRole === 'recruiter' ||
+  message.sender?.userRole === 'admin'
+
+export const MessageBubble = ({ message }: MessageBubbleProps) => {
+  const alignRight = isRecruiterSide(message)
 
   return (
     <div
-      className={`${styles.row} ${
-        isOwnMessage ? styles.own : styles.received
-      }`}>
+      className={`${styles.row} ${alignRight ? styles.own : styles.received}`}>
       <div className={styles.bubble}>
         <RichTextDisplay content={message.content} className={styles.content} />
         {message.createdAt ? (

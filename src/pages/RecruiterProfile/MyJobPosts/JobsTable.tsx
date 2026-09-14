@@ -8,6 +8,7 @@ import { CompanyTag } from '@/components/features/jobs/CompanyTag'
 import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
 import { Select } from '@/components/forms/Select'
 import { StatusBadge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import { useUpdateJobMutation } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
@@ -15,7 +16,7 @@ import { notify } from '@/utils/toastNotifications'
 import Facebook from '../../../assets/Facebook icon.svg'
 import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
-import { ColumnDef, DataTable } from '../../../components'
+import { ColumnDef, DataTable, TableActions } from '../../../components'
 import { formatTimeAgo, recruiterJobPostsTypes } from '../../../utils'
 import { getStatusBadge, JOB_STATUS_OPTIONS } from '../getJobStatus'
 import styles from './JobsTable.module.scss'
@@ -192,23 +193,25 @@ export const JobsTable = ({ data }: JobsTableType) => {
       {
         key: 'details',
         header: 'Details',
-        align: 'center',
+        align: 'right',
         render: (job) => (
-          <div className={styles.actionsCell}>
+          <TableActions>
             <Link
               to={`/recruiterDashboard/jobdetail/${job.id}`}
               state={{ jobName: job.role.name, postedAt: job.createdAt }}>
-              <button className={styles.viewJobButton}>View Job</button>
+              <Button variant="primary" size="sm">
+                View Job
+              </Button>
             </Link>
             {job.status === 'draft' && !resolveAiConfigId(job) && (
               <Link to={`/recruiterDashboard/postjob/${job.id}`}>
-                <button className={styles.addAiConfigButton}>
+                <button type="button" className={styles.addAiConfigButton}>
                   Add AI Config
                 </button>
               </Link>
             )}
             <ShareOptions handleShare={handleShare} jobId={job.id} />
-          </div>
+          </TableActions>
         ),
       },
     ],

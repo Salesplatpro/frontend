@@ -12,7 +12,7 @@
   padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: var(--color-white);
+  background: var(--color-bg-elevated);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -23,7 +23,7 @@
 
 .cardActive {
   border-color: var(--color-brand-800);
-  background: linear-gradient(180deg, #f5f8ff 0%, #ffffff 48%);
+  background: var(--color-primary-tint);
   box-shadow: 0 0 0 1px rgba(36, 65, 171, 0.12);
 }
 
@@ -115,7 +115,7 @@
 .editBtn {
   border-color: var(--color-border-strong);
   color: var(--color-text-heading);
-  background: var(--color-white);
+  background: var(--color-bg-elevated);
 }
 
 .deleteBtn {

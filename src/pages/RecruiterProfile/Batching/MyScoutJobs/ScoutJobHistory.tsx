@@ -13,6 +13,7 @@ import {
   ColumnDef,
   DataTable,
   sortByAccessor,
+  TableActions,
   TableToolbar,
 } from '@/components/ui/DataTable'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -239,10 +240,10 @@ export const ScoutJobHistory = () => {
     },
     {
       key: 'actions',
-      header: 'Actions',
-      align: 'center',
+      header: '',
+      align: 'right',
       render: (row) => (
-        <div className="flex justify-center gap-2">
+        <TableActions>
           <Button
             variant="outline"
             size="sm"
@@ -255,7 +256,7 @@ export const ScoutJobHistory = () => {
             onClick={() => setPipelineTarget(row)}>
             Add to job pipeline
           </Button>
-        </div>
+        </TableActions>
       ),
     },
   ]

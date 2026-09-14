@@ -4,4 +4,5 @@ export interface DashboardStats {
   completionRatio?: number
   applicationsCount?: number
   shortlistCount?: number
+  applicationHeatmap?: Array<{ date: string; count: number }>
 }

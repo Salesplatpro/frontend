@@ -16,7 +16,7 @@
   padding: var(--space-5);
   border-radius: var(--radius-panel);
   border: 1px solid var(--color-border);
-  background: var(--color-white);
+  background: var(--color-bg-elevated);
   box-shadow: var(--shadow-panel);
   display: flex;
   flex-direction: column;
@@ -59,12 +59,14 @@
   margin: 0;
   font-size: var(--text-md);
   font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
 }
 
 .recRationale {
   margin: 0;
   font-size: var(--text-md);
   line-height: 1.55;
+  color: var(--color-text-body);
 }
 
 .mbtiValue {
@@ -146,6 +148,27 @@
   gap: var(--space-4);
 }
 
+.prose {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--color-text-body);
+}
+
+.experienceBlock {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.experienceTitle {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+}
+
 .list {
   margin: 0;
   padding-left: 1.1rem;
@@ -154,6 +177,7 @@
   gap: 6px;
   font-size: var(--text-sm);
   line-height: 1.45;
+  color: var(--color-text-body);
 }
 
 .empty {
@@ -161,12 +185,6 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   font-style: italic;
-}
-
-.prose {
-  margin: 0;
-  font-size: var(--text-sm);
-  line-height: 1.55;
 }
 
 .decisionChip {
@@ -200,6 +218,47 @@
 
 .decisionChip.decisionPending {
   background: #fff4e2;
+}
+
+:global([data-theme='dark']) {
+  .heroHigh {
+    background: rgba(27, 123, 68, 0.18);
+    border-color: rgba(124, 200, 143, 0.45);
+  }
+
+  .heroMedium {
+    background: rgba(181, 71, 8, 0.18);
+    border-color: rgba(251, 178, 65, 0.45);
+  }
+
+  .heroLow {
+    background: rgba(196, 50, 10, 0.18);
+    border-color: rgba(255, 111, 109, 0.45);
+  }
+
+  .decisionAccepted {
+    color: #86efac;
+  }
+
+  .decisionChip.decisionAccepted {
+    background: rgba(27, 123, 68, 0.22);
+  }
+
+  .decisionRejected {
+    color: #fca5a5;
+  }
+
+  .decisionChip.decisionRejected {
+    background: rgba(196, 50, 10, 0.22);
+  }
+
+  .decisionPending {
+    color: #fcd34d;
+  }
+
+  .decisionChip.decisionPending {
+    background: rgba(181, 71, 8, 0.22);
+  }
 }
 
 @media (max-width: 768px) {

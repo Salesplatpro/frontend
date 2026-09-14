@@ -9,6 +9,7 @@ import { sidebarData as originalSidebarData } from '@/components/features/talent
 import { SideBar } from '@/components/layout/sidebar/SideBar'
 import { NavigationLockOverlay } from '@/features/pre-assessment/components/NavigationLockOverlay'
 import { useAssessmentNavigationBlocker } from '@/features/pre-assessment/useAssessmentNavigationBlocker'
+import { ThemeProvider } from '@/features/theme/ThemeProvider'
 
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
 
@@ -26,7 +27,7 @@ const TalentProfileSidebar: React.FC = () => {
 
   useEffect(() => {
     const updatedData = originalSidebarData.map((item) => {
-      if (item.name === 'Notification') {
+      if (item.name === 'Inbox') {
         return { ...item, count: unreadCount }
       }
       return item
@@ -35,39 +36,41 @@ const TalentProfileSidebar: React.FC = () => {
   }, [unreadCount])
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-nav">
-        <button className="menu" onClick={() => setIsOpen(!isOpen)}>
-          {!isOpen && <IoMdMenu className="text-3xl" />}
-        </button>
-        <LoggedInUserBadge />
+    <ThemeProvider>
+      <div className="dashboard">
+        <div className="dashboard-nav">
+          <button className="menu" onClick={() => setIsOpen(!isOpen)}>
+            {!isOpen && <IoMdMenu className="text-3xl" />}
+          </button>
+          <LoggedInUserBadge />
+        </div>
+
+        {isOpen && (
+          <button
+            type="button"
+            className="sidebar-backdrop"
+            aria-label="Close menu"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+        <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
+          <SideBar
+            sideBarData={currentSidebarData}
+            handleClick={() => setIsOpen(false)}
+          />
+
+          <button className="close" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
+          </button>
+
+          {isLocked && <NavigationLockOverlay />}
+        </div>
+
+        <div className="outlet">
+          <Outlet context={{ setUnreadCount } as TalentSidebarContext} />
+        </div>
       </div>
-
-      {isOpen && (
-        <button
-          type="button"
-          className="sidebar-backdrop"
-          aria-label="Close menu"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-      <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
-        <SideBar
-          sideBarData={currentSidebarData}
-          handleClick={() => setIsOpen(false)}
-        />
-
-        <button className="close" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
-        </button>
-
-        {isLocked && <NavigationLockOverlay />}
-      </div>
-
-      <div className="outlet">
-        <Outlet context={{ setUnreadCount } as TalentSidebarContext} />
-      </div>
-    </div>
+    </ThemeProvider>
   )
 }
 

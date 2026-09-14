@@ -36,15 +36,15 @@ export interface ChartProps {
 }
 
 const DEFAULT_COLORS = [
-  '#4985df',
-  '#2441ab',
-  '#1e2a4d',
-  '#3c6fd4',
-  '#1b7b44',
-  '#b54708',
+  'var(--color-brand-500)',
+  'var(--color-brand-300)',
+  'var(--color-brand-700)',
+  'var(--color-brand-800)',
+  'var(--color-success)',
+  'var(--color-warning)',
 ]
 
-const axisTick = { fontSize: 11, fill: '#667085' }
+const axisTick = { fontSize: 11, fill: 'var(--color-text-muted)' }
 
 type TooltipPayload = {
   name?: string

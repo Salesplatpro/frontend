@@ -15,6 +15,7 @@ import { IoCheckmarkCircle } from 'react-icons/io5'
 import { MdOutlineWorkspacePremium } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
+import { NotificationPanel } from '@/components/features/notifications/NotificationPanel'
 import { Avatar } from '@/components/ui/Avatar'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { changePasswordPathForRole } from '@/features/auth/utils/dashboardPath'
@@ -22,11 +23,14 @@ import { getEmailVerificationBadge } from '@/features/email-verification/utils/g
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { ThemeMode, useTheme } from '@/features/theme/ThemeProvider'
 
 import styles from './LoggedInUserBadge.module.scss'
 
 const NOTIFICATION_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
-  talent: '/talentDashboard/Notification',
+  talent: '/talentDashboard/notification',
+  recruiter: '/recruiterDashboard/notifications',
+  admin: '/adminDashboard/notifications',
 }
 
 const PROFILE_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
@@ -38,8 +42,15 @@ const PLAN_ROUTE_BY_ROLE: Partial<Record<string, string>> = {
   recruiter: '/recruiterDashboard/plan',
 }
 
+const THEME_OPTIONS: Array<{ id: ThemeMode; label: string }> = [
+  { id: 'system', label: 'System' },
+  { id: 'light', label: 'Light' },
+  { id: 'dark', label: 'Dark' },
+]
+
 export const LoggedInUserBadge: React.FC = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false)
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -47,6 +58,7 @@ export const LoggedInUserBadge: React.FC = () => {
   const logout = useAuthStore((state) => state.logout)
   const { profile: userInfo, isLoading, error } = useProfile()
   const { unReadCount } = useNotifications()
+  const { mode: themeMode, setMode: setThemeMode } = useTheme()
 
   const role = user?.userRole
   const notificationRoute = role ? NOTIFICATION_ROUTE_BY_ROLE[role] : undefined
@@ -64,10 +76,16 @@ export const LoggedInUserBadge: React.FC = () => {
   const planBadge = getBillingPlanBadge(userInfo?.billingPlan)
 
   const toggleDropdown = () => {
+    setIsNotificationsOpen(false)
     setIsDropdownVisible((prev) => !prev)
   }
 
   const closeDropdown = () => setIsDropdownVisible(false)
+
+  const toggleNotifications = () => {
+    setIsDropdownVisible(false)
+    setIsNotificationsOpen((prev) => !prev)
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,20 +94,22 @@ export const LoggedInUserBadge: React.FC = () => {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsDropdownVisible(false)
+        setIsNotificationsOpen(false)
       }
     }
 
-    if (isDropdownVisible) {
+    if (isDropdownVisible || isNotificationsOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isDropdownVisible])
+  }, [isDropdownVisible, isNotificationsOpen])
 
   const goTo = (path: string) => {
     closeDropdown()
+    setIsNotificationsOpen(false)
     navigate(path)
   }
 
@@ -99,14 +119,17 @@ export const LoggedInUserBadge: React.FC = () => {
         className={cn(styles.notificationIcon, {
           [styles.notificationIconClickable]: !!notificationRoute,
         })}
-        onClick={
-          notificationRoute ? () => navigate(notificationRoute) : undefined
-        }
+        onClick={notificationRoute ? toggleNotifications : undefined}
         role={notificationRoute ? 'button' : undefined}
-        aria-label="Notifications">
+        aria-label="Notifications"
+        aria-expanded={notificationRoute ? isNotificationsOpen : undefined}>
         <IoMdNotificationsOutline size={22} />
         {!!unReadCount && <span className={styles.unreadDot} aria-hidden />}
       </div>
+
+      {isNotificationsOpen && notificationRoute ? (
+        <NotificationPanel viewAllTo={notificationRoute} />
+      ) : null}
 
       {isLoading ? (
         <div className={styles.loadingRow}>
@@ -254,6 +277,24 @@ export const LoggedInUserBadge: React.FC = () => {
               <IoIosArrowForward className={styles.menuChevron} />
             </button>
           )}
+
+          <div className={styles.appearance}>
+            <p className={styles.appearanceLabel}>Appearance</p>
+            <div className={styles.themeSwitch} role="group" aria-label="Theme">
+              {THEME_OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  className={cn(styles.themeOption, {
+                    [styles.themeOptionActive]: themeMode === option.id,
+                  })}
+                  onClick={() => setThemeMode(option.id)}
+                  aria-pressed={themeMode === option.id}>
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <button
             type="button"

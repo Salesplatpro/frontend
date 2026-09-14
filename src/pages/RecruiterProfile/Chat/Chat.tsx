@@ -1,64 +1,88 @@
-import React from 'react'
-import { BsChatDots } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 
+import { InboxLayout } from '@/components/features/messaging/Inbox'
 import { PageHero } from '@/components/layout/PageHero'
-import { PagePanel } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
-import { CountBadge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { Spinner } from '@/components/ui/Spinner'
 import { useChatSessions } from '@/features/messaging/hooks/useChatSessions'
-import { formatTimeAgo } from '@/utils'
-
-import styles from './Chat.module.scss'
+import { useMessages } from '@/features/messaging/hooks/useMessages'
+import { useSendMessage } from '@/features/messaging/hooks/useSendMessage'
 
 export const Chat = () => {
-  const { sessions, isLoading } = useChatSessions()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const applicationId = searchParams.get('applicationId')
+  const { sessions, isLoading, mutate: mutateSessions } = useChatSessions()
+  const {
+    messages,
+    isLoading: messagesLoading,
+    mutate: mutateMessages,
+  } = useMessages(applicationId ?? undefined)
+  const { send, isSending } = useSendMessage(applicationId ?? '')
+
+  const selected = sessions
+    .flatMap((group) =>
+      group.threads.map((thread) => ({ ...thread, jobId: group.jobId })),
+    )
+    .find((thread) => thread.applicationId === applicationId)
+
+  useEffect(() => {
+    if (!applicationId || messagesLoading) return
+    void mutateSessions()
+  }, [applicationId, messagesLoading, messages.length, mutateSessions])
+
+  const sections = sessions.map((group) => ({
+    id: group.jobId,
+    heading: group.jobTitle,
+    conversations: group.threads.map((thread) => ({
+      applicationId: thread.applicationId,
+      counterpartId: thread.talentId,
+      title: thread.talentName,
+      subtitle: group.jobTitle,
+      lastMessageAt: thread.lastMessageAt,
+      lastMessagePreview: thread.lastMessagePreview,
+      unreadCount: thread.unreadCount,
+    })),
+  }))
 
   return (
-    <PageShell>
+    <PageShell wide>
       <PageHero
         compact
         title="Chat"
         lead="Message talents directly from your dashboard"
       />
-
-      {isLoading ? (
-        <Spinner fullPage />
-      ) : sessions.length === 0 ? (
-        <EmptyState
-          icon={<BsChatDots size={28} />}
-          title="No conversations yet"
-          description="Messages you send to talents will appear here, grouped by job."
-        />
-      ) : (
-        <PagePanel>
-          <div className={styles.groups}>
-            {sessions.map((group) => (
-              <section key={group.jobId} className={styles.group}>
-                <h3 className={styles.jobTitle}>{group.jobTitle}</h3>
-                <div className={styles.threads}>
-                  {group.threads.map((thread) => (
-                    <Link
-                      key={thread.applicationId}
-                      to={`/recruiterDashboard/singleJobPost/${group.jobId}?applicationId=${thread.applicationId}`}
-                      className={styles.thread}>
-                      <span className={styles.talentName}>
-                        {thread.talentName}
-                      </span>
-                      <span className={styles.meta}>
-                        {formatTimeAgo(thread.lastMessageAt)}
-                      </span>
-                      <CountBadge item={thread.unreadCount} />
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </PagePanel>
-      )}
+      <InboxLayout
+        sections={sections}
+        selectedApplicationId={applicationId}
+        onSelect={(id) => {
+          if (!id) {
+            setSearchParams({})
+            return
+          }
+          setSearchParams({ applicationId: id })
+        }}
+        isLoading={isLoading}
+        emptyTitle="No conversations yet"
+        emptyDescription="Messages you send to talents will appear here, grouped by job."
+        emptyThreadHint="Choose a talent on the left to continue the conversation."
+        composerPlaceholder="Type a message…"
+        messages={messages}
+        messagesLoading={messagesLoading}
+        isSending={isSending}
+        threadAction={
+          selected ? (
+            <Link
+              to={`/recruiterDashboard/singleJobPost/${selected.jobId}?applicationId=${selected.applicationId}`}>
+              View candidate
+            </Link>
+          ) : null
+        }
+        onSend={async (html) => {
+          if (!selected) return
+          await send({ content: html, recipient: selected.talentId })
+          await Promise.all([mutateMessages(), mutateSessions()])
+        }}
+      />
     </PageShell>
   )
 }

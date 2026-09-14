@@ -65,12 +65,12 @@ export const SingleJob = ({
         <Link to={`/talentDashboard/job/${jobId}`} className={styles.titleRow}>
           <span className={styles.title}>{capitalizeFirstWord(jobTitle)}</span>
           <span className={styles.category}>
-            <GoDotFill color="#2e90fa" />
+            <GoDotFill className={styles.categoryDot} />
             {capitalizeFirstWord(jobCategory)}
           </span>
         </Link>
 
-        <CompanyTag organization={organization} className="mt-1" />
+        <CompanyTag organization={organization} />
 
         {jobBrief && (
           <p className={styles.description}>

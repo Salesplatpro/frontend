@@ -5,6 +5,8 @@ import copy from '@/assets/copy.svg'
 import share from '@/assets/share.svg'
 import { notify } from '@/utils/toastNotifications'
 
+import styles from './ShareOptions.module.scss'
+
 type ShareOptionsProps = {
   handleShare: (jobId: string) => void
   jobId: string
@@ -34,33 +36,32 @@ export const ShareOptions: React.FC<ShareOptionsProps> = ({
 
   const shareOptions = [
     {
-      icon: <img src={share} alt="share icon" className="size-6" />,
+      icon: share,
       text: 'Share',
       action: () => handleShare(jobId),
     },
     {
-      icon: <img src={copy} alt="copy icon" className="size-5" />,
+      icon: copy,
       text: 'Copy',
       action: copyToClipBoard,
     },
   ]
 
   return (
-    <div className="flex space-x-2 items-center justify-center px-2">
-      {shareOptions.map((option, i) => (
-        <div
-          key={i}
+    <div className={styles.row}>
+      {shareOptions.map((option) => (
+        <button
+          key={option.text}
+          type="button"
           data-tooltip-id="share-tooltip"
           data-tooltip-content={option.text}
           onClick={option.action}
-          className={`flex cursor-pointer items-center justify-center text-lg size-8 ${
-            i !== 0 ? 'border-l border-gray-300 px-2' : ''
-          }`}>
-          {option.icon}
-        </div>
+          className={styles.action}
+          aria-label={option.text}>
+          <img src={option.icon} alt="" className={styles.icon} />
+        </button>
       ))}
 
-      {/* Tooltip only once */}
       <ReactTooltip
         id="share-tooltip"
         place={tooltipPosition}

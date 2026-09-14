@@ -12,6 +12,7 @@ import {
   MatchScoreRing,
   Spinner,
   StatusBadge,
+  TableActions,
 } from '../../../components'
 import { JobAiConfigThresholds } from '../../../features/applications/services/applicationService'
 import { formatTimeAgo, SingleJobDetails } from '../../../utils'
@@ -104,11 +105,7 @@ const ApplicantActionsCell = ({
   isLoading,
 }: ApplicantActionsCellProps) => {
   if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Spinner size="sm" />
-      </div>
-    )
+    return <Spinner size="sm" />
   }
 
   const items: DropdownItem[] = [
@@ -117,13 +114,7 @@ const ApplicantActionsCell = ({
     { label: 'Message', onClick: () => onMessage(item.id) },
   ]
 
-  return (
-    <div
-      style={{ display: 'flex', gap: 8, justifyContent: 'center' }}
-      onClick={(event) => event.stopPropagation()}>
-      <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
-    </div>
-  )
+  return <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
 }
 
 const AiMatchCell = ({
@@ -264,16 +255,9 @@ export const buildColumns = ({
   {
     key: 'details',
     header: COLUMN_LABELS.details,
-    align: 'center',
+    align: 'right',
     render: (item) => (
-      <div
-        style={{
-          display: 'flex',
-          gap: 8,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onClick={(event) => event.stopPropagation()}>
+      <TableActions onClick={(event) => event.stopPropagation()}>
         {onOpenAiMatch ? (
           <Button size="sm" onClick={() => onOpenAiMatch(item)}>
             View Application
@@ -286,7 +270,7 @@ export const buildColumns = ({
           onMessage={onMessage}
           isLoading={item.id === loadingRowId}
         />
-      </div>
+      </TableActions>
     ),
   },
 ]

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
-import { ColumnDef } from '@/components/ui/DataTable'
+import { ColumnDef, TableActions } from '@/components/ui/DataTable'
 
 import { formatTimeAgo } from '../../../utils'
 
@@ -55,9 +55,7 @@ export const buildApplicationColumns =
       align: 'right',
       render: (row) =>
         row.jobId ? (
-          <div
-            style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
-            onClick={(event) => event.stopPropagation()}>
+          <TableActions onClick={(event) => event.stopPropagation()}>
             <Link to={`/recruiterDashboard/singleJobPost/${row.jobId}`}>
               <Button size="sm" variant="outline">
                 View job
@@ -69,7 +67,7 @@ export const buildApplicationColumns =
                 <Button size="sm">View Application</Button>
               </Link>
             ) : null}
-          </div>
+          </TableActions>
         ) : null,
     },
   ]

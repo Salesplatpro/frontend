@@ -4,6 +4,7 @@ import {
   changePasswordPathForRole,
   dashboardPathForRole,
   destinationAfterAuth,
+  feedbackPathForRole,
   loginPathWithNext,
 } from './dashboardPath'
 
@@ -77,6 +78,16 @@ describe('loginPathWithNext', () => {
 
   it('returns /login when next is absent', () => {
     expect(loginPathWithNext()).toBe('/login')
+  })
+})
+
+describe('feedbackPathForRole', () => {
+  it('returns the leave-feedback page for each dashboard role', () => {
+    expect(feedbackPathForRole('talent')).toBe('/talentDashboard/feedback')
+    expect(feedbackPathForRole('recruiter')).toBe(
+      '/recruiterDashboard/feedback',
+    )
+    expect(feedbackPathForRole('admin')).toBe('/adminDashboard/leave-feedback')
   })
 })
 

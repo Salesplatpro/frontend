@@ -7,10 +7,8 @@
  *   2. Semantic: purpose-named aliases (--color-text-heading, --color-border).
  *      Components, SCSS variables, and the Tailwind theme consume these.
  *
- * Theming: values respond to the OS color scheme via prefers-color-scheme.
- * Dark values currently mirror light (architecture only — no dark palette has
- * been designed yet). A future theme can be forced with [data-theme='...'] on
- * <html>; absence of data-theme follows the OS preference.
+ * Theming: protected app layouts set `data-theme="light"|"dark"` on `<html>`.
+ * Unprotected routes leave the attribute unset so `:root` stays light.
  */
 
 :root {
@@ -59,12 +57,22 @@
   --color-text-inverse: var(--color-white);
   --color-text-on-dark: var(--color-white);
   --color-text-on-dark-muted: rgba(255, 255, 255, 0.78);
+  --color-icon: var(--color-grey-900);
 
   --color-bg-page: var(--color-white);
   --color-bg-subtle: var(--color-grey-50);
+  --color-bg-elevated: var(--color-white);
+  --color-bg-input: var(--color-white);
   --color-bg-dark: var(--color-grey-900);
   --color-bg-sidebar: var(--color-navy);
+  --color-bg-row-hover: var(--color-grey-50);
   --color-bg-hero: linear-gradient(
+    135deg,
+    var(--color-navy) 0%,
+    var(--color-brand-800) 48%,
+    var(--color-brand-500) 100%
+  );
+  --color-bg-cta: linear-gradient(
     135deg,
     var(--color-navy) 0%,
     var(--color-brand-800) 48%,
@@ -86,6 +94,12 @@
   --color-info: var(--color-info-600);
   --color-warning: var(--color-warning-600);
   --color-focus-ring: var(--color-brand-500);
+
+  --heatmap-0: var(--color-grey-50);
+  --heatmap-1: var(--color-brand-100);
+  --heatmap-2: var(--color-brand-300);
+  --heatmap-3: var(--color-brand-500);
+  --heatmap-4: var(--color-brand-800);
 
   /* ── Typography ────────────────────────────────────────────────────── */
   --font-heading: 'Raleway', sans-serif;
@@ -167,4 +181,51 @@
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-enter: cubic-bezier(0, 0, 0.2, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-text-heading: #f8fafc;
+  --color-text-body: #e4e7ec;
+  --color-text-muted: #98a2b3;
+  --color-text-inverse: #101828;
+  --color-icon: #ffffff;
+
+  --color-bg-page: #0f1728;
+  --color-bg-subtle: #152033;
+  --color-bg-elevated: #1c2a42;
+  --color-bg-input: #152033;
+  --color-bg-dark: #0b1220;
+  --color-bg-sidebar: #10192c;
+  --color-bg-row-hover: #24344f;
+
+  --color-bg-hero: linear-gradient(
+    160deg,
+    #10192c 0%,
+    #15233d 48%,
+    #1c3558 100%
+  );
+  --color-hero-highlight: radial-gradient(
+    1000px 240px at 92% -30%,
+    rgba(73, 133, 223, 0.22),
+    transparent 58%
+  );
+  --color-hero-glow: rgba(73, 133, 223, 0.16);
+  --shadow-hero: 0 18px 40px rgba(0, 0, 0, 0.38);
+
+  --color-border: #2d3a52;
+  --color-border-strong: #3d4d6b;
+  --color-primary-tint: rgba(73, 133, 223, 0.18);
+
+  --shadow-sm: 0px 1.52px 3.05px 0px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0px 4.09px 6.14px -2.05px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0px 12.28px 16.38px -4.09px rgba(0, 0, 0, 0.4);
+  --shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.28);
+
+  --heatmap-0: #1b283c;
+  --heatmap-1: #1e3a5f;
+  --heatmap-2: #2b5ea8;
+  --heatmap-3: #4985df;
+  --heatmap-4: #8ab4f8;
 }

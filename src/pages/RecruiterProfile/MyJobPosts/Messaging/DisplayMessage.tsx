@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import { MessageBubble, MessageBubbleData } from '@/components/ui/MessageBubble'
 
@@ -6,25 +6,24 @@ import styles from './Messaging.module.scss'
 
 type DisplayMessageProps = {
   messages?: MessageBubbleData[]
-  currentUserId?: string
 }
 
 const DEFAULT_MESSAGE = 'No messages yet.'
 
-export const DisplayMessage = ({
-  messages,
-  currentUserId,
-}: DisplayMessageProps) => {
-  const hasMessages = messages && messages.length > 0
+const byCreatedAtAsc = (a: MessageBubbleData, b: MessageBubbleData) =>
+  new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+
+export const DisplayMessage = ({ messages }: DisplayMessageProps) => {
+  const ordered = useMemo(
+    () => [...(messages ?? [])].sort(byCreatedAtAsc),
+    [messages],
+  )
+  const hasMessages = ordered.length > 0
 
   return hasMessages ? (
     <div className={styles.messageList}>
-      {messages.map((message) => (
-        <MessageBubble
-          key={message.id}
-          message={message}
-          currentUserId={currentUserId}
-        />
+      {ordered.map((message) => (
+        <MessageBubble key={message.id} message={message} />
       ))}
     </div>
   ) : (

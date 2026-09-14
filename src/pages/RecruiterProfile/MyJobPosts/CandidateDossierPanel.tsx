@@ -260,13 +260,19 @@ export const CandidateDossierPanel = ({
                 ? `Typed as ${application.mbtiType}`
                 : 'Workplace scenarios the talent answered for this job.'
             }>
-            <AssessmentChat items={application.personalityAnswers} />
+            <AssessmentChat
+              items={application.personalityAnswers}
+              feedback={analysis?.questionFeedback}
+            />
           </PagePanel>
 
           <PagePanel
             title="Role assessment answers"
-            hint="How they said they would do this job.">
-            <AssessmentChat items={application.personalizedAnswers} />
+            hint="How they said they would do this job, with evidence from their CV and answers.">
+            <AssessmentChat
+              items={application.personalizedAnswers}
+              feedback={analysis?.questionFeedback}
+            />
           </PagePanel>
 
           <PagePanel title="Why they fit">
@@ -282,6 +288,15 @@ export const CandidateDossierPanel = ({
                 completes.
               </p>
             )}
+            {analysis?.relevantExperience?.length ? (
+              <div className={styles.experienceBlock}>
+                <h3 className={styles.experienceTitle}>Relevant experience</h3>
+                <BulletList items={analysis.relevantExperience} />
+              </div>
+            ) : null}
+            {analysis?.assessmentInsights ? (
+              <p className={styles.prose}>{analysis.assessmentInsights}</p>
+            ) : null}
           </PagePanel>
 
           <div className={styles.insightGrid}>

@@ -2,13 +2,30 @@
   display: flex;
   align-items: center;
   border-radius: 10px;
-  border: 1px solid var(--color-grey-300);
-  background-color: #fff;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-input);
   margin: 40px 0;
   padding: 10px;
   gap: 8px;
+  color: var(--color-icon);
 }
 
 .input {
   outline: none;
+  border: none;
+  background: transparent;
+  color: var(--color-text-heading);
+  font-family: var(--font-body);
+  width: 100%;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+html[data-theme='dark'] {
+  .container,
+  .input {
+    color: var(--color-white);
+  }
 }
