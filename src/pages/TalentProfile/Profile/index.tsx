@@ -301,9 +301,9 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                         : 'Upload CV'}
                     </label>
                     <p className={styles.hint}>
-                      We extract the text from your PDF or DOCX and store it
-                      securely. Recruiters view a generated CV — the original
-                      file is not kept.
+                      We extract the text from your PDF or DOCX for matching,
+                      and store the original file securely so you and recruiters
+                      can view it.
                     </p>
                     <input
                       id="cv"
@@ -321,6 +321,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                     !isUploading ? (
                       <CvFile
                         fileName={profile.cvFileName || 'CV'}
+                        url={profile.cvUrl ?? undefined}
                         replaceInputId="cv"
                       />
                     ) : (
