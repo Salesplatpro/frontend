@@ -1,8 +1,12 @@
 .form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-5);
-  max-width: 640px;
+  width: 100%;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .field {
@@ -10,6 +14,7 @@
 }
 
 .actions {
+  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
   flex-wrap: wrap;
