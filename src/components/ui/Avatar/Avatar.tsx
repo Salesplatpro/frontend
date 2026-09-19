@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import styles from './Avatar.module.scss'
 
@@ -7,6 +7,7 @@ export type AvatarSize = 'sm' | 'md' | 'lg'
 interface AvatarProps {
   firstName?: string | null
   lastName?: string | null
+  src?: string | null
   size?: AvatarSize
   className?: string
 }
@@ -34,13 +35,29 @@ const colorFor = (seed: string) => {
 export const Avatar = ({
   firstName = '',
   lastName = '',
+  src,
   size = 'md',
   className,
 }: AvatarProps) => {
+  const [imageFailed, setImageFailed] = useState(false)
   const first = (firstName || '').trim()
   const last = (lastName || '').trim()
   const initials = `${first.charAt(0)}${last.charAt(0)}`.toUpperCase() || '?'
   const seed = `${first}${last}` || 'user'
+
+  if (src && !imageFailed) {
+    return (
+      <img
+        src={src}
+        alt=""
+        className={[styles.avatar, styles.image, SIZE_CLASS[size], className]
+          .filter(Boolean)
+          .join(' ')}
+        aria-hidden="true"
+        onError={() => setImageFailed(true)}
+      />
+    )
+  }
 
   return (
     <div
