@@ -4,6 +4,8 @@ import { ChatSessionGroup, Message, TalentChatSession } from '../types'
 
 export const messagesKey = (applicationId: string) =>
   `/messages?application=${applicationId}`
+export const participantMessagesKey = (participantId: string) =>
+  `/messages?participantId=${participantId}`
 export const chatSessionsKey = '/messages/sessions'
 export const talentMessagesKey = '/messages'
 
@@ -11,6 +13,15 @@ export const fetchMessages = (applicationId: string) =>
   httpClient
     .get<{ data: { messages: Message[]; unReadCount: number } }>(
       messagesKey(applicationId),
+    )
+    .then((response) => response.data)
+
+// Reads a direct conversation by the other participant's id — used for
+// admin-to-talent messaging, which isn't scoped to any job application.
+export const fetchMessagesByParticipant = (participantId: string) =>
+  httpClient
+    .get<{ data: { messages: Message[]; unReadCount: number } }>(
+      participantMessagesKey(participantId),
     )
     .then((response) => response.data)
 

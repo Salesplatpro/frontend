@@ -38,13 +38,14 @@ import { LandingPage } from '@/LandingPage'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
 import Feedback from '@/pages/AdminProfile/Feedback/Feedback'
+import AdminJobDetail from '@/pages/AdminProfile/JobDetail/AdminJobDetail'
 import Jobs from '@/pages/AdminProfile/Jobs/Jobs'
 import OrganizationDetail from '@/pages/AdminProfile/Organizations/OrganizationDetail'
 import Organizations from '@/pages/AdminProfile/Organizations/Organizations'
 import Recruiters from '@/pages/AdminProfile/Recruiters/Recruiters'
 import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
+import AdminTalentDetail from '@/pages/AdminProfile/Talents/TalentDetail'
 import Talents from '@/pages/AdminProfile/Talents/Talents'
-import ViewCandidates from '@/pages/AdminProfile/ViewCandidates/ViewCandidates'
 import { FeedbackPage } from '@/pages/Feedback'
 import PostedJob from '@/pages/Home/Jobs/PostedJob'
 import VerifyPaymentPage from '@/pages/Pricing/Verify'
@@ -479,8 +480,12 @@ export const routeConfig: RouteObject[] = [
                 element: <Jobs />,
               },
               {
-                path: 'viewcandidates',
-                element: <ViewCandidates />,
+                path: 'jobs/:jobId',
+                element: <AdminJobDetail />,
+              },
+              {
+                path: 'talents/:talentId',
+                element: <AdminTalentDetail />,
               },
               {
                 path: 'roles',

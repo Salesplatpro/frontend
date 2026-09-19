@@ -13,25 +13,13 @@ import {
   AdminRolePayload,
   AdminTalent,
   AdminTalentFilters,
-  Candidate,
-  CandidateFilters,
+  AdminTalentProfile,
 } from '../types'
 
 interface ApiEnvelope<T> {
   status: boolean
   message: string
   data: T
-}
-
-export const fetchCandidates = (filters: CandidateFilters = {}) => {
-  const params = Object.fromEntries(
-    Object.entries(filters).filter(
-      ([, value]) => value !== undefined && value !== '',
-    ),
-  )
-  return httpClient
-    .get<ApiEnvelope<{ users: Candidate[] }>>('/user/profile/', { params })
-    .then((response) => response.data.data.users)
 }
 
 export const fetchRoles = () =>
@@ -71,6 +59,11 @@ export const fetchAdminTalents = (filters: AdminTalentFilters = {}) => {
     )
     .then((response) => response.data.data)
 }
+
+export const fetchAdminTalentProfile = (id: string) =>
+  httpClient
+    .get<ApiEnvelope<{ user: AdminTalentProfile }>>(`/user/profile/${id}`)
+    .then((response) => response.data.data.user)
 
 export const deleteAdminTalent = (id: string) =>
   httpClient

@@ -55,6 +55,8 @@ type CandidateDossierPanelProps = {
   jobAiConfig?: JobAiConfigThresholds | null
   onClose: () => void
   onChanged?: () => void | Promise<void>
+  /** Admin viewers can see everything here but can't shortlist/reject/message. */
+  readOnly?: boolean
 }
 
 const BulletList = ({ items }: { items?: string[] | null }) => {
@@ -80,6 +82,7 @@ export const CandidateDossierPanel = ({
   jobAiConfig,
   onClose,
   onChanged,
+  readOnly = false,
 }: CandidateDossierPanelProps) => {
   const { data, isLoading } = useApplication(row.id)
   const application = (data?.data?.application ?? row) as SingleJobDetails & {
@@ -209,19 +212,23 @@ export const CandidateDossierPanel = ({
               onClick={() => void handleViewCv()}>
               View talent CV
             </Button>
-            <Button
-              size="sm"
-              loading={isUpdating}
-              onClick={() => void handleStatus('shortlisted')}>
-              Accept
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              loading={isUpdating}
-              onClick={() => void handleStatus('rejected')}>
-              Reject
-            </Button>
+            {!readOnly && (
+              <>
+                <Button
+                  size="sm"
+                  loading={isUpdating}
+                  onClick={() => void handleStatus('shortlisted')}>
+                  Accept
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  loading={isUpdating}
+                  onClick={() => void handleStatus('rejected')}>
+                  Reject
+                </Button>
+              </>
+            )}
           </div>
         }
       />
@@ -366,9 +373,11 @@ export const CandidateDossierPanel = ({
             </PagePanel>
           </div>
 
-          <PagePanel title="Messages">
-            <Messaging applicationId={application.id} talentId={talent.id} />
-          </PagePanel>
+          {!readOnly && (
+            <PagePanel title="Messages">
+              <Messaging applicationId={application.id} talentId={talent.id} />
+            </PagePanel>
+          )}
         </>
       )}
     </div>

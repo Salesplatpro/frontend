@@ -3,7 +3,6 @@ import {
   HiOutlineBriefcase,
   HiOutlineChatAlt2,
   HiOutlineOfficeBuilding,
-  HiOutlineUserGroup,
 } from 'react-icons/hi'
 import { HiOutlineUserCircle, HiOutlineUsers } from 'react-icons/hi2'
 import { MdOutlineAdminPanelSettings } from 'react-icons/md'
@@ -31,11 +30,6 @@ export const adminSidebarData = [
     name: 'Jobs',
     icon: <HiOutlineBriefcase size={ICON_SIZE} />,
     link: '/adminDashboard/jobs',
-  },
-  {
-    name: 'View Candidates',
-    icon: <HiOutlineUserGroup size={ICON_SIZE} />,
-    link: '/adminDashboard/viewcandidates',
   },
   {
     name: 'Roles',

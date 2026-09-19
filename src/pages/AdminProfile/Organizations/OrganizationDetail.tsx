@@ -10,19 +10,21 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Text } from '@/components/ui/Typography'
 import {
   deleteAdminOrganization,
+  fetchAdminJobs,
   fetchAdminOrganization,
   rejectAdminOrganization,
   verifyAdminOrganization,
 } from '@/features/admin/services/adminService'
-import { AdminOrganization } from '@/features/admin/types'
+import { AdminJob, AdminOrganization } from '@/features/admin/types'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
+import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import styles from './OrganizationDetail.module.scss'
 
 const Field = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex flex-col">
+  <div className={styles.field}>
     <Text size="fs-sm" color="secondary">
       {label}
     </Text>
@@ -40,6 +42,8 @@ const OrganizationDetail = () => {
   const [isUpdating, setIsUpdating] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [jobs, setJobs] = useState<AdminJob[]>([])
+  const [isJobsLoading, setIsJobsLoading] = useState(true)
 
   const load = useCallback(async () => {
     if (!organizationId) return
@@ -57,6 +61,17 @@ const OrganizationDetail = () => {
   useEffect(() => {
     void load()
   }, [load])
+
+  useEffect(() => {
+    if (!organizationId) return
+    setIsJobsLoading(true)
+    fetchAdminJobs({ organizationId, limit: 200 })
+      .then((data) => setJobs(data.jobs))
+      .catch((err) =>
+        notify('error', getErrorMessage(err, 'Failed to load job posts')),
+      )
+      .finally(() => setIsJobsLoading(false))
+  }, [organizationId])
 
   const handleVerify = async () => {
     if (!organizationId) return
@@ -110,20 +125,20 @@ const OrganizationDetail = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className={styles.page}>
       <PageHeaderTitle
         title={organization.name}
         description="Verify this company against the email, website, and social details the recruiter provided."
         onBack={() => navigate('/adminDashboard/organizations')}
       />
 
-      <Card className="max-w-[700px] p-6 flex flex-col space-y-6">
-        <div className="flex items-center justify-between">
+      <Card className={styles.card}>
+        <div className={styles.cardHeader}>
           <StatusBadge
             status={organization.status}
             {...getOrganizationStatusBadge(organization.status)}
           />
-          <div className="flex gap-2">
+          <div className={styles.cardActions}>
             <Button
               variant="secondary"
               size="sm"
@@ -148,7 +163,7 @@ const OrganizationDetail = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className={styles.infoGrid}>
           <Field
             label="Owner"
             value={
@@ -180,8 +195,8 @@ const OrganizationDetail = () => {
         </div>
       </Card>
 
-      <Card className="max-w-[700px] p-6 flex flex-col space-y-4">
-        <div>
+      <Card className={styles.card}>
+        <div className={styles.sectionIntro}>
           <Text size="fs-lg" weight="bold">
             Team
           </Text>
@@ -231,6 +246,53 @@ const OrganizationDetail = () => {
                 </article>
               )
             })}
+          </div>
+        )}
+      </Card>
+
+      <Card className={styles.card}>
+        <div className={styles.sectionIntro}>
+          <Text size="fs-lg" weight="bold">
+            Job Posts
+          </Text>
+          <Text size="fs-sm" color="secondary">
+            Every job this company has posted, with its applicant count.
+          </Text>
+        </div>
+        {isJobsLoading ? (
+          <Spinner />
+        ) : jobs.length === 0 ? (
+          <Text size="fs-sm" color="secondary">
+            This company hasn&apos;t posted any jobs yet.
+          </Text>
+        ) : (
+          <div className={styles.list}>
+            {jobs.map((job) => (
+              <article key={job.id} className={styles.jobRow}>
+                <div>
+                  <p className={styles.jobTitle}>
+                    {job.role?.name ?? 'Untitled role'}
+                  </p>
+                  <p className={styles.jobMeta}>
+                    Posted {new Date(job.createdAt).toLocaleDateString()}
+                    {job.postedBy
+                      ? ` · ${job.postedBy.firstName} ${job.postedBy.lastName}`
+                      : ''}
+                  </p>
+                </div>
+                <StatusBadge
+                  status={job.status}
+                  showDot
+                  {...getStatusBadge(job.status)}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/adminDashboard/jobs/${job.id}`)}>
+                  View candidates
+                </Button>
+              </article>
+            ))}
           </div>
         )}
       </Card>

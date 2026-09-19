@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { ConfirmDialog } from '@/components/feedback/ConfirmDialog'
 import { EXPERIENCE_LEVEL_OPTIONS } from '@/components/forms/Select'
@@ -41,6 +42,7 @@ const defaultTalentFilters: TalentFilterValues = {
 const ROWS_PER_PAGE = 10
 
 const Talents = () => {
+  const navigate = useNavigate()
   const { roles, fetchRoles } = useRolesStore()
 
   const [talents, setTalents] = useState<AdminTalent[]>([])
@@ -183,6 +185,12 @@ const Talents = () => {
         align: 'right',
         render: (row) => (
           <div className={styles.actions}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(`/adminDashboard/talents/${row.id}`)}>
+              View
+            </Button>
             <Button
               variant="secondary"
               size="sm"
