@@ -10,6 +10,7 @@ import { useIndividualJobQuery } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
 
 import { JobStatusControl } from '../EditJob/JobStatusControl'
+import styles from './JobDetail.module.scss'
 
 const JobDetail = () => {
   const { jobId } = useParams()
@@ -37,7 +38,7 @@ const JobDetail = () => {
           <Link to={`/recruiterDashboard/editJob/${jobId}`}>
             <button
               type="button"
-              className="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-700 font-raleway font-medium">
+              className={`${styles.button} ${styles.editButton}`}>
               Edit Job
             </button>
           </Link>
@@ -46,7 +47,7 @@ const JobDetail = () => {
             state={{ jobName: job.role?.name, postedAt: job.createdAt }}>
             <button
               type="button"
-              className="px-4 py-2 w-full bg-white text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50 font-raleway font-medium">
+              className={`${styles.button} ${styles.viewButton}`}>
               View Applicants{' '}
               {job.noOfApplicants != null ? `(${job.noOfApplicants})` : ''}
             </button>

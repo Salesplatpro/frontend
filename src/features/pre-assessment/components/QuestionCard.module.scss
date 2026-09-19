@@ -1,0 +1,85 @@
+.card {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: var(--space-6);
+  width: 100%;
+}
+
+.competency {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  margin-bottom: var(--space-4);
+}
+
+.question {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+  line-height: 1.5;
+  margin-bottom: var(--space-6);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-heading);
+  transition: border-color var(--duration-base) var(--ease-standard),
+    background var(--duration-base) var(--ease-standard);
+
+  &:hover {
+    border-color: var(--color-brand-300);
+    background: var(--color-primary-tint);
+  }
+}
+
+.optionSelected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-tint);
+  color: var(--color-primary-strong);
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border-strong);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radioSelected {
+  border-color: var(--color-primary);
+}
+
+.radioDot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+}
+
+.letter {
+  font-weight: var(--weight-bold);
+  width: 20px;
+  flex-shrink: 0;
+}

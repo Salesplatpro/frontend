@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 
+import styles from './Worktype.module.scss'
+
 interface WorkTypeOption {
   value: string
   label: string
@@ -59,36 +61,32 @@ const Worktype: React.FC<WorktypeProps> = ({
   }, [])
 
   return (
-    <div className="relative w-[100%]" ref={dropdownRef}>
-      <div
-        className="w-full p-2 rounded-lg border border-grey-300 h-[44px] mt-1 cursor-pointer flex justify-between items-center"
-        onClick={toggleDropdown}>
-        <span className="font-medium text-sm font-raleway">
+    <div className={styles.wrapper} ref={dropdownRef}>
+      <div className={styles.trigger} onClick={toggleDropdown}>
+        <span className={styles.label}>
           {Object.keys(selectedValues)
             .filter((key) => selectedValues[key])
             .map((key) => options.find((option) => option.value === key)?.label)
             .join(', ') || 'Select Work Type'}
         </span>
         <FiChevronDown
-          className={`ml-2 transition-transform ${
-            dropdownOpen ? 'rotate-180' : ''
+          className={`${styles.chevron} ${
+            dropdownOpen ? styles.chevronOpen : ''
           }`}
         />
       </div>
 
       {dropdownOpen && (
-        <div className="absolute w-full mt-1 bg-white border border-grey-300 rounded-lg z-10 max-h-[150px] overflow-auto">
+        <div className={styles.menu}>
           {options.map((option) => (
-            <label
-              key={option.value}
-              className="block p-2 hover:bg-gray-100 cursor-pointer">
+            <label key={option.value} className={styles.option}>
               <input
                 type="checkbox"
                 checked={selectedValues[option.value] || false}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleCheckboxChange(option.value, e.target.checked)
                 }
-                className="mr-2"
+                className={styles.checkbox}
               />
               {option.label}
             </label>

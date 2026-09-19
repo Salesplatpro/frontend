@@ -51,11 +51,11 @@ $mobile-breakpoint: 480px;
 }
 
 .default {
-  color: #000000;
+  color: var(--color-text-heading);
 }
 
 .primary {
-  color: #525252;
+  color: var(--color-text-body);
 }
 
 .hero {
