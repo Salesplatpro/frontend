@@ -48,10 +48,13 @@ export interface CreateOrganizationPayload {
   facebook?: string
   linkedin?: string
   twitter?: string
-  logoUrl?: string
 }
 
-/** Email and website are immutable after creation, so they are absent here. */
+/**
+ * Email and website are immutable after creation, so they are absent here.
+ * logoUrl is also absent — it's read-only, set only via the logo upload/remove
+ * endpoints, never as a client-supplied string.
+ */
 export interface UpdateOrganizationPayload {
   name?: string
   phone?: string
@@ -60,7 +63,6 @@ export interface UpdateOrganizationPayload {
   facebook?: string
   linkedin?: string
   twitter?: string
-  logoUrl?: string
 }
 
 export interface OrganizationsApiResponse {

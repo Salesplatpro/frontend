@@ -24,6 +24,7 @@ import {
 } from '@/features/organizations/utils/emailDomain'
 
 import styles from './CompanyForm.module.scss'
+import { CompanyLogoUpload } from './CompanyLogoUpload'
 
 export interface CompanyFormValues {
   name: string
@@ -36,7 +37,6 @@ export interface CompanyFormValues {
   linkedin: string
   facebook: string
   twitter: string
-  logoUrl: string
 }
 
 export const EMPTY_COMPANY_FORM: CompanyFormValues = {
@@ -50,10 +50,7 @@ export const EMPTY_COMPANY_FORM: CompanyFormValues = {
   linkedin: '',
   facebook: '',
   twitter: '',
-  logoUrl: '',
 }
-
-const urlRule = Yup.string().url('Must be a valid URL starting with http(s)://')
 
 const baseShape = {
   name: Yup.string().required('Company name is required'),
@@ -62,7 +59,6 @@ const baseShape = {
   industry: Yup.string(),
   facebook: Yup.string(),
   twitter: Yup.string(),
-  logoUrl: urlRule,
 }
 
 const createValidationSchema = Yup.object({
@@ -204,7 +200,7 @@ const FormField: React.FC<FormFieldProps> = ({
   </div>
 )
 
-const LogoPreview: React.FC<{ logoUrl: string }> = ({ logoUrl }) => {
+const LogoPreview: React.FC<{ logoUrl?: string | null }> = ({ logoUrl }) => {
   const [failed, setFailed] = useState(false)
 
   if (!logoUrl || failed) {
@@ -226,7 +222,7 @@ const LogoPreview: React.FC<{ logoUrl: string }> = ({ logoUrl }) => {
   )
 }
 
-const CompanyPreview: React.FC = () => {
+const CompanyPreview: React.FC<{ logoUrl?: string | null }> = ({ logoUrl }) => {
   const { values } = useFormikContext<CompanyFormValues>()
   const displayName = values.name.trim() || 'Your company'
   const presence = values.website.trim() || values.linkedin.trim()
@@ -236,10 +232,7 @@ const CompanyPreview: React.FC = () => {
       <PagePanel>
         <p className={styles.previewLabel}>How it will look</p>
         <div className={styles.previewCard}>
-          <LogoPreview
-            key={values.logoUrl.trim()}
-            logoUrl={values.logoUrl.trim()}
-          />
+          <LogoPreview logoUrl={logoUrl} />
           <div>
             <p className={styles.previewName}>{displayName}</p>
             <p className={styles.previewMeta}>
@@ -276,6 +269,9 @@ interface CompanyFormProps {
     helpers: { resetForm: () => void },
   ) => void | Promise<void>
   onCancel?: () => void
+  /** Only present in edit mode — a company can't have a logo before it exists. */
+  organizationId?: string
+  logoUrl?: string | null
 }
 
 export const CompanyForm: React.FC<CompanyFormProps> = ({
@@ -285,6 +281,8 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
   submitLabel,
   onSubmit,
   onCancel,
+  organizationId,
+  logoUrl,
 }) => {
   const isEdit = mode === 'edit'
 
@@ -422,12 +420,17 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 placeholder="https://linkedin.com/company/acme"
               />
               <div className={styles.span2}>
-                <FormField
-                  label="Logo URL"
-                  name="logoUrl"
-                  placeholder="https://acme.com/logo.png"
-                  hint="Paste a public image URL. It appears next to your company name on jobs."
-                />
+                {isEdit && organizationId ? (
+                  <CompanyLogoUpload
+                    organizationId={organizationId}
+                    companyName={initialValues.name}
+                    logoUrl={logoUrl}
+                  />
+                ) : (
+                  <p className={styles.hint}>
+                    You can add a company logo after creating the company.
+                  </p>
+                )}
               </div>
               <FormField
                 label="X (Twitter)"
@@ -457,7 +460,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
             )}
           </div>
         </Form>
-        <CompanyPreview />
+        <CompanyPreview logoUrl={logoUrl} />
       </div>
     </Formik>
   )

@@ -1,3 +1,5 @@
+import { AxiosProgressEvent } from 'axios'
+
 import { httpClient } from '@/features/auth/services/httpClient'
 
 import {
@@ -42,6 +44,28 @@ export const updateOrganization = (
 export const deleteOrganization = (organizationId: string) =>
   httpClient
     .delete(`/organizations/${organizationId}`)
+    .then((response) => response.data)
+
+export const uploadLogo = (
+  organizationId: string,
+  file: File,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
+) => {
+  const formData = new FormData()
+  formData.append('logo', file)
+
+  return httpClient
+    .patch<OrganizationApiResponse>(
+      `/organizations/${organizationId}/logo`,
+      formData,
+      { onUploadProgress },
+    )
+    .then((response) => response.data)
+}
+
+export const removeLogo = (organizationId: string) =>
+  httpClient
+    .delete<OrganizationApiResponse>(`/organizations/${organizationId}/logo`)
     .then((response) => response.data)
 
 export const fetchVerifiedOrganizations = (search?: string) =>

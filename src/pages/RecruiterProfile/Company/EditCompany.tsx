@@ -38,7 +38,6 @@ const EditCompany = () => {
       linkedin: values.linkedin,
       facebook: values.facebook,
       twitter: values.twitter,
-      logoUrl: values.logoUrl,
     }
     const updated = await updateOrganization(organization.id, payload)
     if (updated) {
@@ -61,7 +60,6 @@ const EditCompany = () => {
         linkedin: organization.linkedin ?? '',
         facebook: organization.facebook ?? '',
         twitter: organization.twitter ?? '',
-        logoUrl: organization.logoUrl ?? '',
       }
     : EMPTY_COMPANY_FORM
 
@@ -104,6 +102,8 @@ const EditCompany = () => {
             submitLabel="Save changes"
             onSubmit={handleSubmit}
             onCancel={goBack}
+            organizationId={organization.id}
+            logoUrl={organization.logoUrl}
           />
         </>
       )}
