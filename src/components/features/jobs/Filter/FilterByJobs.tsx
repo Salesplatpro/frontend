@@ -3,6 +3,8 @@ import { IoFilterOutline } from 'react-icons/io5'
 
 import { useFetchRecruiterJobPostQuery } from '@/redux/api/recruiter'
 
+import styles from './FilterByJobs.module.scss'
+
 interface FilterByJobsProps {
   onFilter: (jobId: string) => void
 }
@@ -24,32 +26,31 @@ const FilterByJobs: React.FC<FilterByJobsProps> = ({ onFilter }) => {
   }
 
   return (
-    <div className="relative">
+    <div className={styles.wrapper}>
       <button
         onClick={() => setDropdownVisible(!dropdownVisible)}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[10px] border border-[rgba(36,65,171,0.22)] bg-white text-[13px] font-semibold text-[#2441ab] hover:-translate-y-px transition">
-        <IoFilterOutline className="text-gray-600" />
-        <span className="text-grey-700 text-sm font-medium">Filters</span>
+        className={styles.trigger}>
+        <IoFilterOutline />
+        <span className={styles.label}>Filters</span>
       </button>
 
-      {/* Dropdown List */}
       {dropdownVisible && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border border-[var(--color-border)] rounded-[12px] shadow-lg z-10 max-h-[200px] overflow-y-auto">
+        <div className={styles.menu}>
           {isLoading ? (
-            <p className="p-4">Loading jobs...</p>
+            <p className={styles.state}>Loading jobs...</p>
           ) : error ? (
-            <p className="p-4 text-red-500">Error loading jobs</p>
+            <p className={`${styles.state} ${styles.error}`}>
+              Error loading jobs
+            </p>
           ) : (
-            <div className="">
-              {jobData?.data?.map((job: Job) => (
-                <div
-                  key={job.id}
-                  onClick={() => handleFilterSelect(job.id)}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm break-words">
-                  {job.role.name}
-                </div>
-              ))}
-            </div>
+            jobData?.data?.map((job: Job) => (
+              <div
+                key={job.id}
+                onClick={() => handleFilterSelect(job.id)}
+                className={styles.item}>
+                {job.role.name}
+              </div>
+            ))
           )}
         </div>
       )}

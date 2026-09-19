@@ -13,6 +13,7 @@ import {
 } from '../../../redux/api/talent'
 import { notify } from '../../../utils/toastNotifications'
 import { Question } from '../../../utils/types'
+import styles from './TalentAssessment.module.scss'
 
 const TalentAssessment = () => {
   const { profile } = useProfile()
@@ -51,18 +52,16 @@ const TalentAssessment = () => {
 
   if (profile?.prescreeningScore && !canRetakeAssessment) {
     return (
-      <div className="flex justify-center items-center flex-col w-full h-full">
+      <div className={styles.doneState}>
         <div>
           <Lottie
             animationData={animationData}
             loop={false}
-            className="w-28 h-28 lg:w-44 lg:h-44 md:w-36 md:h-36"
+            className={styles.doneAnimation}
           />
         </div>
 
-        <h2 className="font-raleway font-semibold text-center text-lg lg:text-2xl md:text-xl text-charcoal pt-4">
-          You Have Taken The Test Already
-        </h2>
+        <h2 className={styles.doneTitle}>You Have Taken The Test Already</h2>
       </div>
     )
   }
@@ -117,31 +116,27 @@ const TalentAssessment = () => {
 
   return (
     <div>
-      <div className="w-full max-w-full px-4 lg:w-[70%] md:w-[80%] mx-auto mt-8 box-border">
-        <div className="ml-0 sm:ml-8">
-          <h2 className="text-2xl md:text-3xl  text-grey-900 font-bold">
-            Pre-Assessment Test
-          </h2>
-          <p className="text-xl font-raleway text-grey-900 font-medium my-3">
+      <div className={styles.page}>
+        <div className={styles.intro}>
+          <h2 className={styles.title}>Pre-Assessment Test</h2>
+          <p className={styles.subtitle}>
             Welcome to your Assessment test, you have 15 Questions to answer in
             this stage.
           </p>
         </div>
 
-        <div className="md:mt-16 mt-2">
-          <form onSubmit={handleSubmit} className="">
+        <div className={styles.form}>
+          <form onSubmit={handleSubmit}>
             <ul>
               {questions.map((question, i) => (
-                <div key={i} className="bg-grey-50 mb-6 p-4 rounded-2xl">
-                  <div className="flex items-center justify-start space-x-3 text-grey-900 font-medium">
-                    <h3 className="text-lg leading-[150%]">{i + 1}.</h3>
-                    <h3 className="text-lg leading-[150%]">
-                      {question.question}
-                    </h3>
+                <div key={i} className={styles.questionCard}>
+                  <div className={styles.questionHeader}>
+                    <h3 className={styles.questionText}>{i + 1}.</h3>
+                    <h3 className={styles.questionText}>{question.question}</h3>
                   </div>
 
                   <textarea
-                    className="w-full bg-white border border-grey-300 rounded-lg h-[100px] p-3 mt-3"
+                    className={styles.answerInput}
                     placeholder="Answer here"
                     name={`answer-${question.id}`}
                     onChange={(e) => handleChange(e, question.id)}
@@ -152,10 +147,8 @@ const TalentAssessment = () => {
               <button
                 type="submit"
                 disabled={!allAnswered} // Disable until all questions are answered
-                className={`px-4 py-2 rounded font-raleway text-normal font-medium ${
-                  allAnswered
-                    ? 'bg-blue-500 text-white hover:bg-blue-700'
-                    : 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                className={`${styles.submitButton} ${
+                  allAnswered ? styles.submitEnabled : styles.submitDisabled
                 }`}>
                 {isSubmitting ? 'Submitting' : 'Submit'}
               </button>

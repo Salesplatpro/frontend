@@ -22,6 +22,7 @@ import ResultCard from './components/ResultCard'
 import { COUNTDOWN_FROM, SECONDS_PER_QUESTION } from './constants'
 import { formatTime, useAssessmentTimer, usePreAssessment } from './hooks'
 import { useAssessmentLockStore } from './lockStore'
+import styles from './page.module.scss'
 import { usePreAssessmentStore } from './store'
 
 type PreAssessmentPageProps = {
@@ -270,15 +271,15 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (fetchError) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <p className="text-red-500 font-raleway">{fetchError}</p>
+      <div className={styles.centeredState}>
+        <p className={styles.errorText}>{fetchError}</p>
       </div>
     )
   }
 
   if (isProfileIncomplete) {
     return (
-      <div className="w-full max-w-full px-4 lg:w-[60%] md:w-[75%] mx-auto mt-10 box-border">
+      <div className={styles.resultWrapper}>
         <ResultCard variant="profileIncomplete" />
       </div>
     )
@@ -286,7 +287,7 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (assessment?.status === 'completed') {
     return (
-      <div className="w-full max-w-full px-4 lg:w-[60%] md:w-[75%] mx-auto mt-10 box-border">
+      <div className={styles.resultWrapper}>
         <ResultCard
           variant="completed"
           score={assessment.score ?? undefined}
@@ -302,9 +303,9 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (isSubmitting) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+      <div className={styles.centeredColumnState}>
         <Spinner />
-        <p className="text-grey-700 font-raleway font-medium">
+        <p className={styles.mutedText}>
           {autoSubmitMessage || 'Submitting assessment...'}
         </p>
       </div>
@@ -313,15 +314,15 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (assessment?.generationFailed) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4 px-4">
-        <p className="text-grey-700 font-raleway font-medium text-center">
+      <div className={styles.centeredColumnStatePadded}>
+        <p className={styles.mutedTextCentered}>
           We couldn&apos;t generate your assessment. Please try again.
         </p>
         <button
           type="button"
           onClick={() => void handleRetryGeneration()}
           disabled={isRetryingGeneration}
-          className="px-5 py-2 rounded-lg bg-blue-500 text-white font-raleway font-medium text-sm hover:bg-blue-600 transition-colors disabled:opacity-60">
+          className={styles.retryButton}>
           {isRetryingGeneration ? 'Retrying...' : 'Try again'}
         </button>
       </div>
@@ -330,9 +331,9 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (assessment?.status === 'pending' && !isReadyToStart) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+      <div className={styles.centeredColumnState}>
         <Spinner />
-        <p className="text-grey-700 font-raleway font-medium">
+        <p className={styles.mutedText}>
           Generating your assessment questions...
         </p>
       </div>
@@ -341,13 +342,11 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (isCountingDown) {
     return (
-      <div className="flex flex-col h-full items-center justify-center bg-white">
-        <p className="text-xl font-raleway font-medium text-grey-600 mb-8">
+      <div className={styles.countdownWrapper}>
+        <p className={styles.countdownLabel}>
           You are about to start your assessment
         </p>
-        <span className="text-8xl font-bold text-blue-500 leading-none font-raleway">
-          {countdown}
-        </span>
+        <span className={styles.countdownNumber}>{countdown}</span>
       </div>
     )
   }
@@ -358,64 +357,52 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
     )
 
     return (
-      <div className="flex flex-col h-full overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-3 px-4 sm:px-6 py-4 border-b border-grey-200 bg-white flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <MdOutlineAssessment className="text-blue-500 text-2xl" />
-            <h1 className="text-xl font-bold text-grey-900 font-raleway">
-              Pre-Assessment
-            </h1>
+      <div className={styles.assessment}>
+        <div className={styles.header}>
+          <div className={styles.headerTitleRow}>
+            <MdOutlineAssessment className={styles.headerIcon} />
+            <h1 className={styles.headerTitle}>Pre-Assessment</h1>
           </div>
-          <div className="flex items-center gap-3 bg-grey-50 rounded-xl px-4 py-2 border border-grey-200">
-            <MdAccessTime className="text-grey-500 text-xl" />
-            <div className="text-right">
-              <p className="text-xs text-grey-500 font-raleway leading-tight">
-                Time Remaining
-              </p>
-              <p className="text-xl font-bold text-grey-900 font-raleway tabular-nums leading-tight">
+          <div className={styles.timerBadge}>
+            <MdAccessTime className={styles.timerIcon} />
+            <div>
+              <p className={styles.timerLabel}>Time Remaining</p>
+              <p className={styles.timerValue}>
                 {formatTime(remainingSeconds)}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-auto p-4 sm:p-6">
-          {/* Progress */}
-          <div className="mb-6">
-            <div className="flex justify-between text-sm font-raleway text-grey-600 mb-2">
+        <div className={styles.scrollArea}>
+          <div className={styles.progressSection}>
+            <div className={styles.progressRow}>
               <span>
                 Question {currentQuestionIndex + 1} of {questions.length}
               </span>
               <span>{progressPct}% Completed</span>
             </div>
-            <div className="w-full h-2 bg-grey-100 rounded-full overflow-hidden">
+            <div className={styles.progressTrack}>
               <div
-                className="h-full bg-blue-500 rounded-full transition-all duration-300"
+                className={styles.progressFill}
                 style={{ width: `${progressPct}%` }}
               />
             </div>
           </div>
 
-          {/* Two-column layout */}
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Left: question */}
-            <div className="flex-1 flex flex-col gap-4 min-w-0">
+          <div className={styles.columns}>
+            <div className={styles.questionColumn}>
               <Questions questions={questions} />
 
-              {/* Navigation */}
-              <div className="flex justify-between gap-3 flex-wrap">
+              <div className={styles.navRow}>
                 <button
                   type="button"
                   disabled={isFirst}
                   onClick={() =>
                     setCurrentQuestionIndex(currentQuestionIndex - 1)
                   }
-                  className={`px-5 py-2 rounded-lg border font-raleway font-medium text-sm transition-colors ${
-                    isFirst
-                      ? 'border-grey-200 text-grey-300 cursor-not-allowed'
-                      : 'border-grey-300 text-grey-700 hover:bg-grey-50'
+                  className={`${styles.navButton} ${
+                    isFirst ? styles.navButtonDisabled : ''
                   }`}>
                   ‹ Previous
                 </button>
@@ -426,7 +413,7 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
                     onClick={() =>
                       setCurrentQuestionIndex(currentQuestionIndex + 1)
                     }
-                    className="px-5 py-2 rounded-lg bg-blue-500 text-white font-raleway font-medium text-sm hover:bg-blue-600 transition-colors">
+                    className={styles.primaryNavButton}>
                     Next ›
                   </button>
                 ) : allAnswered ? (
@@ -434,57 +421,45 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
                     type="button"
                     onClick={() => void handleSubmit(false)}
                     disabled={isSubmitting}
-                    className="px-5 py-2 rounded-lg bg-blue-500 text-white font-raleway font-medium text-sm hover:bg-blue-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+                    className={styles.primaryNavButton}>
                     Submit Assessment
                   </button>
                 ) : (
-                  <span className="text-sm text-grey-500 font-raleway italic">
+                  <span className={styles.answerAllNote}>
                     Answer all questions to submit
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Right panel */}
-            <div className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-4">
-              {/* Guidelines */}
-              <div className="bg-white rounded-2xl border border-grey-200 p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <MdInfo className="text-grey-400 text-lg" />
-                  <h3 className="font-bold text-grey-900 text-sm font-raleway">
+            <div className={styles.sidePanel}>
+              <div className={styles.sideCard}>
+                <div className={styles.sideCardHeader}>
+                  <MdInfo className={styles.sideCardHeaderIcon} />
+                  <h3 className={styles.sideCardTitle}>
                     Assessment Guidelines
                   </h3>
                 </div>
-                <ul className="flex flex-col gap-2.5">
+                <ul className={styles.guidelineList}>
                   {[
                     {
-                      icon: (
-                        <MdOutlineAssessment className="text-grey-400 text-base flex-shrink-0" />
-                      ),
+                      icon: <MdOutlineAssessment />,
                       text: `${questions.length} multiple choice questions`,
                     },
                     {
-                      icon: (
-                        <MdAccessTime className="text-grey-400 text-base flex-shrink-0" />
-                      ),
+                      icon: <MdAccessTime />,
                       text: '30 seconds per question (approx.)',
                     },
                     {
-                      icon: (
-                        <MdRefresh className="text-grey-400 text-base flex-shrink-0" />
-                      ),
+                      icon: <MdRefresh />,
                       text: 'Do not refresh or close the browser',
                     },
                     {
-                      icon: (
-                        <MdCheckCircle className="text-grey-400 text-base flex-shrink-0" />
-                      ),
+                      icon: <MdCheckCircle />,
                       text: 'Your progress is saved automatically',
                     },
                   ].map(({ icon, text }, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-2 text-xs text-grey-600 font-raleway">
+                    <li key={i} className={styles.guidelineItem}>
                       {icon}
                       {text}
                     </li>
@@ -492,12 +467,9 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
                 </ul>
               </div>
 
-              {/* Question Navigator */}
-              <div className="bg-white rounded-2xl border border-grey-200 p-4">
-                <h3 className="font-bold text-grey-900 text-sm font-raleway mb-3">
-                  Question Navigator
-                </h3>
-                <div className="grid grid-cols-5 gap-1.5">
+              <div className={styles.sideCard}>
+                <h3 className={styles.sideCardTitle}>Question Navigator</h3>
+                <div className={styles.navigatorGrid}>
                   {questions.map((q, i) => {
                     const isAnswered = !!answers[q.questionId]
                     const isCurrent = i === currentQuestionIndex
@@ -506,31 +478,29 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
                         key={i}
                         type="button"
                         onClick={() => setCurrentQuestionIndex(i)}
-                        className={`w-9 h-9 rounded-lg text-xs font-bold font-raleway transition-colors ${
+                        className={`${styles.navigatorButton} ${
                           isCurrent
-                            ? 'bg-blue-500 text-white'
+                            ? styles.navigatorButtonCurrent
                             : isAnswered
-                            ? 'bg-green-100 text-green-700 border border-green-200'
-                            : 'bg-grey-100 text-grey-500'
+                            ? styles.navigatorButtonAnswered
+                            : ''
                         }`}>
                         {i + 1}
                       </button>
                     )
                   })}
                 </div>
-                <div className="flex flex-wrap gap-3 mt-3">
+                <div className={styles.legend}>
                   {[
                     {
-                      cls: 'bg-green-100 border border-green-200',
+                      cls: styles.legendSwatchAnswered,
                       label: 'Answered',
                     },
-                    { cls: 'bg-blue-500', label: 'Current' },
-                    { cls: 'bg-grey-100', label: 'Unanswered' },
+                    { cls: styles.legendSwatchCurrent, label: 'Current' },
+                    { cls: styles.legendSwatchUnanswered, label: 'Unanswered' },
                   ].map(({ cls, label }) => (
-                    <span
-                      key={label}
-                      className="flex items-center gap-1 text-xs text-grey-600 font-raleway">
-                      <span className={`w-3 h-3 rounded-sm ${cls}`} />
+                    <span key={label} className={styles.legendItem}>
+                      <span className={`${styles.legendSwatch} ${cls}`} />
                       {label}
                     </span>
                   ))}
