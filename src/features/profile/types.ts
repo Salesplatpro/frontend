@@ -28,7 +28,9 @@ export interface ProfileUser {
   billingStatus?: string | null
   active?: boolean
   bio?: string
+  profileImageUrl?: string | null
   cvFileName?: string | null
+  cvUrl?: string | null
   cvUploadedAt?: string | null
   workType?: WorkType[] | null
   locationCity?: string | null

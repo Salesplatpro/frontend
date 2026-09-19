@@ -9,6 +9,8 @@ export const PROFILE_ENDPOINT = '/user/me'
 // through the backend's text-extraction/embedding pipeline (required for the
 // personalized test feature). Talent-only.
 const CV_UPLOAD_ENDPOINT = '/user/profile'
+// Available to every role, unlike CV_UPLOAD_ENDPOINT.
+const AVATAR_UPLOAD_ENDPOINT = '/user/avatar'
 
 export const fetchProfile = () =>
   httpClient
@@ -29,6 +31,20 @@ export const uploadCv = (
 
   return httpClient
     .patch<ProfileApiResponse>(CV_UPLOAD_ENDPOINT, formData, {
+      onUploadProgress,
+    })
+    .then((response) => response.data)
+}
+
+export const uploadAvatar = (
+  file: File,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
+) => {
+  const formData = new FormData()
+  formData.append('avatar', file)
+
+  return httpClient
+    .patch<ProfileApiResponse>(AVATAR_UPLOAD_ENDPOINT, formData, {
       onUploadProgress,
     })
     .then((response) => response.data)
