@@ -9,6 +9,10 @@
   user-select: none;
 }
 
+.image {
+  object-fit: cover;
+}
+
 .sm {
   width: 32px;
   height: 32px;
