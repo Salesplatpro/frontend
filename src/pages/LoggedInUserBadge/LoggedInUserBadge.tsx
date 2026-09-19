@@ -173,7 +173,12 @@ export const LoggedInUserBadge: React.FC = () => {
             </span>
           )}
           <span className={styles.avatarWrap}>
-            <Avatar firstName={firstName} lastName={lastName} size="md" />
+            <Avatar
+              firstName={firstName}
+              lastName={lastName}
+              src={userInfo?.profileImageUrl}
+              size="md"
+            />
           </span>
           <IoIosArrowDown
             size={16}
@@ -188,7 +193,12 @@ export const LoggedInUserBadge: React.FC = () => {
         <div className={styles.dropdownMenu} role="menu">
           <div className={styles.dropdownHeader}>
             <div className={styles.headerAvatar}>
-              <Avatar firstName={firstName} lastName={lastName} size="lg" />
+              <Avatar
+                firstName={firstName}
+                lastName={lastName}
+                src={userInfo?.profileImageUrl}
+                size="lg"
+              />
               <span className={styles.onlineDot} aria-hidden />
             </div>
             <p className={styles.headerName}>{fullName}</p>
