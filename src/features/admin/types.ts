@@ -3,27 +3,6 @@ export interface CandidateRole {
   name: string
 }
 
-export interface Candidate {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  experience: string | null
-  prescreeningScore: number | null
-  maxSalary: number | null
-  userRoles: CandidateRole[]
-}
-
-export interface CandidateFilters {
-  roleId?: string
-  experience?: string
-  minScore?: number
-  maxSalary?: number
-  incomplete?: boolean
-  limit?: number
-  offset?: number
-}
-
 export interface AdminRole {
   id: string
   name: string
@@ -45,10 +24,18 @@ export interface AdminTalent {
   experience: string | null
   prescreeningScore: number | null
   cvFileName?: string | null
+  cvUrl?: string | null
   cvUploadedAt?: string | null
   locationCountry?: string | null
   createdAt: string
   userRoles: CandidateRole[]
+}
+
+export interface AdminTalentProfile extends AdminTalent {
+  bio?: string | null
+  locationCity?: string | null
+  locationState?: string | null
+  hasEmbedding: boolean
 }
 
 export interface AdminTalentFilters {
@@ -87,6 +74,7 @@ export interface AdminJobFilters {
   search?: string
   status?: string
   roleId?: string
+  organizationId?: string
   limit?: number
   offset?: number
   sort?: 'asc' | 'desc'

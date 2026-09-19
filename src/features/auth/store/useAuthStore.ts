@@ -54,7 +54,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
       import('@/redux/api/recruiter'),
       import('@/redux/features/filesSlice/fileSlice'),
       import('@/features/profile/store/useProfileStore'),
-      import('@/features/admin/store/useCandidatesStore'),
       import('@/features/admin/store/useRolesStore'),
       import('@/features/jobs/store/useJobDraftStore'),
       import('@/features/jobs/store/useJobEditDraftStore'),
@@ -70,7 +69,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
           { recruiterApi },
           { clearScoutUploads },
           { useProfileStore },
-          { useCandidatesStore },
           { useRolesStore },
           { useJobDraftStore },
           { useJobEditDraftStore },
@@ -83,7 +81,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
           store.dispatch(recruiterApi.util.resetApiState())
           store.dispatch(clearScoutUploads())
           useProfileStore.getState().clearProfile()
-          useCandidatesStore.getState().reset()
           useRolesStore.getState().reset()
           useJobDraftStore.getState().clearDraft()
           useJobEditDraftStore.getState().clearAllDrafts()
