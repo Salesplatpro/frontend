@@ -17,13 +17,13 @@ import {
 } from '@/components/layout/PageHero'
 import { PagePanel, StatCard, StatGrid } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
-import { Avatar } from '@/components/ui/Avatar'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
+import ProfilePic from '@/features/profile/components/ProfilePic'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import {
@@ -151,11 +151,7 @@ export const Profile = () => {
       <PageHero
         identity={
           <div className={pageHeroStyles.avatarRing}>
-            <Avatar
-              firstName={profile?.firstName}
-              lastName={profile?.lastName}
-              size="lg"
-            />
+            <ProfilePic />
           </div>
         }
         title={fullName || 'Recruiter'}

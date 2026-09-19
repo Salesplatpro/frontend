@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { PageHero, pageHeroStyles } from '@/components/layout/PageHero'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
+import ProfilePic from '@/features/profile/components/ProfilePic'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { Button } from '../../../components'
-import ProfilePic from '../Profile/ProfilePic'
 import styles from './Support.module.scss'
 
 export const Support = () => {

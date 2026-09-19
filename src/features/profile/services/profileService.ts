@@ -49,3 +49,8 @@ export const uploadAvatar = (
     })
     .then((response) => response.data)
 }
+
+export const removeAvatar = () =>
+  httpClient
+    .delete<ProfileApiResponse>(AVATAR_UPLOAD_ENDPOINT)
+    .then((response) => response.data)
