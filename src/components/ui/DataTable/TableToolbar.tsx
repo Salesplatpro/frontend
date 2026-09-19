@@ -27,6 +27,8 @@ interface TableToolbarProps<T> {
   sortDirection: SortDirection
   onSortChange: (key: string, direction: SortDirection) => void
   exportConfig?: ExportConfig<T>
+  /** Extra controls rendered alongside Columns/Sort/Export, e.g. a bulk action. */
+  actions?: React.ReactNode
 }
 
 const labelOf = <T,>(col: ColumnDef<T>) =>
@@ -41,6 +43,7 @@ export function TableToolbar<T>({
   sortDirection,
   onSortChange,
   exportConfig,
+  actions,
 }: TableToolbarProps<T>) {
   const toggleableColumns = columns.filter((col) => col.toggleable)
   const sortableColumns = columns.filter((col) => col.sortAccessor)
@@ -71,6 +74,7 @@ export function TableToolbar<T>({
         {resultsCount} {resultsCount === 1 ? 'result' : 'results'}
       </span>
       <div className={styles.controls}>
+        {actions}
         {toggleableColumns.length > 0 && (
           <Dropdown
             trigger={<span>Columns</span>}

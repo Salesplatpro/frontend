@@ -420,10 +420,15 @@ export const SingleJobPost = () => {
     }
   }
 
-  const missingVerdictCount = useMemo(
+  // Counts applicants whose AI match never processed at all (matchVerdict
+  // never set) as well as ones that ran and explicitly failed — anything the
+  // "retry" action below can attempt again.
+  const unresolvedVerdictCount = useMemo(
     () =>
       applications.filter(
-        (item) => item.currentStage === 'completed' && !item.matchVerdict,
+        (item) =>
+          item.currentStage === 'completed' &&
+          (!item.matchVerdict || item.matchVerdictStatus === 'failed'),
       ).length,
     [applications],
   )
@@ -526,15 +531,6 @@ export const SingleJobPost = () => {
         } · Posted ${formatTimeAgo(postedAt)}`}
         actions={
           <>
-            {missingVerdictCount > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                loading={isRetryingAllVerdicts}
-                onClick={handleRetryAllMissingVerdicts}>
-                Retry all missing AI matches ({missingVerdictCount})
-              </Button>
-            )}
             <HeroGhost onClick={handleMessageShortlisted}>
               Message all shortlisted
             </HeroGhost>
@@ -627,6 +623,17 @@ export const SingleJobPost = () => {
           resultsCount={sortedApplications.length}
           visibleColumnKeys={visibleColumnKeys}
           onToggleColumn={handleToggleColumn}
+          actions={
+            unresolvedVerdictCount > 0 ? (
+              <Button
+                variant="outline"
+                size="sm"
+                loading={isRetryingAllVerdicts}
+                onClick={handleRetryAllMissingVerdicts}>
+                Regenerate failed matches ({unresolvedVerdictCount})
+              </Button>
+            ) : undefined
+          }
           sortKey={
             toolbarColumns.some(
               (col) => col.key === sortKey && col.sortAccessor,
