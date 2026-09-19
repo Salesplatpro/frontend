@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoIosInformationCircle } from 'react-icons/io'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 
@@ -12,8 +12,11 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useApplication } from '@/features/applications/hooks/useApplication'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
 import type { JobAiConfigThresholds } from '@/features/applications/services/applicationService'
+import { httpClient } from '@/features/auth/services/httpClient'
 import { humanStage } from '@/pages/TalentProfile/Job/jobPipeline'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
+import { notify } from '@/utils/toastNotifications'
 
 import { AssessmentChat } from './AssessmentChat'
 import styles from './CandidateDossierPanel.module.scss'
@@ -96,10 +99,44 @@ export const CandidateDossierPanel = ({
   const { updateStatus, isUpdating } = useUpdateApplicationStatus(
     application.id,
   )
+  const [isLoadingCv, setIsLoadingCv] = useState(false)
 
   const handleStatus = async (status: 'shortlisted' | 'rejected') => {
     await updateStatus(status)
     await onChanged?.()
+  }
+
+  const handleViewCv = async () => {
+    if (talent.cvUrl) {
+      window.open(talent.cvUrl, '_blank', 'noopener')
+      return
+    }
+
+    // Legacy talents without a stored file: open a blank tab synchronously
+    // (so the browser doesn't treat it as a popup) then point it at the
+    // on-demand generated PDF once the authenticated fetch resolves.
+    const cvWindow = window.open('', '_blank')
+    setIsLoadingCv(true)
+    try {
+      const response = await httpClient.get(`/user/profile/${talent.id}/cv`, {
+        responseType: 'blob',
+      })
+      const blobUrl = URL.createObjectURL(response.data as Blob)
+      if (cvWindow) {
+        cvWindow.location.href = blobUrl
+      }
+    } catch (err) {
+      cvWindow?.close()
+      notify(
+        'error',
+        getErrorMessage(err, 'This candidate has no CV on file'),
+        {
+          autoClose: 2500,
+        },
+      )
+    } finally {
+      setIsLoadingCv(false)
+    }
   }
 
   const decision =
@@ -165,9 +202,12 @@ export const CandidateDossierPanel = ({
         }
         actions={
           <div className={styles.heroActions}>
-            <Button variant="outline" size="sm" disabled>
-              Download CV
-              <span className={styles.comingSoon}>Coming soon</span>
+            <Button
+              variant="outline"
+              size="sm"
+              loading={isLoadingCv}
+              onClick={() => void handleViewCv()}>
+              View talent CV
             </Button>
             <Button
               size="sm"
