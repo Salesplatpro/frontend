@@ -3,11 +3,10 @@ import React from 'react'
 import { PageHero, pageHeroStyles } from '@/components/layout/PageHero'
 import { StatusBadge } from '@/components/ui/Badge'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
+import ProfilePic from '@/features/profile/components/ProfilePic'
 import { ProfileUser } from '@/features/profile/types'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
 import ProgressBar from '@/utils/ProgressBar'
-
-import ProfilePic from './ProfilePic'
 
 interface ProfileHeaderProps {
   profile: ProfileUser | null
