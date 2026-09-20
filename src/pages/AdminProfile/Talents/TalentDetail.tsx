@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import useSWR from 'swr'
 
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
-import { fetchAdminTalentProfile } from '@/features/admin/services/adminService'
-import { httpClient } from '@/features/auth/services/httpClient'
+import { useAdminTalentProfile } from '@/features/admin/hooks/useAdminTalentProfile'
 import { useAdminTalentMessaging } from '@/features/messaging/hooks/useAdminTalentMessaging'
 import { DisplayMessage } from '@/pages/RecruiterProfile/MyJobPosts/Messaging/DisplayMessage'
-import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
+import { viewCandidateCv } from '@/utils/viewCandidateCv'
 
 import styles from './TalentDetail.module.scss'
 
@@ -21,10 +19,7 @@ const TalentDetail = () => {
   const [isLoadingCv, setIsLoadingCv] = useState(false)
   const [messageContent, setMessageContent] = useState('')
 
-  const { data: talent, isLoading } = useSWR(
-    talentId ? `/admin/talents/${talentId}` : null,
-    () => fetchAdminTalentProfile(talentId!),
-  )
+  const { talent, isLoading } = useAdminTalentProfile(talentId)
 
   const {
     messages,
@@ -35,25 +30,12 @@ const TalentDetail = () => {
 
   const handleViewCv = async () => {
     if (!talent) return
-    if (talent.cvUrl) {
-      window.open(talent.cvUrl, '_blank', 'noopener')
-      return
-    }
-
-    const cvWindow = window.open('', '_blank')
     setIsLoadingCv(true)
     try {
-      const response = await httpClient.get(`/user/profile/${talent.id}/cv`, {
-        responseType: 'blob',
-      })
-      const blobUrl = URL.createObjectURL(response.data as Blob)
-      if (cvWindow) {
-        cvWindow.location.href = blobUrl
-      }
-    } catch (err) {
-      cvWindow?.close()
-      notify('error', getErrorMessage(err, 'This talent has no CV on file'), {
-        autoClose: 2500,
+      await viewCandidateCv({
+        cvUrl: talent.cvUrl,
+        talentId: talent.id,
+        notFoundMessage: 'This talent has no CV on file',
       })
     } finally {
       setIsLoadingCv(false)

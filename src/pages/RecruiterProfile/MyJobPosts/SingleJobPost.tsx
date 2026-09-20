@@ -111,6 +111,15 @@ const APPLICANT_FILTER_FIELDS: FilterFieldConfig<ApplicantFiltersValues>[] = [
 
 type StatusTab = 'all' | 'shortlisted' | 'pending' | 'rejected'
 
+// True when an applicant's AI match never processed at all (matchVerdict
+// never set) or ran and explicitly failed — anything the "regenerate failed
+// matches" action can attempt again. Single source of truth for both the
+// toolbar's count/button and the bulk-shortlist "no AI match" warning, so
+// they can't drift apart.
+const hasUnresolvedVerdict = (item: SingleJobDetails) =>
+  item.currentStage === 'completed' &&
+  (!item.matchVerdict || item.matchVerdictStatus === 'failed')
+
 const matchesStatusTab = (item: SingleJobDetails, tab: StatusTab) => {
   if (tab === 'all') return true
   if (tab === 'shortlisted') return item.status === 'shortlisted'
@@ -248,12 +257,7 @@ export const SingleJobPost = () => {
 
   const getMissingVerdictIds = (keys: Set<string>) =>
     applications
-      .filter(
-        (item) =>
-          keys.has(item.id) &&
-          item.currentStage === 'completed' &&
-          !item.matchVerdict,
-      )
+      .filter((item) => keys.has(item.id) && hasUnresolvedVerdict(item))
       .map((item) => item.id)
 
   const handleShortlistClick = () => {
@@ -420,16 +424,8 @@ export const SingleJobPost = () => {
     }
   }
 
-  // Counts applicants whose AI match never processed at all (matchVerdict
-  // never set) as well as ones that ran and explicitly failed — anything the
-  // "retry" action below can attempt again.
   const unresolvedVerdictCount = useMemo(
-    () =>
-      applications.filter(
-        (item) =>
-          item.currentStage === 'completed' &&
-          (!item.matchVerdict || item.matchVerdictStatus === 'failed'),
-      ).length,
+    () => applications.filter(hasUnresolvedVerdict).length,
     [applications],
   )
 
