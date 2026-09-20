@@ -12,11 +12,9 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useApplication } from '@/features/applications/hooks/useApplication'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
 import type { JobAiConfigThresholds } from '@/features/applications/services/applicationService'
-import { httpClient } from '@/features/auth/services/httpClient'
 import { humanStage } from '@/pages/TalentProfile/Job/jobPipeline'
-import { getErrorMessage } from '@/utils/getErrorMessage'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
-import { notify } from '@/utils/toastNotifications'
+import { viewCandidateCv } from '@/utils/viewCandidateCv'
 
 import { AssessmentChat } from './AssessmentChat'
 import styles from './CandidateDossierPanel.module.scss'
@@ -110,33 +108,9 @@ export const CandidateDossierPanel = ({
   }
 
   const handleViewCv = async () => {
-    if (talent.cvUrl) {
-      window.open(talent.cvUrl, '_blank', 'noopener')
-      return
-    }
-
-    // Legacy talents without a stored file: open a blank tab synchronously
-    // (so the browser doesn't treat it as a popup) then point it at the
-    // on-demand generated PDF once the authenticated fetch resolves.
-    const cvWindow = window.open('', '_blank')
     setIsLoadingCv(true)
     try {
-      const response = await httpClient.get(`/user/profile/${talent.id}/cv`, {
-        responseType: 'blob',
-      })
-      const blobUrl = URL.createObjectURL(response.data as Blob)
-      if (cvWindow) {
-        cvWindow.location.href = blobUrl
-      }
-    } catch (err) {
-      cvWindow?.close()
-      notify(
-        'error',
-        getErrorMessage(err, 'This candidate has no CV on file'),
-        {
-          autoClose: 2500,
-        },
-      )
+      await viewCandidateCv({ cvUrl: talent.cvUrl, talentId: talent.id })
     } finally {
       setIsLoadingCv(false)
     }

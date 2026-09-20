@@ -314,8 +314,8 @@ const PreAssessmentPage: React.FC<PreAssessmentPageProps> = ({
 
   if (assessment?.generationFailed) {
     return (
-      <div className={styles.centeredColumnStatePadded}>
-        <p className={styles.mutedTextCentered}>
+      <div className={`${styles.centeredColumnState} ${styles.padded}`}>
+        <p className={`${styles.mutedText} ${styles.centered}`}>
           We couldn&apos;t generate your assessment. Please try again.
         </p>
         <button

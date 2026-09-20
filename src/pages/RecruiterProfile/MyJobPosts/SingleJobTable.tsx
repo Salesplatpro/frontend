@@ -24,9 +24,10 @@ type SingleJobTableProps = {
   selectedRowKeys?: Set<string>
   onToggleRow?: (key: string | number) => void
   onToggleAll?: (keys: (string | number)[]) => void
-  onShortlist: (applicationId: string) => void
-  onReject: (applicationId: string) => void
-  onMessage: (applicationId: string) => void
+  /** Omit all three (e.g. an admin's read-only view) to hide the actions dropdown entirely. */
+  onShortlist?: (applicationId: string) => void
+  onReject?: (applicationId: string) => void
+  onMessage?: (applicationId: string) => void
   onOpenDossier?: (item: SingleJobDetails) => void
   /** Application id currently being updated (e.g. via a row-level shortlist/reject) — shows a spinner in that row's actions cell instead of a static disabled state. */
   loadingRowId?: string | null
@@ -91,9 +92,9 @@ export const compareByAiMatch = (
 
 interface ApplicantActionsCellProps {
   item: SingleJobDetails
-  onShortlist: (applicationId: string) => void
-  onReject: (applicationId: string) => void
-  onMessage: (applicationId: string) => void
+  onShortlist?: (applicationId: string) => void
+  onReject?: (applicationId: string) => void
+  onMessage?: (applicationId: string) => void
   isLoading?: boolean
 }
 
@@ -108,11 +109,20 @@ const ApplicantActionsCell = ({
     return <Spinner size="sm" />
   }
 
-  const items: DropdownItem[] = [
-    { label: 'Shortlist', onClick: () => onShortlist(item.id) },
-    { label: 'Reject', onClick: () => onReject(item.id) },
-    { label: 'Message', onClick: () => onMessage(item.id) },
-  ]
+  if (!onShortlist && !onReject && !onMessage) {
+    return null
+  }
+
+  const items: DropdownItem[] = (
+    [
+      onShortlist && {
+        label: 'Shortlist',
+        onClick: () => onShortlist(item.id),
+      },
+      onReject && { label: 'Reject', onClick: () => onReject(item.id) },
+      onMessage && { label: 'Message', onClick: () => onMessage(item.id) },
+    ] as (DropdownItem | undefined)[]
+  ).filter((entry): entry is DropdownItem => Boolean(entry))
 
   return <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
 }
@@ -153,9 +163,9 @@ export const buildColumns = ({
   loadingRowId,
   onOpenAiMatch,
 }: {
-  onShortlist: (applicationId: string) => void
-  onReject: (applicationId: string) => void
-  onMessage: (applicationId: string) => void
+  onShortlist?: (applicationId: string) => void
+  onReject?: (applicationId: string) => void
+  onMessage?: (applicationId: string) => void
   loadingRowId?: string | null
   onOpenAiMatch?: (item: SingleJobDetails) => void
 }): ColumnDef<SingleJobDetails>[] => [

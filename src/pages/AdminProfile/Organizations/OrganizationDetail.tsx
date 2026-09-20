@@ -256,7 +256,7 @@ const OrganizationDetail = () => {
             Job Posts
           </Text>
           <Text size="fs-sm" color="secondary">
-            Every job this company has posted, with its applicant count.
+            Every job this company has posted. Open one to view its candidates.
           </Text>
         </div>
         {isJobsLoading ? (
