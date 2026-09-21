@@ -106,7 +106,6 @@ const pendingPreview = (overrides: Record<string, unknown> = {}) => ({
       status: 'pending',
       expiresAt: '2026-12-01T00:00:00.000Z',
       inviteeExists: true,
-      inviteeHasPaidPlan: false,
       ...overrides,
     },
   },

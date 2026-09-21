@@ -108,7 +108,6 @@ export interface OrganizationInvitePreview {
   status: OrganizationInviteStatus
   expiresAt: string
   inviteeExists: boolean
-  inviteeHasPaidPlan: boolean
 }
 
 export interface OrganizationMember {
