@@ -200,12 +200,6 @@ export const JoinCompanyInvitePage = () => {
       <AuthLayout
         title={`Join ${preview.organizationName}`}
         subtitle="Log in with your recruiter account to accept this invite.">
-        {preview.inviteeHasPaidPlan && (
-          <Alert variant="warning">
-            You are on a paid plan. Switch to the free plan before joining a
-            company team.
-          </Alert>
-        )}
         <p className={styles.lead}>
           You were invited to join <strong>{preview.organizationName}</strong>.
           Log in with <strong>{preview.invitedEmail}</strong> to continue.
