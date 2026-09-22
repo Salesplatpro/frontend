@@ -21,6 +21,7 @@ import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { changePasswordPathForRole } from '@/features/auth/utils/dashboardPath'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
+import { isFreePlan } from '@/features/pricing/types'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { ThemeMode, useTheme } from '@/features/theme/ThemeProvider'
@@ -71,7 +72,7 @@ export const LoggedInUserBadge: React.FC = () => {
   const fullName = `${firstName} ${lastName}`.trim() || 'Account'
   const email = userInfo?.email || user?.email || ''
   const isVerified = !!userInfo?.emailVerifiedAt
-  const isPaid = userInfo?.billingPlan === 'paid'
+  const isPaid = !isFreePlan(userInfo?.billingPlan)
   const verificationBadge = getEmailVerificationBadge(userInfo?.emailVerifiedAt)
   const planBadge = getBillingPlanBadge(userInfo?.billingPlan)
 
@@ -225,7 +226,7 @@ export const LoggedInUserBadge: React.FC = () => {
                     color: planBadge.color,
                   }}>
                   <MdOutlineWorkspacePremium size={14} />
-                  {isPaid ? 'Paid Plan' : 'Free plan'}
+                  {planBadge.status}
                 </span>
               )}
             </div>

@@ -19,14 +19,28 @@ import { useNavigate } from 'react-router-dom'
 
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { notify } from '@/utils/toastNotifications'
 
 import { usePaidCheckout } from '../hooks/usePaidCheckout'
 import { usePricingCatalog } from '../hooks/usePricingCatalog'
-import { BillingInterval, ComparisonRow, PricingPlan } from '../types'
+import {
+  BillingInterval,
+  ComparisonRow,
+  isSubscriptionPlan,
+  PricingFeature,
+  PricingPlan,
+} from '../types'
 import styles from './PricingContent.module.scss'
 
-const formatNgn = (amount: number, symbol: string) =>
-  `${symbol}${amount.toLocaleString('en-NG')}`
+const formatNgn = (amount: number | null | undefined, symbol: string) => {
+  if (amount == null || Number.isNaN(amount)) return null
+  return `${symbol}${amount.toLocaleString('en-NG')}`
+}
+
+const featureLabel = (feature: PricingFeature) =>
+  feature.text ?? feature.label ?? ''
+
+const featureIncluded = (feature: PricingFeature) => feature.included !== false
 
 const comparisonIcon = (id: string) => {
   switch (id) {
@@ -57,9 +71,16 @@ const cellValue = (value: string | boolean) => {
   return value
 }
 
+const planIcon = (plan: PricingPlan) => {
+  if (plan.key === 'pay_per_use') return <FiBriefcase size={20} />
+  if (isSubscriptionPlan(plan) || plan.key === 'paid')
+    return <FiZap size={20} />
+  return <FiUser size={20} />
+}
+
 type PricingContentProps = {
   variant?: 'public' | 'dashboard'
-  currentPlan?: 'free' | 'paid'
+  currentPlan?: string
 }
 
 export const PricingContent: React.FC<PricingContentProps> = ({
@@ -82,6 +103,7 @@ export const PricingContent: React.FC<PricingContentProps> = ({
 
   const symbol = catalog.currencySymbol
   const isYearly = interval === 'annually'
+  const comparison = catalog.comparison
 
   const onSelect = async (plan: PricingPlan) => {
     if (plan.key === 'free') {
@@ -92,7 +114,29 @@ export const PricingContent: React.FC<PricingContentProps> = ({
       navigate('/register')
       return
     }
-    await startCheckout(interval)
+
+    if (plan.key === 'pay_per_use') {
+      if (variant === 'dashboard' || (isLoggedIn && userRole === 'recruiter')) {
+        notify(
+          'info',
+          'Pay per Use is billed when you post a job — no monthly subscription.',
+        )
+        navigate('/recruiterDashboard/myJobPosts')
+        return
+      }
+      navigate('/register')
+      return
+    }
+
+    if (!isSubscriptionPlan(plan)) {
+      notify('error', 'This plan is not available for checkout.')
+      return
+    }
+
+    const checkoutInterval: BillingInterval =
+      isYearly && plan.yearlyAmountNgn == null ? 'monthly' : interval
+
+    await startCheckout(plan.key, checkoutInterval)
   }
 
   return (
@@ -140,18 +184,30 @@ export const PricingContent: React.FC<PricingContentProps> = ({
 
         <div className={styles.cards}>
           {catalog.plans.map((plan) => {
-            const amount = isYearly
-              ? plan.yearlyAmountNgn
-              : plan.monthlyAmountNgn
-            const period = isYearly ? 'year' : 'month'
+            const hasYearly = plan.yearlyAmountNgn != null
+            const amount =
+              isYearly && hasYearly
+                ? plan.yearlyAmountNgn
+                : plan.monthlyAmountNgn
+            const formatted = formatNgn(amount, symbol)
+            const period =
+              isYearly && hasYearly
+                ? 'year'
+                : plan.key === 'pay_per_use'
+                ? 'listing'
+                : 'month'
             const isCurrent =
               currentPlan === plan.key && variant === 'dashboard'
-            const ctaLabel =
-              isCurrent && plan.key === 'free'
-                ? 'Current plan'
-                : plan.key === 'paid'
-                ? `${plan.cta} →`
-                : plan.cta
+            const ctaLabel = isCurrent
+              ? 'Current plan'
+              : plan.key === 'pay_per_use'
+              ? plan.cta
+              : isSubscriptionPlan(plan)
+              ? `${plan.cta} →`
+              : plan.cta
+
+            const monthlyFormatted = formatNgn(plan.monthlyAmountNgn, symbol)
+            const yearlyFormatted = formatNgn(plan.yearlyAmountNgn, symbol)
 
             return (
               <article
@@ -162,34 +218,33 @@ export const PricingContent: React.FC<PricingContentProps> = ({
                 {plan.badge && (
                   <span className={styles.popular}>★ {plan.badge}</span>
                 )}
-                <div className={styles.iconCircle}>
-                  {plan.key === 'paid' ? (
-                    <FiZap size={20} />
-                  ) : (
-                    <FiUser size={20} />
-                  )}
-                </div>
+                <div className={styles.iconCircle}>{planIcon(plan)}</div>
                 <div>
                   <h2 className={styles.planName}>{plan.name}</h2>
                   <p className={styles.planDescription}>{plan.description}</p>
                 </div>
                 <div>
                   <p className={styles.price}>
-                    {formatNgn(amount, symbol)}
-                    {plan.key === 'paid' && (
+                    {formatted ?? plan.priceCaption ?? '—'}
+                    {formatted && (
                       <span className={styles.pricePeriod}> /{period}</span>
                     )}
                   </p>
-                  {plan.key === 'free' ? (
-                    <p className={styles.priceHint}>{plan.priceCaption}</p>
+                  {plan.key === 'pay_per_use' || !hasYearly ? (
+                    <p className={styles.priceHint}>
+                      {plan.priceCaption ?? 'Billed as you go'}
+                    </p>
+                  ) : isYearly ? (
+                    <p className={styles.priceHint}>
+                      {monthlyFormatted
+                        ? `or ${monthlyFormatted}/month`
+                        : plan.priceCaption}
+                    </p>
                   ) : (
                     <p className={styles.priceHint}>
-                      {isYearly
-                        ? `or ${formatNgn(plan.monthlyAmountNgn, symbol)}/month`
-                        : `or ${formatNgn(
-                            plan.yearlyAmountNgn,
-                            symbol,
-                          )}/year (Save ${catalog.yearlyDiscountPercent}%)`}
+                      {yearlyFormatted
+                        ? `or ${yearlyFormatted}/year (Save ${catalog.yearlyDiscountPercent}%)`
+                        : plan.priceCaption}
                     </p>
                   )}
                 </div>
@@ -200,69 +255,73 @@ export const PricingContent: React.FC<PricingContentProps> = ({
                     plan.highlighted ? styles.ctaSolid : styles.ctaOutline,
                   )}
                   onClick={() => onSelect(plan)}
-                  disabled={
-                    isCheckingOut || (isCurrent && plan.key === 'free')
-                  }>
-                  {isCheckingOut && plan.key === 'paid'
+                  disabled={isCheckingOut || isCurrent}>
+                  {isCheckingOut && isSubscriptionPlan(plan)
                     ? 'Redirecting…'
                     : ctaLabel}
                 </button>
+                {plan.featuresIntro && (
+                  <p className={styles.priceHint}>{plan.featuresIntro}</p>
+                )}
                 <ul className={styles.features}>
-                  {plan.features.map((feature) => (
-                    <li
-                      key={feature.text}
-                      className={cn(styles.feature, {
-                        [styles.featureExcluded]: !feature.included,
-                      })}>
-                      {feature.included ? (
-                        <FiCheck size={16} />
-                      ) : (
-                        <FiX size={16} />
-                      )}
-                      <span>{feature.text}</span>
-                    </li>
-                  ))}
+                  {plan.features.map((feature) => {
+                    const label = featureLabel(feature)
+                    if (!label) return null
+                    const included = featureIncluded(feature)
+                    return (
+                      <li
+                        key={label}
+                        className={cn(styles.feature, {
+                          [styles.featureExcluded]: !included,
+                        })}>
+                        {included ? <FiCheck size={16} /> : <FiX size={16} />}
+                        <span>{label}</span>
+                      </li>
+                    )
+                  })}
                 </ul>
               </article>
             )
           })}
         </div>
 
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                {catalog.comparison.columns.map((column) => (
-                  <th
-                    key={column}
-                    className={
-                      column.toLowerCase() === 'paid'
-                        ? styles.paidCol
-                        : undefined
-                    }>
-                    {column}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {catalog.comparison.rows.map((row: ComparisonRow) => (
-                <tr key={row.id}>
-                  <td>
-                    <span className={styles.rowLabel}>
-                      {comparisonIcon(row.id)} {row.label}
-                    </span>
-                    {row.hint && (
-                      <span className={styles.rowHint}>{row.hint}</span>
-                    )}
-                  </td>
-                  <td>{cellValue(row.free)}</td>
-                  <td className={styles.paidCol}>{cellValue(row.paid)}</td>
+        {comparison && (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  {comparison.columns.map((column) => (
+                    <th
+                      key={column}
+                      className={
+                        column.toLowerCase() === 'paid'
+                          ? styles.paidCol
+                          : undefined
+                      }>
+                      {column}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {comparison.rows.map((row: ComparisonRow) => (
+                  <tr key={row.id}>
+                    <td>
+                      <span className={styles.rowLabel}>
+                        {comparisonIcon(row.id)} {row.label}
+                      </span>
+                      {row.hint && (
+                        <span className={styles.rowHint}>{row.hint}</span>
+                      )}
+                    </td>
+                    <td>{cellValue(row.free)}</td>
+                    <td className={styles.paidCol}>{cellValue(row.paid)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <section className={styles.why}>
           <div>

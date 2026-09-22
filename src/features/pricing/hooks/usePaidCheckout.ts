@@ -8,9 +8,9 @@ import { notify } from '@/utils/toastNotifications'
 import { initiatePaidCheckout } from '../services/checkoutService'
 import { BillingInterval } from '../types'
 
-const loginPathForCheckout = (interval: BillingInterval) =>
+const loginPathForCheckout = (planKey: string, interval: BillingInterval) =>
   `/login?next=${encodeURIComponent(
-    `/recruiterDashboard/plan?checkout=paid&interval=${interval}`,
+    `/recruiterDashboard/plan?checkout=${planKey}&interval=${interval}`,
   )}`
 
 export const usePaidCheckout = () => {
@@ -20,15 +20,15 @@ export const usePaidCheckout = () => {
   const userRole = useAuthStore((state) => state.user?.userRole)
 
   const startCheckout = useCallback(
-    async (interval: BillingInterval) => {
+    async (planKey: string, interval: BillingInterval) => {
       if (!isLoggedIn || userRole !== 'recruiter') {
-        navigate(loginPathForCheckout(interval))
+        navigate(loginPathForCheckout(planKey, interval))
         return
       }
 
       setIsCheckingOut(true)
       try {
-        const response = await initiatePaidCheckout(interval)
+        const response = await initiatePaidCheckout(planKey, interval)
         const link = response.data?.link
         if (!link) {
           throw new Error('No checkout link returned')

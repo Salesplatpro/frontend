@@ -5,6 +5,7 @@ import { HiOutlineCreditCard, HiOutlineUserGroup } from 'react-icons/hi2'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
 
+import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import styles from './CompanyBanner.module.scss'
@@ -55,7 +56,7 @@ export const CompanyBanner: React.FC = () => {
               <span className={styles.activeTag}>Active</span>
             )}
             <span className={styles.planTag}>
-              {profile?.billingPlan === 'paid' ? 'Paid' : 'Free plan'}
+              {getBillingPlanBadge(profile?.billingPlan).status}
             </span>
           </span>
         </div>
