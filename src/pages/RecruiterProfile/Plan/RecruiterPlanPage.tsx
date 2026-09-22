@@ -7,7 +7,11 @@ import { Spinner } from '@/components/ui/Spinner'
 import { PlanUsage } from '@/features/pricing/components/PlanUsage'
 import { PricingContent } from '@/features/pricing/components/PricingContent'
 import { usePaidCheckout } from '@/features/pricing/hooks/usePaidCheckout'
-import { BillingInterval } from '@/features/pricing/types'
+import {
+  BillingInterval,
+  isFreePlan,
+  isSubscriptionPlanKey,
+} from '@/features/pricing/types'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 const RecruiterPlanPage: React.FC = () => {
@@ -23,31 +27,32 @@ const RecruiterPlanPage: React.FC = () => {
 
   useEffect(() => {
     if (startedRef.current) return
-    if (checkout !== 'paid' || !profile || profile.billingPlan === 'paid')
-      return
+    if (!checkout || !profile || !isSubscriptionPlanKey(checkout)) return
+    if (profile.billingPlan === checkout) return
     startedRef.current = true
-    void startCheckout(interval)
+    void startCheckout(checkout, interval)
   }, [checkout, interval, profile, startCheckout])
 
   if (isLoading || isCheckingOut) return <Spinner fullPage />
 
-  const isPaid = profile?.billingPlan === 'paid'
+  const onPaidPlan = !isFreePlan(profile?.billingPlan)
+  const currentPlan = profile?.billingPlan ?? 'free'
 
   return (
     <PageShell wide>
       <PageHero
         compact
-        title={isPaid ? 'Your plan' : 'Choose a plan'}
+        title={onPaidPlan ? 'Your plan' : 'Choose a plan'}
         lead={
-          isPaid
+          onPaidPlan
             ? 'See how you are using Auxhr on your current subscription.'
             : 'Upgrade to post more jobs and unlock recruiter tools.'
         }
       />
-      {isPaid ? (
-        <PlanUsage interval={profile?.billingInterval} />
+      {onPaidPlan ? (
+        <PlanUsage interval={profile?.billingInterval} planKey={currentPlan} />
       ) : (
-        <PricingContent variant="dashboard" currentPlan="free" />
+        <PricingContent variant="dashboard" currentPlan={currentPlan} />
       )}
     </PageShell>
   )

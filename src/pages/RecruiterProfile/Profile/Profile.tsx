@@ -22,6 +22,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
+import { isFreePlan } from '@/features/pricing/types'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import ProfilePic from '@/features/profile/components/ProfilePic'
 import { useProfile } from '@/features/profile/hooks/useProfile'
@@ -88,7 +89,7 @@ export const Profile = () => {
     null
   const verificationBadge = getEmailVerificationBadge(profile?.emailVerifiedAt)
   const planBadge = getBillingPlanBadge(profile?.billingPlan)
-  const isPaid = profile?.billingPlan === 'paid'
+  const isPaid = !isFreePlan(profile?.billingPlan)
   const orgBadge = activeOrg
     ? getOrganizationStatusBadge(activeOrg.status)
     : null
@@ -162,7 +163,7 @@ export const Profile = () => {
           <>
             <StatusBadge {...verificationBadge} showDot />
             <StatusBadge
-              status={isPaid ? 'Paid plan' : planBadge.status}
+              status={planBadge.status}
               backgroundColor={planBadge.backgroundColor}
               color={planBadge.color}
               showDot

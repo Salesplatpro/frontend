@@ -8,10 +8,13 @@ export interface InitiatePaymentResponse {
   data: { link: string; reference: string; mode: string }
 }
 
-export const initiatePaidCheckout = (interval: BillingInterval) =>
+export const initiatePaidCheckout = (
+  planKey: string,
+  interval: BillingInterval,
+) =>
   httpClient
     .post<InitiatePaymentResponse>('/payments', {
-      planKey: 'paid',
+      planKey,
       interval,
     })
     .then((res) => res.data)
