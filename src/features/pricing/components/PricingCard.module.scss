@@ -1,0 +1,187 @@
+.card {
+  position: relative;
+  flex: 0 0 min(280px, 85vw);
+  scroll-snap-align: start;
+  background: var(--color-white);
+  border: 1px solid var(--color-grey-200);
+  border-radius: 16px;
+  padding: var(--space-6);
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  @media (min-width: 768px) {
+    flex-basis: calc((100% - 3 * var(--space-6)) / 4);
+    min-width: 240px;
+  }
+
+  @media (min-width: 1100px) {
+    flex-basis: calc((100% - 3 * var(--space-6)) / 4);
+  }
+}
+
+.badge {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: var(--color-grey-900);
+  color: var(--color-white);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.badgeTesting {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: var(--color-warning-600);
+  color: var(--color-white);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.planEyebrow {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-grey-500);
+}
+
+.price {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
+  line-height: 1.15;
+  color: var(--color-grey-900);
+}
+
+.priceUsd {
+  font-size: clamp(1.75rem, 3vw, 2.15rem);
+}
+
+.priceSep {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: var(--weight-bold);
+}
+
+.priceNgn {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: var(--weight-bold);
+}
+
+.planCaption {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-grey-600);
+  line-height: var(--leading-relaxed);
+}
+
+.ctaStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ctaPrimary {
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+  cursor: pointer;
+  background: var(--color-brand-600);
+  color: var(--color-white);
+  transition: background var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(:disabled) {
+    background: var(--color-brand-700);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.ctaSecondary {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+  background: var(--color-white);
+  color: var(--color-brand-700);
+  border: 1px solid var(--color-grey-300);
+  transition: background var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--color-grey-50);
+    border-color: var(--color-brand-300);
+  }
+}
+
+.featuresBlock {
+  border-top: 1px solid var(--color-grey-200);
+  padding-top: var(--space-5);
+  margin-top: var(--space-1);
+}
+
+.featuresLabel {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-grey-500);
+}
+
+.featuresIntro {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-grey-600);
+}
+
+.features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-grey-700);
+  line-height: 1.4;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-100);
+  color: var(--color-brand-600);
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+}

@@ -31,6 +31,9 @@ export interface PricingPlan {
   monthlyAmountNgn: number
   /** Null when the plan has no annual price (e.g. pay_per_use). */
   yearlyAmountNgn: number | null
+  /** Display-only USD; checkout still bills in NGN. */
+  monthlyAmountUsd: number
+  yearlyAmountUsd: number | null
   featuresIntro?: string | null
   features: PricingFeature[]
 }
