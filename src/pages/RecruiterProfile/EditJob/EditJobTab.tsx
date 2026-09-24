@@ -1,4 +1,4 @@
-import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
+import { Form, FormikHelpers, useFormikContext } from 'formik'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -8,6 +8,7 @@ import {
   EMPTY_LOCATION,
   resolveLocationFromNames,
 } from '@/components/forms/LocationSelect'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
@@ -325,7 +326,7 @@ export const EditJobTab = () => {
         aiConfigId={aiConfigId}
       />
 
-      <Formik
+      <ValidatedForm
         initialValues={initialValues}
         validationSchema={editJobValidationSchema}
         onSubmit={onSubmit}
@@ -374,7 +375,7 @@ export const EditJobTab = () => {
             </div>
           </Form>
         )}
-      </Formik>
+      </ValidatedForm>
     </PageShell>
   )
 }

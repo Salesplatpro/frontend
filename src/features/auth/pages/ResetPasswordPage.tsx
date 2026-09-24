@@ -8,6 +8,7 @@ import {
   PasswordInput,
   useFocusFieldOnMount,
 } from '@/components/forms'
+import { ValidationSchemaProvider } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { paths } from '@/paths'
@@ -118,61 +119,63 @@ export const ResetPasswordPage = () => {
   return (
     <AuthLayout title="Reset password" subtitle="Choose a new password">
       <FormikProvider value={formik}>
-        <form onSubmit={formik.handleSubmit} noValidate>
-          <FormikFocusOnError />
-          {submitError && (
-            <Alert variant="error" className={styles.alert}>
-              {submitError}
-            </Alert>
-          )}
+        <ValidationSchemaProvider schema={resetPasswordSchema}>
+          <form onSubmit={formik.handleSubmit} noValidate>
+            <FormikFocusOnError />
+            {submitError && (
+              <Alert variant="error" className={styles.alert}>
+                {submitError}
+              </Alert>
+            )}
 
-          <p className={styles.hint}>
-            Use 8–72 characters with a letter, a number, and a special character
-            (@ $ ! % * # . ? &).
-          </p>
+            <p className={styles.hint}>
+              Use 8–72 characters with a letter, a number, and a special
+              character (@ $ ! % * # . ? &).
+            </p>
 
-          <PasswordInput
-            title="New password"
-            label="password"
-            name="password"
-            autoComplete="new-password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            placeholder="Enter a new password"
-            error={
-              formik.touched.password && formik.errors.password
-                ? formik.errors.password
-                : ''
-            }
-          />
+            <PasswordInput
+              title="New password"
+              label="password"
+              name="password"
+              autoComplete="new-password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="Enter a new password"
+              error={
+                formik.touched.password && formik.errors.password
+                  ? formik.errors.password
+                  : ''
+              }
+            />
 
-          <PasswordInput
-            title="Confirm password"
-            label="confirmPassword"
-            name="confirmPassword"
-            autoComplete="new-password"
-            value={formik.values.confirmPassword}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            placeholder="Confirm your new password"
-            error={
-              formik.touched.confirmPassword && formik.errors.confirmPassword
-                ? formik.errors.confirmPassword
-                : ''
-            }
-          />
+            <PasswordInput
+              title="Confirm password"
+              label="confirmPassword"
+              name="confirmPassword"
+              autoComplete="new-password"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              placeholder="Confirm your new password"
+              error={
+                formik.touched.confirmPassword && formik.errors.confirmPassword
+                  ? formik.errors.confirmPassword
+                  : ''
+              }
+            />
 
-          <div className={styles.actions}>
-            <Button
-              type="submit"
-              fullWidth
-              loading={isResetting}
-              disabled={!formik.isValid || isResetting}>
-              Change password
-            </Button>
-          </div>
-        </form>
+            <div className={styles.actions}>
+              <Button
+                type="submit"
+                fullWidth
+                loading={isResetting}
+                disabled={!formik.isValid || isResetting}>
+                Change password
+              </Button>
+            </div>
+          </form>
+        </ValidationSchemaProvider>
       </FormikProvider>
     </AuthLayout>
   )

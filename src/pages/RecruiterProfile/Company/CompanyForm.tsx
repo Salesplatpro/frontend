@@ -1,17 +1,12 @@
-import {
-  ErrorMessage,
-  Field,
-  FieldProps,
-  Form,
-  Formik,
-  useFormikContext,
-} from 'formik'
+import { ErrorMessage, Field, FieldProps, Form, useFormikContext } from 'formik'
 import React, { useState } from 'react'
 import { BsBuilding } from 'react-icons/bs'
 import * as Yup from 'yup'
 
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { Select } from '@/components/forms/Select'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
 import { INDUSTRY_OPTIONS } from '@/features/organizations/constants/industries'
@@ -154,15 +149,10 @@ const FormField: React.FC<FormFieldProps> = ({
   type = 'text',
 }) => (
   <div className={styles.field} data-field={name}>
-    <label htmlFor={name} className={styles.label}>
+    <FieldLabel htmlFor={name} required={required} className={styles.label}>
       {label}
-      {required && (
-        <span className={styles.req} aria-hidden>
-          *
-        </span>
-      )}
       {locked && <span className={styles.lock}>Locked</span>}
-    </label>
+    </FieldLabel>
     <Field name={name}>
       {({ field, meta }: FieldProps<string>) => (
         <input
@@ -287,7 +277,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
   const isEdit = mode === 'edit'
 
   return (
-    <Formik
+    <ValidatedForm
       initialValues={initialValues}
       enableReinitialize
       validationSchema={isEdit ? editValidationSchema : createValidationSchema}
@@ -309,14 +299,12 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
               <FormField
                 label="Company name"
                 name="name"
-                required
                 placeholder="Acme Inc."
               />
               {!isEdit && (
                 <FormField
                   label="Company domain"
                   name="domain"
-                  required
                   placeholder="@acme.com"
                   hint="Your work email and contact email must use this domain."
                 />
@@ -327,7 +315,6 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                     <Select
                       name="industry"
                       label="Industry"
-                      required={!isEdit}
                       placeholder="Select an industry"
                       options={INDUSTRY_OPTIONS}
                       value={field.value}
@@ -345,7 +332,6 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 <FormField
                   label="Address"
                   name="address"
-                  required
                   placeholder="123 Main Street, Lagos"
                 />
               </div>
@@ -367,7 +353,6 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 label="Email"
                 name="email"
                 type="email"
-                required={!isEdit}
                 disabled={isEdit}
                 locked={isEdit}
                 placeholder="contact@acme.com"
@@ -462,6 +447,6 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
         </Form>
         <CompanyPreview logoUrl={logoUrl} />
       </div>
-    </Formik>
+    </ValidatedForm>
   )
 }

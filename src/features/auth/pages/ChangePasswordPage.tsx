@@ -7,6 +7,7 @@ import {
   PasswordInput,
   useFocusFieldOnMount,
 } from '@/components/forms'
+import { ValidationSchemaProvider } from '@/components/forms/ValidatedForm'
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
@@ -67,81 +68,83 @@ export const ChangePasswordPage = () => {
       <div className={styles.formArea}>
         <Card className={styles.card}>
           <FormikProvider value={formik}>
-            <form
-              className={styles.form}
-              onSubmit={formik.handleSubmit}
-              noValidate>
-              <FormikFocusOnError />
-              {submitError && (
-                <Alert variant="error" className={styles.alert}>
-                  {submitError}
-                </Alert>
-              )}
+            <ValidationSchemaProvider schema={changePasswordSchema}>
+              <form
+                className={styles.form}
+                onSubmit={formik.handleSubmit}
+                noValidate>
+                <FormikFocusOnError />
+                {submitError && (
+                  <Alert variant="error" className={styles.alert}>
+                    {submitError}
+                  </Alert>
+                )}
 
-              <p className={styles.hint}>
-                Use 8–72 characters with a letter, a number, and a special
-                character (@ $ ! % * # . ? &).
-              </p>
+                <p className={styles.hint}>
+                  Use 8–72 characters with a letter, a number, and a special
+                  character (@ $ ! % * # . ? &).
+                </p>
 
-              <PasswordInput
-                title="Current password"
-                label="currentPassword"
-                name="currentPassword"
-                autoComplete="current-password"
-                value={formik.values.currentPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Enter your current password"
-                error={
-                  formik.touched.currentPassword &&
-                  formik.errors.currentPassword
-                    ? formik.errors.currentPassword
-                    : ''
-                }
-              />
+                <PasswordInput
+                  title="Current password"
+                  label="currentPassword"
+                  name="currentPassword"
+                  autoComplete="current-password"
+                  value={formik.values.currentPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Enter your current password"
+                  error={
+                    formik.touched.currentPassword &&
+                    formik.errors.currentPassword
+                      ? formik.errors.currentPassword
+                      : ''
+                  }
+                />
 
-              <PasswordInput
-                title="New password"
-                label="newPassword"
-                name="newPassword"
-                autoComplete="new-password"
-                value={formik.values.newPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Enter a new password"
-                error={
-                  formik.touched.newPassword && formik.errors.newPassword
-                    ? formik.errors.newPassword
-                    : ''
-                }
-              />
+                <PasswordInput
+                  title="New password"
+                  label="newPassword"
+                  name="newPassword"
+                  autoComplete="new-password"
+                  value={formik.values.newPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Enter a new password"
+                  error={
+                    formik.touched.newPassword && formik.errors.newPassword
+                      ? formik.errors.newPassword
+                      : ''
+                  }
+                />
 
-              <PasswordInput
-                title="Confirm password"
-                label="confirmPassword"
-                name="confirmPassword"
-                autoComplete="new-password"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Confirm your new password"
-                error={
-                  formik.touched.confirmPassword &&
-                  formik.errors.confirmPassword
-                    ? formik.errors.confirmPassword
-                    : ''
-                }
-              />
+                <PasswordInput
+                  title="Confirm password"
+                  label="confirmPassword"
+                  name="confirmPassword"
+                  autoComplete="new-password"
+                  value={formik.values.confirmPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Confirm your new password"
+                  error={
+                    formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword
+                      ? formik.errors.confirmPassword
+                      : ''
+                  }
+                />
 
-              <div className={styles.actions}>
-                <Button
-                  type="submit"
-                  loading={isChanging}
-                  disabled={!formik.isValid || isChanging}>
-                  Change password
-                </Button>
-              </div>
-            </form>
+                <div className={styles.actions}>
+                  <Button
+                    type="submit"
+                    loading={isChanging}
+                    disabled={!formik.isValid || isChanging}>
+                    Change password
+                  </Button>
+                </div>
+              </form>
+            </ValidationSchemaProvider>
           </FormikProvider>
         </Card>
       </div>

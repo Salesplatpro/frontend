@@ -1,10 +1,12 @@
-import { Form, Formik } from 'formik'
+import { Form } from 'formik'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { RoleSelect } from '@/components/forms/Roles/RoleSelect'
 import { TextInput } from '@/components/forms/TextInput'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
@@ -53,7 +55,7 @@ const CreateJD = () => {
         onBack={() => navigate(-1)}
       />
       <PagePanel>
-        <Formik
+        <ValidatedForm
           initialValues={initialValues}
           validationSchema={scoutJobValidationSchema}
           onSubmit={handleSubmit}>
@@ -99,9 +101,9 @@ const CreateJD = () => {
               />
 
               <div className={styles.field}>
-                <label htmlFor="jobBrief" className={styles.label}>
+                <FieldLabel htmlFor="jobBrief" className={styles.label}>
                   Job Brief
-                </label>
+                </FieldLabel>
                 <textarea
                   id="jobBrief"
                   name="jobBrief"
@@ -126,9 +128,9 @@ const CreateJD = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="recruiterGuide" className={styles.label}>
+                <FieldLabel htmlFor="recruiterGuide" className={styles.label}>
                   Recruiter&apos;s Guide
-                </label>
+                </FieldLabel>
                 <textarea
                   id="recruiterGuide"
                   name="recruiterGuide"
@@ -166,7 +168,7 @@ const CreateJD = () => {
               </div>
             </Form>
           )}
-        </Formik>
+        </ValidatedForm>
       </PagePanel>
     </PageShell>
   )

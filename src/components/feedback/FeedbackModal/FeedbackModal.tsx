@@ -3,6 +3,7 @@ import 'react-responsive-modal/styles.css'
 import React, { useState } from 'react'
 import { Modal } from 'react-responsive-modal'
 
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import { Button } from '@/components/ui/Button'
 import { useSubmitFeedbackMutation } from '@/redux/api/apiSlice'
 import { focusFieldByName } from '@/utils/focusField'
@@ -78,9 +79,12 @@ export const FeedbackModal = ({ open, onClose }: FeedbackModalProps) => {
         </div>
 
         <div className={styles.field}>
-          <label htmlFor="feedback-message" className={styles.label}>
+          <FieldLabel
+            htmlFor="feedback-message"
+            className={styles.label}
+            required>
             Message
-          </label>
+          </FieldLabel>
           <textarea
             id="feedback-message"
             name="feedback-message"

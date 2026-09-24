@@ -10,6 +10,7 @@ import {
   TextInput,
   useFocusFieldOnMount,
 } from '@/components/forms'
+import { ValidationSchemaProvider } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
 import { paths } from '@/paths'
 
@@ -58,76 +59,81 @@ export const LoginForm = ({
 
   return (
     <FormikProvider value={formik}>
-      <form onSubmit={formik.handleSubmit} noValidate>
-        <FormikFocusOnError />
-        {error && (
-          <Alert variant="error" className={styles.alert}>
-            {error}
-          </Alert>
-        )}
+      <ValidationSchemaProvider schema={loginSchema}>
+        <form onSubmit={formik.handleSubmit} noValidate>
+          <FormikFocusOnError />
+          {error && (
+            <Alert variant="error" className={styles.alert}>
+              {error}
+            </Alert>
+          )}
 
-        <TextInput
-          title="Email"
-          label="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Email"
-          disabled={!!lockedEmail}
-          error={
-            formik.touched.email && formik.errors.email
-              ? formik.errors.email
-              : ''
-          }
-        />
-
-        <PasswordInput
-          title="Password"
-          label="password"
-          name="password"
-          autoComplete="current-password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder="Enter your password"
-          error={
-            formik.touched.password && formik.errors.password
-              ? formik.errors.password
-              : ''
-          }
-        />
-
-        <div className={styles.rememberMe}>
-          <CheckBox
-            name="remember"
-            label="Remember me"
-            checked={formik.values.remember}
+          <TextInput
+            title="Email"
+            label="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={formik.values.email}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="Email"
+            disabled={!!lockedEmail}
+            error={
+              formik.touched.email && formik.errors.email
+                ? formik.errors.email
+                : ''
+            }
           />
-          <Link
-            to={`/${paths.forgotPassword}`}
-            className={styles.forgotPassword}>
-            Forgot password?
-          </Link>
-        </div>
 
-        <Button type="submit" fullWidth loading={isLoading}>
-          Log in
-        </Button>
+          <PasswordInput
+            title="Password"
+            label="password"
+            name="password"
+            autoComplete="current-password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            placeholder="Enter your password"
+            error={
+              formik.touched.password && formik.errors.password
+                ? formik.errors.password
+                : ''
+            }
+          />
 
-        {!hideSignupLink && (
-          <div className={styles.already}>
-            Don&apos;t have an account?{' '}
+          <div className={styles.rememberMe}>
+            <CheckBox
+              name="remember"
+              label="Remember me"
+              checked={formik.values.remember}
+              onChange={formik.handleChange}
+            />
             <Link
-              to={{ pathname: `/${paths.register}`, search: location.search }}>
-              Sign up
+              to={`/${paths.forgotPassword}`}
+              className={styles.forgotPassword}>
+              Forgot password?
             </Link>
           </div>
-        )}
-      </form>
+
+          <Button type="submit" fullWidth loading={isLoading}>
+            Log in
+          </Button>
+
+          {!hideSignupLink && (
+            <div className={styles.already}>
+              Don&apos;t have an account?{' '}
+              <Link
+                to={{
+                  pathname: `/${paths.register}`,
+                  search: location.search,
+                }}>
+                Sign up
+              </Link>
+            </div>
+          )}
+        </form>
+      </ValidationSchemaProvider>
     </FormikProvider>
   )
 }

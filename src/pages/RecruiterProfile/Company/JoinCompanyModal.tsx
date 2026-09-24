@@ -5,6 +5,7 @@ import { BsBuilding, BsCheck2Circle } from 'react-icons/bs'
 import { Modal } from 'react-responsive-modal'
 
 import { Alert } from '@/components/feedback/Alert'
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useJoinOrganization } from '@/features/organizations/hooks/useJoinOrganization'
@@ -191,9 +192,12 @@ export const JoinCompanyModal: React.FC<JoinCompanyModalProps> = ({
             )}
 
             <div className={styles.field}>
-              <label className={styles.label} htmlFor="work-email">
+              <FieldLabel
+                className={styles.label}
+                htmlFor="work-email"
+                required>
                 Your work email
-              </label>
+              </FieldLabel>
               <input
                 id="work-email"
                 type="email"
