@@ -10,7 +10,12 @@ import { notify } from '@/utils/toastNotifications'
 
 import { usePaidCheckout } from '../hooks/usePaidCheckout'
 import { usePricingCatalog } from '../hooks/usePricingCatalog'
-import { BillingInterval, isSubscriptionPlan, PricingPlan } from '../types'
+import {
+  BillingInterval,
+  DEFAULT_BILLING_PLAN_KEY,
+  isSubscriptionPlan,
+  PricingPlan,
+} from '../types'
 import { PricingCard } from './PricingCard'
 import cardStyles from './PricingCard.module.scss'
 import styles from './PricingContent.module.scss'
@@ -28,10 +33,10 @@ type PricingContentProps = {
 
 export const PricingContent: React.FC<PricingContentProps> = ({
   variant = 'public',
-  currentPlan = 'free',
+  currentPlan = DEFAULT_BILLING_PLAN_KEY,
 }) => {
   const { catalog, isLoading, error } = usePricingCatalog()
-  const { startCheckout, isCheckingOut } = usePaidCheckout()
+  const { startCheckout, checkingOutPlanKey } = usePaidCheckout()
   const [interval, setInterval] = useState<BillingInterval>('monthly')
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(false)
@@ -82,16 +87,7 @@ export const PricingContent: React.FC<PricingContentProps> = ({
   const salesHref = catalog.contact.href
 
   const onSelect = async (plan: PricingPlan) => {
-    if (plan.key === 'free') {
-      if (variant === 'dashboard' || (isLoggedIn && userRole === 'recruiter')) {
-        navigate('/recruiterDashboard/dashboard')
-        return
-      }
-      navigate('/register')
-      return
-    }
-
-    if (plan.key === 'pay_per_use') {
+    if (plan.key === DEFAULT_BILLING_PLAN_KEY) {
       if (variant === 'dashboard' || (isLoggedIn && userRole === 'recruiter')) {
         notify(
           'info',
@@ -178,7 +174,7 @@ export const PricingContent: React.FC<PricingContentProps> = ({
               currencySymbol={catalog.currencySymbol}
               isYearly={isYearly}
               isCurrent={currentPlan === plan.key && variant === 'dashboard'}
-              isCheckingOut={isCheckingOut}
+              isCheckingOut={checkingOutPlanKey === plan.key}
               salesHref={salesHref}
               onSelect={onSelect}
             />

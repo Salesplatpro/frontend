@@ -21,7 +21,8 @@ import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { changePasswordPathForRole } from '@/features/auth/utils/dashboardPath'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useNotifications } from '@/features/notifications/hooks/useNotifications'
-import { isFreePlan } from '@/features/pricing/types'
+import { isPayPerUsePlan } from '@/features/pricing/types'
+import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { ThemeMode, useTheme } from '@/features/theme/ThemeProvider'
@@ -72,9 +73,10 @@ export const LoggedInUserBadge: React.FC = () => {
   const fullName = `${firstName} ${lastName}`.trim() || 'Account'
   const email = userInfo?.email || user?.email || ''
   const isVerified = !!userInfo?.emailVerifiedAt
-  const isPaid = !isFreePlan(userInfo?.billingPlan)
+  const billing = getActiveOrganizationBilling(userInfo)
+  const isPaid = !isPayPerUsePlan(billing.billingPlan)
   const verificationBadge = getEmailVerificationBadge(userInfo?.emailVerifiedAt)
-  const planBadge = getBillingPlanBadge(userInfo?.billingPlan)
+  const planBadge = getBillingPlanBadge(billing.billingPlan)
 
   const toggleDropdown = () => {
     setIsNotificationsOpen(false)
@@ -170,7 +172,7 @@ export const LoggedInUserBadge: React.FC = () => {
                 color: planBadge.color,
               }}>
               <MdOutlineWorkspacePremium size={14} />
-              Paid
+              {planBadge.status}
             </span>
           )}
           <span className={styles.avatarWrap}>

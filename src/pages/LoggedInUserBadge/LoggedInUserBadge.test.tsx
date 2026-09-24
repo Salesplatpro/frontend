@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { LoggedInUserBadge } from './LoggedInUserBadge'
 
-const { navigateMock, authState } = vi.hoisted(() => ({
+const { navigateMock, authState, orgState } = vi.hoisted(() => ({
   navigateMock: vi.fn(),
   authState: {
     user: {
@@ -16,6 +16,7 @@ const { navigateMock, authState } = vi.hoisted(() => ({
     },
     logout: vi.fn(),
   },
+  orgState: { billingPlan: 'pay_per_use' as string },
 }))
 
 vi.mock('react-router-dom', async () => {
@@ -37,7 +38,15 @@ vi.mock('@/features/profile/hooks/useProfile', () => ({
       lastName: 'Lovelace',
       email: 'ada@example.com',
       emailVerifiedAt: '2026-01-01T00:00:00.000Z',
-      billingPlan: 'free',
+      activeOrganization: {
+        id: 'org-1',
+        ownerId: 'u1',
+        name: 'Ada Co',
+        status: 'verified',
+        billingPlan: orgState.billingPlan,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+      },
     },
     isLoading: false,
     error: null,
@@ -76,6 +85,7 @@ describe('LoggedInUserBadge', () => {
     navigateMock.mockReset()
     authState.logout.mockReset()
     authState.user.userRole = 'talent'
+    orgState.billingPlan = 'pay_per_use'
   })
 
   it('navigates to the change-password route from the account menu', () => {
@@ -110,5 +120,25 @@ describe('LoggedInUserBadge', () => {
     expect(
       screen.queryByRole('menuitem', { name: /Change password/ }),
     ).toBeNull()
+  })
+
+  // The trigger pill used to hardcode "Paid" while the dropdown showed the real plan name,
+  // so an org on sme_basic read as two different things in the same header.
+  it('shows the real plan name in the trigger pill for a paid recruiter', () => {
+    authState.user.userRole = 'recruiter'
+    orgState.billingPlan = 'sme_basic'
+    renderBadge()
+
+    expect(screen.getByText('Sme Basic')).toBeTruthy()
+    expect(screen.queryByText('Paid')).toBeNull()
+  })
+
+  it('shows no paid pill for a pay-per-use recruiter, and never says Free', () => {
+    authState.user.userRole = 'recruiter'
+    renderBadge()
+
+    expect(screen.queryByText(/Free/)).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: /Ada Lovelace/ }))
+    expect(screen.getByText('Pay per Use')).toBeTruthy()
   })
 })

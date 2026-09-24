@@ -22,7 +22,8 @@ import { Spinner } from '@/components/ui/Spinner'
 import { getEmailVerificationBadge } from '@/features/email-verification/utils/getEmailVerificationBadge'
 import { useMyOrganizations } from '@/features/organizations/hooks/useMyOrganizations'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
-import { isFreePlan } from '@/features/pricing/types'
+import { isPayPerUsePlan } from '@/features/pricing/types'
+import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import ProfilePic from '@/features/profile/components/ProfilePic'
 import { useProfile } from '@/features/profile/hooks/useProfile'
@@ -88,8 +89,9 @@ export const Profile = () => {
     profile?.activeOrganization ??
     null
   const verificationBadge = getEmailVerificationBadge(profile?.emailVerifiedAt)
-  const planBadge = getBillingPlanBadge(profile?.billingPlan)
-  const isPaid = !isFreePlan(profile?.billingPlan)
+  const billing = getActiveOrganizationBilling(profile)
+  const planBadge = getBillingPlanBadge(billing.billingPlan)
+  const isPaid = !isPayPerUsePlan(billing.billingPlan)
   const orgBadge = activeOrg
     ? getOrganizationStatusBadge(activeOrg.status)
     : null
@@ -138,9 +140,9 @@ export const Profile = () => {
     },
     {
       label: 'Billing interval',
-      value: isPaid ? titleCase(profile?.billingInterval) : 'Not subscribed',
+      value: isPaid ? titleCase(billing.billingInterval) : 'Pay per use',
     },
-    { label: 'Billing status', value: titleCase(profile?.billingStatus) },
+    { label: 'Billing status', value: titleCase(billing.billingStatus) },
     { label: 'Last updated', value: formatDate(profile?.updatedAt) },
   ]
 
