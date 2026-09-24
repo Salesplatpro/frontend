@@ -4,6 +4,7 @@ import {
   workModeNeedsLocation,
   WorkTypeCheckboxes,
 } from '@/components/features/jobs/WorkTypeCheckboxes'
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import {
   EMPTY_LOCATION,
   LocationSelect,
@@ -96,7 +97,6 @@ export const JobDetailsFields = ({
       <div className={styles.fieldGroup}>
         <TextField
           label="Job Brief"
-          asterick
           name="jobBrief"
           placeholder="Describe the role in up to 600 words"
           type="textarea"
@@ -113,7 +113,6 @@ export const JobDetailsFields = ({
       <div className={styles.fieldGroup}>
         <TextField
           label="Job Requirements"
-          asterick
           name="requirements"
           placeholder="List the qualifications and skills needed"
           type="textarea"
@@ -145,9 +144,9 @@ export const JobDetailsFields = ({
       <h3 className={styles.sectionTitle}>Work &amp; Location</h3>
 
       <div className={styles.fieldGroup}>
-        <p className={styles.label}>
-          Work Mode<span className={styles.required}>*</span>
-        </p>
+        <FieldLabel htmlFor="workMode" className={styles.label}>
+          Work Mode
+        </FieldLabel>
         <WorkTypeCheckboxes
           name="workMode"
           value={values.workMode}
@@ -216,7 +215,6 @@ export const JobDetailsFields = ({
         <div className={styles.compensationFieldThird}>
           <TextField
             label="Min Salary"
-            asterick
             name="minSalary"
             placeholder="e.g. 300000"
             tooltip="Lowest compensation you will offer in the selected currency and period. Shown to candidates on the job post."

@@ -2,6 +2,7 @@ import cn from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 
+import { useFieldRequired } from '../useFieldRequired'
 import styles from './Select.module.scss'
 import { SelectProps } from './types'
 
@@ -21,6 +22,7 @@ export const Select: React.FC<SelectProps> = ({
   searchable,
   defaultOpen,
 }) => {
+  const isRequired = useFieldRequired(name, required)
   const [isOpen, setIsOpen] = useState(!!defaultOpen)
   const [search, setSearch] = useState('')
   const containerRef = useRef<HTMLDivElement>(null)
@@ -81,7 +83,11 @@ export const Select: React.FC<SelectProps> = ({
       {label && (
         <div className={styles.label}>
           {label}
-          {required && <span className={styles.required}>*</span>}
+          {isRequired && (
+            <span className={styles.required} aria-hidden>
+              *
+            </span>
+          )}
         </div>
       )}
       <button
