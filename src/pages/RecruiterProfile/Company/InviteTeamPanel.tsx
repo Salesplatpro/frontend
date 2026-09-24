@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
@@ -58,9 +59,9 @@ export const InviteTeamPanel: React.FC<InviteTeamPanelProps> = ({
         seatsRemaining === 1 ? '' : 's'
       } remaining.`}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <label className={styles.label} htmlFor="invite-email">
+        <FieldLabel className={styles.label} htmlFor="invite-email" required>
           Work email
-        </label>
+        </FieldLabel>
         <div className={styles.row}>
           <input
             id="invite-email"

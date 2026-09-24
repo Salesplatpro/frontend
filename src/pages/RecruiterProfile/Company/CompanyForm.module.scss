@@ -83,11 +83,6 @@
   margin-bottom: 0;
 }
 
-.req {
-  @extend %form-required;
-  margin-left: 0;
-}
-
 .lock {
   font-size: var(--text-xs);
   font-weight: var(--weight-bold);

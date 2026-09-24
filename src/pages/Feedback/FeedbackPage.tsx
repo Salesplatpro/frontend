@@ -3,6 +3,7 @@ import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2'
 import { IoCheckmarkCircle } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 
+import { FieldLabel } from '@/components/forms/FieldLabel'
 import { PageHero } from '@/components/layout/PageHero'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
@@ -156,9 +157,12 @@ export const FeedbackPage = () => {
               </div>
 
               <div className={styles.field}>
-                <label htmlFor="feedback-message" className={styles.label}>
+                <FieldLabel
+                  htmlFor="feedback-message"
+                  className={styles.label}
+                  required>
                   Message
-                </label>
+                </FieldLabel>
                 <textarea
                   id="feedback-message"
                   name="feedback-message"

@@ -1,8 +1,9 @@
-import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
+import { Form, FormikHelpers, useFormikContext } from 'formik'
 import React, { useCallback, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAiConfigDraftStore } from '@/features/jobs/store/useAiConfigDraftStore'
@@ -205,7 +206,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
           : 'Choose how this job screens applicants. Hover the info icons to see what candidates experience at each step.'}
       </p>
 
-      <Formik
+      <ValidatedForm
         initialValues={initialValues}
         validationSchema={aiConfigValidationSchema}
         onSubmit={onSubmit}
@@ -242,7 +243,7 @@ const AiConfig = ({ mode = 'create', aiConfigId }: AiConfigProps) => {
             </div>
           </Form>
         )}
-      </Formik>
+      </ValidatedForm>
     </div>
   )
 }

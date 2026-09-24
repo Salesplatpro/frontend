@@ -12,6 +12,7 @@ import {
   TextInput,
   useFocusFieldOnMount,
 } from '@/components/forms'
+import { ValidationSchemaProvider } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
 import { Heading, Text } from '@/components/ui/Typography'
 import { paths } from '@/paths'
@@ -58,45 +59,48 @@ export const ForgotPasswordPage = () => {
         title="Forgot password"
         subtitle="Enter your email and we'll send a reset link">
         <FormikProvider value={formik}>
-          <form onSubmit={formik.handleSubmit} noValidate>
-            <FormikFocusOnError />
-            {submitError && (
-              <Alert variant="error" className={styles.alert}>
-                {submitError}
-              </Alert>
-            )}
+          <ValidationSchemaProvider schema={forgotPasswordSchema}>
+            <form onSubmit={formik.handleSubmit} noValidate>
+              <FormikFocusOnError />
+              {submitError && (
+                <Alert variant="error" className={styles.alert}>
+                  {submitError}
+                </Alert>
+              )}
 
-            <TextInput
-              title="Email"
-              label="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="Email"
-              error={
-                formik.touched.email && formik.errors.email
-                  ? formik.errors.email
-                  : ''
-              }
-            />
+              <TextInput
+                title="Email"
+                label="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Email"
+                error={
+                  formik.touched.email && formik.errors.email
+                    ? formik.errors.email
+                    : ''
+                }
+              />
 
-            <div className={styles.actions}>
-              <Button
-                type="submit"
-                fullWidth
-                loading={isRequesting}
-                disabled={!formik.isValid || isRequesting}>
-                Send reset link
-              </Button>
-            </div>
+              <div className={styles.actions}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  loading={isRequesting}
+                  disabled={!formik.isValid || isRequesting}>
+                  Send reset link
+                </Button>
+              </div>
 
-            <div className={styles.already}>
-              Remember your password? <Link to={`/${paths.login}`}>Log in</Link>
-            </div>
-          </form>
+              <div className={styles.already}>
+                Remember your password?{' '}
+                <Link to={`/${paths.login}`}>Log in</Link>
+              </div>
+            </form>
+          </ValidationSchemaProvider>
         </FormikProvider>
       </AuthLayout>
 

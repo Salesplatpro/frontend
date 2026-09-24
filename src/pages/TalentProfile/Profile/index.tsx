@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material'
-import { Field, Form, Formik, FormikProps, useFormikContext } from 'formik'
+import { Field, Form, FormikProps, useFormikContext } from 'formik'
 import React, { useEffect, useRef } from 'react'
 
 import { WorkTypeCheckboxes } from '@/components/features/jobs/WorkTypeCheckboxes'
@@ -12,6 +12,7 @@ import {
   PROFILE_CURRENCY_OPTIONS,
   Select,
 } from '@/components/forms/Select'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
@@ -77,7 +78,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
       <TalentProfileHeader profile={profile} progress={formProgress} />
 
       <PagePanel>
-        <Formik
+        <ValidatedForm
           innerRef={formikRef}
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -355,7 +356,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
               </Form>
             )
           }}
-        </Formik>
+        </ValidatedForm>
       </PagePanel>
     </PageShell>
   )

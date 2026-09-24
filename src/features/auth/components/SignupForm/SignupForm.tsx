@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from 'formik'
+import { Field, Form } from 'formik'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import {
   TextInput,
   useFocusFieldOnMount,
 } from '@/components/forms'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
 import { loginPathWithNext } from '@/features/auth/utils/dashboardPath'
 import { paths } from '@/paths'
@@ -80,7 +81,7 @@ export const SignupForm = ({
   }
 
   return (
-    <Formik
+    <ValidatedForm
       initialValues={initialValues}
       validationSchema={SignUpSchema}
       onSubmit={handleSubmit}>
@@ -170,6 +171,6 @@ export const SignupForm = ({
           </Link>
         </div>
       </Form>
-    </Formik>
+    </ValidatedForm>
   )
 }

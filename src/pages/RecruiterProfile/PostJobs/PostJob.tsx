@@ -1,9 +1,10 @@
-import { Form, Formik, FormikHelpers, useFormikContext } from 'formik'
+import { Form, FormikHelpers, useFormikContext } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
 import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
+import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
 import {
@@ -151,7 +152,7 @@ const PostJob: React.FC = () => {
         </div>
       )}
 
-      <Formik
+      <ValidatedForm
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmit}
@@ -186,7 +187,7 @@ const PostJob: React.FC = () => {
             </div>
           </Form>
         )}
-      </Formik>
+      </ValidatedForm>
     </div>
   )
 }
