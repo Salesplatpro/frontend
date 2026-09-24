@@ -1,4 +1,4 @@
-import { isFreePlan } from '../types'
+import { DEFAULT_BILLING_PLAN_KEY, isPayPerUsePlan } from '../types'
 
 const TITLE_CASE = (value: string) =>
   value
@@ -8,16 +8,18 @@ const TITLE_CASE = (value: string) =>
     .join(' ')
 
 export const getBillingPlanBadge = (billingPlan?: string | null) => {
-  if (isFreePlan(billingPlan)) {
-    return { status: 'Free plan', backgroundColor: '#f1f6fd', color: '#4279cb' }
+  // Pay per Use is the default for every company — there is no "Free" tier to show.
+  if (isPayPerUsePlan(billingPlan)) {
+    return {
+      status: 'Pay per Use',
+      backgroundColor: '#f1f6fd',
+      color: '#4279cb',
+    }
   }
 
-  const label =
-    billingPlan === 'paid'
-      ? 'Paid'
-      : billingPlan === 'pay_per_use'
-      ? 'Pay per Use'
-      : TITLE_CASE(billingPlan!)
-
-  return { status: label, backgroundColor: '#e8f1fc', color: '#2441ab' }
+  return {
+    status: TITLE_CASE(billingPlan ?? DEFAULT_BILLING_PLAN_KEY),
+    backgroundColor: '#e8f1fc',
+    color: '#2441ab',
+  }
 }

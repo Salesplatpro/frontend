@@ -62,7 +62,6 @@ export interface PricingCatalog {
     items: Array<{ title: string; body: string; icon: string }>
   }
   contact: { prompt: string; cta: string; href: string }
-  dummyUsage?: Array<{ id: string; label: string; used: number; limit: string }>
 }
 
 export interface PricingApiResponse {
@@ -75,13 +74,15 @@ export type BillingInterval = 'monthly' | 'annually'
 export type BillingPlan = PricingPlanKey
 export type BillingStatus = 'active' | 'past_due' | 'cancelled'
 
-export const isFreePlan = (billingPlan?: string | null): boolean =>
-  !billingPlan || billingPlan === 'free'
+/** Default for every new organization — pay when activating a job. */
+export const DEFAULT_BILLING_PLAN_KEY = 'pay_per_use'
 
-/** Subscription checkout via `/payments` — excludes free, pay_per_use, and hidden/legacy. */
+export const isPayPerUsePlan = (billingPlan?: string | null): boolean =>
+  !billingPlan || billingPlan === DEFAULT_BILLING_PLAN_KEY
+
+/** Subscription checkout via `/payments` — excludes pay_per_use and hidden/legacy. */
 export const isSubscriptionPlan = (plan: PricingPlan): boolean =>
-  plan.key !== 'free' &&
-  plan.key !== 'pay_per_use' &&
+  plan.key !== DEFAULT_BILLING_PLAN_KEY &&
   plan.visible !== false &&
   plan.purchasable !== false
 
@@ -93,7 +94,5 @@ export const isSubscriptionPlanKey = (
     const plan = plans.find((p) => p.key === key)
     return plan ? isSubscriptionPlan(plan) : false
   }
-  return (
-    key !== 'free' && key !== 'pay_per_use' && key !== 'paid' && Boolean(key)
-  )
+  return Boolean(key) && key !== DEFAULT_BILLING_PLAN_KEY && key !== 'paid'
 }

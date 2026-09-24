@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSWRConfig } from 'swr'
 
 import { Spinner } from '@/components/ui/Spinner'
+import { organizationUsageKey } from '@/features/organizations/hooks/useOrganizationUsage'
 import { verifyPaidCheckout } from '@/features/pricing/services/checkoutService'
+import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
+import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { Button, DisplayError } from '../../components'
+import styles from './Verify.module.scss'
 
 const VerifyPaymentPage: React.FC = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { mutate } = useProfile()
+  const { mutate: globalMutate } = useSWRConfig()
   const [error, setError] = useState<string | null>(null)
 
   const reference = searchParams.get('reference') || searchParams.get('trxref')
@@ -27,8 +33,19 @@ const VerifyPaymentPage: React.FC = () => {
 
       try {
         await verifyPaidCheckout(reference)
-        await mutate()
-        notify('success', 'Payment verified. You are now on the Paid plan.')
+
+        // Revalidate the profile first — it carries the new plan — then drop the
+        // cached usage snapshot, which still holds the pre-purchase limits.
+        const refreshed = await mutate()
+        const user = refreshed?.data?.user
+        if (user?.activeOrganizationId) {
+          await globalMutate(organizationUsageKey(user.activeOrganizationId))
+        }
+
+        const label = getBillingPlanBadge(
+          getActiveOrganizationBilling(user).billingPlan,
+        ).status
+        notify('success', `Payment verified. You are now on ${label}.`)
         navigate('/recruiterDashboard/plan')
       } catch (err) {
         const message = getErrorMessage(
@@ -41,12 +58,12 @@ const VerifyPaymentPage: React.FC = () => {
     }
 
     void verify()
-  }, [mutate, navigate, reference])
+  }, [globalMutate, mutate, navigate, reference])
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center">
+    <div className={styles.page}>
       {error ? (
-        <div>
+        <div className={styles.failure}>
           <DisplayError message={error} />
           <Button onClick={() => navigate('/recruiterDashboard/plan')}>
             Go to Plan

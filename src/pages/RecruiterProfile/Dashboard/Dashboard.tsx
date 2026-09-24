@@ -12,6 +12,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { WelcomeModal } from '@/features/auth/components/WelcomeModal'
 import { EmailVerificationPanel } from '@/features/email-verification/components/EmailVerificationPanel'
 import { getOrganizationStatusBadge } from '@/features/organizations/utils/getOrganizationStatusBadge'
+import { PlanUsage } from '@/features/pricing/components/PlanUsage'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { useRouteToast } from '@/hooks/useRouteToast'
 import { CompanyLogo } from '@/pages/RecruiterProfile/Company/CompanyLogo'
@@ -119,6 +120,8 @@ const Dashboard = () => {
           { label: 'Shortlisted', value: stats?.shortlistCount ?? 0 },
         ]}
       />
+
+      {organization && <PlanUsage compact />}
 
       <ApplicationTracker infoData={stats} />
 

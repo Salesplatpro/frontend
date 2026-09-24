@@ -12,6 +12,7 @@ import {
   MembersApiResponse,
   OrganizationApiResponse,
   OrganizationsApiResponse,
+  OrganizationUsageApiResponse,
   SendOrganizationInvitePayload,
   UpdateOrganizationPayload,
 } from '../types'
@@ -121,6 +122,11 @@ export const sendOrganizationInvite = (
 export const fetchOrganizationMembers = (organizationId: string) =>
   httpClient
     .get<MembersApiResponse>(`/organizations/${organizationId}/members`)
+    .then((response) => response.data)
+
+export const fetchOrganizationUsage = (organizationId: string) =>
+  httpClient
+    .get<OrganizationUsageApiResponse>(`/organizations/${organizationId}/usage`)
     .then((response) => response.data)
 
 export const fetchOrganizationInvites = (organizationId: string) =>

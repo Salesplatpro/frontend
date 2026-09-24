@@ -1,18 +1,26 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
+import { Spinner } from '@/components/ui/Spinner'
+import { useOrganizationUsage } from '@/features/organizations/hooks/useOrganizationUsage'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 
 import { usePricingCatalog } from '../hooks/usePricingCatalog'
+import { DEFAULT_BILLING_PLAN_KEY, isPayPerUsePlan } from '../types'
+import { getBillingPlanBadge } from '../utils/getBillingPlanBadge'
 import styles from './PlanUsage.module.scss'
 
 type PlanUsageProps = {
   interval?: string | null
   planKey?: string | null
+  billingStatus?: string | null
+  billingPeriodEnd?: string | null
+  compact?: boolean
 }
 
 const planDisplayName = (planKey?: string | null, catalogName?: string) => {
   if (catalogName) return catalogName
-  if (!planKey || planKey === 'free') return 'Free'
-  if (planKey === 'paid') return 'Paid'
-  if (planKey === 'pay_per_use') return 'Pay per Use'
+  if (!planKey || planKey === DEFAULT_BILLING_PLAN_KEY) return 'Pay per Use'
   return planKey
     .split(/[_-]/)
     .filter(Boolean)
@@ -20,42 +28,133 @@ const planDisplayName = (planKey?: string | null, catalogName?: string) => {
     .join(' ')
 }
 
-export const PlanUsage: React.FC<PlanUsageProps> = ({ interval, planKey }) => {
+const formatLimit = (limit: number | null) =>
+  limit == null ? 'Unlimited' : limit.toLocaleString()
+
+const meterPct = (used: number, limit: number | null) => {
+  if (limit == null || limit <= 0) return 0
+  return Math.min(100, Math.round((used / limit) * 100))
+}
+
+export const PlanUsage: React.FC<PlanUsageProps> = ({
+  interval,
+  planKey,
+  billingStatus,
+  billingPeriodEnd,
+  compact = false,
+}) => {
+  const { profile } = useProfile()
+  const orgId = profile?.activeOrganizationId
+  const { usage, isLoading } = useOrganizationUsage(orgId)
   const { catalog } = usePricingCatalog()
-  const items = catalog?.dummyUsage ?? []
-  const period = interval === 'annually' ? 'yearly' : 'monthly'
-  const catalogPlan = catalog?.plans.find((plan) => plan.key === planKey)
-  const name = planDisplayName(planKey, catalogPlan?.name)
+
+  const effectivePlan =
+    usage?.billingPlan ?? planKey ?? DEFAULT_BILLING_PLAN_KEY
+  const catalogPlan = catalog?.plans.find((plan) => plan.key === effectivePlan)
+  const name = planDisplayName(effectivePlan, catalogPlan?.name)
+  const period =
+    (usage?.billingInterval ?? interval) === 'annually' ? 'yearly' : 'monthly'
+  const payPerUse = isPayPerUsePlan(effectivePlan)
+  const badge = getBillingPlanBadge(effectivePlan)
+  const meters = usage?.meters ?? []
+  const flags = (usage?.flags ?? []).filter((f) => f.included)
+  const periodEnd = usage?.billingPeriodEnd ?? billingPeriodEnd
+  const status = usage?.billingStatus ?? billingStatus
+
+  if (isLoading && !usage) {
+    return (
+      <div className={compact ? styles.compact : styles.page}>
+        <Spinner />
+      </div>
+    )
+  }
 
   return (
-    <div className={styles.page}>
+    <div className={compact ? styles.compact : styles.page}>
       <header className={styles.header}>
         <p className={styles.kicker}>Current plan</p>
-        <h1 className={styles.title}>You&apos;re on {name}</h1>
+        <div className={styles.titleRow}>
+          <h2 className={styles.title}>You&apos;re on {name}</h2>
+          <span
+            className={styles.badge}
+            style={{
+              backgroundColor: badge.backgroundColor,
+              color: badge.color,
+            }}>
+            {badge.status}
+          </span>
+        </div>
         <p className={styles.subtitle}>
-          Hiring tools on the {period} plan
-          {items.length > 0
-            ? '. Usage below is sample data — the product is not gated yet.'
-            : '.'}
+          {payPerUse
+            ? 'Pay when you activate a job listing — no monthly subscription.'
+            : `Hiring tools on the ${period} plan${
+                status ? ` · ${status.replace(/_/g, ' ')}` : ''
+              }.`}
         </p>
+        {periodEnd && !payPerUse && (
+          <p className={styles.periodEnd}>
+            Renews or ends{' '}
+            {new Date(periodEnd).toLocaleDateString('en-NG', {
+              dateStyle: 'medium',
+            })}
+          </p>
+        )}
       </header>
 
-      {items.length > 0 && (
-        <div className={styles.grid}>
-          {items.map((item) => (
-            <article key={item.id} className={styles.card}>
-              <p className={styles.label}>{item.label}</p>
-              <p className={styles.value}>{item.used.toLocaleString()}</p>
-              <p className={styles.limit}>{item.limit}</p>
-            </article>
-          ))}
+      {meters.length > 0 && (
+        <div className={compact ? styles.compactGrid : styles.grid}>
+          {meters.map((item) => {
+            const pct = meterPct(item.used, item.limit)
+            const atLimit = item.limit != null && item.used >= item.limit
+            return (
+              <article key={item.key} className={styles.card}>
+                <p className={styles.label}>{item.label}</p>
+                <p className={styles.value}>
+                  {item.used.toLocaleString()}
+                  <span className={styles.valueSuffix}>
+                    {' '}
+                    / {formatLimit(item.limit)}
+                  </span>
+                </p>
+                <div className={styles.barTrack} aria-hidden>
+                  <div
+                    className={atLimit ? styles.barFillWarn : styles.barFill}
+                    style={{ width: `${item.limit == null ? 8 : pct}%` }}
+                  />
+                </div>
+                <p className={styles.limit}>
+                  {item.period === 'monthly' ? 'This month' : 'Active now'}
+                </p>
+              </article>
+            )
+          })}
         </div>
       )}
 
-      <p className={styles.note}>
-        Billing status updates as soon as Paystack confirms payment. Feature
-        limits are not enforced in this release.
-      </p>
+      {!compact && flags.length > 0 && (
+        <div className={styles.flags}>
+          <p className={styles.flagsTitle}>Included tools</p>
+          <ul className={styles.flagList}>
+            {flags.map((flag) => (
+              <li key={flag.key}>{flag.label}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {payPerUse && !compact && (
+        <p className={styles.note}>
+          Activating a job moves it to pending payment. Complete checkout to go
+          live. Upgrade below for concurrent listings and team seats without
+          per-job charges.
+        </p>
+      )}
+
+      {compact && (
+        <Link className={styles.manageLink} to="/recruiterDashboard/plan">
+          Manage plan &amp; billing
+        </Link>
+      )}
     </div>
   )
 }

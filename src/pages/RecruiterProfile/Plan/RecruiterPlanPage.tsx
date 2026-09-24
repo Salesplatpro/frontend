@@ -9,15 +9,15 @@ import { PricingContent } from '@/features/pricing/components/PricingContent'
 import { usePaidCheckout } from '@/features/pricing/hooks/usePaidCheckout'
 import {
   BillingInterval,
-  isFreePlan,
   isSubscriptionPlanKey,
 } from '@/features/pricing/types'
+import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
 const RecruiterPlanPage: React.FC = () => {
   const { profile, isLoading } = useProfile()
   const [params] = useSearchParams()
-  const { startCheckout, isCheckingOut } = usePaidCheckout()
+  const { startCheckout, checkingOutPlanKey } = usePaidCheckout()
   const startedRef = useRef(false)
 
   const checkout = params.get('checkout')
@@ -25,35 +25,33 @@ const RecruiterPlanPage: React.FC = () => {
     params.get('interval') === 'annually' ? 'annually' : 'monthly'
   ) as BillingInterval
 
+  const billing = getActiveOrganizationBilling(profile)
+  const currentPlan = billing.billingPlan
+
   useEffect(() => {
     if (startedRef.current) return
     if (!checkout || !profile || !isSubscriptionPlanKey(checkout)) return
-    if (profile.billingPlan === checkout) return
+    if (currentPlan === checkout) return
     startedRef.current = true
     void startCheckout(checkout, interval)
-  }, [checkout, interval, profile, startCheckout])
+  }, [checkout, interval, profile, currentPlan, startCheckout])
 
-  if (isLoading || isCheckingOut) return <Spinner fullPage />
-
-  const onPaidPlan = !isFreePlan(profile?.billingPlan)
-  const currentPlan = profile?.billingPlan ?? 'free'
+  if (isLoading || checkingOutPlanKey) return <Spinner fullPage />
 
   return (
     <PageShell wide>
       <PageHero
         compact
-        title={onPaidPlan ? 'Your plan' : 'Choose a plan'}
-        lead={
-          onPaidPlan
-            ? 'See how you are using Auxhr on your current subscription.'
-            : 'Upgrade to post more jobs and unlock recruiter tools.'
-        }
+        title="Your plan"
+        lead="See how you are using Auxhr, and upgrade anytime."
       />
-      {onPaidPlan ? (
-        <PlanUsage interval={profile?.billingInterval} planKey={currentPlan} />
-      ) : (
-        <PricingContent variant="dashboard" currentPlan={currentPlan} />
-      )}
+      <PlanUsage
+        interval={billing.billingInterval}
+        planKey={currentPlan}
+        billingStatus={billing.billingStatus}
+        billingPeriodEnd={billing.billingPeriodEnd}
+      />
+      <PricingContent variant="dashboard" currentPlan={currentPlan} />
     </PageShell>
   )
 }

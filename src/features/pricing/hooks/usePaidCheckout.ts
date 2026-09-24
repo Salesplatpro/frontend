@@ -14,7 +14,9 @@ const loginPathForCheckout = (planKey: string, interval: BillingInterval) =>
   )}`
 
 export const usePaidCheckout = () => {
-  const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const [checkingOutPlanKey, setCheckingOutPlanKey] = useState<string | null>(
+    null,
+  )
   const navigate = useNavigate()
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const userRole = useAuthStore((state) => state.user?.userRole)
@@ -26,7 +28,7 @@ export const usePaidCheckout = () => {
         return
       }
 
-      setIsCheckingOut(true)
+      setCheckingOutPlanKey(planKey)
       try {
         const response = await initiatePaidCheckout(planKey, interval)
         const link = response.data?.link
@@ -39,11 +41,11 @@ export const usePaidCheckout = () => {
           'error',
           getErrorMessage(error, 'Could not start checkout. Please try again.'),
         )
-        setIsCheckingOut(false)
+        setCheckingOutPlanKey(null)
       }
     },
     [isLoggedIn, navigate, userRole],
   )
 
-  return { startCheckout, isCheckingOut }
+  return { startCheckout, checkingOutPlanKey }
 }

@@ -2,6 +2,8 @@ export type OrganizationStatus = 'pending' | 'verified' | 'rejected'
 
 export type OrganizationJoinRequestStatus = 'pending' | 'approved' | 'rejected'
 
+export type OrganizationBillingStatus = 'active' | 'past_due' | 'cancelled'
+
 export interface Organization {
   id: string
   ownerId: string
@@ -17,9 +19,39 @@ export interface Organization {
   twitter?: string | null
   logoUrl?: string | null
   status: OrganizationStatus
+  /** Company-wide plan key — source of truth after org-scoped billing. */
+  billingPlan?: string | null
+  billingInterval?: 'monthly' | 'annually' | null
+  billingStatus?: OrganizationBillingStatus | null
+  /** ISO timestamp when the current paid period ends; null on pay_per_use. */
+  billingPeriodEnd?: string | null
   verifiedAt?: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface UsageMeter {
+  key: string
+  label: string
+  used: number
+  limit: number | null
+  period: 'concurrent' | 'monthly'
+}
+
+/** Live entitlement snapshot for the active company, derived from its current plan. */
+export interface OrganizationUsage {
+  billingPlan: string
+  billingInterval: 'monthly' | 'annually' | null
+  billingStatus: OrganizationBillingStatus
+  billingPeriodEnd: string | null
+  meters: UsageMeter[]
+  flags: Array<{ key: string; label: string; included: boolean }>
+}
+
+export interface OrganizationUsageApiResponse {
+  status: boolean
+  message: string
+  data: { usage: OrganizationUsage }
 }
 
 export interface OrganizationJoinRequest {

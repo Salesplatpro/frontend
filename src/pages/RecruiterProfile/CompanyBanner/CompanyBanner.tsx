@@ -5,6 +5,7 @@ import { HiOutlineCreditCard, HiOutlineUserGroup } from 'react-icons/hi2'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
 
+import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 
@@ -17,6 +18,7 @@ export const CompanyBanner: React.FC = () => {
 
   const { profile } = useProfile()
   const activeOrganization = profile?.activeOrganization
+  const { billingPlan } = getActiveOrganizationBilling(profile)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -56,7 +58,7 @@ export const CompanyBanner: React.FC = () => {
               <span className={styles.activeTag}>Active</span>
             )}
             <span className={styles.planTag}>
-              {getBillingPlanBadge(profile?.billingPlan).status}
+              {getBillingPlanBadge(billingPlan).status}
             </span>
           </span>
         </div>
