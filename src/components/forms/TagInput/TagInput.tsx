@@ -1,6 +1,7 @@
 import React, { ClipboardEvent, KeyboardEvent, useRef, useState } from 'react'
 import { IoClose } from 'react-icons/io5'
 
+import { useFieldRequired } from '../useFieldRequired'
 import styles from './TagInput.module.scss'
 
 interface TagInputProps {
@@ -8,6 +9,7 @@ interface TagInputProps {
   onChange: (value: string[]) => void
   label?: string
   name?: string
+  /** Defaults to whether the form's Yup schema marks this field required. */
   required?: boolean
   placeholder?: string
   error?: string
@@ -28,6 +30,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const isRequired = useFieldRequired(name, required)
 
   const addTags = (raws: string[]) => {
     let next = value
@@ -76,7 +79,11 @@ export const TagInput: React.FC<TagInputProps> = ({
       {label && (
         <label className={styles.label} htmlFor={name}>
           {label}
-          {required && <span className={styles.required}>*</span>}
+          {isRequired && (
+            <span className={styles.required} aria-hidden>
+              *
+            </span>
+          )}
         </label>
       )}
 

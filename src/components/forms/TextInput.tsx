@@ -2,6 +2,7 @@ import { FormikContext, getIn } from 'formik'
 import React, { useContext } from 'react'
 
 import styles from './TextInput.module.scss'
+import { useFieldRequired } from './useFieldRequired'
 
 export type TextInputProps = {
   title: string
@@ -10,6 +11,7 @@ export type TextInputProps = {
   autoComplete?: string
   isPassword?: boolean
   placeholder?: string
+  /** Defaults to whether the form's Yup schema marks this field required. */
   required?: boolean
   value?: string | number
   disabled?: boolean
@@ -54,6 +56,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
     ref,
   ) => {
     const fieldError = useFieldError(name, error)
+    const isRequired = useFieldRequired(name, required)
     const inputId = id || name || label
     const errorId = `${inputId}-error`
     const inputType = isPassword ? 'password' : type || 'text'
@@ -62,7 +65,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       <div className={styles.container} data-field={name}>
         <div className={styles.label}>
           <label htmlFor={inputId}>{title}</label>
-          {required && (
+          {isRequired && (
             <span className={styles.required} aria-hidden>
               *
             </span>
@@ -85,7 +88,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
             required={required}
             aria-invalid={fieldError ? true : undefined}
             aria-describedby={fieldError ? errorId : undefined}
-            aria-required={required || undefined}
+            aria-required={isRequired || undefined}
             className={
               fieldError ? `${styles.input} ${styles.invalid}` : styles.input
             }

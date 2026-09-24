@@ -2,6 +2,9 @@ import { ErrorMessage, Field } from 'formik'
 import React from 'react'
 import { Tooltip as ReactTooltip } from 'react-tooltip'
 
+import styles from './RadioFieldGroup.module.scss'
+import { useFieldRequired } from './useFieldRequired'
+
 type RadioFieldOption = {
   value: string
   label: string
@@ -11,6 +14,8 @@ type RadioFieldGroupProps = {
   name: string
   label: string
   options: RadioFieldOption[]
+  /** Defaults to whether the form's Yup schema marks this field required. */
+  required?: boolean
   icons?: React.ReactNode
   tooltipContent?: string
   tooltipPosition?: 'top' | 'bottom' | 'left' | 'right'
@@ -21,21 +26,34 @@ const RadioFieldGroup = ({
   name,
   label,
   options,
+  required,
   icons,
   tooltipContent,
   tooltipPosition = 'bottom',
   tooltipVariant = 'info',
 }: RadioFieldGroupProps) => {
+  const isRequired = useFieldRequired(name, required)
+
   return (
     <div
-      className="flex flex-row items-center space-x-4 mb-4"
+      className={styles.group}
+      role="radiogroup"
+      aria-labelledby={`${name}-label`}
+      aria-required={isRequired || undefined}
       data-field={name}>
-      <p className="font-semibold text-base text-[#434144] flex-1">{label}</p>
+      <p className={styles.label} id={`${name}-label`}>
+        {label}
+        {isRequired && (
+          <span className={styles.required} aria-hidden>
+            *
+          </span>
+        )}
+      </p>
       {options.map((option) => (
         <label
           key={option.value}
           htmlFor={`${name}${option.value}`}
-          className="flex items-center space-x-2">
+          className={styles.option}>
           <Field
             type="radio"
             id={`${name}${option.value}`}
@@ -61,10 +79,7 @@ const RadioFieldGroup = ({
 
       <ErrorMessage name={name}>
         {(message) => (
-          <div
-            id={`${name}-error`}
-            className="text-red-500 text-sm"
-            role="alert">
+          <div id={`${name}-error`} className={styles.error} role="alert">
             {message}
           </div>
         )}

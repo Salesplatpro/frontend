@@ -5,11 +5,13 @@ import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import RichTextEditor from './RichTextEditor'
 import styles from './TextField.module.scss'
+import { useFieldRequired } from './useFieldRequired'
 
 interface TextFieldProps {
   label: string
   name: string
-  asterick?: boolean
+  /** Defaults to whether the form's Yup schema marks this field required. */
+  required?: boolean
   placeholder?: string
   type?: string
   MAX_WORDS?: number
@@ -22,13 +24,14 @@ const TextField = ({
   label,
   name,
   placeholder,
-  asterick,
+  required,
   type,
   MAX_WORDS,
   disabled,
   hint,
   tooltip,
 }: TextFieldProps) => {
+  const isRequired = useFieldRequired(name, required)
   const tooltipId = `${name}-field-tooltip`
   const errorId = `${name}-error`
   const hintId = `${name}-hint`
@@ -37,7 +40,7 @@ const TextField = ({
     <div className={styles.field} data-field={name}>
       <label htmlFor={name} className={styles.label}>
         {label}
-        {asterick && (
+        {isRequired && (
           <span className={styles.required} aria-hidden>
             *
           </span>
@@ -87,7 +90,7 @@ const TextField = ({
                 placeholder={placeholder}
                 disabled={disabled}
                 aria-invalid={hasError || undefined}
-                aria-required={asterick || undefined}
+                aria-required={isRequired || undefined}
                 aria-describedby={
                   [hasError ? errorId : null, hint ? hintId : null]
                     .filter(Boolean)
