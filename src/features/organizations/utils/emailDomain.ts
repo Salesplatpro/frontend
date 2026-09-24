@@ -69,3 +69,8 @@ export const emailMatchesCompanyDomain = (
     : companyDomain.toLowerCase()
   return extractEmailDomain(email) === normalized
 }
+
+const LINKEDIN_URL_PATTERN = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/.+$/i
+
+export const isValidLinkedinUrl = (value: string): boolean =>
+  LINKEDIN_URL_PATTERN.test(value.trim())

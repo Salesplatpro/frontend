@@ -16,6 +16,7 @@ import {
   extractWebsiteDomain,
   isPublicEmailDomain,
   isValidCompanyDomainInput,
+  isValidLinkedinUrl,
 } from '@/features/organizations/utils/emailDomain'
 
 import styles from './CompanyForm.module.scss'
@@ -60,16 +61,15 @@ const createValidationSchema = Yup.object({
   ...baseShape,
   industry: Yup.string().required('Industry is required'),
   domain: Yup.string()
-    .required('Company domain is required')
     .test(
       'domain-format',
       'Domain must start with @ and include a dot (e.g. @acme.com)',
-      (value) => !!value && isValidCompanyDomainInput(value),
+      (value) => !value || isValidCompanyDomainInput(value),
     )
     .test(
       'domain-not-public',
       'Use a corporate domain, not a personal email provider',
-      (value) => !!value && !isPublicEmailDomain(`name${value}`),
+      (value) => !value || !isPublicEmailDomain(`name${value}`),
     ),
   email: Yup.string()
     .email('Must be a valid email')
@@ -77,7 +77,10 @@ const createValidationSchema = Yup.object({
     .test(
       'corporate-email',
       'Use a corporate work email, not a personal address (Gmail, Yahoo, etc.)',
-      (value) => !!value && !isPublicEmailDomain(value),
+      function (value) {
+        if (!this.parent.domain?.trim()) return true
+        return !!value && !isPublicEmailDomain(value)
+      },
     )
     .test(
       'email-matches-domain',
@@ -95,8 +98,9 @@ const createValidationSchema = Yup.object({
       'email-matches-website',
       'Contact email domain must match your website domain',
       function (value) {
+        const domain = this.parent.domain?.trim()
         const website = this.parent.website?.trim()
-        if (!value || !website) return true
+        if (!value || !website || !domain) return true
         if (emailDomainMatchesWebsite(value, website)) return true
         const websiteDomain = extractWebsiteDomain(website)
         return this.createError({
@@ -106,20 +110,14 @@ const createValidationSchema = Yup.object({
         })
       },
     ),
-  website: Yup.string().test(
-    'website-or-linkedin',
-    'Provide a website or a LinkedIn URL',
-    function (value) {
-      return !!value || !!this.parent.linkedin
-    },
-  ),
-  linkedin: Yup.string().test(
-    'website-or-linkedin',
-    'Provide a website or a LinkedIn URL',
-    function (value) {
-      return !!value || !!this.parent.website
-    },
-  ),
+  website: Yup.string(),
+  linkedin: Yup.string()
+    .required('LinkedIn URL is required')
+    .test(
+      'linkedin-format',
+      'Enter a valid LinkedIn URL (e.g. https://linkedin.com/company/acme)',
+      (value) => !!value && isValidLinkedinUrl(value),
+    ),
 })
 
 const editValidationSchema = Yup.object({
@@ -306,7 +304,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                   label="Company domain"
                   name="domain"
                   placeholder="@acme.com"
-                  hint="Your work email and contact email must use this domain."
+                  hint="Optional. If provided, your work email and contact email must use this domain."
                 />
               )}
               <Field name="industry">
@@ -359,7 +357,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 hint={
                   isEdit
                     ? 'Email cannot be changed after the company is created.'
-                    : 'Use a work email on the same domain as your website (e.g. name@acme.com for acme.com).'
+                    : 'If you have a company domain, use a matching work email; otherwise any valid email works.'
                 }
               />
               <FormField
@@ -383,7 +381,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
             </div>
             {!isEdit && (
               <p className={styles.callout}>
-                Provide a website or a LinkedIn page — at least one is required.
+                LinkedIn is required so candidates can verify your company.
               </p>
             )}
             <div className={styles.grid}>
