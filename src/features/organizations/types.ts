@@ -71,14 +71,14 @@ export interface OrganizationJoinRequest {
 
 export interface CreateOrganizationPayload {
   name: string
-  domain: string
+  domain?: string
   email: string
   phone?: string
   address?: string
   industry?: string
   website?: string
   facebook?: string
-  linkedin?: string
+  linkedin: string
   twitter?: string
 }
 
