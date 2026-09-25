@@ -63,13 +63,14 @@ const createValidationSchema = Yup.object({
   domain: Yup.string()
     .test(
       'domain-format',
-      'Domain must start with @ and include a dot (e.g. @acme.com)',
+      'Domain must include a dot (e.g. acme.com)',
       (value) => !value || isValidCompanyDomainInput(value),
     )
     .test(
       'domain-not-public',
       'Use a corporate domain, not a personal email provider',
-      (value) => !value || !isPublicEmailDomain(`name${value}`),
+      (value) =>
+        !value || !isPublicEmailDomain(`name@${value.replace(/^@/, '')}`),
     ),
   email: Yup.string()
     .email('Must be a valid email')
@@ -112,12 +113,18 @@ const createValidationSchema = Yup.object({
     ),
   website: Yup.string(),
   linkedin: Yup.string()
-    .required('LinkedIn URL is required')
     .test(
       'linkedin-format',
       'Enter a valid LinkedIn URL (e.g. https://linkedin.com/company/acme)',
-      (value) => !!value && isValidLinkedinUrl(value),
-    ),
+      (value) => !value || isValidLinkedinUrl(value),
+    )
+    .when('domain', {
+      is: (domain: string) => !domain?.trim(),
+      then: (schema) =>
+        schema.required(
+          'LinkedIn URL is required when you have no company domain',
+        ),
+    }),
 })
 
 const editValidationSchema = Yup.object({
@@ -207,6 +214,16 @@ const LogoPreview: React.FC<{ logoUrl?: string | null }> = ({ logoUrl }) => {
       className={styles.logoOnDark}
       onError={() => setFailed(true)}
     />
+  )
+}
+
+const OnlinePresenceCallout: React.FC = () => {
+  const { values } = useFormikContext<CompanyFormValues>()
+  if (values.domain.trim()) return null
+  return (
+    <p className={styles.callout}>
+      LinkedIn is required since you haven&apos;t provided a company domain.
+    </p>
   )
 }
 
@@ -303,8 +320,8 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 <FormField
                   label="Company domain"
                   name="domain"
-                  placeholder="@acme.com"
-                  hint="Optional. If provided, your work email and contact email must use this domain."
+                  placeholder="acme.com"
+                  hint="Optional. If provided, your contact email must use this domain and LinkedIn becomes optional."
                 />
               )}
               <Field name="industry">
@@ -379,11 +396,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
                 </p>
               </div>
             </div>
-            {!isEdit && (
-              <p className={styles.callout}>
-                LinkedIn is required so candidates can verify your company.
-              </p>
-            )}
+            {!isEdit && <OnlinePresenceCallout />}
             <div className={styles.grid}>
               <FormField
                 label="Website"
