@@ -262,6 +262,12 @@ export const recruiterApi = createApi({
         { type: 'RecruiterJob', id: 'LIST' },
       ],
     }),
+    activateJobPayment: builder.mutation({
+      query: (jobId: string) => ({
+        url: `/jobs/${jobId}/activate-payment`,
+        method: 'POST',
+      }),
+    }),
     fetchPersonalityQuestions: builder.query({
       query: (jobId: string) => ({
         url: `/questions?questionType=personality&jobId=${jobId}`,
@@ -292,6 +298,7 @@ export const {
   useGetRecruiterShortlistQuery,
   useUpdateJobMutation,
   useDeleteJobMutation,
+  useActivateJobPaymentMutation,
   useFetchPersonalityQuestionsQuery,
   useGetAiConfigQuery,
 } = recruiterApi

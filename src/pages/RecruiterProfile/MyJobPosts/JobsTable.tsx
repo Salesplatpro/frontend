@@ -9,7 +9,10 @@ import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOption
 import { Select } from '@/components/forms/Select'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { useUpdateJobMutation } from '@/redux/api/recruiter'
+import {
+  useActivateJobPaymentMutation,
+  useUpdateJobMutation,
+} from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
@@ -32,6 +35,8 @@ type StatusCellProps = {
 
 const StatusCell = ({ jobId, status, aiConfigId }: StatusCellProps) => {
   const [updateJob, { isLoading }] = useUpdateJobMutation()
+  const [activateJobPayment, { isLoading: isPaying }] =
+    useActivateJobPaymentMutation()
   const [isEditing, setIsEditing] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -62,6 +67,36 @@ const StatusCell = ({ jobId, status, aiConfigId }: StatusCellProps) => {
     } catch (err) {
       notify('error', getErrorMessage(err, 'Failed to update job status'))
     }
+  }
+
+  const handlePay = async () => {
+    try {
+      const response = await activateJobPayment(jobId).unwrap()
+      const link = response?.data?.link
+      if (!link) {
+        throw new Error('No payment link returned')
+      }
+      window.location.assign(link)
+    } catch (err) {
+      notify(
+        'error',
+        getErrorMessage(err, 'Could not start payment. Please try again.'),
+      )
+    }
+  }
+
+  if (status === 'pending_payment') {
+    return (
+      <div className={styles.statusCell}>
+        <Button
+          variant="primary"
+          size="sm"
+          loading={isPaying}
+          onClick={() => void handlePay()}>
+          Pay to activate
+        </Button>
+      </div>
+    )
   }
 
   return (
