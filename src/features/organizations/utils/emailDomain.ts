@@ -49,15 +49,15 @@ export const emailDomainMatchesWebsite = (
   return !!emailDomain && !!websiteDomain && emailDomain === websiteDomain
 }
 
-const COMPANY_DOMAIN_PATTERN = /^@[^\s@]+\.[^\s@]+$/
+const COMPANY_DOMAIN_PATTERN = /^@?[^\s@]+\.[^\s@]+$/
 
 export const isValidCompanyDomainInput = (value: string): boolean =>
   COMPANY_DOMAIN_PATTERN.test(value.trim())
 
 export const normalizeCompanyDomainInput = (value: string): string => {
   const trimmed = value.trim()
-  const withAt = trimmed.startsWith('@') ? trimmed : `@${trimmed}`
-  return withAt.toLowerCase()
+  const withoutAt = trimmed.startsWith('@') ? trimmed.slice(1) : trimmed
+  return withoutAt.toLowerCase()
 }
 
 export const emailMatchesCompanyDomain = (
