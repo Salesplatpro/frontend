@@ -41,7 +41,10 @@ export const CompanyBanner: React.FC = () => {
   }
 
   return (
-    <div className={styles.wrapper} ref={wrapperRef}>
+    <div
+      className={styles.wrapper}
+      ref={wrapperRef}
+      data-tour="company-switcher">
       <button
         type="button"
         className={styles.trigger}

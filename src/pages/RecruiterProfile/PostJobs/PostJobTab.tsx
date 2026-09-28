@@ -1,45 +1,85 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
+import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
+import { PostJobFormValues } from '@/utils/jobPostTypes'
 
 import AiConfig from './AiConfig/AiConfig'
 import PostJob from './PostJob'
-import styles from './PostJobTab.module.scss'
+import { ReviewStep } from './ReviewStep/ReviewStep'
+import { StartStep } from './StartStep/StartStep'
+import { PostJobStepId, PostJobStepper } from './Stepper/PostJobStepper'
 
-const tabs = [
-  {
-    id: '1',
-    tab: 'jobdetails',
-    title: 'Job details',
-    description: 'Describe the role',
-  },
-  {
-    id: '2',
-    tab: 'aiconfig',
-    title: 'Screening setup',
-    description: 'Configure assessments',
-  },
-]
+export type PostJobRouteStep = 'new' | 'details' | 'screening' | 'review'
 
-const PostJobTab = () => {
+type PostJobTabProps = {
+  step?: PostJobRouteStep
+}
+
+const BASE_PATH = '/recruiterDashboard/postjob'
+
+const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
   const { jobId } = useParams()
-  const [activeTab, setActiveTab] = useState(jobId ? 'aiconfig' : 'jobdetails')
+  const navigate = useNavigate()
+  const { draft, saveDraft, clearDraft } = useJobDraftStore()
+  const [newJobStage, setNewJobStage] = useState<'start' | 'details'>(() =>
+    draft ? 'details' : 'start',
+  )
+  const [aiFilledCount, setAiFilledCount] = useState<number | null>(null)
 
-  useEffect(() => {
-    setActiveTab(jobId ? 'aiconfig' : 'jobdetails')
-  }, [jobId])
+  const current: PostJobStepId = step === 'new' ? newJobStage : step
+
+  const handleGenerated = (values: PostJobFormValues, filledCount: number) => {
+    saveDraft(values)
+    setAiFilledCount(filledCount)
+    setNewJobStage('details')
+  }
+
+  const handleStartFromScratch = () => {
+    clearDraft()
+    setAiFilledCount(null)
+    setNewJobStage('details')
+  }
+
+  const handleBackToStart = () => {
+    setAiFilledCount(null)
+    setNewJobStage('start')
+  }
+
+  const selectable: PostJobStepId[] = jobId
+    ? ['details', 'screening', 'review']
+    : newJobStage === 'details'
+    ? ['start']
+    : []
 
   const renderContent = () => {
-    switch (activeTab) {
-      case 'aiconfig':
-        return <AiConfig />
-      case 'jobdetails':
-        return <PostJob />
-      default:
-        return <PostJob />
+    if (step === 'screening' && jobId) {
+      return <AiConfig />
     }
+    if (step === 'review' && jobId) {
+      return <ReviewStep jobId={jobId} />
+    }
+    if (step === 'details' && jobId) {
+      return <PostJob jobId={jobId} />
+    }
+    if (newJobStage === 'start') {
+      return (
+        <StartStep
+          hasDraft={!!draft}
+          onContinueDraft={() => setNewJobStage('details')}
+          onGenerated={handleGenerated}
+          onStartFromScratch={handleStartFromScratch}
+        />
+      )
+    }
+    return (
+      <PostJob
+        aiFilledCount={aiFilledCount}
+        onBackToStart={handleBackToStart}
+      />
+    )
   }
 
   return (
@@ -47,50 +87,23 @@ const PostJobTab = () => {
       <PageHero
         compact
         title="Create a job"
-        lead="Two steps: describe the role, then choose how applicants are screened."
+        lead="Start with AI or from scratch, choose how applicants are screened, then publish."
       />
 
-      <div className={styles.tabList} role="tablist">
-        {tabs.map((tab, index) => {
-          const isDisabled = tab.tab === 'aiconfig' && !jobId
-          const isActive = activeTab === tab.tab
-          const tabItemClass = [
-            styles.tabItem,
-            isActive ? styles.active : '',
-            isDisabled ? styles.disabled : '',
-          ]
-            .filter(Boolean)
-            .join(' ')
+      <PostJobStepper
+        current={current}
+        selectable={selectable}
+        onSelect={(target) => {
+          if (target === 'start') handleBackToStart()
+          if (target === 'details' && jobId)
+            navigate(`${BASE_PATH}/${jobId}/details`)
+          if (target === 'screening' && jobId) navigate(`${BASE_PATH}/${jobId}`)
+          if (target === 'review' && jobId)
+            navigate(`${BASE_PATH}/${jobId}/review`)
+        }}
+      />
 
-          return (
-            <React.Fragment key={tab.id}>
-              {index > 0 ? (
-                <span className={styles.tabChain} aria-hidden>
-                  /
-                </span>
-              ) : null}
-              <div className={tabItemClass}>
-                <button
-                  className={styles.tabButton}
-                  onClick={() => !isDisabled && setActiveTab(tab.tab)}
-                  disabled={isDisabled}
-                  role="tab"
-                  aria-selected={isActive}>
-                  <span className={styles.tabIndex}>{tab.id}</span>
-                  <span className={styles.tabCopy}>
-                    <span className={styles.tabTitle}>{tab.title}</span>
-                    <span className={styles.tabDesc}>{tab.description}</span>
-                  </span>
-                </button>
-              </div>
-            </React.Fragment>
-          )
-        })}
-      </div>
-
-      <div className={styles.content} role="tabpanel">
-        {renderContent()}
-      </div>
+      <div>{renderContent()}</div>
     </PageShell>
   )
 }

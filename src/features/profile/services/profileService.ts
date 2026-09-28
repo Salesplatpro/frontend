@@ -11,6 +11,7 @@ export const PROFILE_ENDPOINT = '/user/me'
 const CV_UPLOAD_ENDPOINT = '/user/profile'
 // Available to every role, unlike CV_UPLOAD_ENDPOINT.
 const AVATAR_UPLOAD_ENDPOINT = '/user/avatar'
+const TOUR_ENDPOINT = '/user/me/tour'
 
 export const fetchProfile = () =>
   httpClient
@@ -53,4 +54,9 @@ export const uploadAvatar = (
 export const removeAvatar = () =>
   httpClient
     .delete<ProfileApiResponse>(AVATAR_UPLOAD_ENDPOINT)
+    .then((response) => response.data)
+
+export const completeTour = () =>
+  httpClient
+    .post<{ data: { tourCompletedAt: string } }>(TOUR_ENDPOINT)
     .then((response) => response.data)

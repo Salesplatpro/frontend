@@ -9,6 +9,7 @@ import { sidebarData as originalSidebarData } from '@/components/features/talent
 import { SideBar } from '@/components/layout/sidebar/SideBar'
 import { NavigationLockOverlay } from '@/features/pre-assessment/components/NavigationLockOverlay'
 import { useAssessmentNavigationBlocker } from '@/features/pre-assessment/useAssessmentNavigationBlocker'
+import { ProductTourHost } from '@/features/product-tour'
 import { ThemeProvider } from '@/features/theme/ThemeProvider'
 
 import { LoggedInUserBadge } from '../LoggedInUserBadge'
@@ -40,7 +41,7 @@ const TalentProfileSidebar: React.FC = () => {
       <div className="dashboard">
         <div className="dashboard-nav">
           <button className="menu" onClick={() => setIsOpen(!isOpen)}>
-            {!isOpen && <IoMdMenu className="text-3xl" />}
+            {!isOpen && <IoMdMenu className="menu-icon" />}
           </button>
           <LoggedInUserBadge />
         </div>
@@ -60,7 +61,7 @@ const TalentProfileSidebar: React.FC = () => {
           />
 
           <button className="close" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
+            {isOpen && <AiOutlineCloseCircle className="close-icon" />}
           </button>
 
           {isLocked && <NavigationLockOverlay />}
@@ -69,6 +70,11 @@ const TalentProfileSidebar: React.FC = () => {
         <div className="outlet">
           <Outlet context={{ setUnreadCount } as TalentSidebarContext} />
         </div>
+        <ProductTourHost
+          audience="talent"
+          homePath="/talentDashboard"
+          blocked={isLocked}
+        />
       </div>
     </ThemeProvider>
   )

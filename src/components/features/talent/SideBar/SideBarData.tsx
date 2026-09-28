@@ -16,12 +16,14 @@ export const sidebarData = [
   },
   {
     name: 'Pre-Assessment test',
+    tourId: 'nav-pre-assessment',
     icon: <MdOutlineAssessment size={ICON_SIZE} />,
 
     link: '/talentDashboard/talentQuiz',
   },
   {
     name: 'Jobs',
+    tourId: 'nav-jobs',
     icon: <IoBagOutline size={ICON_SIZE} />,
     link: '/talentDashboard/job',
     end: false,
@@ -29,17 +31,20 @@ export const sidebarData = [
 
   {
     name: 'Inbox',
+    tourId: 'nav-inbox',
     icon: <BsChatDots size={ICON_SIZE} />,
     link: '/talentDashboard/chat',
   },
 
   {
     name: 'Notifications',
+    tourId: 'nav-notifications',
     icon: <BiMessageDetail size={ICON_SIZE} />,
     link: '/talentDashboard/notification',
   },
   {
     name: 'Applications pipeline',
+    tourId: 'nav-pipeline',
     icon: <RiFlowChart size={ICON_SIZE} />,
     link: '/talentDashboard/applicationPipeline',
     end: false,

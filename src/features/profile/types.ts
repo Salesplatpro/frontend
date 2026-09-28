@@ -42,6 +42,8 @@ export interface ProfileUser {
   assessmentRetryDate?: string | null
   roleChangeCount?: number
   activePreScreeningId?: string | null
+  /** When the first-time product tour was finished or skipped; null means not yet. */
+  tourCompletedAt?: string | null
   createdAt?: string
   updatedAt?: string
   userRoles?: ProfileRole[]

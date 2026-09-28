@@ -69,6 +69,7 @@ import EditCompany from '@/pages/RecruiterProfile/Company/EditCompany'
 import AllApplications from '@/pages/RecruiterProfile/Dashboard/AllApplications'
 import Dashboard from '@/pages/RecruiterProfile/Dashboard/Dashboard'
 import { EditJobTab } from '@/pages/RecruiterProfile/EditJob'
+import RecruiterGuide from '@/pages/RecruiterProfile/Guide/Guide'
 import JobDetail from '@/pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from '@/pages/RecruiterProfile/MyJobPosts/SingleJobPost'
 import RecruiterPlanPage from '@/pages/RecruiterProfile/Plan/RecruiterPlanPage'
@@ -330,6 +331,10 @@ export const routeConfig: RouteObject[] = [
                 element: <FeedbackPage />,
               },
               {
+                path: 'guide',
+                element: <RecruiterGuide />,
+              },
+              {
                 path: paths.changePassword,
                 element: <ChangePasswordPage />,
               },
@@ -369,7 +374,15 @@ export const routeConfig: RouteObject[] = [
                       },
                       {
                         path: 'postjob/:jobId',
-                        element: <PostJobTab />,
+                        element: <PostJobTab step="screening" />,
+                      },
+                      {
+                        path: 'postjob/:jobId/details',
+                        element: <PostJobTab step="details" />,
+                      },
+                      {
+                        path: 'postjob/:jobId/review',
+                        element: <PostJobTab step="review" />,
                       },
                       {
                         path: 'myJobPosts',

@@ -5,7 +5,11 @@ import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
 import { Outlet } from 'react-router-dom'
 
-import { sidebarData } from '@/components/features/recruiter/SideBar/sidebarData'
+import {
+  sidebarData,
+  sidebarFooterData,
+} from '@/components/features/recruiter/SideBar/sidebarData'
+import { ProductTourHost } from '@/features/product-tour'
 import { ThemeProvider } from '@/features/theme/ThemeProvider'
 
 import { SideBar } from '../../components'
@@ -20,7 +24,7 @@ const RecruiterProfileSidebar = () => {
       <div className="dashboard">
         <div className="dashboard-nav">
           <button className="menu" onClick={() => setIsOpen(!isOpen)}>
-            {!isOpen && <IoMdMenu className="text-3xl" />}
+            {!isOpen && <IoMdMenu className="menu-icon" />}
           </button>
           <LoggedInUserBadge />
         </div>
@@ -37,14 +41,19 @@ const RecruiterProfileSidebar = () => {
             sideBarData={sidebarData}
             handleClick={() => setIsOpen(false)}
             topSlot={<CompanyBanner />}
+            footerItems={sidebarFooterData}
           />
           <button className="close" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen && <AiOutlineCloseCircle className="text-2xl" />}
+            {isOpen && <AiOutlineCloseCircle className="close-icon" />}
           </button>
         </div>
         <div className="outlet">
           <Outlet />
         </div>
+        <ProductTourHost
+          audience="recruiter"
+          homePath="/recruiterDashboard/dashboard"
+        />
       </div>
     </ThemeProvider>
   )

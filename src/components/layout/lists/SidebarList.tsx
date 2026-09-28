@@ -17,6 +17,8 @@ type SidebarListProps = {
    * (e.g. a list page with a `/:id` detail route) so the item stays
    * highlighted while the user is on one of those child routes. */
   end?: boolean
+  /** Anchor for the product tour (`data-tour`). */
+  tourId?: string
 }
 
 export const SidebarList = ({
@@ -27,15 +29,14 @@ export const SidebarList = ({
   onClick,
   link,
   end = true,
+  tourId,
 }: SidebarListProps) => {
   const content = (
     <>
       <div className={styles.listItem}>
         <div className={styles.iconBox}>{icon}</div>
         <div>
-          <div className="font-raleway font-medium text-base leading-[24px]">
-            {name}
-          </div>
+          <div className={styles.name}>{name}</div>
           <div>{details}</div>
         </div>
       </div>
@@ -48,7 +49,10 @@ export const SidebarList = ({
   // which would otherwise match every route and always show as active.
   if (!link) {
     return (
-      <div className={styles.listContainer} onClick={onClick}>
+      <div
+        className={styles.listContainer}
+        onClick={onClick}
+        data-tour={tourId}>
         {content}
       </div>
     )
@@ -58,6 +62,7 @@ export const SidebarList = ({
     <NavLink
       to={link}
       end={end}
+      data-tour={tourId}
       className={({ isActive }) =>
         `${styles.listContainer} ${isActive ? styles.active : ''}`
       }
