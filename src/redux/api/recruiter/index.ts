@@ -5,7 +5,7 @@ import { customBaseQuery } from '../../../utils/customBaseQuery'
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
   baseQuery: customBaseQuery,
-  tagTypes: ['Recruiter', 'RecruiterJob', 'ScoutJob', 'ScoutBatch'],
+  tagTypes: ['Recruiter', 'RecruiterJob', 'ScoutJob', 'ScoutBatch', 'AiConfig'],
   endpoints: (builder) => ({
     jobPostCreation: builder.mutation({
       query: (data) => ({
@@ -18,6 +18,20 @@ export const recruiterApi = createApi({
     generateJobContent: builder.mutation({
       query: (data) => ({
         url: `/jobs/generate`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    generateJobContentFromFile: builder.mutation({
+      query: (data: FormData) => ({
+        url: `/jobs/generate/file`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    generateJobField: builder.mutation({
+      query: (data) => ({
+        url: `/jobs/generate/field`,
         method: 'POST',
         body: data,
       }),
@@ -47,7 +61,10 @@ export const recruiterApi = createApi({
       }),
       // Creating a config links it onto the job (aiConfigId) — refresh job
       // lists/detail so the "Active" status option becomes available.
-      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
+      invalidatesTags: [
+        { type: 'RecruiterJob', id: 'LIST' },
+        { type: 'AiConfig', id: 'LIST' },
+      ],
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled
@@ -65,6 +82,17 @@ export const recruiterApi = createApi({
         url: `/ai-config/${aiConfigId}`,
         method: 'GET',
       }),
+      providesTags: (_result, _error, aiConfigId) => [
+        { type: 'AiConfig', id: aiConfigId },
+      ],
+    }),
+
+    getAiConfigs: builder.query({
+      query: () => ({
+        url: `/ai-config`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'AiConfig', id: 'LIST' }],
     }),
 
     patchAiConfig: builder.mutation({
@@ -73,7 +101,20 @@ export const recruiterApi = createApi({
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
+      invalidatesTags: (_result, _error, { aiConfigId }) => [
+        { type: 'RecruiterJob', id: 'LIST' },
+        { type: 'AiConfig', id: aiConfigId },
+        { type: 'AiConfig', id: 'LIST' },
+      ],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          const { talentApi } = await import('../talent')
+          dispatch(talentApi.util.invalidateTags(['Jobs']))
+        } catch {
+          // mutation failed — leave caches alone
+        }
+      },
     }),
     fetchRecruiterJobPost: builder.query({
       query: (params: { limit?: number; status?: string } = {}) => {
@@ -251,6 +292,15 @@ export const recruiterApi = createApi({
         { type: 'RecruiterJob', id: jobId },
         { type: 'RecruiterJob', id: 'LIST' },
       ],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          const { talentApi } = await import('../talent')
+          dispatch(talentApi.util.invalidateTags(['Jobs']))
+        } catch {
+          // mutation failed — leave caches alone
+        }
+      },
     }),
     deleteJob: builder.mutation({
       query: (jobId: string) => ({
@@ -281,6 +331,8 @@ export const recruiterApi = createApi({
 export const {
   useJobPostCreationMutation,
   useGenerateJobContentMutation,
+  useGenerateJobContentFromFileMutation,
+  useGenerateJobFieldMutation,
   useFetchDashboardQuery,
   useFetchAllApplicationsQuery,
   useAiConfigMutation,
@@ -302,4 +354,5 @@ export const {
   useActivateJobPaymentMutation,
   useFetchPersonalityQuestionsQuery,
   useGetAiConfigQuery,
+  useGetAiConfigsQuery,
 } = recruiterApi

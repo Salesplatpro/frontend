@@ -46,7 +46,13 @@ const FormObserver: React.FC<{ saveDraft: (v: PostJobFormValues) => void }> = ({
   return null
 }
 
-const PostJob: React.FC = () => {
+type PostJobProps = {
+  /** Number of fields the AI filled in on the Start step, if it was used. */
+  aiFilledCount?: number | null
+  onBackToStart?: () => void
+}
+
+const PostJob: React.FC<PostJobProps> = ({ aiFilledCount, onBackToStart }) => {
   const navigate = useNavigate()
   const [jobPostCreation, { isLoading: isSubmitting }] =
     useJobPostCreationMutation()
@@ -144,12 +150,28 @@ const PostJob: React.FC = () => {
             give AI better material to screen them.
           </p>
         </div>
+        {onBackToStart && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onBackToStart}>
+            Back to start options
+          </Button>
+        )}
       </div>
 
-      {hadDraft && (
-        <div className={styles.draftNotice}>
-          Restored your unsaved draft from last time.
+      {aiFilledCount != null ? (
+        <div className={styles.draftNotice} role="status">
+          AI filled in {aiFilledCount} field{aiFilledCount === 1 ? '' : 's'}.
+          Check each one before you continue — you can change anything.
         </div>
+      ) : (
+        hadDraft && (
+          <div className={styles.draftNotice}>
+            Restored your unsaved draft from last time.
+          </div>
+        )
       )}
 
       <ValidatedForm

@@ -369,7 +369,7 @@ export const routeConfig: RouteObject[] = [
                       },
                       {
                         path: 'postjob/:jobId',
-                        element: <PostJobTab />,
+                        element: <PostJobTab step="screening" />,
                       },
                       {
                         path: 'myJobPosts',
