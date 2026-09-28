@@ -51,7 +51,13 @@ export interface RetryVerdictsResult {
   failed: number
 }
 
-export const retryMissingVerdicts = (jobId: string) =>
+export const retryMissingVerdicts = (
+  jobId: string,
+  applicationIds?: string[],
+) =>
   httpClient
-    .post<{ data: RetryVerdictsResult }>(`/jobs/${jobId}/retry-verdicts`)
+    .post<{ data: RetryVerdictsResult }>(
+      `/jobs/${jobId}/retry-verdicts`,
+      applicationIds ? { applicationIds } : undefined,
+    )
     .then((response) => response.data.data)

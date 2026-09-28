@@ -192,6 +192,9 @@ export const SingleJobPost = () => {
     useState(false)
   const [isRetryingVerdicts, setIsRetryingVerdicts] = useState(false)
   const [isRetryingAllVerdicts, setIsRetryingAllVerdicts] = useState(false)
+  const [regeneratingRowId, setRegeneratingRowId] = useState<string | null>(
+    null,
+  )
 
   // Column defs with no-op action callbacks — only used here to derive
   // toolbar metadata (toggleable/sortable keys, labels) from the same
@@ -276,7 +279,7 @@ export const SingleJobPost = () => {
     if (!jobId) return
     setIsRetryingVerdicts(true)
     try {
-      await retryMissingVerdicts(jobId)
+      await retryMissingVerdicts(jobId, getMissingVerdictIds(selectedRowKeys))
       notify('success', 'AI matches retried for selected talents', {
         autoClose: 2000,
       })
@@ -286,6 +289,24 @@ export const SingleJobPost = () => {
     } finally {
       setIsRetryingVerdicts(false)
       setIsMissingVerdictModalOpen(false)
+    }
+  }
+
+  const handleRegenerateMatch = async (applicationId: string) => {
+    if (!jobId) return
+    setRegeneratingRowId(applicationId)
+    try {
+      await retryMissingVerdicts(jobId, [applicationId])
+      notify('success', 'Regenerating AI match — check back shortly', {
+        autoClose: 2500,
+      })
+      await mutate()
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to regenerate AI match'), {
+        autoClose: 2000,
+      })
+    } finally {
+      setRegeneratingRowId(null)
     }
   }
 
@@ -671,6 +692,8 @@ export const SingleJobPost = () => {
           onReject={(id) => handleRowStatus(id, 'rejected')}
           onMessage={handleRowMessage}
           onOpenDossier={openDossier}
+          onRegenerateMatch={handleRegenerateMatch}
+          regeneratingRowId={regeneratingRowId}
           loadingRowId={loadingRowId}
           visibleColumnKeys={visibleColumnKeys}
           sortKey={sortKey}
