@@ -267,6 +267,7 @@ export const recruiterApi = createApi({
         url: `/jobs/${jobId}/activate-payment`,
         method: 'POST',
       }),
+      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
     fetchPersonalityQuestions: builder.query({
       query: (jobId: string) => ({

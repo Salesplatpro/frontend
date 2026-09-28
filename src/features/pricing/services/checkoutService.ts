@@ -19,5 +19,13 @@ export const initiatePaidCheckout = (
     })
     .then((res) => res.data)
 
+export interface VerifyPaymentResponse {
+  status: boolean
+  message: string
+  data: { jobId: string | null }
+}
+
 export const verifyPaidCheckout = (reference: string) =>
-  httpClient.post('/payments/verify', { reference }).then((res) => res.data)
+  httpClient
+    .post<VerifyPaymentResponse>('/payments/verify', { reference })
+    .then((res) => res.data)

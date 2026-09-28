@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useSWRConfig } from 'swr'
 
@@ -8,6 +9,8 @@ import { verifyPaidCheckout } from '@/features/pricing/services/checkoutService'
 import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
 import { useProfile } from '@/features/profile/hooks/useProfile'
+import { recruiterApi } from '@/redux/api/recruiter'
+import { talentApi } from '@/redux/api/talent'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
@@ -19,6 +22,7 @@ const VerifyPaymentPage: React.FC = () => {
   const navigate = useNavigate()
   const { mutate } = useProfile()
   const { mutate: globalMutate } = useSWRConfig()
+  const dispatch = useDispatch()
   const [error, setError] = useState<string | null>(null)
 
   const reference = searchParams.get('reference') || searchParams.get('trxref')
@@ -32,7 +36,20 @@ const VerifyPaymentPage: React.FC = () => {
       }
 
       try {
-        await verifyPaidCheckout(reference)
+        const { data } = await verifyPaidCheckout(reference)
+
+        if (data?.jobId) {
+          dispatch(
+            recruiterApi.util.invalidateTags([
+              { type: 'RecruiterJob', id: 'LIST' },
+              { type: 'RecruiterJob', id: data.jobId },
+            ]),
+          )
+          dispatch(talentApi.util.invalidateTags(['Jobs']))
+          notify('success', 'Payment verified. Your job is now live.')
+          navigate('/recruiterDashboard/myJobPosts')
+          return
+        }
 
         // Revalidate the profile first — it carries the new plan — then drop the
         // cached usage snapshot, which still holds the pre-purchase limits.
@@ -58,7 +75,7 @@ const VerifyPaymentPage: React.FC = () => {
     }
 
     void verify()
-  }, [globalMutate, mutate, navigate, reference])
+  }, [dispatch, globalMutate, mutate, navigate, reference])
 
   return (
     <div className={styles.page}>

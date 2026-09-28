@@ -9,10 +9,7 @@ import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOption
 import { Select } from '@/components/forms/Select'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import {
-  useActivateJobPaymentMutation,
-  useUpdateJobMutation,
-} from '@/redux/api/recruiter'
+import { useUpdateJobMutation } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
@@ -21,8 +18,13 @@ import LinkedIn from '../../../assets/linkedin logo_icon.svg'
 import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import { ColumnDef, DataTable, TableActions } from '../../../components'
 import { formatTimeAgo, recruiterJobPostsTypes } from '../../../utils'
-import { getStatusBadge, JOB_STATUS_OPTIONS } from '../getJobStatus'
+import {
+  getStatusBadge,
+  getStatusLabel,
+  JOB_STATUS_OPTIONS,
+} from '../getJobStatus'
 import styles from './JobsTable.module.scss'
+import { useJobPayment } from './useJobPayment'
 
 const resolveAiConfigId = (job: recruiterJobPostsTypes): string | null =>
   job.aiConfigId ?? (typeof job.aiConfig === 'string' ? job.aiConfig : null)
@@ -31,12 +33,20 @@ type StatusCellProps = {
   jobId: string
   status: string
   aiConfigId?: string | null
+  showPay: boolean
+  isPaying: boolean
+  onPay: () => void
 }
 
-const StatusCell = ({ jobId, status, aiConfigId }: StatusCellProps) => {
+const StatusCell = ({
+  jobId,
+  status,
+  aiConfigId,
+  showPay,
+  isPaying,
+  onPay,
+}: StatusCellProps) => {
   const [updateJob, { isLoading }] = useUpdateJobMutation()
-  const [activateJobPayment, { isLoading: isPaying }] =
-    useActivateJobPaymentMutation()
   const [isEditing, setIsEditing] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -69,32 +79,23 @@ const StatusCell = ({ jobId, status, aiConfigId }: StatusCellProps) => {
     }
   }
 
-  const handlePay = async () => {
-    try {
-      const response = await activateJobPayment(jobId).unwrap()
-      const link = response?.data?.link
-      if (!link) {
-        throw new Error('No payment link returned')
-      }
-      window.location.assign(link)
-    } catch (err) {
-      notify(
-        'error',
-        getErrorMessage(err, 'Could not start payment. Please try again.'),
-      )
-    }
-  }
-
   if (status === 'pending_payment') {
     return (
       <div className={styles.statusCell}>
-        <Button
-          variant="primary"
-          size="sm"
-          loading={isPaying}
-          onClick={() => void handlePay()}>
-          Pay to activate
-        </Button>
+        {showPay ? (
+          <Button
+            variant="primary"
+            size="sm"
+            loading={isPaying}
+            onClick={onPay}>
+            Pay to activate
+          </Button>
+        ) : (
+          <StatusBadge
+            status={getStatusLabel(status)}
+            {...getStatusBadge(status)}
+          />
+        )}
       </div>
     )
   }
@@ -134,6 +135,7 @@ type ShareLinks = {
 }
 
 export const JobsTable = ({ data }: JobsTableType) => {
+  const { canPay, payForJob, payingJobId } = useJobPayment()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [shareLinks, setShareLinks] = useState<ShareLinks>({
     facebook: '',
@@ -200,6 +202,9 @@ export const JobsTable = ({ data }: JobsTableType) => {
             jobId={job.id}
             status={job.status ?? 'draft'}
             aiConfigId={resolveAiConfigId(job)}
+            showPay={canPay(job.status ?? 'draft', !!resolveAiConfigId(job))}
+            isPaying={payingJobId === job.id}
+            onPay={() => void payForJob(job.id)}
           />
         ),
       },
@@ -238,6 +243,16 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 View Job
               </Button>
             </Link>
+            {job.status === 'draft' &&
+              canPay('draft', !!resolveAiConfigId(job)) && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  loading={payingJobId === job.id}
+                  onClick={() => void payForJob(job.id)}>
+                  Pay to activate
+                </Button>
+              )}
             {job.status === 'draft' && !resolveAiConfigId(job) && (
               <Link to={`/recruiterDashboard/postjob/${job.id}`}>
                 <button type="button" className={styles.addAiConfigButton}>
@@ -250,7 +265,7 @@ export const JobsTable = ({ data }: JobsTableType) => {
         ),
       },
     ],
-    [handleShare],
+    [handleShare, canPay, payForJob, payingJobId],
   )
 
   return (

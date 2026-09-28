@@ -23,17 +23,20 @@
   flex: 1;
 }
 
+.item {
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
 .row {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
   color: inherit;
-
-  &:last-child {
-    border-bottom: none;
-  }
 
   &:active {
     background-color: var(--color-bg-subtle);
@@ -95,4 +98,10 @@
   :global(html[data-theme='dark']) & {
     color: var(--color-white);
   }
+}
+
+.payBar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--space-4) var(--space-4);
 }
