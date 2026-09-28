@@ -54,12 +54,16 @@ export const JobsCardList = ({ data }: JobsCardListProps) => {
                   </span>
                 </div>
                 <CompanyTag organization={job.organization} />
-                <p className={styles.subtext}>
-                  {job.noOfApplicants} applicants &bull;{' '}
-                  {formatTimeAgo(job.createdAt)}
-                </p>
+                <p className={styles.subtext}>{formatTimeAgo(job.createdAt)}</p>
               </div>
               <IoChevronForward className={styles.chevron} />
+            </Link>
+            <Link
+              to={`/recruiterDashboard/singleJobPost/${job.id}`}
+              state={{ jobName: job.role.name, postedAt: job.createdAt }}
+              className={styles.applicantsLink}>
+              {job.noOfApplicants ?? 0} applicant
+              {job.noOfApplicants === 1 ? '' : 's'} — view applicants
             </Link>
             {canPay(status, !!aiConfigId) && (
               <div className={styles.payBar}>
