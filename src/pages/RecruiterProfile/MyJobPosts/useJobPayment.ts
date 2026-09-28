@@ -16,9 +16,12 @@ export const useJobPayment = () => {
     getActiveOrganizationBilling(profile).billingPlan,
   )
 
+  // A subscription whose job slots are full also parks activations in
+  // pending_payment, so those are payable on any plan. Paying for a draft
+  // straight away is only offered on pay-per-use.
   const canPay = (status: string, hasAiConfig: boolean) =>
-    isPayPerUse &&
-    (status === 'pending_payment' || (status === 'draft' && hasAiConfig))
+    status === 'pending_payment' ||
+    (isPayPerUse && status === 'draft' && hasAiConfig)
 
   const payForJob = async (jobId: string) => {
     setPayingJobId(jobId)
