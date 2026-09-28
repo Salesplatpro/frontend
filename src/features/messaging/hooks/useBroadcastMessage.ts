@@ -4,8 +4,10 @@ import { broadcastMessage } from '../services/messagingService'
 
 interface BroadcastArgs {
   application: string
-  content: string
+  content?: string
   talentIds?: string[]
+  messages?: { applicationId: string; subject?: string; content: string }[]
+  sendEmail?: boolean
 }
 
 export const useBroadcastMessage = () => {
