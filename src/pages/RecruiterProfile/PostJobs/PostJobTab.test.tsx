@@ -23,14 +23,17 @@ vi.mock('@/utils/toastNotifications', () => ({ notify: vi.fn() }))
 
 vi.mock('./PostJob', () => ({
   default: ({
+    jobId,
     aiFilledCount,
     onBackToStart,
   }: {
+    jobId?: string
     aiFilledCount?: number | null
     onBackToStart?: () => void
   }) => (
     <div>
       <p>Details step</p>
+      <p>Job: {jobId ?? 'new'}</p>
       <p>AI filled: {String(aiFilledCount)}</p>
       <button type="button" onClick={onBackToStart}>
         Back to start options
@@ -51,6 +54,10 @@ const renderAt = (path: string) =>
         <Route
           path="/recruiterDashboard/postjob/:jobId"
           element={<PostJobTab step="screening" />}
+        />
+        <Route
+          path="/recruiterDashboard/postjob/:jobId/details"
+          element={<PostJobTab step="details" />}
         />
       </Routes>
     </MemoryRouter>,
@@ -142,5 +149,33 @@ describe('PostJobTab', () => {
     expect(
       screen.getByText('Screening').closest('li')?.getAttribute('aria-current'),
     ).toBe('step')
+  })
+
+  it('edits the details of a saved job', () => {
+    renderAt('/recruiterDashboard/postjob/job-1/details')
+    expect(screen.getByText('Job: job-1')).toBeTruthy()
+    expect(
+      screen.getByText('Details').closest('li')?.getAttribute('aria-current'),
+    ).toBe('step')
+  })
+
+  it('moves between details and screening of a saved job from the stepper', () => {
+    renderAt('/recruiterDashboard/postjob/job-1/details')
+    fireEvent.click(
+      screen.getByRole('button', { name: /screening choose how to screen/i }),
+    )
+    expect(screen.getByText('Screening step')).toBeTruthy()
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /details describe the role/i }),
+    )
+    expect(screen.getByText('Job: job-1')).toBeTruthy()
+  })
+
+  it('does not let a saved job go back to the start options', () => {
+    renderAt('/recruiterDashboard/postjob/job-1')
+    expect(
+      screen.queryByRole('button', { name: /start pick how to begin/i }),
+    ).toBeNull()
   })
 })

@@ -11,7 +11,7 @@ import PostJob from './PostJob'
 import { StartStep } from './StartStep/StartStep'
 import { PostJobStepId, PostJobStepper } from './Stepper/PostJobStepper'
 
-export type PostJobRouteStep = 'new' | 'screening'
+export type PostJobRouteStep = 'new' | 'details' | 'screening'
 
 type PostJobTabProps = {
   step?: PostJobRouteStep
@@ -28,8 +28,7 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
   )
   const [aiFilledCount, setAiFilledCount] = useState<number | null>(null)
 
-  const current: PostJobStepId =
-    step === 'screening' ? 'screening' : newJobStage
+  const current: PostJobStepId = step === 'new' ? newJobStage : step
 
   const handleGenerated = (values: PostJobFormValues, filledCount: number) => {
     saveDraft(values)
@@ -48,12 +47,18 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
     setNewJobStage('start')
   }
 
-  const selectable: PostJobStepId[] =
-    step === 'new' && newJobStage === 'details' ? ['start'] : []
+  const selectable: PostJobStepId[] = jobId
+    ? ['details', 'screening']
+    : newJobStage === 'details'
+    ? ['start']
+    : []
 
   const renderContent = () => {
     if (step === 'screening' && jobId) {
       return <AiConfig />
+    }
+    if (step === 'details' && jobId) {
+      return <PostJob jobId={jobId} />
     }
     if (newJobStage === 'start') {
       return (
@@ -86,6 +91,8 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
         selectable={selectable}
         onSelect={(target) => {
           if (target === 'start') handleBackToStart()
+          if (target === 'details' && jobId)
+            navigate(`${BASE_PATH}/${jobId}/details`)
           if (target === 'screening' && jobId) navigate(`${BASE_PATH}/${jobId}`)
         }}
       />

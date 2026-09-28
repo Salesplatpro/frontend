@@ -3,37 +3,29 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
-import { EMPTY_LOCATION } from '@/components/forms/LocationSelect'
 import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
 import { useJobDraftStore } from '@/features/jobs/store/useJobDraftStore'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 import {
-  useGenerateJobContentMutation,
   useJobPostCreationMutation,
+  useUpdateJobMutation,
 } from '@/redux/api/recruiter'
+import { useIndividualJobQuery } from '@/redux/api/talent'
 import { getErrorMessage } from '@/utils/getErrorMessage'
-import { locationFieldsFromWorkMode } from '@/utils/jobLocationPayload'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
 import { JobDetailsFields } from './JobDetailsFields'
+import { JobPreview } from './JobPreview/JobPreview'
 import styles from './PostJob.module.scss'
+import { EMPTY_JOB_FORM } from './utils/generatedJobToForm'
+import { jobFormToPayload, jobToFormValues } from './utils/jobFormValues'
+import { useRoleName } from './utils/useRoleName'
 import { validationSchema } from './validationSchema'
 
-const DEFAULT_VALUES: PostJobFormValues = {
-  jobBrief: '',
-  role: '',
-  requirements: '',
-  minSalary: '',
-  maxSalary: '',
-  compensationPeriod: '',
-  currency: '',
-  workMode: [],
-  experienceLevel: '',
-  location: { ...EMPTY_LOCATION },
-  skills: [],
-  goals: [],
-}
+const BASE_PATH = '/recruiterDashboard/postjob'
 
 // Syncs Formik values into the draft store on every change.
 const FormObserver: React.FC<{ saveDraft: (v: PostJobFormValues) => void }> = ({
@@ -46,43 +38,74 @@ const FormObserver: React.FC<{ saveDraft: (v: PostJobFormValues) => void }> = ({
   return null
 }
 
+const LivePreview = () => {
+  const { values } = useFormikContext<PostJobFormValues>()
+  const { profile } = useProfile()
+  const roleName = useRoleName(values.role)
+  return (
+    <JobPreview
+      values={values}
+      roleName={roleName}
+      companyName={profile?.activeOrganization?.name}
+    />
+  )
+}
+
 type PostJobProps = {
+  /** Set when editing the details of a job already saved as a draft. */
+  jobId?: string
   /** Number of fields the AI filled in on the Start step, if it was used. */
   aiFilledCount?: number | null
   onBackToStart?: () => void
 }
 
-const PostJob: React.FC<PostJobProps> = ({ aiFilledCount, onBackToStart }) => {
+const PostJob: React.FC<PostJobProps> = ({
+  jobId,
+  aiFilledCount,
+  onBackToStart,
+}) => {
   const navigate = useNavigate()
-  const [jobPostCreation, { isLoading: isSubmitting }] =
-    useJobPostCreationMutation()
-  const [generateJobContent, { isLoading: isGeneratingWithAI }] =
-    useGenerateJobContentMutation()
+  const isUpdate = !!jobId
+  const [jobPostCreation] = useJobPostCreationMutation()
+  const [updateJob] = useUpdateJobMutation()
   const { draft, saveDraft, clearDraft } = useJobDraftStore()
+  const { data: jobData, isLoading: jobLoading } = useIndividualJobQuery(
+    jobId,
+    { skip: !isUpdate },
+  )
 
-  // Capture once whether a draft existed at mount, so the restored-draft
-  // notice doesn't flicker on/off as the user edits the form.
-  const [hadDraft] = useState(() => draft != null)
+  // Read the draft once at mount: re-deriving it from the store would reset
+  // the form (and re-save it) every time the draft is cleared or saved.
+  const [initialDraft] = useState(() => (isUpdate ? null : draft))
+  const hadDraft = initialDraft != null
 
-  const initialValues: PostJobFormValues = draft ?? DEFAULT_VALUES
+  if (isUpdate && jobLoading) return <Spinner fullPage />
+
+  const job = jobData?.data?.job ?? jobData?.data
+  const initialValues: PostJobFormValues = isUpdate
+    ? job
+      ? jobToFormValues(job)
+      : EMPTY_JOB_FORM
+    : { ...EMPTY_JOB_FORM, ...(initialDraft ?? {}) }
 
   const onSubmit = async (
     values: PostJobFormValues,
     { setSubmitting }: FormikHelpers<PostJobFormValues>,
   ) => {
-    const { location, maxSalary, workMode, ...rest } = values
-    const payload = {
-      ...rest,
-      workMode,
-      ...(maxSalary ? { maxSalary } : {}),
-      ...locationFieldsFromWorkMode(location, workMode),
-    }
+    const payload = jobFormToPayload(values)
 
     try {
-      const response = await jobPostCreation(payload).unwrap()
-      const jobId: string = response?.data?.job?.id
+      if (isUpdate) {
+        await updateJob({ jobId, data: payload }).unwrap()
+        notify('success', 'Job details saved.')
+        navigate(`${BASE_PATH}/${jobId}`)
+        return
+      }
 
-      if (!jobId) {
+      const response = await jobPostCreation(payload).unwrap()
+      const newJobId: string = response?.data?.job?.id
+
+      if (!newJobId) {
         notify(
           'error',
           'Job was created but no ID was returned. Please check My Job Posts and add an AI Config from there.',
@@ -91,52 +114,23 @@ const PostJob: React.FC<PostJobProps> = ({ aiFilledCount, onBackToStart }) => {
       }
 
       clearDraft()
-      notify('success', 'Job saved as a draft. Add your AI settings next.')
-      navigate(`/recruiterDashboard/postjob/${jobId}`)
-    } catch (err) {
-      const apiMessage = getErrorMessage(
-        err,
-        'Failed to post job. Your progress has been saved — please try again.',
-      )
-      notify('error', apiMessage)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleGenerateWithAI = async (
-    values: PostJobFormValues,
-    setFieldValue: (key: keyof PostJobFormValues, value: unknown) => void,
-  ) => {
-    try {
-      const response = await generateJobContent({
-        role: values.role,
-        experienceLevel: values.experienceLevel || undefined,
-        keywords: values.skills,
-      }).unwrap()
-      const content = response?.data?.content
-      if (!content) return
-
-      setFieldValue('jobBrief', content.jobBrief)
-      setFieldValue('requirements', content.requirements)
-      if (Array.isArray(content.skills) && content.skills.length > 0) {
-        setFieldValue('skills', content.skills)
-      }
-      if (Array.isArray(content.goals) && content.goals.length > 0) {
-        setFieldValue('goals', content.goals)
-      }
       notify(
         'success',
-        'Job content generated — feel free to edit before submitting.',
+        'Job saved as a draft. Now choose how to screen applicants.',
       )
+      navigate(`${BASE_PATH}/${newJobId}`)
     } catch (err) {
       notify(
         'error',
         getErrorMessage(
           err,
-          'Failed to generate job content. Please try again.',
+          isUpdate
+            ? 'Failed to save job details. Please try again.'
+            : 'Failed to post job. Your progress has been saved — please try again.',
         ),
       )
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -179,32 +173,36 @@ const PostJob: React.FC<PostJobProps> = ({ aiFilledCount, onBackToStart }) => {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
         enableReinitialize>
-        {({ values, setFieldValue, errors, touched }) => (
+        {({ values, setFieldValue, errors, touched, isSubmitting }) => (
           <Form noValidate>
             <FormikFocusOnError />
-            <FormObserver saveDraft={saveDraft} />
+            {!isUpdate && <FormObserver saveDraft={saveDraft} />}
 
-            <JobDetailsFields
-              values={values}
-              errors={errors}
-              touched={touched}
-              setFieldValue={(key, value) => setFieldValue(key, value)}
-              onGenerateWithAI={() =>
-                handleGenerateWithAI(values, setFieldValue)
-              }
-              isGeneratingWithAI={isGeneratingWithAI}
-            />
+            <div className={styles.layout}>
+              <div className={styles.formColumn}>
+                <JobDetailsFields
+                  values={values}
+                  errors={errors}
+                  touched={touched}
+                  setFieldValue={(key, value) => setFieldValue(key, value)}
+                  roleDisabled={isUpdate}
+                />
+              </div>
+              <LivePreview />
+            </div>
 
             <div className={styles.actions}>
-              <p className={styles.autosaveHint}>
-                Your progress is saved automatically as you go.
-              </p>
+              {!isUpdate && (
+                <p className={styles.autosaveHint}>
+                  Your progress is saved automatically as you go.
+                </p>
+              )}
               <Button
                 type="submit"
                 variant="primary"
                 size="lg"
                 loading={isSubmitting}>
-                Submit job details
+                {isUpdate ? 'Save and continue' : 'Continue to screening'}
               </Button>
             </div>
           </Form>

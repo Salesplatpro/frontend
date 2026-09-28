@@ -2,12 +2,7 @@ import { Form, FormikHelpers, useFormikContext } from 'formik'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { WorkType } from '@/components/features/jobs/WorkTypeCheckboxes'
 import { FormikFocusOnError } from '@/components/forms/FormikFocusOnError'
-import {
-  EMPTY_LOCATION,
-  resolveLocationFromNames,
-} from '@/components/forms/LocationSelect'
 import { ValidatedForm } from '@/components/forms/ValidatedForm'
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
@@ -17,7 +12,6 @@ import { Spinner } from '@/components/ui/Spinner'
 import { useJobEditDraftStore } from '@/features/jobs/store/useJobEditDraftStore'
 import {
   useAiConfigMutation,
-  useGenerateJobContentMutation,
   useGetAiConfigQuery,
   usePatchAiConfigMutation,
   useUpdateJobMutation,
@@ -25,7 +19,6 @@ import {
 import { useIndividualJobQuery } from '@/redux/api/talent'
 import { capitalizeEachWord } from '@/utils/CapitalizeWord'
 import { getErrorMessage } from '@/utils/getErrorMessage'
-import { locationFieldsFromWorkMode } from '@/utils/jobLocationPayload'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
@@ -39,6 +32,10 @@ import useGeneratedQuestion from '../PostJobs/AiConfig/useGeneratedQuestion'
 import { JobDetailsFields } from '../PostJobs/JobDetailsFields'
 import postJobStyles from '../PostJobs/PostJob.module.scss'
 import tabStyles from '../PostJobs/PostJobTab.module.scss'
+import {
+  jobFormToPayload,
+  jobToFormValues,
+} from '../PostJobs/utils/jobFormValues'
 import { editJobValidationSchema } from './editJobValidationSchema'
 import { JobStatusControl } from './JobStatusControl'
 
@@ -97,8 +94,6 @@ export const EditJobTab = () => {
   const [updateJob] = useUpdateJobMutation()
   const [patchAiConfig] = usePatchAiConfigMutation()
   const [createAiConfig] = useAiConfigMutation()
-  const [generateJobContent, { isLoading: isGeneratingWithAI }] =
-    useGenerateJobContentMutation()
   const { drafts, saveDraft, clearDraft } = useJobEditDraftStore()
   const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
     useGeneratedQuestion(jobId)
@@ -139,31 +134,7 @@ export const EditJobTab = () => {
     return null
   }
 
-  const rawWorkMode = job.workMode
-  const workMode: WorkType[] = Array.isArray(rawWorkMode)
-    ? (rawWorkMode as WorkType[])
-    : rawWorkMode
-    ? [rawWorkMode as WorkType]
-    : []
-
-  const jobInitialValues: PostJobFormValues = {
-    jobBrief: job.jobBrief || '',
-    role: job.role?.id || '',
-    requirements: job.requirements || '',
-    minSalary: String(job.minSalary ?? ''),
-    maxSalary: String(job.maxSalary ?? ''),
-    compensationPeriod: job.compensationPeriod || 'yearly',
-    currency: job.currency || '',
-    workMode,
-    experienceLevel: job.experienceLevel || '',
-    location: resolveLocationFromNames(
-      job.locationCountry ?? undefined,
-      job.locationState ?? undefined,
-      job.locationCity ?? undefined,
-    ) ?? { ...EMPTY_LOCATION },
-    skills: job.skills || [],
-    goals: job.goals || [],
-  }
+  const jobInitialValues: PostJobFormValues = jobToFormValues(job)
 
   const savedDraft = drafts[jobId ?? ''] as EditJobFormValues | undefined
 
@@ -189,62 +160,14 @@ export const EditJobTab = () => {
     aiConfig: aiConfigInitialValues,
   }
 
-  const handleGenerateWithAI = async (
-    values: EditJobFormValues,
-    setFieldValue: (key: keyof PostJobFormValues, value: unknown) => void,
-  ) => {
-    try {
-      const response = await generateJobContent({
-        role: values.role,
-        experienceLevel: values.experienceLevel || undefined,
-        keywords: values.skills,
-      }).unwrap()
-      const content = response?.data?.content
-      if (!content) return
-
-      setFieldValue('jobBrief', content.jobBrief)
-      setFieldValue('requirements', content.requirements)
-      if (Array.isArray(content.skills) && content.skills.length > 0) {
-        setFieldValue('skills', content.skills)
-      }
-      if (Array.isArray(content.goals) && content.goals.length > 0) {
-        setFieldValue('goals', content.goals)
-      }
-      notify(
-        'success',
-        'Job content generated — feel free to edit before submitting.',
-      )
-    } catch (err) {
-      notify(
-        'error',
-        getErrorMessage(
-          err,
-          'Failed to generate job content. Please try again.',
-        ),
-      )
-    }
-  }
-
   const onSubmit = async (
     values: EditJobFormValues,
     { setSubmitting }: FormikHelpers<EditJobFormValues>,
   ) => {
     // Status changes go through JobStatusControl, not this submit.
-    const {
-      location,
-      aiConfig: aiConfigValues,
-      status,
-      maxSalary,
-      workMode,
-      ...rest
-    } = values
+    const { aiConfig: aiConfigValues, status, ...jobValues } = values
     void status
-    const jobPayload = {
-      ...rest,
-      workMode,
-      ...(maxSalary ? { maxSalary } : {}),
-      ...locationFieldsFromWorkMode(location, workMode),
-    }
+    const jobPayload = jobFormToPayload(jobValues)
 
     const cleanedAiConfig: Partial<AiConfigFieldValues> = { ...aiConfigValues }
     if (aiConfigValues.cvSimilarity === 'false') {
@@ -342,10 +265,6 @@ export const EditJobTab = () => {
               touched={touched}
               setFieldValue={(key, value) => setFieldValue(key, value)}
               roleDisabled
-              onGenerateWithAI={() =>
-                handleGenerateWithAI(values, setFieldValue)
-              }
-              isGeneratingWithAI={isGeneratingWithAI}
             />
 
             <h2 className={tabStyles.heading}>AI Configuration</h2>
