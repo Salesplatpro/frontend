@@ -197,6 +197,21 @@
   line-height: 1.5;
 }
 
+.learnMore {
+  color: var(--color-primary);
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .hint {
   margin: var(--space-1) 0 0;
   font-family: var(--font-body);

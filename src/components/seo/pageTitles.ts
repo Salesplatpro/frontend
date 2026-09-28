@@ -30,6 +30,7 @@ const EXACT_TITLES: Record<string, string> = {
   '/recruiterDashboard/feedback': 'Feedback',
   '/recruiterDashboard/dashboard/allapplications': 'All Applications',
   '/recruiterDashboard/postjob': 'Post Job',
+  '/recruiterDashboard/guide': 'Guide',
   '/recruiterDashboard/myJobPosts': 'My Job Posts',
   '/recruiterDashboard/scout': 'Scout',
   '/recruiterDashboard/talent-search': 'Talent Search',

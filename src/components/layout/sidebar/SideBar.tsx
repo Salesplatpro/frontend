@@ -12,23 +12,28 @@ import {
 import { SidebarList } from '../lists'
 import styles from './sidebar.module.scss'
 
+interface SideBarItem {
+  name: string
+  icon: ReactNode
+  count?: number
+  link?: string
+  end?: boolean
+}
+
 interface sideBarProps {
-  sideBarData: {
-    name: string
-    icon: ReactNode
-    count?: number
-    link?: string
-    end?: boolean
-  }[]
+  sideBarData: SideBarItem[]
   handleClick?: () => void
   /** Optional content rendered between the logo and the nav list (e.g. a company switcher). */
   topSlot?: ReactNode
+  /** Extra links pinned to the bottom of the sidebar, above "Leave us feedback". */
+  footerItems?: SideBarItem[]
 }
 
 export const SideBar: React.FC<sideBarProps> = ({
   sideBarData,
   handleClick,
   topSlot,
+  footerItems = [],
 }) => {
   const userRole = useAuthStore((state) => state.user?.userRole)
   const homePath = dashboardPathForRole(userRole)
@@ -62,6 +67,16 @@ export const SideBar: React.FC<sideBarProps> = ({
         </div>
       </div>
       <div>
+        {footerItems.map((item) => (
+          <SidebarList
+            key={item.name}
+            icon={item.icon}
+            name={item.name}
+            link={item.link}
+            end={item.end}
+            onClick={handleClick}
+          />
+        ))}
         <SidebarList
           icon={<CgProfile size={20} />}
           name="Leave us feedback"

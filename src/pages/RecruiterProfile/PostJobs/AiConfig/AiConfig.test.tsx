@@ -108,6 +108,16 @@ describe('AiConfig (screening step)', () => {
     expect(screen.getAllByText(/^Tip:/)).toHaveLength(6)
   })
 
+  it('links every tip to its guide entry in a new tab', () => {
+    renderAiConfig()
+    const links = screen.getAllByRole('link', { name: /learn more/i })
+    expect(links).toHaveLength(6)
+    expect(links[1].getAttribute('href')).toBe(
+      '/recruiterDashboard/guide#cv-match',
+    )
+    expect(links[1].getAttribute('target')).toBe('_blank')
+  })
+
   it('has no switch for the skills test — its score is always set', () => {
     renderAiConfig()
     expect(screen.getAllByRole('switch')).toHaveLength(3)

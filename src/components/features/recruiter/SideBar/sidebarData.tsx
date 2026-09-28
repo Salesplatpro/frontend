@@ -2,6 +2,7 @@ import React from 'react'
 import { BsChatDots } from 'react-icons/bs'
 import { CiBoxList, CiSearch } from 'react-icons/ci'
 import { FiDownload } from 'react-icons/fi'
+import { IoBookOutline } from 'react-icons/io5'
 import { MdWorkOutline } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
 
@@ -47,5 +48,13 @@ export const sidebarData = [
     name: 'Shortlist',
     icon: <CiBoxList size={ICON_SIZE} />,
     link: '/recruiterDashboard/shortlist',
+  },
+]
+
+export const sidebarFooterData = [
+  {
+    name: 'Guide',
+    icon: <IoBookOutline size={ICON_SIZE} />,
+    link: '/recruiterDashboard/guide',
   },
 ]
