@@ -376,6 +376,10 @@ export const routeConfig: RouteObject[] = [
                         element: <PostJobTab step="details" />,
                       },
                       {
+                        path: 'postjob/:jobId/review',
+                        element: <PostJobTab step="review" />,
+                      },
+                      {
                         path: 'myJobPosts',
                         element: <MyJobPosts />,
                       },

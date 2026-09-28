@@ -20,12 +20,13 @@ const REWRITE_ACTIONS: { action: JobFieldAction; label: string }[] = [
 
 type AiFieldActionsProps = {
   field: JobTextField
-  /** Current field value as editor HTML. */
+  /** Current field value: editor HTML, or plain text when format is 'text'. */
   value: string
   job: JobAiContext
-  onApply: (html: string) => void
+  onApply: (value: string) => void
   /** Label for the button shown while the field is empty. */
   writeLabel?: string
+  format?: 'html' | 'text'
 }
 
 export const AiFieldActions = ({
@@ -34,10 +35,12 @@ export const AiFieldActions = ({
   job,
   onApply,
   writeLabel = 'Write with AI',
+  format = 'html',
 }: AiFieldActionsProps) => {
   const { run, pendingKey } = useJobFieldAssist()
   const [previous, setPrevious] = useState<string | null>(null)
-  const currentText = htmlToPlainText(value ?? '')
+  const currentText =
+    format === 'html' ? htmlToPlainText(value ?? '') : (value ?? '').trim()
   const isEmpty = !currentText
   const canRun = hasAiContext(job)
   const isBusy = pendingKey !== null
@@ -51,7 +54,7 @@ export const AiFieldActions = ({
     })
     if (result?.text) {
       setPrevious(value ?? '')
-      onApply(plainTextToHtml(result.text))
+      onApply(format === 'html' ? plainTextToHtml(result.text) : result.text)
     }
   }
 

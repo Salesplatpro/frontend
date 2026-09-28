@@ -22,16 +22,19 @@ import { getErrorMessage } from '@/utils/getErrorMessage'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
 import { notify } from '@/utils/toastNotifications'
 
+import { AiConfigFields } from '../PostJobs/AiConfig/AiConfigFields'
 import {
   AI_CONFIG_DEFAULT_VALUES,
-  AiConfigFields,
   AiConfigFieldValues,
-  DICHOTOMY_COUNT_FIELDS,
-} from '../PostJobs/AiConfig/AiConfigFields'
-import useGeneratedQuestion from '../PostJobs/AiConfig/useGeneratedQuestion'
+} from '../PostJobs/AiConfig/aiConfigModel'
+import {
+  aiConfigFromApi,
+  aiConfigToPayload,
+} from '../PostJobs/AiConfig/aiConfigPayload'
 import { JobDetailsFields } from '../PostJobs/JobDetailsFields'
 import postJobStyles from '../PostJobs/PostJob.module.scss'
 import tabStyles from '../PostJobs/PostJobTab.module.scss'
+import { htmlToPlainText } from '../PostJobs/utils/aiText'
 import {
   jobFormToPayload,
   jobToFormValues,
@@ -54,40 +57,6 @@ const FormObserver: React.FC<{ saveDraft: (v: EditJobFormValues) => void }> = ({
   return null
 }
 
-const toAiConfigFieldValues = (aiConfig: {
-  name?: string | null
-  prescreeningAssessment?: boolean
-  minPrescreeningScore?: number | null
-  cvSimilarity?: boolean
-  minCvSimilarityScore?: number | null
-  personalizedAssessment?: boolean
-  noPersonalizedQuestions?: number | null
-  personalityEvaluation?: boolean
-  noOfEIQuestions?: number | null
-  noOfSNQuestions?: number | null
-  noOfTFQuestions?: number | null
-  noOfJPQuestions?: number | null
-  uploadedQuestions?: string[] | null
-  recruiterGuide?: string | null
-}): AiConfigFieldValues => ({
-  name: aiConfig.name ?? '',
-  prescreeningAssessment: aiConfig.prescreeningAssessment ? 'true' : 'false',
-  minPrescreeningScore: aiConfig.minPrescreeningScore ?? '',
-  cvSimilarity: aiConfig.cvSimilarity ? 'true' : 'false',
-  minCvSimilarityScore: aiConfig.minCvSimilarityScore ?? '',
-  personalizedAssessment: aiConfig.personalizedAssessment ? 'true' : 'false',
-  noPersonalizedQuestions: aiConfig.noPersonalizedQuestions ?? '',
-  personalityEvaluation: aiConfig.personalityEvaluation ? 'true' : 'false',
-  noOfEIQuestions: aiConfig.noOfEIQuestions ?? '',
-  noOfSNQuestions: aiConfig.noOfSNQuestions ?? '',
-  noOfTFQuestions: aiConfig.noOfTFQuestions ?? '',
-  noOfJPQuestions: aiConfig.noOfJPQuestions ?? '',
-  uploadedQuestions: aiConfig.uploadedQuestions?.length
-    ? aiConfig.uploadedQuestions
-    : [''],
-  recruiterGuide: aiConfig.recruiterGuide ?? '',
-})
-
 export const EditJobTab = () => {
   const { jobId } = useParams()
   const { data, error, isLoading } = useIndividualJobQuery(jobId)
@@ -95,8 +64,6 @@ export const EditJobTab = () => {
   const [patchAiConfig] = usePatchAiConfigMutation()
   const [createAiConfig] = useAiConfigMutation()
   const { drafts, saveDraft, clearDraft } = useJobEditDraftStore()
-  const { questionsByPair, generateQuestion, removeQuestion, loadingPairs } =
-    useGeneratedQuestion(jobId)
 
   const job = data?.data?.job ?? data?.data
   const nestedAiConfig = job?.aiConfig ?? null
@@ -121,7 +88,7 @@ export const EditJobTab = () => {
   const aiConfigInitialValues = useMemo<AiConfigFieldValues>(
     () =>
       fetchedAiConfig
-        ? toAiConfigFieldValues(fetchedAiConfig)
+        ? aiConfigFromApi(fetchedAiConfig)
         : AI_CONFIG_DEFAULT_VALUES,
     [fetchedAiConfig],
   )
@@ -169,40 +136,7 @@ export const EditJobTab = () => {
     void status
     const jobPayload = jobFormToPayload(jobValues)
 
-    const cleanedAiConfig: Partial<AiConfigFieldValues> = { ...aiConfigValues }
-    if (aiConfigValues.cvSimilarity === 'false') {
-      delete cleanedAiConfig.minCvSimilarityScore
-    }
-    if (aiConfigValues.personalizedAssessment === 'false') {
-      delete cleanedAiConfig.noPersonalizedQuestions
-    }
-    if (aiConfigValues.personalityEvaluation === 'false') {
-      delete cleanedAiConfig.uploadedQuestions
-      delete cleanedAiConfig.noOfEIQuestions
-      delete cleanedAiConfig.noOfSNQuestions
-      delete cleanedAiConfig.noOfTFQuestions
-      delete cleanedAiConfig.noOfJPQuestions
-    } else {
-      // Each dichotomy pair is independently optional (only one of the four
-      // is required overall) — a blank count means "skip this pair" and must
-      // not be sent as '' (fails backend isInt()).
-      DICHOTOMY_COUNT_FIELDS.forEach((field) => {
-        if (cleanedAiConfig[field] === '' || cleanedAiConfig[field] == null) {
-          delete cleanedAiConfig[field]
-        }
-      })
-    }
-    if (!aiConfigValues.recruiterGuide) {
-      delete cleanedAiConfig.recruiterGuide
-    }
-
-    const aiConfigPayload = {
-      ...cleanedAiConfig,
-      prescreeningAssessment: cleanedAiConfig.prescreeningAssessment === 'true',
-      cvSimilarity: cleanedAiConfig.cvSimilarity === 'true',
-      personalizedAssessment: cleanedAiConfig.personalizedAssessment === 'true',
-      personalityEvaluation: cleanedAiConfig.personalityEvaluation === 'true',
-    }
+    const aiConfigPayload = aiConfigToPayload(aiConfigValues)
 
     const [jobResult, aiConfigResult] = await Promise.allSettled([
       updateJob({ jobId, data: jobPayload }).unwrap(),
@@ -267,7 +201,7 @@ export const EditJobTab = () => {
               roleDisabled
             />
 
-            <h2 className={tabStyles.heading}>AI Configuration</h2>
+            <h2 className={tabStyles.heading}>Screening</h2>
 
             <AiConfigFields
               values={values.aiConfig}
@@ -277,10 +211,14 @@ export const EditJobTab = () => {
                 setFieldValue(`aiConfig.${key}`, value)
               }
               jobId={jobId}
-              questionsByPair={questionsByPair}
-              loadingPairs={loadingPairs}
-              generateQuestion={generateQuestion}
-              removeQuestion={removeQuestion}
+              jobContext={{
+                role: job.role?.name ?? '',
+                experienceLevel: values.experienceLevel,
+                jobBrief: htmlToPlainText(values.jobBrief ?? ''),
+                requirements: htmlToPlainText(values.requirements ?? ''),
+                skills: values.skills,
+                goals: values.goals,
+              }}
             />
 
             <div className={postJobStyles.actions}>

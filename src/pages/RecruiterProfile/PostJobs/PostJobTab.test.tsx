@@ -46,6 +46,10 @@ vi.mock('./AiConfig/AiConfig', () => ({
   default: () => <p>Screening step</p>,
 }))
 
+vi.mock('./ReviewStep/ReviewStep', () => ({
+  ReviewStep: ({ jobId }: { jobId: string }) => <p>Review step {jobId}</p>,
+}))
+
 const renderAt = (path: string) =>
   render(
     <MemoryRouter initialEntries={[path]}>
@@ -58,6 +62,10 @@ const renderAt = (path: string) =>
         <Route
           path="/recruiterDashboard/postjob/:jobId/details"
           element={<PostJobTab step="details" />}
+        />
+        <Route
+          path="/recruiterDashboard/postjob/:jobId/review"
+          element={<PostJobTab step="review" />}
         />
       </Routes>
     </MemoryRouter>,
@@ -177,5 +185,17 @@ describe('PostJobTab', () => {
     expect(
       screen.queryByRole('button', { name: /start pick how to begin/i }),
     ).toBeNull()
+  })
+
+  it('shows the review step and marks earlier steps done', () => {
+    renderAt('/recruiterDashboard/postjob/job-1/review')
+    expect(screen.getByText('Review step job-1')).toBeTruthy()
+    expect(
+      screen.getByText('Review').closest('li')?.getAttribute('aria-current'),
+    ).toBe('step')
+    fireEvent.click(
+      screen.getByRole('button', { name: /screening choose how to screen/i }),
+    )
+    expect(screen.getByText('Screening step')).toBeTruthy()
   })
 })

@@ -8,10 +8,11 @@ import { PostJobFormValues } from '@/utils/jobPostTypes'
 
 import AiConfig from './AiConfig/AiConfig'
 import PostJob from './PostJob'
+import { ReviewStep } from './ReviewStep/ReviewStep'
 import { StartStep } from './StartStep/StartStep'
 import { PostJobStepId, PostJobStepper } from './Stepper/PostJobStepper'
 
-export type PostJobRouteStep = 'new' | 'details' | 'screening'
+export type PostJobRouteStep = 'new' | 'details' | 'screening' | 'review'
 
 type PostJobTabProps = {
   step?: PostJobRouteStep
@@ -48,7 +49,7 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
   }
 
   const selectable: PostJobStepId[] = jobId
-    ? ['details', 'screening']
+    ? ['details', 'screening', 'review']
     : newJobStage === 'details'
     ? ['start']
     : []
@@ -56,6 +57,9 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
   const renderContent = () => {
     if (step === 'screening' && jobId) {
       return <AiConfig />
+    }
+    if (step === 'review' && jobId) {
+      return <ReviewStep jobId={jobId} />
     }
     if (step === 'details' && jobId) {
       return <PostJob jobId={jobId} />
@@ -94,6 +98,8 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
           if (target === 'details' && jobId)
             navigate(`${BASE_PATH}/${jobId}/details`)
           if (target === 'screening' && jobId) navigate(`${BASE_PATH}/${jobId}`)
+          if (target === 'review' && jobId)
+            navigate(`${BASE_PATH}/${jobId}/review`)
         }}
       />
 

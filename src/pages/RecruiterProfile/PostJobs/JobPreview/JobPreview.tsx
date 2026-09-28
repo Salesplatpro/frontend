@@ -26,12 +26,14 @@ type JobPreviewProps = {
   values: PostJobFormValues
   roleName: string
   companyName?: string | null
+  showChecklist?: boolean
 }
 
 export const JobPreview = ({
   values,
   roleName,
   companyName,
+  showChecklist = true,
 }: JobPreviewProps) => {
   const checklist = jobChecklist(values)
   const doneCount = checklist.filter((item) => item.done).length
@@ -62,38 +64,40 @@ export const JobPreview = ({
 
   return (
     <aside className={styles.aside} aria-label="Job post preview">
-      <section className={styles.checklist}>
-        <p className={styles.checklistTitle}>
-          {doneCount} of {checklist.length} done
-        </p>
-        <div
-          className={styles.progress}
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={checklist.length}
-          aria-valuenow={doneCount}
-          aria-label="Job details completed">
-          <span
-            className={styles.progressFill}
-            style={{ width: `${(doneCount / checklist.length) * 100}%` }}
-          />
-        </div>
-        <ul className={styles.checklistItems}>
-          {checklist.map((item) => (
-            <li
-              key={item.key}
-              className={item.done ? styles.itemDone : styles.itemTodo}>
-              <span className={styles.itemMark} aria-hidden>
-                {item.done ? <FaCheck /> : null}
-              </span>
-              {item.label}
-              <span className={styles.srOnly}>
-                {item.done ? ' (done)' : ' (to do)'}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {showChecklist && (
+        <section className={styles.checklist}>
+          <p className={styles.checklistTitle}>
+            {doneCount} of {checklist.length} done
+          </p>
+          <div
+            className={styles.progress}
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={checklist.length}
+            aria-valuenow={doneCount}
+            aria-label="Job details completed">
+            <span
+              className={styles.progressFill}
+              style={{ width: `${(doneCount / checklist.length) * 100}%` }}
+            />
+          </div>
+          <ul className={styles.checklistItems}>
+            {checklist.map((item) => (
+              <li
+                key={item.key}
+                className={item.done ? styles.itemDone : styles.itemTodo}>
+                <span className={styles.itemMark} aria-hidden>
+                  {item.done ? <FaCheck /> : null}
+                </span>
+                {item.label}
+                <span className={styles.srOnly}>
+                  {item.done ? ' (done)' : ' (to do)'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className={styles.card}>
         <p className={styles.kicker}>What candidates will see</p>

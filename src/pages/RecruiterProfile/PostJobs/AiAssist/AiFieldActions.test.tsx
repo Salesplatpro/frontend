@@ -145,4 +145,32 @@ describe('AiFieldActions', () => {
     ).toBe(true)
     expect(screen.getByText(/pick a role first/i)).toBeTruthy()
   })
+
+  it('works with plain text fields', async () => {
+    generateFieldMock.mockReturnValue({
+      unwrap: () =>
+        Promise.resolve({
+          data: { text: 'Must know Go.\nRed flag: no tests.' },
+        }),
+    })
+    const onApply = vi.fn()
+    render(
+      <AiFieldActions
+        field="recruiterGuide"
+        value="  draft <b>notes</b> "
+        job={job}
+        onApply={onApply}
+        format="text"
+      />,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Rewrite' }))
+    await waitFor(() =>
+      expect(onApply).toHaveBeenCalledWith(
+        'Must know Go.\nRed flag: no tests.',
+      ),
+    )
+    expect(generateFieldMock.mock.calls[0][0].currentText).toBe(
+      'draft <b>notes</b>',
+    )
+  })
 })
