@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
 import { Spinner } from '@/components/ui/Spinner'
+import { PlanHistory } from '@/features/pricing/components/PlanHistory'
 import { PlanUsage } from '@/features/pricing/components/PlanUsage'
 import { PricingContent } from '@/features/pricing/components/PricingContent'
 import { usePaidCheckout } from '@/features/pricing/hooks/usePaidCheckout'
@@ -51,6 +52,7 @@ const RecruiterPlanPage: React.FC = () => {
         billingStatus={billing.billingStatus}
         billingPeriodEnd={billing.billingPeriodEnd}
       />
+      <PlanHistory />
       <PricingContent variant="dashboard" currentPlan={currentPlan} />
     </PageShell>
   )

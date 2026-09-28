@@ -5,6 +5,7 @@ import { useSWRConfig } from 'swr'
 
 import { Spinner } from '@/components/ui/Spinner'
 import { organizationUsageKey } from '@/features/organizations/hooks/useOrganizationUsage'
+import { planHistoryKey } from '@/features/pricing/hooks/usePlanHistory'
 import { verifyPaidCheckout } from '@/features/pricing/services/checkoutService'
 import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
@@ -52,11 +53,14 @@ const VerifyPaymentPage: React.FC = () => {
         }
 
         // Revalidate the profile first — it carries the new plan — then drop the
-        // cached usage snapshot, which still holds the pre-purchase limits.
+        // cached usage snapshot and plan history, which predate the purchase.
         const refreshed = await mutate()
         const user = refreshed?.data?.user
         if (user?.activeOrganizationId) {
-          await globalMutate(organizationUsageKey(user.activeOrganizationId))
+          await Promise.all([
+            globalMutate(organizationUsageKey(user.activeOrganizationId)),
+            globalMutate(planHistoryKey(user.activeOrganizationId)),
+          ])
         }
 
         const label = getBillingPlanBadge(
