@@ -11,6 +11,7 @@ import { DisplayMessage } from '@/pages/RecruiterProfile/MyJobPosts/Messaging/Di
 import { notify } from '@/utils/toastNotifications'
 import { viewCandidateCv } from '@/utils/viewCandidateCv'
 
+import { OnboardingDrawer } from '../Onboarding/OnboardingDrawer'
 import styles from './TalentDetail.module.scss'
 
 const TalentDetail = () => {
@@ -18,6 +19,7 @@ const TalentDetail = () => {
   const navigate = useNavigate()
   const [isLoadingCv, setIsLoadingCv] = useState(false)
   const [messageContent, setMessageContent] = useState('')
+  const [isFollowUpOpen, setIsFollowUpOpen] = useState(false)
 
   const { talent, isLoading } = useAdminTalentProfile(talentId)
 
@@ -69,13 +71,21 @@ const TalentDetail = () => {
       <PagePanel
         title="Profile"
         action={
-          <Button
-            variant="outline"
-            size="sm"
-            loading={isLoadingCv}
-            onClick={() => void handleViewCv()}>
-            View talent CV
-          </Button>
+          <div className={styles.panelActions}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsFollowUpOpen(true)}>
+              Onboarding follow-up
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              loading={isLoadingCv}
+              onClick={() => void handleViewCv()}>
+              View talent CV
+            </Button>
+          </div>
         }>
         <div className={styles.infoGrid}>
           <div className={styles.infoItem}>
@@ -147,6 +157,11 @@ const TalentDetail = () => {
           </div>
         </div>
       </PagePanel>
+      <OnboardingDrawer
+        userId={isFollowUpOpen ? talent.id : null}
+        userName={`${talent.firstName} ${talent.lastName}`}
+        onClose={() => setIsFollowUpOpen(false)}
+      />
     </div>
   )
 }

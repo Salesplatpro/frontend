@@ -14,15 +14,26 @@ import {
 import { EmptyState } from '@/components/ui/EmptyState'
 import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
+  FOLLOW_UP_OPTIONS,
+  stageOptions,
+  TALENT_STAGE_OPTIONS,
+} from '@/features/admin/onboarding'
+import {
   deleteAdminTalent,
   fetchAdminTalents,
 } from '@/features/admin/services/adminService'
 import { useRolesStore } from '@/features/admin/store/useRolesStore'
-import { AdminTalent } from '@/features/admin/types'
+import {
+  AdminTalent,
+  FollowUpStatus,
+  OnboardingStage,
+} from '@/features/admin/types'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { Pagination } from '../../RecruiterProfile/MyJobPosts/Pagination'
+import { OnboardingBadge } from '../Onboarding/OnboardingBadge'
+import { OnboardingDrawer } from '../Onboarding/OnboardingDrawer'
 import styles from './Talents.module.scss'
 
 type SortDirection = 'asc' | 'desc'
@@ -31,12 +42,16 @@ interface TalentFilterValues {
   search: string
   experience: string
   roleId: string
+  onboardingStage: string
+  followUp: string
 }
 
 const defaultTalentFilters: TalentFilterValues = {
   search: '',
   experience: '',
   roleId: '',
+  onboardingStage: '',
+  followUp: '',
 }
 
 const ROWS_PER_PAGE = 10
@@ -60,26 +75,37 @@ const Talents = () => {
     'experience',
     'score',
     'cv',
+    'onboarding',
     'createdAt',
   ])
   const [talentToDelete, setTalentToDelete] = useState<AdminTalent | null>(null)
   const [isDeletingTalent, setIsDeletingTalent] = useState(false)
+  const [followUpTarget, setFollowUpTarget] = useState<AdminTalent | null>(null)
 
   useEffect(() => {
     void fetchRoles()
   }, [fetchRoles])
 
+  const { onboardingStage, followUp } = talentFilters
+
+  // Onboarding filters run on the server so they cover every talent, not
+  // just the loaded page; the other filters stay in the browser.
   const loadTalents = useCallback(async () => {
     setTalentsLoading(true)
     try {
-      const data = await fetchAdminTalents({ limit: 200, offset: 0 })
+      const data = await fetchAdminTalents({
+        limit: 200,
+        offset: 0,
+        onboardingStage: onboardingStage as OnboardingStage | '',
+        followUp: followUp as FollowUpStatus | '',
+      })
       setTalents(data.users)
     } catch (err) {
       notify('error', getErrorMessage(err, 'Failed to load talents'))
     } finally {
       setTalentsLoading(false)
     }
-  }, [])
+  }, [onboardingStage, followUp])
 
   useEffect(() => {
     void loadTalents()
@@ -118,6 +144,20 @@ const Talents = () => {
       label: 'Role',
       offValue: '',
       options: roleOptions,
+    },
+    {
+      type: 'select',
+      key: 'onboardingStage',
+      label: 'Onboarding stage',
+      offValue: '',
+      options: stageOptions(TALENT_STAGE_OPTIONS),
+    },
+    {
+      type: 'select',
+      key: 'followUp',
+      label: 'Follow-up',
+      offValue: '',
+      options: FOLLOW_UP_OPTIONS,
     },
   ]
 
@@ -171,6 +211,17 @@ const Talents = () => {
           row.cvFileName ?? (row.cvUploadedAt ? 'Uploaded' : '—'),
       },
       {
+        key: 'onboarding',
+        header: 'Onboarding',
+        sortLabel: 'Onboarding',
+        toggleable: true,
+        render: (row) => <OnboardingBadge summary={row.onboarding} />,
+        sortAccessor: (row) =>
+          row.onboarding
+            ? TALENT_STAGE_OPTIONS.indexOf(row.onboarding.stage)
+            : -1,
+      },
+      {
         key: 'createdAt',
         header: 'Joined',
         sortLabel: 'Joined',
@@ -190,6 +241,12 @@ const Talents = () => {
               size="sm"
               onClick={() => navigate(`/adminDashboard/talents/${row.id}`)}>
               View
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFollowUpTarget(row)}>
+              Follow up
             </Button>
             <Button
               variant="secondary"
@@ -328,6 +385,17 @@ const Talents = () => {
           </>
         )}
       </div>
+
+      <OnboardingDrawer
+        userId={followUpTarget?.id ?? null}
+        userName={
+          followUpTarget
+            ? `${followUpTarget.firstName} ${followUpTarget.lastName}`
+            : ''
+        }
+        onClose={() => setFollowUpTarget(null)}
+        onSent={() => void loadTalents()}
+      />
 
       <ConfirmDialog
         open={Boolean(talentToDelete)}

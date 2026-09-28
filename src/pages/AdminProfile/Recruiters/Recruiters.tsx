@@ -12,24 +12,39 @@ import {
 import { EmptyState } from '@/components/ui/EmptyState'
 import { FilterBar, FilterFieldConfig } from '@/components/ui/FilterPanel'
 import {
+  FOLLOW_UP_OPTIONS,
+  RECRUITER_STAGE_OPTIONS,
+  stageOptions,
+} from '@/features/admin/onboarding'
+import {
   deleteAdminRecruiter,
   fetchAdminRecruiters,
 } from '@/features/admin/services/adminService'
-import { AdminRecruiter } from '@/features/admin/types'
+import {
+  AdminRecruiter,
+  FollowUpStatus,
+  OnboardingStage,
+} from '@/features/admin/types'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { Pagination } from '../../RecruiterProfile/MyJobPosts/Pagination'
+import { OnboardingBadge } from '../Onboarding/OnboardingBadge'
+import { OnboardingDrawer } from '../Onboarding/OnboardingDrawer'
 import styles from './Recruiters.module.scss'
 
 type SortDirection = 'asc' | 'desc'
 
 interface RecruiterFilterValues {
   search: string
+  onboardingStage: string
+  followUp: string
 }
 
 const defaultRecruiterFilters: RecruiterFilterValues = {
   search: '',
+  onboardingStage: '',
+  followUp: '',
 }
 
 const ROWS_PER_PAGE = 10
@@ -46,23 +61,36 @@ const Recruiters = () => {
   const [recruiterVisibleKeys, setRecruiterVisibleKeys] = useState<string[]>([
     'name',
     'email',
+    'onboarding',
     'createdAt',
   ])
   const [recruiterToDelete, setRecruiterToDelete] =
     useState<AdminRecruiter | null>(null)
   const [isDeletingRecruiter, setIsDeletingRecruiter] = useState(false)
+  const [followUpTarget, setFollowUpTarget] = useState<AdminRecruiter | null>(
+    null,
+  )
 
+  const { onboardingStage, followUp } = recruiterFilters
+
+  // Onboarding filters run on the server so they cover every recruiter, not
+  // just the loaded page; search stays in the browser.
   const loadRecruiters = useCallback(async () => {
     setRecruitersLoading(true)
     try {
-      const data = await fetchAdminRecruiters({ limit: 200, offset: 0 })
+      const data = await fetchAdminRecruiters({
+        limit: 200,
+        offset: 0,
+        onboardingStage: onboardingStage as OnboardingStage | '',
+        followUp: followUp as FollowUpStatus | '',
+      })
       setRecruiters(data.users)
     } catch (err) {
       notify('error', getErrorMessage(err, 'Failed to load recruiters'))
     } finally {
       setRecruitersLoading(false)
     }
-  }, [])
+  }, [onboardingStage, followUp])
 
   useEffect(() => {
     void loadRecruiters()
@@ -74,6 +102,20 @@ const Recruiters = () => {
       key: 'search',
       label: 'Search',
       placeholder: 'Name or email',
+    },
+    {
+      type: 'select',
+      key: 'onboardingStage',
+      label: 'Onboarding stage',
+      offValue: '',
+      options: stageOptions(RECRUITER_STAGE_OPTIONS),
+    },
+    {
+      type: 'select',
+      key: 'followUp',
+      label: 'Follow-up',
+      offValue: '',
+      options: FOLLOW_UP_OPTIONS,
     },
   ]
 
@@ -96,6 +138,17 @@ const Recruiters = () => {
         sortAccessor: (row) => row.email,
       },
       {
+        key: 'onboarding',
+        header: 'Onboarding',
+        sortLabel: 'Onboarding',
+        toggleable: true,
+        render: (row) => <OnboardingBadge summary={row.onboarding} />,
+        sortAccessor: (row) =>
+          row.onboarding
+            ? RECRUITER_STAGE_OPTIONS.indexOf(row.onboarding.stage)
+            : -1,
+      },
+      {
         key: 'createdAt',
         header: 'Joined',
         sortLabel: 'Joined',
@@ -110,6 +163,12 @@ const Recruiters = () => {
         align: 'right',
         render: (row) => (
           <div className={styles.actions}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFollowUpTarget(row)}>
+              Follow up
+            </Button>
             <Button
               variant="secondary"
               size="sm"
@@ -240,6 +299,17 @@ const Recruiters = () => {
           </>
         )}
       </div>
+
+      <OnboardingDrawer
+        userId={followUpTarget?.id ?? null}
+        userName={
+          followUpTarget
+            ? `${followUpTarget.firstName} ${followUpTarget.lastName}`
+            : ''
+        }
+        onClose={() => setFollowUpTarget(null)}
+        onSent={() => void loadRecruiters()}
+      />
 
       <ConfirmDialog
         open={Boolean(recruiterToDelete)}

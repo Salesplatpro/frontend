@@ -14,6 +14,8 @@ import {
   AdminTalent,
   AdminTalentFilters,
   AdminTalentProfile,
+  OnboardingEmailRecord,
+  UserOnboarding,
 } from '../types'
 
 interface ApiEnvelope<T> {
@@ -90,6 +92,31 @@ export const deleteAdminRecruiter = (id: string) =>
   httpClient
     .delete<ApiEnvelope<null>>(`/admin/recruiters/${id}`)
     .then((response) => response.data)
+
+export const fetchUserOnboarding = (userId: string) =>
+  httpClient
+    .get<ApiEnvelope<{ onboarding: UserOnboarding }>>(
+      `/admin/users/${userId}/onboarding`,
+    )
+    .then((response) => response.data.data.onboarding)
+
+export const draftOnboardingEmail = (userId: string) =>
+  httpClient
+    .post<ApiEnvelope<{ draft: { subject: string; body: string } }>>(
+      `/admin/users/${userId}/onboarding/draft`,
+    )
+    .then((response) => response.data.data.draft)
+
+export const sendOnboardingEmail = (
+  userId: string,
+  payload: { subject: string; body: string; confirm?: boolean },
+) =>
+  httpClient
+    .post<ApiEnvelope<{ email: OnboardingEmailRecord }>>(
+      `/admin/users/${userId}/onboarding/emails`,
+      payload,
+    )
+    .then((response) => response.data.data.email)
 
 export const fetchAdminJobs = (filters: AdminJobFilters = {}) => {
   const params = Object.fromEntries(

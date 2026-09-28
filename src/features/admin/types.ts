@@ -16,6 +16,53 @@ export interface AdminRolePayload {
   description?: string
 }
 
+export type OnboardingStage =
+  | 'verify_email'
+  | 'complete_profile'
+  | 'take_assessment'
+  | 'apply_to_job'
+  | 'create_company'
+  | 'post_job'
+  | 'set_up_screening'
+  | 'publish_job'
+  | 'active'
+
+export type FollowUpStatus = 'none' | 'emailed' | 'progressed'
+
+export interface OnboardingSummary {
+  stage: OnboardingStage
+  emailsSent: number
+  lastEmailAt: string | null
+  followUp: FollowUpStatus
+}
+
+export interface OnboardingEmailRecord {
+  id: string
+  userId: string
+  sentById: string | null
+  stage: OnboardingStage
+  subject: string
+  body: string
+  status: 'sent' | 'failed'
+  error: string | null
+  createdAt: string
+}
+
+export interface UserOnboarding {
+  userId: string
+  role: 'talent' | 'recruiter'
+  stage: OnboardingStage
+  steps: { key: string; label: string; done: boolean }[]
+  nextSteps: { steps: string[]; ctaLabel: string; ctaPath: string } | null
+  followUp: FollowUpStatus
+  emails: OnboardingEmailRecord[]
+}
+
+export interface OnboardingFilters {
+  onboardingStage?: OnboardingStage | ''
+  followUp?: FollowUpStatus | ''
+}
+
 export interface AdminTalent {
   id: string
   firstName: string
@@ -29,6 +76,7 @@ export interface AdminTalent {
   locationCountry?: string | null
   createdAt: string
   userRoles: CandidateRole[]
+  onboarding?: OnboardingSummary | null
 }
 
 export interface AdminTalentProfile extends AdminTalent {
@@ -38,7 +86,7 @@ export interface AdminTalentProfile extends AdminTalent {
   hasEmbedding: boolean
 }
 
-export interface AdminTalentFilters {
+export interface AdminTalentFilters extends OnboardingFilters {
   search?: string
   experience?: string
   roleId?: string
@@ -86,9 +134,10 @@ export interface AdminRecruiter {
   lastName: string
   email: string
   createdAt: string
+  onboarding?: OnboardingSummary | null
 }
 
-export interface AdminRecruiterFilters {
+export interface AdminRecruiterFilters extends OnboardingFilters {
   search?: string
   limit?: number
   offset?: number
