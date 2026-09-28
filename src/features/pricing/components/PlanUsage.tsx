@@ -8,6 +8,7 @@ import { useProfile } from '@/features/profile/hooks/useProfile'
 import { usePricingCatalog } from '../hooks/usePricingCatalog'
 import { DEFAULT_BILLING_PLAN_KEY, isPayPerUsePlan } from '../types'
 import { getBillingPlanBadge } from '../utils/getBillingPlanBadge'
+import { getPlanDisplayName } from '../utils/getPlanDisplayName'
 import styles from './PlanUsage.module.scss'
 
 type PlanUsageProps = {
@@ -16,16 +17,6 @@ type PlanUsageProps = {
   billingStatus?: string | null
   billingPeriodEnd?: string | null
   compact?: boolean
-}
-
-const planDisplayName = (planKey?: string | null, catalogName?: string) => {
-  if (catalogName) return catalogName
-  if (!planKey || planKey === DEFAULT_BILLING_PLAN_KEY) return 'Pay per Use'
-  return planKey
-    .split(/[_-]/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ')
 }
 
 const formatLimit = (limit: number | null) =>
@@ -50,8 +41,7 @@ export const PlanUsage: React.FC<PlanUsageProps> = ({
 
   const effectivePlan =
     usage?.billingPlan ?? planKey ?? DEFAULT_BILLING_PLAN_KEY
-  const catalogPlan = catalog?.plans.find((plan) => plan.key === effectivePlan)
-  const name = planDisplayName(effectivePlan, catalogPlan?.name)
+  const name = getPlanDisplayName(effectivePlan, catalog)
   const period =
     (usage?.billingInterval ?? interval) === 'annually' ? 'yearly' : 'monthly'
   const payPerUse = isPayPerUsePlan(effectivePlan)

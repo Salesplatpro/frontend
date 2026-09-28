@@ -74,6 +74,28 @@ export type BillingInterval = 'monthly' | 'annually'
 export type BillingPlan = PricingPlanKey
 export type BillingStatus = 'active' | 'past_due' | 'cancelled'
 
+export type PlanChangeReason =
+  | 'purchase'
+  | 'expired'
+  | 'subscription_disabled'
+  | 'subscription_enabled'
+
+export interface PlanHistoryEntry {
+  id: string
+  fromPlan: string | null
+  toPlan: string
+  billingInterval: BillingInterval | null
+  reason: PlanChangeReason
+  paymentId: string | null
+  createdAt: string
+}
+
+export interface PlanHistoryApiResponse {
+  status: boolean
+  message: string
+  data: { history: PlanHistoryEntry[] }
+}
+
 /** Default for every new organization — pay when activating a job. */
 export const DEFAULT_BILLING_PLAN_KEY = 'pay_per_use'
 
