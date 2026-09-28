@@ -9,6 +9,7 @@ import {
   sidebarData,
   sidebarFooterData,
 } from '@/components/features/recruiter/SideBar/sidebarData'
+import { ProductTourHost } from '@/features/product-tour'
 import { ThemeProvider } from '@/features/theme/ThemeProvider'
 
 import { SideBar } from '../../components'
@@ -49,6 +50,10 @@ const RecruiterProfileSidebar = () => {
         <div className="outlet">
           <Outlet />
         </div>
+        <ProductTourHost
+          audience="recruiter"
+          homePath="/recruiterDashboard/dashboard"
+        />
       </div>
     </ThemeProvider>
   )

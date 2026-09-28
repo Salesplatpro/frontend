@@ -3,6 +3,8 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 
+import { useTourStore } from '@/features/product-tour'
+
 import Guide from './Guide'
 
 const renderGuide = (path = '/recruiterDashboard/guide') =>
@@ -55,5 +57,18 @@ describe('Guide', () => {
 
   it('ignores a link to an entry that does not exist', () => {
     expect(() => renderGuide('/recruiterDashboard/guide#nope')).not.toThrow()
+  })
+
+  it('replays the product tour on request', () => {
+    useTourStore.getState().stop()
+    renderGuide()
+    fireEvent.click(
+      screen.getByRole('button', { name: /take the tour again/i }),
+    )
+    expect(useTourStore.getState().active).toEqual({
+      role: 'recruiter',
+      source: 'replay',
+    })
+    useTourStore.getState().stop()
   })
 })

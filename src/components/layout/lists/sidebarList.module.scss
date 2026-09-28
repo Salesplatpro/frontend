@@ -41,6 +41,13 @@
   }
 }
 
+.name {
+  font-family: var(--font-heading);
+  font-size: var(--text-md);
+  font-weight: var(--weight-medium);
+  line-height: 24px;
+}
+
 .iconBox {
   display: flex;
   align-items: center;

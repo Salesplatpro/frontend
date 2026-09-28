@@ -117,7 +117,10 @@ export const LoggedInUserBadge: React.FC = () => {
   }
 
   return (
-    <div className={styles.container} ref={dropdownRef}>
+    <div
+      className={styles.container}
+      ref={dropdownRef}
+      data-tour="profile-menu">
       <div
         className={cn(styles.notificationIcon, {
           [styles.notificationIconClickable]: !!notificationRoute,

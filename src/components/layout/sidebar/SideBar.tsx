@@ -18,6 +18,7 @@ interface SideBarItem {
   count?: number
   link?: string
   end?: boolean
+  tourId?: string
 }
 
 interface sideBarProps {
@@ -60,6 +61,7 @@ export const SideBar: React.FC<sideBarProps> = ({
                 count={data.count}
                 link={data.link}
                 end={data.end}
+                tourId={data.tourId}
                 onClick={handleClick}
               />
             )
@@ -74,6 +76,7 @@ export const SideBar: React.FC<sideBarProps> = ({
             name={item.name}
             link={item.link}
             end={item.end}
+            tourId={item.tourId}
             onClick={handleClick}
           />
         ))}

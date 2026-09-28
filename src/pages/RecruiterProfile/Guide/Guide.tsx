@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom'
 
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
+import { Button } from '@/components/ui/Button'
+import { useTourStore } from '@/features/product-tour'
 
 import styles from './Guide.module.scss'
 import { filterGuide } from './guideContent'
@@ -12,6 +14,7 @@ const Guide = () => {
   const [query, setQuery] = useState('')
   const searchId = useId()
   const sections = filterGuide(query)
+  const startTour = useTourStore((state) => state.start)
 
   useEffect(() => {
     if (!hash) return
@@ -27,6 +30,14 @@ const Guide = () => {
         compact
         title="Guide"
         lead="Short answers on what each page and field does."
+        actions={
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => startTour('recruiter')}>
+            Take the tour again
+          </Button>
+        }
       />
 
       <div className={styles.layout}>
