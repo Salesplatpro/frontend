@@ -56,6 +56,8 @@ interface JobDetailsViewProps {
   job: JobDetailsJob
   action: React.ReactNode
   onBack?: () => void
+  /** Optional content rendered between the hero and the company/share row — e.g. the recruiter-only applicant stats strip. Other consumers of this shared view simply omit it. */
+  beforeBody?: React.ReactNode
 }
 
 const formatLocation = (job: JobDetailsJob) => {
@@ -70,6 +72,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
   job,
   action,
   onBack,
+  beforeBody,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const link = `https://auxhr.com/job/postedjob/${jobId}`
@@ -123,6 +126,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
           ) : undefined
         }
       />
+      {beforeBody}
       <div className={styles.header}>
         <CompanyTag
           organization={job.organization}
