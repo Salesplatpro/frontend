@@ -5,20 +5,21 @@ import { describe, expect, it } from 'vitest'
 import { MatchScoreRing } from './MatchScoreRing'
 
 describe('MatchScoreRing', () => {
-  it('renders the CV match percentage instead of a qualitative verdict label', () => {
+  it('renders the AI overall fit score, not the earlier CV similarity score, once it exists', () => {
     render(
       <MatchScoreRing
         verdict="high"
+        overallFitScore={88}
         averageScore={82}
         cvSimilarityScore={74}
       />,
     )
-    expect(screen.getByText('74%')).toBeTruthy()
-    expect(screen.getByText('CV match')).toBeTruthy()
-    expect(screen.queryByText('Strong Match')).toBeNull()
+    expect(screen.getByText('88%')).toBeTruthy()
+    expect(screen.getByText('AI match')).toBeTruthy()
+    expect(screen.queryByText('74%')).toBeNull()
   })
 
-  it('still shows the CV match percentage while the rest of screening is in progress', () => {
+  it('falls back to the CV match percentage, clearly labeled as screening-stage, before the AI verdict exists', () => {
     render(
       <MatchScoreRing
         verdict={null}
@@ -28,7 +29,7 @@ describe('MatchScoreRing', () => {
       />,
     )
     expect(screen.getByText('61%')).toBeTruthy()
-    expect(screen.getByText('CV match')).toBeTruthy()
+    expect(screen.getByText('CV match (screening)')).toBeTruthy()
     expect(screen.queryByText('Screening')).toBeNull()
   })
 

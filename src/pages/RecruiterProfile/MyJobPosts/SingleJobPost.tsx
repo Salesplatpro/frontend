@@ -20,15 +20,17 @@ import { Spinner } from '@/components/ui/Spinner'
 import { Tabs } from '@/components/ui/Tabs'
 import { useBulkUpdateApplicationStatus } from '@/features/applications/hooks/useBulkUpdateApplicationStatus'
 import { useJobApplications } from '@/features/applications/hooks/useJobApplications'
-import { retryMissingVerdicts } from '@/features/applications/services/applicationService'
-import { useBroadcastMessage } from '@/features/messaging/hooks/useBroadcastMessage'
-import { useProfile } from '@/features/profile/hooks/useProfile'
+import {
+  downloadBulkFitReport,
+  downloadCandidateFitReport,
+  retryMissingVerdicts,
+} from '@/features/applications/services/applicationService'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
 import { formatTimeAgo, SingleJobDetails } from '../../../utils'
 import { CandidateDossierPanel } from './CandidateDossierPanel'
-import { exportBoardReport } from './exportRankingPdf'
+import { AiMessageComposer } from './Messaging/AiMessageComposer'
 import { Pagination } from './Pagination'
 import styles from './SingleJobPost.module.scss'
 import {
@@ -176,7 +178,6 @@ export const SingleJobPost = () => {
   const { jobId } = useParams()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile } = useProfile()
   const { data, error, isLoading, mutate } = useJobApplications(jobId)
   const location = useLocation()
   const jobName = location.state?.jobName
@@ -187,11 +188,14 @@ export const SingleJobPost = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Set<string>>(new Set())
   const [loadingRowId, setLoadingRowId] = useState<string | null>(null)
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false)
-  const [messageContent, setMessageContent] = useState('')
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false)
   const [isMissingVerdictModalOpen, setIsMissingVerdictModalOpen] =
     useState(false)
   const [isRetryingVerdicts, setIsRetryingVerdicts] = useState(false)
   const [isRetryingAllVerdicts, setIsRetryingAllVerdicts] = useState(false)
+  const [regeneratingRowId, setRegeneratingRowId] = useState<string | null>(
+    null,
+  )
 
   // Column defs with no-op action callbacks — only used here to derive
   // toolbar metadata (toggleable/sortable keys, labels) from the same
@@ -219,7 +223,6 @@ export const SingleJobPost = () => {
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0])
 
   const { bulkUpdateStatus, isBulkUpdating } = useBulkUpdateApplicationStatus()
-  const { sendBroadcast, isBroadcasting } = useBroadcastMessage()
 
   const clearSelection = () => setSelectedRowKeys(new Set())
 
@@ -276,7 +279,7 @@ export const SingleJobPost = () => {
     if (!jobId) return
     setIsRetryingVerdicts(true)
     try {
-      await retryMissingVerdicts(jobId)
+      await retryMissingVerdicts(jobId, getMissingVerdictIds(selectedRowKeys))
       notify('success', 'AI matches retried for selected talents', {
         autoClose: 2000,
       })
@@ -286,6 +289,24 @@ export const SingleJobPost = () => {
     } finally {
       setIsRetryingVerdicts(false)
       setIsMissingVerdictModalOpen(false)
+    }
+  }
+
+  const handleRegenerateMatch = async (applicationId: string) => {
+    if (!jobId) return
+    setRegeneratingRowId(applicationId)
+    try {
+      await retryMissingVerdicts(jobId, [applicationId])
+      notify('success', 'Regenerating AI match — check back shortly', {
+        autoClose: 2500,
+      })
+      await mutate()
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to regenerate AI match'), {
+        autoClose: 2000,
+      })
+    } finally {
+      setRegeneratingRowId(null)
     }
   }
 
@@ -332,31 +353,6 @@ export const SingleJobPost = () => {
     setIsMessageModalOpen(true)
   }
 
-  const handleSendBulkMessage = async () => {
-    if (!messageContent.trim()) {
-      notify('error', 'Message cannot be empty', { autoClose: 2000 })
-      return
-    }
-    const [firstApplicationId] = Array.from(selectedRowKeys)
-    if (!firstApplicationId) return
-
-    try {
-      await sendBroadcast({
-        application: firstApplicationId,
-        content: messageContent,
-        talentIds: applications
-          .filter((application) => selectedRowKeys.has(application.id))
-          .map((application) => application.talent.id),
-      })
-      notify('success', 'Message sent to selected talents', { autoClose: 2000 })
-      setMessageContent('')
-      setIsMessageModalOpen(false)
-      clearSelection()
-    } catch {
-      notify('error', 'Failed to send message', { autoClose: 2000 })
-    }
-  }
-
   const handleMessageShortlisted = () => {
     const shortlisted = applications.filter(
       (item) => item.status === 'shortlisted',
@@ -391,7 +387,7 @@ export const SingleJobPost = () => {
     (item) => item.id === searchParams.get('applicationId'),
   )
 
-  const handleBoardPdf = (scope: 'selected' | 'all') => {
+  const handleDownloadReport = async (scope: 'selected' | 'all') => {
     const rows =
       scope === 'selected'
         ? sortedApplications.filter((item) => selectedRowKeys.has(item.id))
@@ -402,25 +398,27 @@ export const SingleJobPost = () => {
       })
       return
     }
+    setIsDownloadingReport(true)
     try {
-      exportBoardReport({
-        recruiterName: `${profile?.firstName ?? ''} ${
-          profile?.lastName ?? ''
-        }`.trim(),
-        jobTitle: jobName || 'Job',
-        companyName: profile?.activeOrganization?.name ?? '',
-        companyLogoUrl: profile?.activeOrganization?.logoUrl,
-        applicants: rows,
-        totalApplicants: applications.length,
-        scopeLabel:
-          scope === 'selected' ? 'Selected candidates' : 'Filtered applicants',
-      })
+      if (rows.length === 1) {
+        const [row] = rows
+        await downloadCandidateFitReport(
+          jobId!,
+          row!.id,
+          `${row!.talent.firstName} ${row!.talent.lastName}`,
+        )
+      } else {
+        await downloadBulkFitReport(
+          jobId!,
+          rows.map((row) => row.id),
+        )
+      }
     } catch (err) {
-      notify(
-        'error',
-        err instanceof Error ? err.message : 'Failed to export report',
-        { autoClose: 3000 },
-      )
+      notify('error', getErrorMessage(err, 'Failed to generate report'), {
+        autoClose: 3000,
+      })
+    } finally {
+      setIsDownloadingReport(false)
     }
   }
 
@@ -603,13 +601,15 @@ export const SingleJobPost = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handleBoardPdf('selected')}>
+            loading={isDownloadingReport}
+            onClick={() => void handleDownloadReport('selected')}>
             Download report (selected)
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handleBoardPdf('all')}>
+            loading={isDownloadingReport}
+            onClick={() => void handleDownloadReport('all')}>
             Download report (all)
           </Button>
         </div>
@@ -671,6 +671,8 @@ export const SingleJobPost = () => {
           onReject={(id) => handleRowStatus(id, 'rejected')}
           onMessage={handleRowMessage}
           onOpenDossier={openDossier}
+          onRegenerateMatch={handleRegenerateMatch}
+          regeneratingRowId={regeneratingRowId}
           loadingRowId={loadingRowId}
           visibleColumnKeys={visibleColumnKeys}
           sortKey={sortKey}
@@ -691,36 +693,22 @@ export const SingleJobPost = () => {
         />
       </div>
 
-      <Modal
+      <AiMessageComposer
         open={isMessageModalOpen}
         onClose={() => setIsMessageModalOpen(false)}
-        center>
-        <div>
-          <h2 className={styles.modalTitle}>
-            Message {selectedRowKeys.size} talent
-            {selectedRowKeys.size > 1 ? 's' : ''}
-          </h2>
-          <textarea
-            className={styles.modalTextarea}
-            placeholder="Type your message..."
-            value={messageContent}
-            onChange={(event) => setMessageContent(event.target.value)}
-          />
-          <div className={styles.modalActions}>
-            <Button
-              variant="outline"
-              onClick={() => setIsMessageModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              loading={isBroadcasting}
-              onClick={handleSendBulkMessage}>
-              Send
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        jobId={jobId!}
+        targets={applications
+          .filter((application) => selectedRowKeys.has(application.id))
+          .map((application) => ({
+            id: application.id,
+            talentId: application.talent.id,
+            talentName: `${application.talent.firstName} ${application.talent.lastName}`,
+          }))}
+        onSent={() => {
+          clearSelection()
+          void mutate()
+        }}
+      />
 
       <Modal
         open={isMissingVerdictModalOpen}

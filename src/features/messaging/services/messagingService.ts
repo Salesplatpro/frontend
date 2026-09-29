@@ -38,14 +38,24 @@ export const sendMessage = (payload: {
   application?: string
 }) => httpClient.post('/messages', payload).then((response) => response.data)
 
+export interface BroadcastMessageResult {
+  sent: number
+  emailed: number
+  emailFailures: { applicationId: string; error: string }[]
+}
+
 export const broadcastMessage = (payload: {
   application: string
-  content: string
+  content?: string
   talentIds?: string[]
+  /** One drafted message per recipient — takes priority over `content` when present. */
+  messages?: { applicationId: string; subject?: string; content: string }[]
+  /** Also email each recipient in addition to the in-app message. */
+  sendEmail?: boolean
 }) =>
   httpClient
-    .post('/messages/broadcast', payload)
-    .then((response) => response.data)
+    .post<{ data: BroadcastMessageResult }>('/messages/broadcast', payload)
+    .then((response) => response.data.data)
 
 export const acknowledgeMessage = (messageId: string, acknowledge: boolean) =>
   httpClient

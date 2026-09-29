@@ -1,5 +1,6 @@
 import React from 'react'
-import { BsThreeDotsVertical } from 'react-icons/bs'
+import { BsArrowRepeat, BsThreeDotsVertical } from 'react-icons/bs'
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 
 import {
   Avatar,
@@ -29,6 +30,10 @@ type SingleJobTableProps = {
   onReject?: (applicationId: string) => void
   onMessage?: (applicationId: string) => void
   onOpenDossier?: (item: SingleJobDetails) => void
+  /** Regenerates the AI match for one candidate — shown on failed/stuck cells. */
+  onRegenerateMatch?: (applicationId: string) => void
+  /** Application id currently regenerating its AI match — shows a spinner on that row's ring. */
+  regeneratingRowId?: string | null
   /** Application id currently being updated (e.g. via a row-level shortlist/reject) — shows a spinner in that row's actions cell instead of a static disabled state. */
   loadingRowId?: string | null
   visibleColumnKeys?: string[]
@@ -50,7 +55,6 @@ const formatAbsoluteDate = (dateString: string) =>
 const COLUMN_LABELS: Record<string, string> = {
   name: 'Name',
   status: 'Job Status',
-  cvRanking: 'Completion order',
   aiMatch: 'AI Match',
   dateApplied: 'Date Applied',
   details: 'Details',
@@ -84,10 +88,30 @@ export const compareByAiMatch = (
     verdictRank(b.matchVerdict, b.currentStage)
   if (verdictDiff !== 0) return verdictDiff
 
-  const scoreDiff = (b.averageScore ?? 0) - (a.averageScore ?? 0) // desc
+  const scoreOf = (item: SingleJobDetails) =>
+    item.overallFitScore ??
+    item.matchAnalysis?.overallFitScore ??
+    item.averageScore ??
+    0
+  const scoreDiff = scoreOf(b) - scoreOf(a) // desc
   if (scoreDiff !== 0) return scoreDiff
 
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() // desc
+}
+
+// A short, plain-English hint shown on hover so a recruiter can judge a
+// candidate from the table without opening the dossier.
+const matchTooltipContent = (item: SingleJobDetails): string | undefined => {
+  if (item.currentStage && item.currentStage !== 'completed') {
+    return 'Still screening — the AI match appears once this candidate finishes the pipeline.'
+  }
+  if (item.matchVerdictStatus === 'failed') {
+    return 'AI match generation failed. Click the refresh icon to try again.'
+  }
+  if (!item.matchVerdict) return undefined
+  const summary = item.matchAnalysis?.whyFit || item.matchVerdictReasoning
+  if (!summary) return undefined
+  return summary.length > 220 ? `${summary.slice(0, 217)}…` : summary
 }
 
 interface ApplicantActionsCellProps {
@@ -127,12 +151,80 @@ const ApplicantActionsCell = ({
   return <Dropdown trigger={<BsThreeDotsVertical />} items={items} />
 }
 
+const AiMatchDisplay = ({
+  item,
+  onRegenerateMatch,
+  isRegenerating,
+}: {
+  item: SingleJobDetails
+  onRegenerateMatch?: (applicationId: string) => void
+  isRegenerating?: boolean
+}) => {
+  const canRegenerate =
+    onRegenerateMatch &&
+    item.currentStage === 'completed' &&
+    (item.matchVerdictStatus === 'failed' || !item.matchVerdict)
+  const tooltip = matchTooltipContent(item)
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-flex' }}>
+      <div
+        data-tooltip-id={tooltip ? 'ai-match-tooltip' : undefined}
+        data-tooltip-content={tooltip}>
+        <MatchScoreRing
+          verdict={item.matchVerdict ?? null}
+          overallFitScore={
+            item.overallFitScore ?? item.matchAnalysis?.overallFitScore ?? null
+          }
+          averageScore={item.averageScore ?? null}
+          cvSimilarityScore={item.cvSimilarityScore ?? null}
+          failed={item.matchVerdictStatus === 'failed'}
+          currentStage={item.currentStage}
+        />
+      </div>
+      {canRegenerate ? (
+        <button
+          type="button"
+          aria-label="Regenerate AI match"
+          title="Regenerate AI match"
+          disabled={isRegenerating}
+          onClick={(event) => {
+            event.stopPropagation()
+            onRegenerateMatch(item.id)
+          }}
+          style={{
+            position: 'absolute',
+            top: -4,
+            right: -4,
+            width: 20,
+            height: 20,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '50%',
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-surface)',
+            color: 'var(--color-text-muted)',
+            cursor: isRegenerating ? 'default' : 'pointer',
+            padding: 0,
+          }}>
+          {isRegenerating ? <Spinner size="sm" /> : <BsArrowRepeat size={12} />}
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
 const AiMatchCell = ({
   item,
   onOpen,
+  onRegenerateMatch,
+  isRegenerating,
 }: {
   item: SingleJobDetails
   onOpen: (item: SingleJobDetails) => void
+  onRegenerateMatch?: (applicationId: string) => void
+  isRegenerating?: boolean
 }) => (
   <div style={{ display: 'flex', justifyContent: 'center' }}>
     <button
@@ -145,12 +237,10 @@ const AiMatchCell = ({
         padding: 0,
         cursor: 'pointer',
       }}>
-      <MatchScoreRing
-        verdict={item.matchVerdict ?? null}
-        averageScore={item.averageScore ?? null}
-        cvSimilarityScore={item.cvSimilarityScore ?? null}
-        failed={item.matchVerdictStatus === 'failed'}
-        currentStage={item.currentStage}
+      <AiMatchDisplay
+        item={item}
+        onRegenerateMatch={onRegenerateMatch}
+        isRegenerating={isRegenerating}
       />
     </button>
   </div>
@@ -162,12 +252,16 @@ export const buildColumns = ({
   onMessage,
   loadingRowId,
   onOpenAiMatch,
+  onRegenerateMatch,
+  regeneratingRowId,
 }: {
   onShortlist?: (applicationId: string) => void
   onReject?: (applicationId: string) => void
   onMessage?: (applicationId: string) => void
   loadingRowId?: string | null
   onOpenAiMatch?: (item: SingleJobDetails) => void
+  onRegenerateMatch?: (applicationId: string) => void
+  regeneratingRowId?: string | null
 }): ColumnDef<SingleJobDetails>[] => [
   {
     key: 'name',
@@ -212,15 +306,6 @@ export const buildColumns = ({
     sortAccessor: (item) => item.status,
   },
   {
-    key: 'cvRanking',
-    header: COLUMN_LABELS.cvRanking,
-    align: 'center',
-    hideBelow: 900,
-    toggleable: true,
-    render: (item) => (item.rank ? `#${item.rank}` : '—'),
-    sortAccessor: (item) => item.rank ?? Infinity,
-  },
-  {
     key: 'aiMatch',
     header: COLUMN_LABELS.aiMatch,
     align: 'center',
@@ -228,15 +313,18 @@ export const buildColumns = ({
     toggleable: true,
     render: (item) =>
       onOpenAiMatch ? (
-        <AiMatchCell item={item} onOpen={onOpenAiMatch} />
+        <AiMatchCell
+          item={item}
+          onOpen={onOpenAiMatch}
+          onRegenerateMatch={onRegenerateMatch}
+          isRegenerating={item.id === regeneratingRowId}
+        />
       ) : (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MatchScoreRing
-            verdict={item.matchVerdict ?? null}
-            averageScore={item.averageScore ?? null}
-            cvSimilarityScore={item.cvSimilarityScore ?? null}
-            failed={item.matchVerdictStatus === 'failed'}
-            currentStage={item.currentStage}
+          <AiMatchDisplay
+            item={item}
+            onRegenerateMatch={onRegenerateMatch}
+            isRegenerating={item.id === regeneratingRowId}
           />
         </div>
       ),
@@ -300,6 +388,8 @@ export const SingleJobTable = ({
   sortDirection,
   onSortChange,
   onOpenDossier,
+  onRegenerateMatch,
+  regeneratingRowId,
 }: SingleJobTableProps) => {
   const allColumns = buildColumns({
     onShortlist,
@@ -307,6 +397,8 @@ export const SingleJobTable = ({
     onMessage,
     loadingRowId,
     onOpenAiMatch: onOpenDossier,
+    onRegenerateMatch,
+    regeneratingRowId,
   })
   const columns = visibleColumnKeys
     ? allColumns.filter(
@@ -317,24 +409,31 @@ export const SingleJobTable = ({
     : allColumns
 
   return (
-    <DataTable
-      columns={columns}
-      data={applications}
-      getRowKey={(item) => item.id}
-      ariaLabel="Job applications table"
-      selectedRowKeys={selectedRowKeys}
-      onToggleRow={onToggleRow}
-      onToggleAll={onToggleAll}
-      onRowClick={onOpenDossier}
-      sortKey={sortKey}
-      sortDirection={sortDirection}
-      onSortChange={onSortChange}
-      emptyState={
-        <EmptyState
-          title="No applications yet"
-          description="Applications for this job will appear here once candidates apply."
-        />
-      }
-    />
+    <>
+      <DataTable
+        columns={columns}
+        data={applications}
+        getRowKey={(item) => item.id}
+        ariaLabel="Job applications table"
+        selectedRowKeys={selectedRowKeys}
+        onToggleRow={onToggleRow}
+        onToggleAll={onToggleAll}
+        onRowClick={onOpenDossier}
+        sortKey={sortKey}
+        sortDirection={sortDirection}
+        onSortChange={onSortChange}
+        emptyState={
+          <EmptyState
+            title="No applications yet"
+            description="Applications for this job will appear here once candidates apply."
+          />
+        }
+      />
+      <ReactTooltip
+        id="ai-match-tooltip"
+        place="top"
+        style={{ maxWidth: 260, zIndex: 20 }}
+      />
+    </>
   )
 }

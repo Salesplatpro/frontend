@@ -80,6 +80,8 @@ export type SingleJobDetails = {
   personalizedScore?: number | null
   rank?: number | null
   averageScore?: number | null
+  /** The AI's overall fit score (0-100) — what the AI Match column/ring should show. Distinct from cvSimilarityScore/averageScore, which are earlier-stage pipeline scores. */
+  overallFitScore?: number | null
   matchVerdict?: 'high' | 'medium' | 'low' | null
   matchVerdictStatus?: 'pending' | 'succeeded' | 'failed' | null
   matchVerdictReasoning?: string | null

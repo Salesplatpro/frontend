@@ -11,9 +11,14 @@ import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useApplication } from '@/features/applications/hooks/useApplication'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
-import type { JobAiConfigThresholds } from '@/features/applications/services/applicationService'
+import {
+  type JobAiConfigThresholds,
+  downloadCandidateFitReport,
+} from '@/features/applications/services/applicationService'
 import { humanStage } from '@/pages/TalentProfile/Job/jobPipeline'
+import { getErrorMessage } from '@/utils/getErrorMessage'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
+import { notify } from '@/utils/toastNotifications'
 import { viewCandidateCv } from '@/utils/viewCandidateCv'
 
 import { AssessmentChat } from './AssessmentChat'
@@ -46,6 +51,24 @@ const RECOMMENDATION_LABELS: Record<string, string> = {
   hire: 'Recommend: Hire',
   interview_further: 'Recommend: Interview further',
   no_hire: 'Recommend: Do not hire',
+}
+
+// The one sentence a recruiter should be able to read and act on without
+// opening anything else — plain English, suggestive, first thing on the page.
+const verdictSentence = (application: SingleJobDetails): string => {
+  const { matchVerdict, matchRecommendation, currentStage } = application
+  if (!matchVerdict) {
+    return currentStage && currentStage !== 'completed'
+      ? 'Still screening — the AI recommendation appears once this candidate finishes the pipeline.'
+      : 'AI recommendation pending.'
+  }
+  if (matchVerdict === 'high' || matchRecommendation === 'hire') {
+    return "We'd shortlist this candidate — strong evidence of fit against the role's requirements."
+  }
+  if (matchVerdict === 'low' || matchRecommendation === 'no_hire') {
+    return "We wouldn't shortlist this candidate — notable gaps against the role's requirements."
+  }
+  return 'Worth a closer look — some strong signals alongside open questions.'
 }
 
 type CandidateDossierPanelProps = {
@@ -101,6 +124,7 @@ export const CandidateDossierPanel = ({
     application.id,
   )
   const [isLoadingCv, setIsLoadingCv] = useState(false)
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false)
 
   const handleStatus = async (status: 'shortlisted' | 'rejected') => {
     await updateStatus(status)
@@ -113,6 +137,23 @@ export const CandidateDossierPanel = ({
       await viewCandidateCv({ cvUrl: talent.cvUrl, talentId: talent.id })
     } finally {
       setIsLoadingCv(false)
+    }
+  }
+
+  const handleDownloadReport = async () => {
+    setIsDownloadingReport(true)
+    try {
+      await downloadCandidateFitReport(
+        application.jobId,
+        application.id,
+        fullName,
+      )
+    } catch (err) {
+      notify('error', getErrorMessage(err, 'Failed to generate report'), {
+        autoClose: 3000,
+      })
+    } finally {
+      setIsDownloadingReport(false)
     }
   }
 
@@ -186,6 +227,13 @@ export const CandidateDossierPanel = ({
               onClick={() => void handleViewCv()}>
               View talent CV
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              loading={isDownloadingReport}
+              onClick={() => void handleDownloadReport()}>
+              Download report
+            </Button>
             {!readOnly && (
               <>
                 <Button
@@ -215,14 +263,12 @@ export const CandidateDossierPanel = ({
             className={`${styles.recommendation} ${hero?.className ?? ''}`}
             aria-label="AI hiring recommendation">
             <p className={styles.recKicker}>AI recommendation</p>
-            <h2 className={styles.recTitle}>
-              {hero
-                ? `${hero.title} — ${hero.action}`
-                : 'Hiring recommendation pending'}
-            </h2>
+            <h2 className={styles.recTitle}>{verdictSentence(application)}</h2>
             <p className={styles.recScore}>
-              Overall fit{' '}
-              {analysis?.overallFitScore != null
+              {hero ? `${hero.title} · ` : ''}Overall fit{' '}
+              {application.overallFitScore != null
+                ? `${Math.round(application.overallFitScore)}/100`
+                : analysis?.overallFitScore != null
                 ? `${analysis.overallFitScore}/100`
                 : application.averageScore != null
                 ? `${application.averageScore}% avg`
@@ -345,11 +391,20 @@ export const CandidateDossierPanel = ({
             <PagePanel title="Evidence">
               <BulletList items={analysis?.keyEvidence} />
             </PagePanel>
+            {analysis?.conflictingRequirements?.length ? (
+              <PagePanel title="Conflicting or inconsistent answers">
+                <BulletList items={analysis.conflictingRequirements} />
+              </PagePanel>
+            ) : null}
           </div>
 
           {!readOnly && (
             <PagePanel title="Messages">
-              <Messaging applicationId={application.id} talentId={talent.id} />
+              <Messaging
+                applicationId={application.id}
+                talentId={talent.id}
+                jobId={application.jobId}
+              />
             </PagePanel>
           )}
         </>

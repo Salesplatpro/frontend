@@ -6,8 +6,10 @@ import styles from './MatchScoreRing.module.scss'
 
 interface MatchScoreRingProps {
   verdict: Verdict | null
+  /** The AI's overall fit score (0-100) — the real "AI Match" number. Always preferred once the verdict has finished generating. */
+  overallFitScore?: number | null
   averageScore: number | null
-  /** Recruiter-facing CV match percent — preferred over the qualitative verdict label. */
+  /** Early-pipeline CV similarity percent — shown only while the AI verdict is still pending, clearly labeled as such so it's never mistaken for the finished AI match. */
   cvSimilarityScore?: number | null
   /** True when verdict generation has failed — shown instead of "Not Available". */
   failed?: boolean
@@ -28,17 +30,23 @@ const DEFAULT_COLORS = {
 
 export const MatchScoreRing = ({
   verdict,
+  overallFitScore,
   averageScore,
   cvSimilarityScore,
   failed,
   currentStage,
 }: MatchScoreRingProps) => {
-  const score =
-    cvSimilarityScore != null
-      ? cvSimilarityScore
-      : averageScore != null
-      ? averageScore
-      : null
+  // The finished AI match score always wins once it exists. Before that, fall
+  // back to whatever early-pipeline signal is available so the cell isn't
+  // blank — but label it clearly as a screening-stage number, never "AI Match".
+  const hasAiScore = overallFitScore != null
+  const score = hasAiScore
+    ? overallFitScore
+    : cvSimilarityScore != null
+    ? cvSimilarityScore
+    : averageScore != null
+    ? averageScore
+    : null
 
   if (score == null) {
     if (failed) {
@@ -76,7 +84,9 @@ export const MatchScoreRing = ({
         pathColor={path}
         trailColor={trail}
       />
-      <span className={styles.label}>CV match</span>
+      <span className={styles.label}>
+        {hasAiScore ? 'AI match' : 'CV match (screening)'}
+      </span>
     </div>
   )
 }

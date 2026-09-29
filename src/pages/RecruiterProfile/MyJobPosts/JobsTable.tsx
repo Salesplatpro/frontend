@@ -216,8 +216,13 @@ export const JobsTable = ({ data }: JobsTableType) => {
           <Link
             to={`/recruiterDashboard/singleJobPost/${job.id}`}
             state={{ jobName: job.role.name, postedAt: job.createdAt }}>
-            <button className={styles.applicantsButton}>
-              {job.noOfApplicants}
+            <button
+              className={styles.applicantsButton}
+              aria-label={`View ${job.noOfApplicants ?? 0} applicant${
+                job.noOfApplicants === 1 ? '' : 's'
+              } for ${job.role.name}`}>
+              {job.noOfApplicants ?? 0} applicant
+              {job.noOfApplicants === 1 ? '' : 's'}
             </button>
           </Link>
         ),

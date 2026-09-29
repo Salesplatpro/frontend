@@ -90,4 +90,12 @@
   .navButton:disabled {
     color: var(--color-text-muted);
   }
+
+  .summary {
+    color: var(--color-white);
+
+    span {
+      color: var(--color-white);
+    }
+  }
 }
