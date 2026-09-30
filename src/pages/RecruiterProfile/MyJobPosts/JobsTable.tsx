@@ -1,11 +1,8 @@
-import 'react-responsive-modal/styles.css'
-
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Modal } from 'react-responsive-modal'
 import { Link } from 'react-router-dom'
 
 import { CompanyTag } from '@/components/features/jobs/CompanyTag'
-import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+import { ShareJob } from '@/components/features/jobs/ShareJob'
 import { Select } from '@/components/forms/Select'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -13,9 +10,6 @@ import { useUpdateJobMutation } from '@/redux/api/recruiter'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import { notify } from '@/utils/toastNotifications'
 
-import Facebook from '../../../assets/Facebook icon.svg'
-import LinkedIn from '../../../assets/linkedin logo_icon.svg'
-import Twitter from '../../../assets/twitter_new_brand_icon.svg'
 import { ColumnDef, DataTable, TableActions } from '../../../components'
 import { formatTimeAgo, recruiterJobPostsTypes } from '../../../utils'
 import {
@@ -128,45 +122,8 @@ type JobsTableType = {
   data: recruiterJobPostsTypes[]
 }
 
-type ShareLinks = {
-  facebook: string
-  twitter: string
-  linkedin: string
-}
-
 export const JobsTable = ({ data }: JobsTableType) => {
   const { canPay, payForJob, payingJobId } = useJobPayment()
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [shareLinks, setShareLinks] = useState<ShareLinks>({
-    facebook: '',
-    twitter: '',
-    linkedin: '',
-  })
-
-  const handleShare = (jobId: string) => {
-    const link = `https://auxhr.com/job/postedjob/${jobId}`
-    setShareLinks({
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        link,
-      )}`,
-      twitter: `https://twitter.com/share?url=${encodeURIComponent(link)}`,
-      linkedin: `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
-        link,
-      )}`,
-    })
-    setIsModalOpen(true)
-  }
-
-  const handleRedirectShare = (link: string) => {
-    window.open(link, '_blank', 'noopener,noreferrer')
-  }
-
-  const shareOptions = [
-    { icon: Facebook, text: 'Share', link: shareLinks.facebook },
-    { icon: Twitter, text: 'Tweet', link: shareLinks.twitter },
-    { icon: LinkedIn, text: 'Share', link: shareLinks.linkedin },
-  ]
-
   const columns = useMemo<ColumnDef<recruiterJobPostsTypes>[]>(
     () => [
       {
@@ -265,56 +222,27 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 </button>
               </Link>
             )}
-            <ShareOptions handleShare={handleShare} jobId={job.id} />
+            <ShareJob jobId={job.id} jobTitle={job.role?.name} />
           </TableActions>
         ),
       },
     ],
-    [handleShare, canPay, payForJob, payingJobId],
+    [canPay, payForJob, payingJobId],
   )
 
   return (
-    <>
-      <DataTable
-        columns={columns}
-        data={data}
-        getRowKey={(job) => job.id}
-        ariaLabel="Job posts table"
-        allowOverflow
-        getRowClassName={(job) => {
-          if (job.status === 'suspended' || job.status === 'closed')
-            return styles.rowClosed
-          if (resolveAiConfigId(job)) return styles.rowComplete
-          return styles.rowIncomplete
-        }}
-      />
-
-      <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        center
-        classNames={{ overlay: 'dashboard-modal-overlay' }}>
-        <div className={styles.modalContent}>
-          <h2 className={styles.modalTitle}>
-            Select your preferred social media to share job
-          </h2>
-          <div className={styles.modalOptions}>
-            {shareOptions.map((option, index) => (
-              <button
-                key={index}
-                className={styles.shareButton}
-                onClick={() => handleRedirectShare(option.link)}>
-                <img
-                  src={option.icon}
-                  alt={option.text}
-                  className={styles.shareIcon}
-                />
-                {option.text}
-              </button>
-            ))}
-          </div>
-        </div>
-      </Modal>
-    </>
+    <DataTable
+      columns={columns}
+      data={data}
+      getRowKey={(job) => job.id}
+      ariaLabel="Job posts table"
+      allowOverflow
+      getRowClassName={(job) => {
+        if (job.status === 'suspended' || job.status === 'closed')
+          return styles.rowClosed
+        if (resolveAiConfigId(job)) return styles.rowComplete
+        return styles.rowIncomplete
+      }}
+    />
   )
 }
