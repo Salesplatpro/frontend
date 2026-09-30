@@ -5,6 +5,7 @@ import {
   JobDetailsJob,
   JobDetailsView,
 } from '@/components/features/jobs/JobDetailsView'
+import { useDocumentTitle } from '@/components/seo'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useIndividualJobQuery } from '@/redux/api/talent'
@@ -21,6 +22,14 @@ const PostedJob = () => {
   const jobNotFound = errorStatus === 404
   const jobLoadFailed = !!error && !jobNotFound
   const jobClosed = !!job && job.status !== 'active'
+
+  useDocumentTitle(
+    job?.role?.name
+      ? `${job.role.name}${
+          job.organization?.name ? ` at ${job.organization.name}` : ''
+        } | Auxhr`
+      : undefined,
+  )
 
   if (isLoading) return <Spinner fullPage />
 
