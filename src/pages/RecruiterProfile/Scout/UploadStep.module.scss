@@ -1,5 +1,10 @@
 @use '../../../styles/breakpoints' as bp;
 
+.page {
+  max-width: 820px;
+  margin-inline: auto;
+}
+
 .noticeBody {
   margin: var(--space-1, 0.25rem) 0 0;
   font-size: var(--text-md, 14px);

@@ -79,7 +79,7 @@ export const UploadStep = () => {
   }
 
   return (
-    <PageShell>
+    <PageShell className={styles.page}>
       <PageHero
         compact
         kicker={campaign.name}

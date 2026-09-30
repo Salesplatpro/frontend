@@ -181,7 +181,7 @@ export const CampaignForm = () => {
   }
 
   return (
-    <PageShell>
+    <PageShell className={styles.page}>
       <PageHero
         compact
         kicker={isEditing ? 'Edit campaign' : 'New campaign'}
