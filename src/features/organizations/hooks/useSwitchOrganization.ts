@@ -14,7 +14,7 @@ const resetCompanyWorkspaceCaches = async () => {
     { store },
     { recruiterApi },
     { talentApi },
-    { clearScoutUploads },
+    { useScoutStore },
     { useJobDraftStore },
     { useJobEditDraftStore },
     { useAiConfigDraftStore },
@@ -22,7 +22,7 @@ const resetCompanyWorkspaceCaches = async () => {
     import('@/redux/store/store'),
     import('@/redux/api/recruiter'),
     import('@/redux/api/talent'),
-    import('@/redux/features/filesSlice/fileSlice'),
+    import('@/features/scout/store/useScoutStore'),
     import('@/features/jobs/store/useJobDraftStore'),
     import('@/features/jobs/store/useJobEditDraftStore'),
     import('@/features/jobs/store/useAiConfigDraftStore'),
@@ -30,7 +30,7 @@ const resetCompanyWorkspaceCaches = async () => {
 
   store.dispatch(recruiterApi.util.resetApiState())
   store.dispatch(talentApi.util.resetApiState())
-  store.dispatch(clearScoutUploads())
+  useScoutStore.getState().resetScout()
   useJobDraftStore.getState().clearDraft()
   useJobEditDraftStore.getState().clearAllDrafts()
   useAiConfigDraftStore.getState().clearAllDrafts()

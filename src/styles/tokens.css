@@ -95,6 +95,13 @@
   --color-warning: var(--color-warning-600);
   --color-focus-ring: var(--color-brand-500);
 
+  /* Status backgrounds. Status text had tokens but the tinted surfaces behind it
+     did not, so components reached for raw Tailwind reds and greens instead. */
+  --color-danger-tint: #fdf2f0;
+  --color-success-tint: #eef8f2;
+  --color-warning-tint: #fdf4ec;
+  --color-info-tint: #eef4ff;
+
   --heatmap-0: var(--color-grey-50);
   --heatmap-1: var(--color-brand-100);
   --heatmap-2: var(--color-brand-300);
@@ -167,6 +174,14 @@
   /* ── Z-index registry ──────────────────────────────────────────────── */
   /* MUI modals sit at 1300 and sonner's <Toaster/> above everything else —
      new layers must slot around them. Never invent ad-hoc z-index values. */
+  /* Breakpoints. Media queries were hand-written per file and ColumnDef.hideBelow
+     takes raw pixels, so these keep the two in step. Use the breakpoints.scss
+     mixins in SCSS; the raw values are here for hideBelow and JS. */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 900px;
+  --bp-xl: 1000px;
+
   --z-sticky: 100;
   --z-dropdown: 1000;
   --z-drawer: 1200;
@@ -217,6 +232,11 @@
   --color-border: #2d3a52;
   --color-border-strong: #3d4d6b;
   --color-primary-tint: rgba(73, 133, 223, 0.18);
+
+  --color-danger-tint: rgba(196, 50, 10, 0.18);
+  --color-success-tint: rgba(27, 123, 68, 0.18);
+  --color-warning-tint: rgba(181, 71, 8, 0.18);
+  --color-info-tint: rgba(0, 107, 255, 0.18);
 
   --shadow-sm: 0px 1.52px 3.05px 0px rgba(0, 0, 0, 0.25);
   --shadow-md: 0px 4.09px 6.14px -2.05px rgba(0, 0, 0, 0.28);

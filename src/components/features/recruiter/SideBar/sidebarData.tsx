@@ -1,7 +1,7 @@
 import React from 'react'
 import { BsChatDots } from 'react-icons/bs'
 import { CiBoxList, CiSearch } from 'react-icons/ci'
-import { FiDownload } from 'react-icons/fi'
+import { HiOutlineViewfinderCircle } from 'react-icons/hi2'
 import { IoBookOutline } from 'react-icons/io5'
 import { MdWorkOutline } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
@@ -31,7 +31,7 @@ export const sidebarData = [
   {
     name: 'Scout',
     tourId: 'nav-scout',
-    icon: <FiDownload size={ICON_SIZE} />,
+    icon: <HiOutlineViewfinderCircle size={ICON_SIZE} />,
     link: '/recruiterDashboard/scout',
     end: false,
   },

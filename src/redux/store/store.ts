@@ -7,17 +7,14 @@ import rootReducer from '../features/reducer'
 
 export const store = configureStore({
   reducer: rootReducer,
+  // Nothing non-serializable lives in the store any more: the scout slice held
+  // `File` objects and has moved to Zustand, where they stay out of persistence.
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [
-          'file/setFiles',
-          'file/addFiles',
-          'file/addCvCoverLetter',
-        ],
-        ignoredPaths: ['file.files', 'file.cvCoverLetter', 'file.results'],
-      },
-    }).concat(api.middleware, talentApi.middleware, recruiterApi.middleware),
+    getDefaultMiddleware().concat(
+      api.middleware,
+      talentApi.middleware,
+      recruiterApi.middleware,
+    ),
   devTools: process.env.NODE_ENV !== 'production',
 })
 
