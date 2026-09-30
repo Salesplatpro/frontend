@@ -1,0 +1,64 @@
+@use '../../../styles/form-field' as *;
+
+.field {
+  @extend %form-field-group;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3, 0.75rem);
+  flex-wrap: wrap;
+}
+
+.label {
+  @extend %form-label;
+  margin: 0;
+}
+
+.required {
+  @extend %form-required;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  flex-wrap: wrap;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-muted, #667085);
+}
+
+.textarea {
+  @extend %form-textarea;
+  min-height: 140px;
+  resize: vertical;
+}
+
+.invalid {
+  @extend %form-input-invalid;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3, 0.75rem);
+  min-height: 18px;
+}
+
+.error {
+  @extend %form-error;
+}
+
+.counter {
+  font-size: var(--text-sm, 12px);
+  color: var(--color-text-muted, #667085);
+  font-variant-numeric: tabular-nums;
+}
