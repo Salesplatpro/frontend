@@ -1,10 +1,14 @@
 @use '../../../styles/breakpoints' as bp;
 
+.page {
+  max-width: 820px;
+  margin-inline: auto;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: var(--space-8, 2rem);
-  max-width: 820px;
 }
 
 .section {
