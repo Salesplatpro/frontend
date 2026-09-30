@@ -18,6 +18,7 @@ import { notify } from '@/utils/toastNotifications'
 
 import { useGetRecruiterShortlistQuery } from '../../../redux/api/recruiter'
 import { capitalizeEachWord } from '../../../utils/CapitalizeWord'
+import styles from './Shortlist.module.scss'
 
 interface ShortlistedApplication {
   id: string
@@ -188,7 +189,7 @@ export const Shortlist = () => {
         title="Shortlist"
         lead="View shortlisted talents ready for the next stage"
       />
-      <div className="flex flex-col gap-3">
+      <div className={styles.layout}>
         <FilterBar
           fields={SHORTLIST_FILTER_FIELDS}
           filters={filters}
@@ -230,7 +231,7 @@ export const Shortlist = () => {
           }
         />
         {selectedRowKeys.size > 0 && (
-          <div className="flex justify-end">
+          <div className={styles.bulkActions}>
             <Button
               size="sm"
               loading={isBroadcasting}
@@ -240,14 +241,18 @@ export const Shortlist = () => {
           </div>
         )}
         {messageOpen && (
-          <div className="flex flex-col gap-3">
+          <div className={styles.composer}>
+            <label className={styles.composerLabel} htmlFor="shortlist-message">
+              Your message
+            </label>
             <textarea
-              className="w-full min-h-[120px] border rounded-lg p-3"
+              id="shortlist-message"
+              className={styles.textarea}
               placeholder="Type your message..."
               value={messageContent}
               onChange={(event) => setMessageContent(event.target.value)}
             />
-            <div className="flex justify-end gap-2">
+            <div className={styles.composerActions}>
               <Button variant="outline" onClick={() => setMessageOpen(false)}>
                 Cancel
               </Button>
