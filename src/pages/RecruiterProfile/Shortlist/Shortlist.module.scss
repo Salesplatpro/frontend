@@ -1,0 +1,43 @@
+@use '../../../styles/form-field' as *;
+@use '../../../styles/breakpoints' as bp;
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+}
+
+.bulkActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+  padding: var(--space-4, 1rem);
+  border: 1px solid var(--color-border, #e4e7ec);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--color-bg-elevated, #ffffff);
+}
+
+.composerLabel {
+  @extend %form-label;
+}
+
+.textarea {
+  @extend %form-textarea;
+  min-height: 140px;
+  resize: vertical;
+}
+
+.composerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2, 0.5rem);
+
+  @include bp.below(bp.$bp-sm) {
+    flex-direction: column-reverse;
+  }
+}

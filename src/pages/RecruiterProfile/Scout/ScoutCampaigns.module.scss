@@ -1,0 +1,39 @@
+.nameCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-md, 14px);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--color-text-heading, #1e2a4d);
+}
+
+.role {
+  font-size: var(--text-sm, 12px);
+  color: var(--color-text-muted, #667085);
+}
+
+.count {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--text-md, 14px);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--color-text-heading, #1e2a4d);
+  font-variant-numeric: tabular-nums;
+}
+
+.runs {
+  font-size: var(--text-sm, 12px);
+  font-weight: var(--weight-regular, 400);
+  color: var(--color-text-muted, #667085);
+}
+
+.muted {
+  font-size: var(--text-md, 14px);
+  color: var(--color-text-muted, #667085);
+}

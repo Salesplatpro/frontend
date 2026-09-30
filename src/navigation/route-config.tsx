@@ -52,17 +52,9 @@ import VerifyPaymentPage from '@/pages/Pricing/Verify'
 import {
   Chat,
   MyJobPosts,
-  ProcessCV,
   Profile as RecruiterProfilePage,
   Shortlist,
-  UploadCv,
 } from '@/pages/RecruiterProfile'
-import { ChooseMethod } from '@/pages/RecruiterProfile/Batching/ChooseMethod'
-import CreateJD from '@/pages/RecruiterProfile/Batching/CreateJD'
-import {
-  MyScoutJobs,
-  ScoutJobHistory,
-} from '@/pages/RecruiterProfile/Batching/MyScoutJobs'
 import Company from '@/pages/RecruiterProfile/Company/Company'
 import CreateCompany from '@/pages/RecruiterProfile/Company/CreateCompany'
 import EditCompany from '@/pages/RecruiterProfile/Company/EditCompany'
@@ -75,8 +67,12 @@ import { SingleJobPost } from '@/pages/RecruiterProfile/MyJobPosts/SingleJobPost
 import RecruiterPlanPage from '@/pages/RecruiterProfile/Plan/RecruiterPlanPage'
 import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
-import SearchResult from '@/pages/RecruiterProfile/TalentSearch/SearchResult'
-import SearchTalent from '@/pages/RecruiterProfile/TalentSearch/SearchTalent'
+import { CampaignDetail } from '@/pages/RecruiterProfile/Scout/CampaignDetail'
+import { CampaignForm } from '@/pages/RecruiterProfile/Scout/CampaignForm'
+import { RunResults } from '@/pages/RecruiterProfile/Scout/RunResults'
+import { ScoutCampaigns } from '@/pages/RecruiterProfile/Scout/ScoutCampaigns'
+import { UploadStep } from '@/pages/RecruiterProfile/Scout/UploadStep'
+import { TalentSearch } from '@/pages/RecruiterProfile/TalentSearch/TalentSearch'
 import { ApplicationPipeline } from '@/pages/TalentProfile/ApplicationPipeline'
 import TalentDashboardHome from '@/pages/TalentProfile/Dashboard/TalentDashboardHome'
 import Inbox from '@/pages/TalentProfile/Inbox/InboxList'
@@ -390,35 +386,30 @@ export const routeConfig: RouteObject[] = [
                       },
                       {
                         path: 'scout',
-                        element: <MyScoutJobs />,
-                      },
-                      {
-                        path: 'scout/history/:scoutJobId',
-                        element: <ScoutJobHistory />,
-                      },
-                      {
-                        path: 'scout/:id',
-                        element: <ChooseMethod />,
+                        children: [
+                          { index: true, element: <ScoutCampaigns /> },
+                          { path: 'new', element: <CampaignForm /> },
+                          {
+                            path: ':campaignId',
+                            element: <CampaignDetail />,
+                          },
+                          {
+                            path: ':campaignId/edit',
+                            element: <CampaignForm />,
+                          },
+                          {
+                            path: ':campaignId/upload',
+                            element: <UploadStep />,
+                          },
+                          {
+                            path: ':campaignId/runs/:runId',
+                            element: <RunResults />,
+                          },
+                        ],
                       },
                       {
                         path: 'talent-search',
-                        element: <SearchTalent />,
-                      },
-                      {
-                        path: 'talent-search/results',
-                        element: <SearchResult />,
-                      },
-                      {
-                        path: 'scout/create-jd',
-                        element: <CreateJD />,
-                      },
-                      {
-                        path: 'scout/upload-cv/:id',
-                        element: <UploadCv />,
-                      },
-                      {
-                        path: 'scout/process-cv/:id',
-                        element: <ProcessCV />,
+                        element: <TalentSearch />,
                       },
                       {
                         path: 'singleJobPost/:jobId',

@@ -1,0 +1,94 @@
+@use '../../../styles/breakpoints' as bp;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5, 1.25rem);
+  padding: var(--space-6, 1.5rem);
+  border: 1px solid var(--color-border, #e4e7ec);
+  border-radius: var(--radius-panel, 20px);
+  background: var(--color-bg-elevated, #ffffff);
+  box-shadow: var(--shadow-sm, 0 1px 2px rgba(16, 24, 40, 0.06));
+  margin-bottom: var(--space-6, 1.5rem);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4, 1rem);
+
+  @include bp.below(bp.$bp-lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.filterField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+}
+
+.fieldHint {
+  margin: 0;
+  font-size: var(--text-sm, 12px);
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-muted, #667085);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.resultsCount {
+  margin: 0 0 var(--space-3, 0.75rem);
+  font-size: var(--text-md, 14px);
+  font-weight: var(--weight-medium, 500);
+  color: var(--color-text-body, #344054);
+}
+
+.candidateCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  min-width: 0;
+}
+
+.candidateMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.candidateName {
+  font-size: var(--text-md, 14px);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--color-text-heading, #1e2a4d);
+}
+
+.candidateSub {
+  font-size: var(--text-sm, 12px);
+  color: var(--color-text-muted, #667085);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+.evidence {
+  margin: 0;
+  padding-left: var(--space-4, 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-body, #344054);
+  max-width: 44ch;
+}
+
+.muted {
+  font-size: var(--text-md, 14px);
+  color: var(--color-text-muted, #667085);
+}

@@ -1,16 +1,10 @@
-import 'react-responsive-modal/styles.css'
+import React from 'react'
 
-import React, { useState } from 'react'
-import { Modal } from 'react-responsive-modal'
-
-import Facebook from '@/assets/Facebook icon.svg'
-import LinkedIn from '@/assets/linkedin logo_icon.svg'
-import Twitter from '@/assets/twitter_new_brand_icon.svg'
 import {
   CompanyTag,
   JobOrganization,
 } from '@/components/features/jobs/CompanyTag'
-import { ShareOptions } from '@/components/features/jobs/ShareOption/ShareOptions'
+import { ShareJob } from '@/components/features/jobs/ShareJob'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
 import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
@@ -74,31 +68,6 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
   onBack,
   beforeBody,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const link = `https://auxhr.com/job/postedjob/${jobId}`
-
-  const shareOptions = [
-    {
-      icon: Facebook,
-      text: 'Share',
-      link: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        link,
-      )}`,
-    },
-    {
-      icon: Twitter,
-      text: 'Tweet',
-      link: `https://twitter.com/share?url=${encodeURIComponent(link)}`,
-    },
-    {
-      icon: LinkedIn,
-      text: 'Share',
-      link: `https://www.linkedin.com/shareArticle?url=${encodeURIComponent(
-        link,
-      )}`,
-    },
-  ]
-
   const workModeLabel = job.workMode?.length
     ? job.workMode.map((mode) => capitalizeFirstWord(mode)).join(', ')
     : 'Not specified'
@@ -106,10 +75,6 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
   const postedByName = job.postedBy?.firstName
     ? `${job.postedBy.firstName} ${job.postedBy.lastName ?? ''}`.trim()
     : null
-
-  const handleRedirectShare = (shareLink: string) => {
-    window.open(shareLink, '_blank', 'noopener,noreferrer')
-  }
 
   return (
     <PageShell wide>
@@ -133,7 +98,7 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
           size="md"
           className={styles.company}
         />
-        <ShareOptions handleShare={() => setIsModalOpen(true)} jobId={jobId} />
+        <ShareJob jobId={jobId} jobTitle={job.role?.name} />
       </div>
 
       <div className={styles.body}>
@@ -206,34 +171,6 @@ const JobDetailsView: React.FC<JobDetailsViewProps> = ({
           )}
         </aside>
       </div>
-
-      <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        center
-        classNames={{ overlay: 'dashboard-modal-overlay' }}>
-        <div className={styles.shareModal}>
-          <h2 className={styles.shareModalTitle}>
-            Select your preferred social media to share job
-          </h2>
-          <div className={styles.shareModalOptions}>
-            {shareOptions.map((option, index) => (
-              <button
-                key={index}
-                type="button"
-                className={styles.shareModalOption}
-                onClick={() => handleRedirectShare(option.link)}>
-                <img
-                  src={option.icon}
-                  alt={option.text}
-                  className={styles.shareModalIcon}
-                />
-                {option.text}
-              </button>
-            ))}
-          </div>
-        </div>
-      </Modal>
     </PageShell>
   )
 }
