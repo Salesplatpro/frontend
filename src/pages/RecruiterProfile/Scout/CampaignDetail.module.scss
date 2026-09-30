@@ -1,0 +1,82 @@
+@use '../../../styles/breakpoints' as bp;
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5, 1.25rem);
+
+  @include bp.below(bp.$bp-lg) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.prose {
+  margin: 0;
+  font-size: var(--text-md, 14px);
+  line-height: var(--leading-relaxed, 1.6);
+  color: var(--color-text-body, #344054);
+  white-space: pre-wrap;
+}
+
+.skillGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+
+  & + & {
+    margin-top: var(--space-4, 1rem);
+  }
+}
+
+.skillLabel {
+  font-size: var(--text-sm, 12px);
+  font-weight: var(--weight-semibold, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted, #667085);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 0.5rem);
+}
+
+.chip {
+  padding: 4px var(--space-3, 0.75rem);
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--color-border, #e4e7ec);
+  background: var(--color-bg-subtle, #f7f8fb);
+  font-size: var(--text-sm, 12px);
+  font-weight: var(--weight-medium, 500);
+  color: var(--color-text-body, #344054);
+}
+
+.chipMust {
+  border-color: var(--color-primary, #4985df);
+  background: var(--color-primary-tint, #f1f6fd);
+  color: var(--color-primary-strong, #2441ab);
+}
+
+.date {
+  font-size: var(--text-md, 14px);
+  color: var(--color-text-body, #344054);
+}
+
+.count {
+  font-size: var(--text-md, 14px);
+  font-weight: var(--weight-semibold, 600);
+  color: var(--color-text-heading, #1e2a4d);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3, 0.75rem);
+  margin-top: var(--space-6, 1.5rem);
+
+  @include bp.below(bp.$bp-sm) {
+    flex-direction: column-reverse;
+  }
+}
