@@ -1,0 +1,20 @@
+// Shared breakpoints. Media queries can't read CSS custom properties, so the
+// numbers live here as SCSS variables and in tokens.css for `hideBelow` and JS.
+// Keep the two in step.
+
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 900px;
+$bp-xl: 1000px;
+
+@mixin below($width) {
+  @media (max-width: #{$width - 1px}) {
+    @content;
+  }
+}
+
+@mixin from($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
