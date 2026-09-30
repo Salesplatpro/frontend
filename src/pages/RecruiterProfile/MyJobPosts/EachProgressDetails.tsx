@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AnalyzedPercentage } from '../Batching'
+import { AnalyzedPercentage } from './AnalyzedPercentage'
 import styles from './EachProgressDetails.module.scss'
 
 type EachProgressProps = {

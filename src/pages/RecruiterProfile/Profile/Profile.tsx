@@ -31,7 +31,7 @@ import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
 import {
   useFetchDashboardQuery,
   useFetchRecruiterJobPostQuery,
-  useGetScoutJobsQuery,
+  useGetScoutCampaignsQuery,
 } from '@/redux/api/recruiter'
 import { recruiterJobPostsTypes } from '@/utils/recruiterJobPostsTypes'
 
@@ -59,10 +59,8 @@ export const Profile = () => {
     useFetchDashboardQuery({})
   const { data: jobsData, isLoading: isJobsLoading } =
     useFetchRecruiterJobPostQuery({ limit: 50 })
-  const { data: scoutData, isLoading: isScoutLoading } = useGetScoutJobsQuery({
-    limit: 100,
-    offset: 0,
-  })
+  const { data: scoutData, isLoading: isScoutLoading } =
+    useGetScoutCampaignsQuery({ limit: 100, offset: 0 })
 
   if (isProfileLoading) {
     return <Spinner fullPage />
