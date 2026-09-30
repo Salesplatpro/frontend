@@ -167,8 +167,8 @@ const Card: React.FC<{ job: Job; logo: string | null }> = ({ job, logo }) => {
         color: ON_DARK,
         backgroundImage: `linear-gradient(135deg, ${BRAND_800} 48%, ${BRAND_500} 100%)`,
       }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {logo ? (
+      <div style={{ display: 'flex', alignItems: 'center', minHeight: 88 }}>
+        {!company && !logo ? null : logo ? (
           <img
             src={logo}
             alt=""
@@ -195,7 +195,7 @@ const Card: React.FC<{ job: Job; logo: string | null }> = ({ job, logo }) => {
               fontSize: 44,
               fontWeight: 700,
             }}>
-            {(company ?? 'A').charAt(0).toUpperCase()}
+            {(company ?? '').charAt(0).toUpperCase()}
           </div>
         )}
         {company ? (
