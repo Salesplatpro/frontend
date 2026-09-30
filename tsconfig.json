@@ -20,6 +20,7 @@
     "skipLibCheck": true
   },
   "include": [
+    "api",
     "cypress",
     "middleware.ts",
     "./src",
