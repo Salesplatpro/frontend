@@ -10,16 +10,12 @@ type JobRole = {
   description: string
 }
 
+// Job payloads carry only these three recruiter fields — the public job
+// endpoints scrub the rest of the User relation before it leaves the API.
 type JobPostedBy = {
   id: string
-  email: string
   firstName: string
   lastName: string
-  middleName: string
-  userRole: string
-  emailVerifiedAt: string | null
-  active: boolean
-  onboarded: boolean
 }
 
 type JobOrganizationSummary = {
