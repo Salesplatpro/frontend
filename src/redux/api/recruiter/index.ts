@@ -1,11 +1,48 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 
+import type {
+  CampaignListResponse,
+  CampaignResponse,
+  RunDetailResponse,
+  RunListResponse,
+  RunResponse,
+  ShortlistResponse,
+  TalentSearchResponse,
+} from '../../../features/scout/types'
 import { customBaseQuery } from '../../../utils/customBaseQuery'
+
+/** Body the campaign create/update endpoints accept. */
+type ScoutCampaignPayload = {
+  name: string
+  role: string
+  jobBrief: string
+  recruiterGuide: string
+  shortlistSize: number
+  experienceLevel?: string | null
+  mustHaveSkills?: string[] | null
+  niceToHaveSkills?: string[] | null
+  workMode?: string | null
+  locationCountry?: string | null
+  locationState?: string | null
+  locationCity?: string | null
+}
+
+type TalentSearchPayload = {
+  description: string
+  roleId?: string | null
+  experienceLevel?: string | null
+  workMode?: string | null
+  country?: string | null
+  state?: string | null
+  city?: string | null
+  limit?: number
+  offset?: number
+}
 
 export const recruiterApi = createApi({
   reducerPath: 'recruiterApi',
   baseQuery: customBaseQuery,
-  tagTypes: ['Recruiter', 'RecruiterJob', 'ScoutJob', 'ScoutBatch', 'AiConfig'],
+  tagTypes: ['Recruiter', 'RecruiterJob', 'ScoutJob', 'ScoutRun', 'AiConfig'],
   endpoints: (builder) => ({
     jobPostCreation: builder.mutation({
       query: (data) => ({
@@ -154,7 +191,10 @@ export const recruiterApi = createApi({
         method: 'DELETE',
       }),
     }),
-    createJD: builder.mutation({
+    createScoutCampaign: builder.mutation<
+      CampaignResponse,
+      Partial<ScoutCampaignPayload>
+    >({
       query: (data) => ({
         url: `/scout/jobs`,
         method: 'POST',
@@ -162,122 +202,141 @@ export const recruiterApi = createApi({
       }),
       invalidatesTags: [{ type: 'ScoutJob', id: 'LIST' }],
     }),
-    searchTalentDb: builder.query({
-      query: (data) => {
-        const {
-          role,
-          experienceLevel,
-          location,
-          limit,
-          offset,
-          jobId,
-          percentage,
-        } = data
-
-        const roleId = role || ''
-        const experience = experienceLevel || ''
-        const country = location?.country?.name || ''
-        const state = location?.state?.name || ''
-        const city = location?.city?.name || ''
-
-        const queryParams = new URLSearchParams()
-
-        if (roleId) queryParams.append('roleId', roleId)
-        if (experience) queryParams.append('experience', experience)
-        if (country) queryParams.append('country', country)
-        if (state) queryParams.append('state', state)
-        if (city) queryParams.append('city', city)
-        if (limit) queryParams.append('limit', String(limit))
-        if (offset) queryParams.append('offset', String(offset))
-        if (jobId) queryParams.append('jobId', jobId)
-        if (percentage) queryParams.append('percentage', String(percentage))
-
-        return {
-          url: `/scout/talents?${queryParams.toString()}`,
-          method: 'GET',
-        }
-      },
-    }),
-    uploadScoutCvBatch: builder.mutation({
-      query: (data) => ({
-        url: `/scout/cv-batch`,
-        method: 'POST',
+    updateScoutCampaign: builder.mutation<
+      CampaignResponse,
+      { campaignId: string; data: Partial<ScoutCampaignPayload> }
+    >({
+      query: ({ campaignId, data }) => ({
+        url: `/scout/jobs/${campaignId}`,
+        method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (_result, _error, data: FormData) => [
-        { type: 'ScoutBatch', id: String(data.get('scoutJobId')) },
+      invalidatesTags: (_result, _error, { campaignId }) => [
+        { type: 'ScoutJob', id: campaignId },
+        { type: 'ScoutJob', id: 'LIST' },
       ],
     }),
-    addScoutToPipeline: builder.mutation({
-      query: ({
-        scoutId,
-        jobId,
-        talentEmail,
-      }: {
-        scoutId: string
-        jobId: string
-        talentEmail: string
-      }) => ({
-        url: `/scout/${scoutId}/add-to-pipeline`,
-        method: 'POST',
-        body: { jobId, talentEmail },
-      }),
-      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
-    }),
-    getCampaignName: builder.query({
+    getScoutCampaign: builder.query<CampaignResponse, { id: string }>({
       query: ({ id }) => ({
         url: `/scout/jobs/${id}`,
         method: 'GET',
       }),
       providesTags: (_result, _error, { id }) => [{ type: 'ScoutJob', id }],
     }),
-    getScoutJobs: builder.query({
-      query: ({
-        limit = 20,
-        offset = 0,
-      }: { limit?: number; offset?: number } = {}) => ({
-        url: `/scout/jobs?limit=${limit}&offset=${offset}`,
-        method: 'GET',
-      }),
-      providesTags: (result) => {
-        const scoutJobs = Array.isArray(result?.data?.scoutJobs)
-          ? result.data.scoutJobs
-          : []
-        return [
-          ...scoutJobs.map((job: { id: string }) => ({
-            type: 'ScoutJob' as const,
-            id: job.id,
-          })),
-          { type: 'ScoutJob' as const, id: 'LIST' },
-        ]
+    getScoutCampaigns: builder.query<
+      CampaignListResponse,
+      { limit?: number; offset?: number; search?: string } | void
+    >({
+      query: (args) => {
+        const { limit = 20, offset = 0, search } = args ?? {}
+        const params = new URLSearchParams({
+          limit: String(limit),
+          offset: String(offset),
+        })
+        if (search?.trim()) params.append('search', search.trim())
+        return { url: `/scout/jobs?${params.toString()}`, method: 'GET' }
       },
-    }),
-    getScoutJobScouts: builder.query({
-      query: ({
-        scoutJobId,
-        limit = 20,
-        offset = 0,
-      }: {
-        scoutJobId: string
-        limit?: number
-        offset?: number
-      }) => ({
-        url: `/scout/jobs/${scoutJobId}/scouts?limit=${limit}&offset=${offset}`,
-        method: 'GET',
-      }),
-      providesTags: (_result, _error, { scoutJobId }) => [
-        { type: 'ScoutBatch', id: scoutJobId },
+      providesTags: (result) => [
+        ...(result?.data?.scoutJobs ?? []).map((job) => ({
+          type: 'ScoutJob' as const,
+          id: job.id,
+        })),
+        { type: 'ScoutJob' as const, id: 'LIST' },
       ],
     }),
-    deleteScoutJob: builder.mutation({
-      query: (scoutJobId: string) => ({
-        url: `/scout/jobs/${scoutJobId}`,
+    deleteScoutCampaign: builder.mutation<unknown, string>({
+      query: (campaignId) => ({
+        url: `/scout/jobs/${campaignId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_result, _error, scoutJobId) => [
-        { type: 'ScoutJob', id: scoutJobId },
+      invalidatesTags: (_result, _error, campaignId) => [
+        { type: 'ScoutJob', id: campaignId },
         { type: 'ScoutJob', id: 'LIST' },
       ],
+    }),
+    startScoutRun: builder.mutation<
+      RunResponse,
+      { campaignId: string; body: FormData }
+    >({
+      query: ({ campaignId, body }) => ({
+        url: `/scout/jobs/${campaignId}/runs`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: (_result, _error, { campaignId }) => [
+        { type: 'ScoutRun', id: `LIST-${campaignId}` },
+        { type: 'ScoutJob', id: 'LIST' },
+      ],
+    }),
+    getScoutRun: builder.query<RunDetailResponse, { runId: string }>({
+      query: ({ runId }) => ({
+        url: `/scout/runs/${runId}`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, { runId }) => [
+        { type: 'ScoutRun', id: runId },
+      ],
+    }),
+    getScoutShortlist: builder.query<ShortlistResponse, { runId: string }>({
+      query: ({ runId }) => ({
+        url: `/scout/runs/${runId}/shortlist`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, { runId }) => [
+        { type: 'ScoutRun', id: `SHORTLIST-${runId}` },
+      ],
+    }),
+    getScoutRuns: builder.query<
+      RunListResponse,
+      { campaignId: string; limit?: number; offset?: number }
+    >({
+      query: ({ campaignId, limit = 20, offset = 0 }) => ({
+        url: `/scout/jobs/${campaignId}/runs?limit=${limit}&offset=${offset}`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, { campaignId }) => [
+        { type: 'ScoutRun', id: `LIST-${campaignId}` },
+      ],
+    }),
+    retryScoutCv: builder.mutation<unknown, { scoutId: string; runId: string }>(
+      {
+        query: ({ scoutId }) => ({
+          url: `/scout/cvs/${scoutId}/retry`,
+          method: 'POST',
+        }),
+        invalidatesTags: (_result, _error, { runId }) => [
+          { type: 'ScoutRun', id: runId },
+          { type: 'ScoutRun', id: `SHORTLIST-${runId}` },
+        ],
+      },
+    ),
+    searchTalents: builder.mutation<TalentSearchResponse, TalentSearchPayload>({
+      query: (body) => ({
+        url: `/scout/talents/search`,
+        method: 'POST',
+        body,
+      }),
+    }),
+    messageScoutCandidate: builder.mutation<
+      unknown,
+      { candidateId: string; content: string }
+    >({
+      query: ({ candidateId, content }) => ({
+        url: `/scout/candidates/${candidateId}/message`,
+        method: 'POST',
+        body: { content },
+      }),
+    }),
+    addScoutToPipeline: builder.mutation<
+      unknown,
+      { scoutId: string; jobId: string; talentEmail: string }
+    >({
+      query: ({ scoutId, jobId, talentEmail }) => ({
+        url: `/scout/${scoutId}/add-to-pipeline`,
+        method: 'POST',
+        body: { jobId, talentEmail },
+      }),
+      invalidatesTags: [{ type: 'RecruiterJob', id: 'LIST' }],
     }),
     getRecruiterShortlist: builder.query({
       query: () => `recruiter/shortlist/`,
@@ -340,14 +399,19 @@ export const {
   useFetchRecruiterJobPostQuery,
   useGenJpPersonalityMutation,
   useDeletePersonalityQuestionMutation,
-  useCreateJDMutation,
-  useSearchTalentDbQuery,
-  useUploadScoutCvBatchMutation,
+  useCreateScoutCampaignMutation,
+  useUpdateScoutCampaignMutation,
+  useGetScoutCampaignQuery,
+  useGetScoutCampaignsQuery,
+  useDeleteScoutCampaignMutation,
+  useStartScoutRunMutation,
+  useGetScoutRunQuery,
+  useGetScoutShortlistQuery,
+  useGetScoutRunsQuery,
+  useRetryScoutCvMutation,
+  useSearchTalentsMutation,
+  useMessageScoutCandidateMutation,
   useAddScoutToPipelineMutation,
-  useGetCampaignNameQuery,
-  useGetScoutJobsQuery,
-  useGetScoutJobScoutsQuery,
-  useDeleteScoutJobMutation,
   useGetRecruiterShortlistQuery,
   useUpdateJobMutation,
   useDeleteJobMutation,
