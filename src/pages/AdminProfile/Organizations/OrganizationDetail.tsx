@@ -300,7 +300,7 @@ const OrganizationDetail = () => {
       <ConfirmDialog
         open={confirmDelete}
         title="Permanently delete this company?"
-        message={`Deleting "${organization.name}" removes the company, every job posted under it, and team memberships. Recruiter accounts are not deleted. This cannot be undone.`}
+        message={`Deleting "${organization.name}" removes the company, every job posted under it, its scout campaigns and team memberships, and cancels any active paid plan. Recruiter accounts are not deleted. This cannot be undone.`}
         confirmLabel="Delete company"
         variant="danger"
         isConfirming={isDeleting}

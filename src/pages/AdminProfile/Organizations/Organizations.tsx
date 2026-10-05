@@ -345,7 +345,7 @@ const Organizations = () => {
         title="Permanently delete this company?"
         message={`Deleting "${
           orgToDelete?.name ?? 'this company'
-        }" removes the company, every job posted under it, and team memberships. Recruiter accounts are not deleted. This cannot be undone.`}
+        }" removes the company, every job posted under it, its scout campaigns and team memberships, and cancels any active paid plan. Recruiter accounts are not deleted. This cannot be undone.`}
         confirmLabel="Delete company"
         variant="danger"
         isConfirming={isDeletingOrg}
