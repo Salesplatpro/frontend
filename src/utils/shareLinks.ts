@@ -12,7 +12,7 @@
  * crawlers disagrees with the URL that was actually shared.
  */
 export const appOrigin = (
-  import.meta.env.VITE_PUBLIC_APP_URL ?? 'https://auxhr.com'
+  import.meta.env.VITE_PUBLIC_APP_URL ?? 'https://www.auxhr.com'
 ).replace(/\/+$/, '')
 
 export const buildJobShareUrl = (jobId: string): string =>

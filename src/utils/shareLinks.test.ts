@@ -11,7 +11,7 @@ describe('appOrigin', () => {
   })
 
   it('falls back to the production origin when unset', () => {
-    expect(appOrigin).toBe('https://auxhr.com')
+    expect(appOrigin).toBe('https://www.auxhr.com')
   })
 
   it('strips trailing slashes from a configured origin', async () => {
@@ -30,19 +30,19 @@ describe('appOrigin', () => {
 describe('buildJobShareUrl', () => {
   it('builds the public job path on the canonical origin', () => {
     expect(buildJobShareUrl(JOB_ID)).toBe(
-      `https://auxhr.com/job/postedjob/${JOB_ID}`,
+      `https://www.auxhr.com/job/postedjob/${JOB_ID}`,
     )
   })
 
   it('encodes the job id', () => {
     expect(buildJobShareUrl('a b/c')).toBe(
-      'https://auxhr.com/job/postedjob/a%20b%2Fc',
+      'https://www.auxhr.com/job/postedjob/a%20b%2Fc',
     )
   })
 })
 
 describe('buildShareTargets', () => {
-  const url = 'https://auxhr.com/job/postedjob/abc'
+  const url = 'https://www.auxhr.com/job/postedjob/abc'
   const title = 'Senior Sales Executive at Acme & Co'
   const targets = buildShareTargets(url, title)
 

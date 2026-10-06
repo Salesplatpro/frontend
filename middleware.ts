@@ -20,7 +20,8 @@ const API_BASE_URL =
 // Canonical public origin, shared with buildJobShareUrl in
 // src/utils/shareLinks.ts. og:url and rel=canonical are identity claims, so
 // they must name production even when a preview deployment renders them.
-const SITE_ORIGIN = process.env['VITE_PUBLIC_APP_URL'] ?? 'https://auxhr.com'
+const SITE_ORIGIN =
+  process.env['VITE_PUBLIC_APP_URL'] ?? 'https://www.auxhr.com'
 
 const API_TIMEOUT_MS = 2500
 
