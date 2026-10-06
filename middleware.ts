@@ -6,7 +6,7 @@
 // the full Node API surface.
 
 const CRAWLER_UA_PATTERN =
-  /facebookexternalhit|facebookcatalog|Facebot|Twitterbot|LinkedInBot|Slackbot|Slack-ImgProxy|WhatsApp|Discordbot|TelegramBot|Bluesky|Mastodon|redditbot|Pinterest(?:bot)?|Applebot|SkypeUriPreview|embedly|iframely|vkShare|XING-contenttabreceiver|Nuzzel|Qwantify|outbrain|W3C_Validator|Googlebot|Google-InspectionTool|bingbot|BingPreview|DuckDuckBot|YandexBot|Baiduspider/i
+  /facebookexternalhit|facebookcatalog|Facebot|Twitterbot|LinkedInBot|Slackbot|Slack-ImgProxy|WhatsApp|Discordbot|TelegramBot|Bluesky|Mastodon|redditbot|Pinterest(?:bot)?|Applebot|SkypeUriPreview|MicrosoftPreview|Snap URL Preview|embedly|iframely|vkShare|XING-contenttabreceiver|Nuzzel|Qwantify|outbrain|W3C_Validator|Googlebot|Google-InspectionTool|bingbot|BingPreview|DuckDuckBot|YandexBot|Baiduspider/i
 
 const JOB_PATH_PATTERN = /^\/job\/postedjob\/([^/?#]+)/
 
@@ -20,7 +20,8 @@ const API_BASE_URL =
 // Canonical public origin, shared with buildJobShareUrl in
 // src/utils/shareLinks.ts. og:url and rel=canonical are identity claims, so
 // they must name production even when a preview deployment renders them.
-const SITE_ORIGIN = process.env['VITE_PUBLIC_APP_URL'] ?? 'https://auxhr.com'
+const SITE_ORIGIN =
+  process.env['VITE_PUBLIC_APP_URL'] ?? 'https://www.auxhr.com'
 
 const API_TIMEOUT_MS = 2500
 
@@ -64,9 +65,22 @@ const escapeHtml = (value: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
 
+const HTML_ENTITIES: Record<string, string> = {
+  nbsp: ' ',
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  '#39': "'",
+}
+
 const stripHtml = (html: string): string =>
   html
     .replace(/<[^>]*>/g, ' ')
+    .replace(
+      /&(nbsp|amp|lt|gt|quot|#39);/g,
+      (_, entity: string) => HTML_ENTITIES[entity] ?? '',
+    )
     .replace(/\s+/g, ' ')
     .trim()
 
@@ -75,6 +89,24 @@ const titleCase = (value: string): string =>
 
 const truncate = (text: string, limit: number): string =>
   text.length > limit ? `${text.slice(0, limit - 1)}…` : text
+
+const DESCRIPTION_LIMIT = 160
+
+const shortenDescription = (text: string): string => {
+  if (text.length <= DESCRIPTION_LIMIT) return text
+
+  const head = text.slice(0, DESCRIPTION_LIMIT)
+  const sentenceEnd = Math.max(
+    head.lastIndexOf('. '),
+    head.lastIndexOf('! '),
+    head.lastIndexOf('? '),
+  )
+  if (sentenceEnd > 0) return head.slice(0, sentenceEnd + 1)
+
+  const wordEnd = head.lastIndexOf(' ', DESCRIPTION_LIMIT - 1)
+  const cut = head.slice(0, wordEnd > 0 ? wordEnd : DESCRIPTION_LIMIT - 1)
+  return `${cut.replace(/[,;:]$/, '')}…`
+}
 
 const buildLocation = (job: Job): string =>
   [job.locationCity, job.locationState, job.locationCountry]
@@ -110,10 +142,9 @@ const buildHtml = (job: Job, jobId: string, origin: string): string => {
     : 'Job Opening'
   const title = truncate(fullTitle, 70)
 
-  const rawDescription = job.jobBrief
-    ? stripHtml(job.jobBrief)
-    : 'View this job opening and apply.'
-  const description = truncate(rawDescription, 200)
+  const rawDescription =
+    stripHtml(job.jobBrief ?? '') || 'View this job opening and apply.'
+  const description = shortenDescription(rawDescription)
 
   const canonicalUrl = `${SITE_ORIGIN}/job/postedjob/${jobId}`
   // Served by the same deployment that rendered these tags, so preview
