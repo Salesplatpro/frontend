@@ -6,7 +6,7 @@
 // the full Node API surface.
 
 const CRAWLER_UA_PATTERN =
-  /facebookexternalhit|facebookcatalog|Facebot|Twitterbot|LinkedInBot|Slackbot|Slack-ImgProxy|WhatsApp|Discordbot|TelegramBot|Bluesky|Mastodon|redditbot|Pinterest(?:bot)?|Applebot|SkypeUriPreview|embedly|iframely|vkShare|XING-contenttabreceiver|Nuzzel|Qwantify|outbrain|W3C_Validator|Googlebot|Google-InspectionTool|bingbot|BingPreview|DuckDuckBot|YandexBot|Baiduspider/i
+  /facebookexternalhit|facebookcatalog|Facebot|Twitterbot|LinkedInBot|Slackbot|Slack-ImgProxy|WhatsApp|Discordbot|TelegramBot|Bluesky|Mastodon|redditbot|Pinterest(?:bot)?|Applebot|SkypeUriPreview|MicrosoftPreview|Snap URL Preview|embedly|iframely|vkShare|XING-contenttabreceiver|Nuzzel|Qwantify|outbrain|W3C_Validator|Googlebot|Google-InspectionTool|bingbot|BingPreview|DuckDuckBot|YandexBot|Baiduspider/i
 
 const JOB_PATH_PATTERN = /^\/job\/postedjob\/([^/?#]+)/
 
