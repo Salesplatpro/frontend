@@ -1,0 +1,118 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+.hero {
+  background: #fff;
+  padding: t.$nl-page-padding;
+
+  @include bp.below(bp.$bp-md) {
+    padding: t.$nl-page-padding-mobile;
+  }
+}
+
+.heroInner {
+  background: t.$nl-color-hero-bg;
+  border-radius: 24px;
+  padding: 64px 20px 64px;
+
+  @include bp.from(bp.$bp-md) {
+    padding: 96px 32px 64px;
+  }
+}
+
+.copy {
+  max-width: 1024px;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.headline {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: t.$nl-color-text-heading;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 60px;
+    line-height: 72px;
+    letter-spacing: -1.2px;
+  }
+}
+
+.mobileBreak {
+  @include bp.from(bp.$bp-md) {
+    display: none;
+  }
+}
+
+.subcopy {
+  font-family: t.$nl-font-general-sans;
+  font-size: 16px;
+  line-height: 1.5;
+  color: t.$nl-color-text-body;
+  margin: 0;
+  max-width: 768px;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 20px;
+    line-height: 30px;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+
+  @include bp.from(bp.$bp-sm) {
+    flex-direction: row;
+    justify-content: center;
+    width: auto;
+  }
+}
+
+%pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  border-radius: t.$nl-radius-pill;
+  padding: 16px 24px;
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 16px;
+  text-decoration: none;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  @include bp.from(bp.$bp-sm) {
+    width: auto;
+  }
+}
+
+.ctaSolid {
+  @extend %pill;
+  background: t.$nl-color-cta-solid-bg;
+  color: t.$nl-color-cta-solid-text;
+}
+
+.ctaOutline {
+  @extend %pill;
+  background: t.$nl-color-bg-surface;
+  color: t.$nl-color-cta-outline-text;
+  border: 1px solid t.$nl-color-cta-outline-border;
+}

@@ -1,0 +1,323 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+// Tailwind emerald tag chip — same palette as HeroPanel's $dc-emerald-*.
+$emerald-50: #ecfdf5;
+$emerald-200: #a7f3d0;
+$emerald-800: #065f46;
+
+$frame: t.$nl-violet-300;
+
+// Desktop rail geometry; the connector's `top` is derived from these.
+$thumb-size: 160px;
+$rail-gap: 10px;
+$panel-gap: 24px;
+
+// Stacked (below lg) rail geometry.
+$thumb-size-sm: 88px;
+$rail-gap-sm: 8px;
+$panel-gap-sm: 14px;
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.section {
+  padding: 96px t.$nl-page-padding;
+  background: #fff;
+  @include t.nl-mobile-page-padding-x;
+}
+
+.header {
+  max-width: 768px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.heading {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.subcopy {
+  font-family: t.$nl-font-general-sans;
+  font-size: 16px;
+  line-height: 1.5;
+  color: t.$nl-color-text-body;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 18px;
+  }
+}
+
+.panel {
+  max-width: 1216px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $panel-gap-sm;
+
+  @include bp.from(bp.$bp-lg) {
+    flex-direction: row;
+    gap: $panel-gap;
+  }
+}
+
+// ---- Big card: violet frame with an inset, more-rounded photo ----
+
+.card {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 10px;
+  border-radius: 20px;
+  background: $frame;
+
+  @include bp.from(bp.$bp-md) {
+    aspect-ratio: 1032 / 540;
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  @include bp.from(bp.$bp-lg) {
+    flex: 1;
+    width: auto;
+  }
+}
+
+.photoFrame {
+  position: relative;
+  flex: 1;
+  border-radius: 24px;
+  overflow: hidden;
+  animation: fadeIn 300ms ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  @include bp.from(bp.$bp-md) {
+    border-radius: 32px;
+  }
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// ---- Candidate overlay ----
+
+.overlay {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px t.$nl-violet-50;
+  font-family: t.$nl-font-raleway;
+
+  @include bp.from(bp.$bp-md) {
+    left: 24px;
+    right: auto;
+    bottom: 24px;
+    width: 356px;
+    padding: 24px 24px 28px;
+  }
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: t.$nl-violet-500;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  @include bp.from(bp.$bp-md) {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+.name {
+  margin: 12px 0 0;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: normal;
+  color: t.$nl-violet-950;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 17px;
+  }
+}
+
+.role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 16px;
+  color: t.$nl-slateblue-800;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 14px;
+  }
+}
+
+.fit {
+  padding: 0 5px;
+  border-radius: 4px;
+  background: t.$nl-blue-100;
+  color: t.$nl-blue-950;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 13px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tag {
+  padding: 4px 9px;
+  border: 1px solid $emerald-200;
+  border-radius: 6px;
+  background: $emerald-50;
+  color: $emerald-800;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 15px;
+  white-space: nowrap;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 12px;
+  }
+}
+
+// ---- Thumbnail rail + connector ----
+
+.rail {
+  position: relative;
+  display: flex;
+  gap: $rail-gap-sm;
+
+  @include bp.from(bp.$bp-lg) {
+    flex-direction: column;
+    gap: $rail-gap;
+  }
+}
+
+.connector {
+  position: absolute;
+  z-index: 0;
+  width: 28px;
+  height: 34px;
+  fill: $frame;
+  left: calc(
+    var(--active-index) * #{$thumb-size-sm + $rail-gap-sm} + #{$thumb-size-sm * 0.5} -
+      14px
+  );
+  top: calc(#{$panel-gap-sm * -0.5} - 17px);
+  transform: rotate(90deg) scale(0.6);
+  transition: left 300ms ease, top 300ms ease;
+
+  @include bp.from(bp.$bp-lg) {
+    left: -26px;
+    top: calc(
+      var(--active-index) * #{$thumb-size + $rail-gap} + #{$thumb-size * 0.5} -
+        17px
+    );
+    transform: none;
+  }
+}
+
+.thumb {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: $thumb-size-sm;
+  height: $thumb-size-sm;
+  padding: 0;
+  border: 0 solid $frame;
+  border-radius: 12px;
+  overflow: hidden;
+  background: none;
+  cursor: pointer;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1);
+    transition: filter 200ms ease;
+  }
+
+  @include bp.from(bp.$bp-lg) {
+    width: $thumb-size;
+    height: $thumb-size;
+    border-radius: 16px;
+  }
+}
+
+.thumbActive {
+  border-width: 4px;
+  border-radius: 14px;
+
+  img {
+    filter: none;
+  }
+
+  @include bp.from(bp.$bp-lg) {
+    border-width: 8px;
+    border-radius: 20px;
+  }
+}

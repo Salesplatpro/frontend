@@ -1,0 +1,289 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+// Figma-exact colors outside the shared nl- ramp.
+$indigo-200: #c7d2fe;
+$indigo-600: #4f46e5;
+$indigo-700: #4338ca;
+$active-bg: rgba(238, 242, 255, 0.8);
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-900: #0f172a;
+$emerald-50: #ecfdf5;
+$emerald-200: #a7f3d0;
+$border-top: rgba(226, 232, 240, 0.8);
+$shadow-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+$drop-shadow-xs: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.05));
+
+.section {
+  padding: 96px t.$nl-page-padding;
+  background: t.$nl-gray-100;
+  border-top: 1px solid $border-top;
+  @include t.nl-mobile-page-padding-x;
+}
+
+.inner {
+  max-width: 1216px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+.header {
+  width: 100%;
+  max-width: 768px;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.heading {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.tagline {
+  font-family: t.$nl-font-hanken;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: -0.27px;
+  color: $indigo-600;
+  margin: 0;
+}
+
+.subcopy {
+  font-family: t.$nl-font-raleway;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: -0.16px;
+  color: t.$nl-gray-600;
+  margin: 0;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: t.$nl-radius-pill;
+  background: t.$nl-slateblue-950;
+  color: #fff;
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 16px;
+  line-height: 1;
+  text-decoration: none;
+
+  @include bp.from(bp.$bp-sm) {
+    width: auto;
+  }
+}
+
+// ---- Journey tracker ----
+
+.tracker {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 48px 32px 32px;
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: 16px;
+  filter: $drop-shadow-xs;
+}
+
+.trackerTitle {
+  font-family: t.$nl-font-raleway;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: normal;
+  letter-spacing: 0.55px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+}
+
+.stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stage {
+  flex: 1 1 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: 12px;
+  text-align: center;
+
+  &.active {
+    background: $active-bg;
+    border-color: $indigo-200;
+  }
+}
+
+.stageIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+
+  img {
+    display: block;
+  }
+
+  .done & {
+    background: $emerald-50;
+    border: 1px solid $emerald-200;
+  }
+
+  .active & {
+    background: $indigo-600;
+    filter: $drop-shadow-xs;
+  }
+
+  .pending & {
+    background: $slate-100;
+    border: 1px solid $slate-200;
+  }
+}
+
+.stageLabel {
+  font-family: t.$nl-font-hanken;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+  color: $slate-900;
+
+  .active & {
+    color: $indigo-700;
+  }
+}
+
+.stageCaption {
+  margin-top: 4px;
+  font-family: t.$nl-font-geist;
+  font-size: 13px;
+  line-height: 18px;
+  color: $slate-500;
+
+  .active & {
+    color: $slate-600;
+  }
+}
+
+// ---- Connected steps ----
+
+.steps {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  @include bp.from(bp.$bp-sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include bp.from(bp.$bp-lg) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.connector {
+  display: none;
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 50%;
+  height: 1px;
+  background: t.$nl-blue-200;
+  transform: translateY(-50%);
+
+  @include bp.from(bp.$bp-lg) {
+    display: block;
+  }
+}
+
+.step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 16px;
+  background: #fff;
+  border: 1px solid t.$nl-blue-200;
+  border-radius: 16px;
+  box-shadow: $shadow-xs;
+}
+
+.stepIcon {
+  display: flex;
+  padding: 6px;
+  border-radius: 8px;
+  background: t.$nl-violet-500;
+
+  img {
+    display: block;
+  }
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stepTitle {
+  font-family: t.$nl-font-hanken;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: -0.27px;
+  color: $slate-900;
+  margin: 0;
+}
+
+.stepDescription {
+  font-family: t.$nl-font-raleway;
+  font-size: 14px;
+  line-height: normal;
+  color: $slate-600;
+  margin: 0;
+}

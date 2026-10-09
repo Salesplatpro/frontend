@@ -1,0 +1,145 @@
+// New landing design system — independent from tokens.css / Tailwind / legacy $landing-*.
+// Primitives: 8 ramps, 50-950.
+@use '../../../../../../styles/breakpoints' as bp;
+
+$nl-blue-50: #eaf2ff;
+$nl-blue-100: #d9e8ff;
+$nl-blue-200: #bad3ff;
+$nl-blue-300: #91b6ff;
+$nl-blue-400: #658dff;
+$nl-blue-500: #4266ff;
+$nl-blue-600: #213aff;
+$nl-blue-700: #162aec;
+$nl-blue-800: #1527be;
+$nl-blue-900: #1b2b94;
+$nl-blue-950: #0f1652;
+
+$nl-violet-50: #e4e5ff;
+$nl-violet-100: #cfd0ff;
+$nl-violet-200: #a9a8ff;
+$nl-violet-300: #7b74ff;
+$nl-violet-400: #5d3eff;
+$nl-violet-500: #4f13ff;
+$nl-violet-600: #4800ff;
+$nl-violet-700: #4800ff;
+$nl-violet-800: #4000e4;
+$nl-violet-900: #3700b0;
+$nl-violet-950: #160040;
+
+$nl-slateblue-50: #f3f6fc;
+$nl-slateblue-100: #e7edf7;
+$nl-slateblue-200: #cad8ed;
+$nl-slateblue-300: #9bb7de;
+$nl-slateblue-400: #6591cb;
+$nl-slateblue-500: #4173b6;
+$nl-slateblue-600: #305999;
+$nl-slateblue-700: #28487c;
+$nl-slateblue-800: #243e68;
+$nl-slateblue-900: #233657;
+$nl-slateblue-950: #101828;
+
+$nl-gray-50: #ffffff;
+$nl-gray-100: #efefef;
+$nl-gray-200: #dcdcdc;
+$nl-gray-300: #bdbdbd;
+$nl-gray-400: #989898;
+$nl-gray-500: #7c7c7c;
+$nl-gray-600: #656565;
+$nl-gray-700: #525252;
+$nl-gray-800: #464646;
+$nl-gray-900: #3d3d3d;
+$nl-gray-950: #292929;
+
+$nl-taupe-50: #f5f3ee;
+$nl-taupe-100: #efede5;
+$nl-taupe-200: #dfd8c9;
+$nl-taupe-300: #9bb7de;
+$nl-taupe-400: #b4a183;
+$nl-taupe-500: #a58b6a;
+$nl-taupe-600: #987b5e;
+$nl-taupe-700: #7f654f;
+$nl-taupe-800: #685344;
+$nl-taupe-900: #554439;
+$nl-taupe-950: #2d241d;
+
+$nl-cyan-50: #ebfeff;
+$nl-cyan-100: #cefbff;
+$nl-cyan-200: #a2f5ff;
+$nl-cyan-300: #63eafd;
+$nl-cyan-400: #1cd6f4;
+$nl-cyan-500: #00b8d9;
+$nl-cyan-600: #0393b7;
+$nl-cyan-700: #0a7594;
+$nl-cyan-800: #125f78;
+$nl-cyan-900: #144e65;
+$nl-cyan-950: #063346;
+
+$nl-amber-50: #fef9ec;
+$nl-amber-100: #fdedc8;
+$nl-amber-200: #fada8d;
+$nl-amber-300: #f7c052;
+$nl-amber-400: #f5a623;
+$nl-amber-500: #ef8711;
+$nl-amber-600: #d3630c;
+$nl-amber-700: #af440e;
+$nl-amber-800: #8f3411;
+$nl-amber-900: #752c12;
+$nl-amber-950: #431505;
+
+$nl-teal-50: #eafff6;
+$nl-teal-100: #cdfee7;
+$nl-teal-200: #a0fad5;
+$nl-teal-300: #63f2c0;
+$nl-teal-400: #25e2a6;
+$nl-teal-500: #00c48c;
+$nl-teal-600: #00a479;
+$nl-teal-700: #008364;
+$nl-teal-800: #00674f;
+$nl-teal-900: #005542;
+$nl-teal-950: #003027;
+
+// Semantic aliases — what components actually reach for.
+$nl-color-bg-surface: #ffffff;
+$nl-color-text-heading: $nl-gray-950;
+$nl-color-text-body: $nl-slateblue-500;
+$nl-color-text-muted: $nl-gray-500;
+$nl-color-border: $nl-gray-200;
+$nl-color-hero-bg: #f5f3ee;
+
+// Full-page side gutter (Figma: 36px inset on the 1440px canvas).
+$nl-page-padding: 36px;
+$nl-page-padding-mobile: 16px;
+
+@mixin nl-mobile-page-padding-x {
+  @include bp.below(bp.$bp-md) {
+    padding-inline: $nl-page-padding-mobile;
+  }
+}
+
+$nl-color-cta-solid-bg: $nl-gray-950;
+$nl-color-cta-solid-text: #ffffff;
+$nl-color-cta-outline-border: $nl-gray-300;
+$nl-color-cta-outline-text: $nl-gray-950;
+
+$nl-gradient-panel: linear-gradient(135deg, $nl-violet-700, $nl-blue-600);
+$nl-color-tab-active-bg: #ffffff;
+$nl-color-tab-active-icon: $nl-violet-700;
+$nl-color-tab-inactive-icon: rgba(255, 255, 255, 0.65);
+$nl-color-tab-inactive-bg: rgba(255, 255, 255, 0.12);
+
+$nl-color-success-bg: $nl-teal-100;
+$nl-color-success-text: $nl-teal-700;
+$nl-color-success-badge-bg: $nl-teal-500;
+
+$nl-radius-pill: 999px;
+$nl-radius-card: 24px;
+$nl-radius-panel: 36px;
+
+// Fonts — per Figma spec: Raleway for nav/body/buttons, General Sans for
+// large headings, Geist for small card UI chrome, Hanken Grotesk for bold stats,
+// Inter for feature-section body copy.
+$nl-font-raleway: 'Raleway', sans-serif;
+$nl-font-general-sans: 'General Sans', sans-serif;
+$nl-font-geist: 'Geist', sans-serif;
+$nl-font-hanken: 'Hanken Grotesk', sans-serif;
+$nl-font-inter: 'Inter', sans-serif;

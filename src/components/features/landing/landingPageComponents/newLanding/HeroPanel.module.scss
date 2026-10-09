@@ -1,0 +1,564 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+// The diagnostic card is styled to look like its own mini product screenshot
+// (Figma spec), using a different, Tailwind-stock-style palette rather than
+// the brand ramp in _tokens.scss. Scoped here, not added to the shared tokens.
+$dc-emerald-bg: #ecfdf5;
+$dc-emerald-border: #a7f3d0;
+$dc-emerald-text: #047857;
+$dc-emerald-text-strong: #065f46;
+$dc-indigo: #4f46e5;
+$dc-indigo-strong: #4338ca;
+$dc-slate-900: #0f172a;
+$dc-slate-700: #334155;
+$dc-slate-500: #64748b;
+$dc-slate-200: #e2e8f0;
+$dc-slate-100: #f1f5f9;
+$dc-slate-50: #f8fafc;
+$dc-blue-600: #2563eb;
+$dc-blue-50: #eff6ff;
+$dc-shadow: 0 20px 25px -5px rgba(226, 232, 240, 0.6),
+  0 8px 10px -6px rgba(226, 232, 240, 0.6);
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel {
+  max-width: 1280px;
+  margin-inline: auto;
+  margin-top: 40px;
+  padding: 24px 16px;
+  background: linear-gradient(to top, t.$nl-blue-300, t.$nl-violet-400);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  @include bp.from(bp.$bp-md) {
+    padding: 40px 32px;
+    border-radius: t.$nl-radius-panel;
+    gap: 32px;
+  }
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.tabOuter {
+  background: #fff;
+  padding: 6px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+}
+
+.tabInner,
+.tabInnerActive {
+  padding: 6px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms ease;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.tabInner {
+  background: t.$nl-gray-300;
+}
+
+.tabInnerActive {
+  background: t.$nl-violet-800;
+}
+
+.stem {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 36px;
+  margin-top: -2px;
+}
+
+.card {
+  background: #fff;
+  border-radius: t.$nl-radius-card;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  animation: fadeSlideIn 300ms ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  @include bp.from(bp.$bp-md) {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 40px;
+  }
+}
+
+.cardLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+
+  @include bp.from(bp.$bp-md) {
+    gap: 36px;
+  }
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: t.$nl-font-raleway;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: -0.4px;
+  color: t.$nl-color-text-body;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.headingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heading {
+  font-family: t.$nl-font-general-sans;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: -0.48px;
+  color: t.$nl-color-text-heading;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 32px;
+    letter-spacing: -0.64px;
+  }
+}
+
+.body {
+  font-family: t.$nl-font-raleway;
+  font-size: 16px;
+  line-height: 1.5;
+  color: t.$nl-color-text-body;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 18px;
+  }
+}
+
+.learnMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  color: t.$nl-color-cta-outline-text;
+  border: 1px solid t.$nl-color-cta-outline-border;
+  border-radius: t.$nl-radius-pill;
+  padding: 16px 24px;
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 16px;
+  cursor: pointer;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.cardRight {
+  display: flex;
+  padding: 24px;
+  border-radius: t.$nl-radius-card;
+  background: linear-gradient(to top, t.$nl-blue-300, t.$nl-violet-400);
+
+  @include bp.below(bp.$bp-md) {
+    min-height: 220px;
+  }
+}
+
+// ---- Tab 1: diagnostic brief (exact Figma spec) ----
+
+.diagnosticCard {
+  width: 100%;
+  background: #fff;
+  border: 1px solid $dc-slate-200;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: $dc-shadow;
+  font-family: t.$nl-font-geist;
+}
+
+.diagnosticHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid $dc-slate-100;
+}
+
+.diagnosticTitle {
+  display: block;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: $dc-indigo;
+}
+
+.diagnosticName {
+  font-family: t.$nl-font-hanken;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.48px;
+  color: $dc-slate-900;
+  margin: 8px 0 0;
+}
+
+.diagnosticRole {
+  font-size: 13px;
+  color: $dc-slate-500;
+  margin: 0;
+}
+
+.matchBadge {
+  background: $dc-emerald-bg;
+  border: 1px solid $dc-emerald-border;
+  color: $dc-emerald-text;
+  font-family: t.$nl-font-hanken;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.27px;
+  border-radius: 12px;
+  padding: 9px 17px;
+  white-space: nowrap;
+}
+
+.diagnosticBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+.tagsLabelRow,
+.synthesisLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+
+  img {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.tagsLabel {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.44px;
+  text-transform: uppercase;
+  color: $dc-emerald-text;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: $dc-emerald-bg;
+  border: 1px solid $dc-emerald-border;
+  color: $dc-emerald-text-strong;
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 6px;
+  padding: 5px 13px;
+}
+
+.synthesis {
+  background: $dc-slate-50;
+  border: 1px solid $dc-slate-200;
+  border-radius: 12px;
+  padding: 17px;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: -0.07px;
+    line-height: 20px;
+    color: $dc-slate-700;
+  }
+}
+
+.synthesisLabel {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.44px;
+  text-transform: uppercase;
+  color: $dc-indigo-strong;
+}
+
+// ---- Tab 2: stepper (reconstructed) ----
+
+.stepperCard {
+  width: 100%;
+  background: #fff;
+  border: 1px solid $dc-slate-200;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: $dc-shadow;
+  font-family: t.$nl-font-geist;
+  display: flex;
+  flex-direction: column;
+}
+
+.stepperRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.stepperNode,
+.stepperNodeDone {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stepperNode {
+  border: 2px solid $dc-slate-200;
+  background: #fff;
+}
+
+.stepperNodeDone {
+  background: $dc-emerald-text;
+}
+
+.stepperLine {
+  position: absolute;
+  left: 5px;
+  top: 100%;
+  width: 2px;
+  height: 14px;
+  background: $dc-slate-200;
+}
+
+.stepperLabel {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: $dc-slate-900;
+}
+
+.pillDone,
+.pillPending {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: t.$nl-radius-pill;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+.pillDone {
+  background: $dc-emerald-bg;
+  color: $dc-emerald-text;
+}
+
+.pillPending {
+  background: $dc-blue-50;
+  color: $dc-blue-600;
+}
+
+// ---- Tab 3: dashboard (reconstructed) ----
+
+.dashboardCard {
+  width: 100%;
+  background: #fff;
+  border: 1px solid $dc-slate-200;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: $dc-shadow;
+  font-family: t.$nl-font-geist;
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dashboardMetricLabel {
+  font-size: 13px;
+  color: $dc-slate-500;
+}
+
+.dashboardMetricValue {
+  font-family: t.$nl-font-hanken;
+  font-weight: 700;
+  font-size: 22px;
+  color: $dc-slate-900;
+}
+
+.sparkline {
+  width: 100%;
+  height: 48px;
+  margin-bottom: 16px;
+
+  polyline {
+    stroke: $dc-indigo;
+  }
+}
+
+.dashboardTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    color: $dc-slate-500;
+    padding-bottom: 8px;
+    border-bottom: 1px solid $dc-slate-100;
+  }
+
+  td {
+    padding: 8px 0;
+    color: $dc-slate-900;
+    border-bottom: 1px solid $dc-slate-100;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: $dc-blue-50;
+  color: $dc-blue-600;
+  font-size: 9px;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+// ---- Tab 4: photo (reconstructed) ----
+
+.photoCard {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: $dc-shadow;
+  min-height: 180px;
+
+  @include bp.from(bp.$bp-md) {
+    min-height: 260px;
+  }
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoOverlay {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  right: 12px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  font-family: t.$nl-font-geist;
+}
+
+.photoName {
+  font-family: t.$nl-font-hanken;
+  font-weight: 700;
+  font-size: 15px;
+  color: $dc-slate-900;
+  margin: 0;
+}
+
+.photoRole {
+  font-size: 12px;
+  color: $dc-slate-500;
+  margin: 2px 0 8px;
+}
+
+.photoFit {
+  background: $dc-emerald-bg;
+  color: $dc-emerald-text;
+  font-weight: 600;
+  border-radius: t.$nl-radius-pill;
+  padding: 2px 8px;
+  margin-left: 4px;
+}
+
+.photoTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.photoTag {
+  background: $dc-emerald-bg;
+  border: 1px solid $dc-emerald-border;
+  color: $dc-emerald-text-strong;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 3px 8px;
+}

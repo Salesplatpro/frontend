@@ -1,0 +1,80 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  padding: 120px t.$nl-page-padding;
+  background: linear-gradient(
+    202.28deg,
+    t.$nl-violet-300 0%,
+    t.$nl-blue-500 49.043%,
+    t.$nl-violet-950 100%
+  );
+  @include t.nl-mobile-page-padding-x;
+}
+
+.heading {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-50;
+  text-align: center;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.grid {
+  width: 100%;
+  max-width: 1216px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+
+  @include bp.below(bp.$bp-lg) {
+    .card:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @include bp.from(bp.$bp-lg) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  font-family: t.$nl-font-raleway;
+
+  @include bp.from(bp.$bp-md) {
+    gap: 64px;
+  }
+}
+
+.value {
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 1;
+  color: t.$nl-blue-800;
+}
+
+.label {
+  font-size: 16px;
+  line-height: 1.5;
+  color: t.$nl-slateblue-950;
+  white-space: pre-line;
+}

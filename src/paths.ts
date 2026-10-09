@@ -12,6 +12,7 @@ export const paths = {
   testimonials: 'testimonials',
   pricing: 'pricing',
   features: 'features',
+  resources: 'resources',
   blog: 'https://mysalesplat.com/blog/',
   facebook: 'https://facebook.com/Salesplat',
   twitter: 'https://x.com/SalesPlat',
