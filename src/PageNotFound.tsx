@@ -2,8 +2,6 @@ import React from 'react'
 import { RiArrowGoBackLine } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 
-import { LandingFooter } from '@/components/features/landing/landingPageComponents'
-
 import errorImage from './assets/errorImage.png'
 
 function PageNotFound() {
@@ -42,8 +40,6 @@ function PageNotFound() {
           />
         </div>
       </div>
-
-      <LandingFooter />
     </div>
   )
 }

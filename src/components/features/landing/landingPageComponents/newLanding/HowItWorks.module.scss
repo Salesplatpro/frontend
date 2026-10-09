@@ -1,0 +1,289 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+// Scoped to this section's "mini product screenshot" mocks — not shared
+// tokens, mirrors the $dc-* pattern already used in HeroPanel.module.scss.
+$dc-slate-900: #0f172a;
+$dc-slate-600: #475569;
+$dc-shadow-card: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+
+// Figma-exact badge chip colors (not part of the shared nl- ramp).
+$badge-bg: #eef2ff;
+$badge-border: #e0e7ff;
+
+.section {
+  padding: 96px t.$nl-page-padding;
+  background: #fff;
+  @include t.nl-mobile-page-padding-x;
+}
+
+.copy {
+  max-width: 800px;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.heading {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: 1.25;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.subcopy {
+  font-family: t.$nl-font-raleway;
+  font-size: 16px;
+  line-height: 1.5;
+  color: t.$nl-slateblue-800;
+  margin: 0;
+  max-width: 700px;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 20px;
+    line-height: 30px;
+  }
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 1280px;
+  margin-inline: auto;
+
+  @include bp.from(bp.$bp-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp.from(bp.$bp-lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.connector {
+  display: none;
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 50%;
+  height: 1px;
+  background: t.$nl-blue-200;
+  transform: translateY(-50%);
+  z-index: 0;
+
+  @include bp.from(bp.$bp-lg) {
+    display: block;
+  }
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid t.$nl-blue-200;
+  border-radius: 16px;
+  box-shadow: $dc-shadow-card;
+  overflow: hidden;
+}
+
+.cardTop {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 16px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: $badge-bg;
+  border: 1px solid $badge-border;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.05);
+  color: t.$nl-blue-700;
+  font-family: t.$nl-font-raleway;
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: -0.48px;
+}
+
+.title {
+  font-family: t.$nl-font-hanken;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: -0.27px;
+  color: $dc-slate-900;
+  margin: 0;
+}
+
+.description {
+  font-family: t.$nl-font-raleway;
+  font-size: 14px;
+  line-height: 1.4;
+  color: $dc-slate-600;
+  margin: 0;
+}
+
+.mockPanel {
+  flex-shrink: 0;
+  height: 144px;
+  padding: 16px 24px;
+  background: linear-gradient(
+    206.725deg,
+    t.$nl-violet-50 0%,
+    t.$nl-blue-400 47.873%,
+    t.$nl-violet-900 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// ---- Steps 1-2: search / pill mock ----
+
+.searchMock,
+.pillMock {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  padding: 10px 16px;
+  font-family: t.$nl-font-raleway;
+  font-size: 14px;
+  color: t.$nl-slateblue-900;
+
+  img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.searchMock {
+  border-radius: t.$nl-radius-pill;
+}
+
+.pillMock {
+  border-radius: 8px;
+}
+
+// ---- Step 3: skeleton table mock ----
+
+.skeletonCard {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.skeletonColumn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonCell {
+  height: 21px;
+  display: flex;
+  align-items: center;
+  padding-left: 7px;
+}
+
+.skeletonBar {
+  display: block;
+  height: 5px;
+  border-radius: t.$nl-radius-pill;
+  background: t.$nl-gray-200;
+}
+
+// ---- Step 4: profile mock ----
+
+.profileCard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid t.$nl-violet-50;
+  border-radius: 12px;
+  padding: 12px;
+  font-family: t.$nl-font-raleway;
+}
+
+.iconBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: t.$nl-violet-500;
+
+  img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.profileName {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.27px;
+  color: t.$nl-violet-950;
+  margin: 0;
+}
+
+.profileMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profileRole {
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: -0.07px;
+  color: t.$nl-slateblue-800;
+}
+
+.fitBadge {
+  background: t.$nl-blue-100;
+  color: t.$nl-blue-950;
+  font-size: 11px;
+  border-radius: 4px;
+  padding: 2px 4px;
+  white-space: nowrap;
+}

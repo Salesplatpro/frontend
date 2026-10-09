@@ -2,8 +2,8 @@ import React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import {
-  LandingFooter,
-  LandingNavbar,
+  Footer,
+  Navbar,
 } from '@/components/features/landing/landingPageComponents'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { destinationAfterAuth } from '@/features/auth/utils/dashboardPath'
@@ -30,11 +30,11 @@ export const MainLayout = () => {
 
   return (
     <>
-      <LandingNavbar />
-      <main className="mt-16">
+      <Navbar />
+      <main>
         <Outlet />
       </main>
-      <LandingFooter />
+      <Footer />
     </>
   )
 }

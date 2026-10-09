@@ -1,0 +1,525 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+// Figma-exact colors outside the shared nl- ramp.
+$text-supporting: #475467;
+$score-orange: #ff8d28;
+$score-green: #34c759;
+$status-open-bg: rgba(1, 158, 66, 0.2);
+$status-open-text: #019e42;
+$status-closed-bg: rgba(117, 117, 117, 0.3);
+$status-closed-text: #757575;
+$recruiter-pink: #c11574;
+$recruiter-blue: #175cd3;
+$recruiter-amber: #b54708;
+$recruiter-pill-border: #f6f6f6;
+
+$gradient-violet: linear-gradient(270deg, t.$nl-blue-900, t.$nl-violet-400);
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  padding: 96px t.$nl-page-padding;
+  background: #fff;
+  @include t.nl-mobile-page-padding-x;
+
+  @include bp.from(bp.$bp-md) {
+    gap: 96px;
+  }
+}
+
+.header {
+  width: 100%;
+  max-width: 768px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.heading {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.subcopy {
+  font-family: t.$nl-font-inter;
+  font-size: 16px;
+  line-height: 24px;
+  color: $text-supporting;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 20px;
+    line-height: 30px;
+  }
+}
+
+.rows {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+
+  @include bp.from(bp.$bp-xl) {
+    gap: 96px;
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include bp.from(bp.$bp-xl) {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+
+.visualFirst {
+  @include bp.from(bp.$bp-xl) {
+    flex-direction: row-reverse;
+  }
+}
+
+.copyCell {
+  display: flex;
+
+  @include bp.from(bp.$bp-xl) {
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 48px 64px 48px 0;
+
+    .visualFirst & {
+      justify-content: flex-start;
+      padding: 48px 0 48px 64px;
+    }
+  }
+}
+
+.copy {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  @include bp.from(bp.$bp-xl) {
+    max-width: 576px;
+    padding: 0 32px;
+  }
+}
+
+.copyText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-family: t.$nl-font-raleway;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.25;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 30px;
+  }
+}
+
+%body-lg {
+  font-family: t.$nl-font-inter;
+  font-size: 18px;
+  line-height: 28px;
+  color: $text-supporting;
+}
+
+.description {
+  @extend %body-lg;
+  margin: 0;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0;
+  padding: 0 0 0 16px;
+  list-style: none;
+}
+
+.point {
+  @extend %body-lg;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  img {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+}
+
+// ---- Visual panels ----
+
+.visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 32px;
+  overflow: hidden;
+  padding: 40px 20px;
+
+  @include bp.from(bp.$bp-xl) {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 20px;
+  }
+}
+
+// ---- Scores ----
+
+.visualScores {
+  background: $gradient-violet;
+
+  @include bp.from(bp.$bp-xl) {
+    padding: 0 48px;
+  }
+}
+
+.scoreList {
+  width: 100%;
+  max-width: 544px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scoreCard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: #fff;
+  border: 0.5px solid t.$nl-blue-50;
+  border-radius: 16px;
+
+  &.blue {
+    .scoreValue {
+      color: t.$nl-violet-600;
+    }
+
+    .scoreFill {
+      background: t.$nl-blue-500;
+    }
+  }
+
+  &.orange {
+    .scoreValue {
+      color: $score-orange;
+    }
+
+    .scoreFill {
+      background: $score-orange;
+    }
+  }
+
+  &.green {
+    .scoreValue {
+      color: $score-green;
+    }
+
+    .scoreFill {
+      background: $score-green;
+    }
+  }
+}
+
+.scoreHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: t.$nl-font-raleway;
+  font-size: 18px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.scoreLabel {
+  font-weight: 500;
+  color: t.$nl-slateblue-800;
+}
+
+.scoreValue {
+  font-weight: 600;
+}
+
+.scoreLabel,
+.scoreValue {
+  &.large {
+    font-size: 20px;
+  }
+}
+
+.scoreTrack {
+  display: block;
+  height: 6px;
+  border-radius: 20px;
+  background: t.$nl-gray-100;
+}
+
+.scoreFill {
+  display: block;
+  height: 100%;
+  border-radius: 20px;
+}
+
+// ---- Jobs ----
+
+.visualJobs {
+  background: linear-gradient(180deg, t.$nl-blue-50, t.$nl-blue-200);
+}
+
+.jobList {
+  width: 100%;
+  max-width: 502px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.jobCard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  row-gap: 12px;
+  padding: 16px 20px;
+  background: #fff;
+  border: 0.3px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  font-family: t.$nl-font-raleway;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.jobText {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #000;
+}
+
+.jobTitle {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.jobMeta {
+  font-weight: 500;
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.jobStats {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.jobStatus {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px 0 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+
+  &.open {
+    background: $status-open-bg;
+    color: $status-open-text;
+  }
+
+  &.closed {
+    background: $status-closed-bg;
+    color: $status-closed-text;
+  }
+}
+
+// Figma sits this label 1.8px above the status pill's centre line.
+.jobApplicants {
+  width: 111px;
+  margin-bottom: 3.6px;
+  font-weight: 500;
+  font-size: 16px;
+  color: t.$nl-violet-900;
+}
+
+// ---- Recruiters ----
+// Pill sizes are Figma's 1.655x-scaled component instance values.
+
+.visualRecruiters {
+  background: $gradient-violet;
+  padding: 40px 0;
+
+  @include bp.from(bp.$bp-xl) {
+    padding: 0;
+  }
+}
+
+.recruiterRows {
+  flex: 0 0 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 19.862px;
+}
+
+.recruiterRow {
+  display: flex;
+  justify-content: center;
+  gap: 13.241px;
+}
+
+.recruiterPill {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 9.931px;
+  padding: 13.241px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1.439px $recruiter-pill-border;
+  border-radius: 49px;
+}
+
+.recruiterAvatar {
+  width: 39.724px;
+  height: 39.724px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.recruiterText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: t.$nl-font-raleway;
+  font-size: 13.241px;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.recruiterName {
+  font-weight: 600;
+
+  &.pink {
+    color: $recruiter-pink;
+  }
+
+  &.blue {
+    color: $recruiter-blue;
+  }
+
+  &.amber {
+    color: $recruiter-amber;
+  }
+}
+
+// Zero intrinsic width so the role truncates to the name's width.
+.recruiterRole {
+  width: 0;
+  min-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: t.$nl-slateblue-950;
+  mix-blend-mode: hard-light;
+}
+
+// ---- Stats ----
+
+.visualStats {
+  background: linear-gradient(180deg, t.$nl-blue-100, t.$nl-blue-300);
+}
+
+.statsBody {
+  width: 100%;
+  max-width: 511px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 38px;
+}
+
+.statGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 245px));
+  align-items: center;
+  gap: 16px;
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  padding: 10px 0 10px 10px;
+  background: #fff;
+  border-radius: 15px;
+  font-family: t.$nl-font-raleway;
+  line-height: 1.1;
+  color: #000;
+}
+
+.statValue {
+  font-weight: 600;
+  font-size: 30px;
+
+  &.large {
+    font-size: 38px;
+  }
+}
+
+.statLabel {
+  font-size: 18px;
+}
+
+.barChart {
+  width: 100%;
+  max-width: 489px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+}
+
+.bar {
+  flex: 0 1 63px;
+  border-radius: 4px 4px 0 0;
+  background: rgba(255, 255, 255, 0.4);
+
+  &.highlight {
+    background: #fff;
+  }
+}

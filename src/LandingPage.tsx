@@ -2,14 +2,16 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 
 import {
+  CandidateExperience,
+  CtaBanner,
+  Faq,
+  Hero,
+  HiringScale,
+  HiringTeams,
   HowItWorks,
-  ItsForYou,
-  LandingHero,
-  RecruitmentWorkflow,
-  Statistics,
-  Testimonials,
+  ImpactMetrics,
+  WorkflowFeatures,
 } from '@/components/features/landing/landingPageComponents'
-import { howItWorksData } from '@/components/features/landing/landingPageComponents/utils'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
 import { dashboardPathForRole } from '@/features/auth/utils/dashboardPath'
 
@@ -22,17 +24,16 @@ export const LandingPage = () => {
   }
 
   return (
-    <div style={{ overflowX: 'hidden' }}>
-      <LandingHero />
-      <RecruitmentWorkflow
-        title="How it works"
-        subTitle="Your Recruitment Workflow, Reinvented."
-        data={howItWorksData}
-      />
-      <ItsForYou />
-      <Statistics />
+    <>
+      <Hero />
       <HowItWorks />
-      <Testimonials />
-    </div>
+      <WorkflowFeatures />
+      <ImpactMetrics />
+      <HiringTeams />
+      <CandidateExperience />
+      <HiringScale />
+      <CtaBanner />
+      <Faq />
+    </>
   )
 }

@@ -1,0 +1,91 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+.section {
+  padding: 96px t.$nl-page-padding;
+  background: #fff;
+  @include t.nl-mobile-page-padding-x;
+}
+
+.header {
+  max-width: 768px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.heading {
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.subcopy {
+  font-family: t.$nl-font-general-sans;
+  font-size: 16px;
+  line-height: 1.5;
+  color: t.$nl-color-text-body;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 18px;
+  }
+}
+
+.list {
+  max-width: 768px;
+  margin-inline: auto;
+}
+
+.item {
+  padding: 24px 0;
+  border-top: 1px solid t.$nl-color-border;
+
+  &:last-child {
+    border-bottom: 1px solid t.$nl-color-border;
+  }
+}
+
+.question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: t.$nl-font-raleway;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.4;
+  color: t.$nl-slateblue-950;
+
+  svg {
+    flex-shrink: 0;
+    color: t.$nl-gray-500;
+  }
+}
+
+.answer {
+  margin: 12px 0 0;
+  padding-right: 36px;
+  font-family: t.$nl-font-general-sans;
+  font-size: 15px;
+  line-height: 1.6;
+  color: t.$nl-color-text-body;
+}

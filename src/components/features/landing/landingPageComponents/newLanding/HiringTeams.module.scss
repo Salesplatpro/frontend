@@ -1,0 +1,78 @@
+@use '../../../../../styles/breakpoints' as bp;
+@use './styles/tokens' as t;
+
+.section {
+  padding: 96px t.$nl-page-padding;
+  background: #fff;
+  @include t.nl-mobile-page-padding-x;
+}
+
+.inner {
+  max-width: 1216px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.heading {
+  max-width: 768px;
+  font-family: t.$nl-font-raleway;
+  font-weight: 550;
+  font-size: 28px;
+  line-height: normal;
+  letter-spacing: -0.56px;
+  color: t.$nl-slateblue-950;
+  margin: 0;
+
+  @include bp.from(bp.$bp-md) {
+    font-size: 40px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  @include bp.from(bp.$bp-md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  mix-blend-mode: luminosity;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: t.$nl-font-raleway;
+  line-height: 1.5;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: inherit;
+  color: t.$nl-violet-950;
+  margin: 0;
+}
+
+.description {
+  font-size: 14px;
+  color: t.$nl-gray-700;
+  margin: 0;
+}
