@@ -37,6 +37,7 @@ import PreAssessmentPage from '@/features/pre-assessment/page'
 import { LandingPage } from '@/LandingPage'
 import { MainLayout, Resources } from '@/pages'
 import AdminProfileSidebar from '@/pages/AdminProfile/AdminProfileSidebar'
+import Applications from '@/pages/AdminProfile/Applications/Applications'
 import Feedback from '@/pages/AdminProfile/Feedback/Feedback'
 import AdminJobDetail from '@/pages/AdminProfile/JobDetail/AdminJobDetail'
 import Jobs from '@/pages/AdminProfile/Jobs/Jobs'
@@ -490,6 +491,10 @@ export const routeConfig: RouteObject[] = [
               {
                 path: 'talents/:talentId',
                 element: <AdminTalentDetail />,
+              },
+              {
+                path: 'applications',
+                element: <Applications />,
               },
               {
                 path: 'roles',

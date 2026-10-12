@@ -5,12 +5,16 @@ import { PageHeaderTitle } from '@/components/layout/PageHeaderTitle'
 import { PagePanel } from '@/components/layout/PagePanel'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { stuckBadge } from '@/features/admin/applicationFollowUp'
 import { useAdminTalentProfile } from '@/features/admin/hooks/useAdminTalentProfile'
+import { useTalentStuckApplications } from '@/features/admin/hooks/useTalentStuckApplications'
 import { useAdminTalentMessaging } from '@/features/messaging/hooks/useAdminTalentMessaging'
 import { DisplayMessage } from '@/pages/RecruiterProfile/MyJobPosts/Messaging/DisplayMessage'
 import { notify } from '@/utils/toastNotifications'
 import { viewCandidateCv } from '@/utils/viewCandidateCv'
 
+import { ApplicationFollowUpDrawer } from '../Applications/ApplicationFollowUpDrawer'
+import onboardingStyles from '../Onboarding/Onboarding.module.scss'
 import { OnboardingDrawer } from '../Onboarding/OnboardingDrawer'
 import styles from './TalentDetail.module.scss'
 
@@ -20,8 +24,13 @@ const TalentDetail = () => {
   const [isLoadingCv, setIsLoadingCv] = useState(false)
   const [messageContent, setMessageContent] = useState('')
   const [isFollowUpOpen, setIsFollowUpOpen] = useState(false)
+  const [stuckApplicationId, setStuckApplicationId] = useState<string | null>(
+    null,
+  )
 
   const { talent, isLoading } = useAdminTalentProfile(talentId)
+  const { applications: stuckApplications } =
+    useTalentStuckApplications(talentId)
 
   const {
     messages,
@@ -132,6 +141,58 @@ const TalentDetail = () => {
         {talent.bio ? <p className={styles.bio}>{talent.bio}</p> : null}
       </PagePanel>
 
+      {stuckApplications.length > 0 && (
+        <PagePanel title="Stuck applications">
+          <div className={styles.stuckList}>
+            {stuckApplications.map((application) => {
+              const badge = stuckBadge(application.stage)
+              return (
+                <div
+                  key={application.applicationId}
+                  className={styles.stuckRow}>
+                  <div className={styles.stuckInfo}>
+                    <span className={styles.stuckJob}>
+                      {application.job.title}
+                    </span>
+                    {application.company && (
+                      <span className={styles.stuckCompany}>
+                        {application.company.name}
+                      </span>
+                    )}
+                    <span
+                      className={`${onboardingStyles.badge} ${
+                        onboardingStyles[badge.tone]
+                      }`}>
+                      {badge.label}
+                    </span>
+                  </div>
+                  <div className={styles.panelActions}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        navigate(
+                          `/adminDashboard/jobs/${application.job.id}?applicationId=${application.applicationId}`,
+                        )
+                      }>
+                      View
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setStuckApplicationId(application.applicationId)
+                      }>
+                      Follow up
+                    </Button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </PagePanel>
+      )}
+
       <PagePanel title="Message this talent">
         <div className={styles.messages}>
           {isMessagesLoading ? (
@@ -161,6 +222,11 @@ const TalentDetail = () => {
         userId={isFollowUpOpen ? talent.id : null}
         userName={`${talent.firstName} ${talent.lastName}`}
         onClose={() => setIsFollowUpOpen(false)}
+      />
+      <ApplicationFollowUpDrawer
+        applicationId={stuckApplicationId}
+        talentName={`${talent.firstName} ${talent.lastName}`}
+        onClose={() => setStuckApplicationId(null)}
       />
     </div>
   )

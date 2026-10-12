@@ -14,7 +14,11 @@ import {
   AdminTalent,
   AdminTalentFilters,
   AdminTalentProfile,
+  ApplicationFollowUp,
+  ApplicationFollowUpEmailRecord,
   OnboardingEmailRecord,
+  StuckApplicationsQuery,
+  StuckApplicationSummary,
   UserOnboarding,
 } from '../types'
 
@@ -114,6 +118,53 @@ export const sendOnboardingEmail = (
   httpClient
     .post<ApiEnvelope<{ email: OnboardingEmailRecord }>>(
       `/admin/users/${userId}/onboarding/emails`,
+      payload,
+    )
+    .then((response) => response.data.data.email)
+
+export const fetchStuckApplications = (
+  filters: StuckApplicationsQuery = {},
+) => {
+  const params = Object.fromEntries(
+    Object.entries(filters).filter(
+      ([, value]) => value !== undefined && value !== '',
+    ),
+  )
+  return httpClient
+    .get<
+      ApiEnvelope<{ applications: StuckApplicationSummary[]; total: number }>
+    >('/admin/applications', { params })
+    .then((response) => response.data.data)
+}
+
+export const fetchTalentStuckApplications = (talentId: string) =>
+  httpClient
+    .get<ApiEnvelope<{ applications: StuckApplicationSummary[] }>>(
+      `/admin/users/${talentId}/stuck-applications`,
+    )
+    .then((response) => response.data.data.applications)
+
+export const fetchApplicationFollowUp = (applicationId: string) =>
+  httpClient
+    .get<ApiEnvelope<{ followUp: ApplicationFollowUp }>>(
+      `/admin/applications/${applicationId}/follow-up`,
+    )
+    .then((response) => response.data.data.followUp)
+
+export const draftApplicationFollowUpEmail = (applicationId: string) =>
+  httpClient
+    .post<ApiEnvelope<{ draft: { subject: string; body: string } }>>(
+      `/admin/applications/${applicationId}/follow-up/draft`,
+    )
+    .then((response) => response.data.data.draft)
+
+export const sendApplicationFollowUpEmail = (
+  applicationId: string,
+  payload: { subject: string; body: string; confirm?: boolean },
+) =>
+  httpClient
+    .post<ApiEnvelope<{ email: ApplicationFollowUpEmailRecord }>>(
+      `/admin/applications/${applicationId}/follow-up/emails`,
       payload,
     )
     .then((response) => response.data.data.email)

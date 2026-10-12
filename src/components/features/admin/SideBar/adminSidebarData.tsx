@@ -2,6 +2,7 @@ import React from 'react'
 import {
   HiOutlineBriefcase,
   HiOutlineChatAlt2,
+  HiOutlineClipboardList,
   HiOutlineOfficeBuilding,
 } from 'react-icons/hi'
 import { HiOutlineUserCircle, HiOutlineUsers } from 'react-icons/hi2'
@@ -30,6 +31,11 @@ export const adminSidebarData = [
     name: 'Jobs',
     icon: <HiOutlineBriefcase size={ICON_SIZE} />,
     link: '/adminDashboard/jobs',
+  },
+  {
+    name: 'Applications',
+    icon: <HiOutlineClipboardList size={ICON_SIZE} />,
+    link: '/adminDashboard/applications',
   },
   {
     name: 'Roles',

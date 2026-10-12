@@ -188,6 +188,73 @@ export interface AdminOrganizationFilters {
   sort?: 'asc' | 'desc'
 }
 
+export type ScreeningStage =
+  | 'personality'
+  | 'personalized'
+  | 'prescreening'
+  | 'cv_similarity'
+  | 'completed'
+
+export type ApplicationFollowUpStatus = 'none' | 'emailed' | 'progressed'
+
+export interface StuckApplicationSummary {
+  applicationId: string
+  talent: { id: string; firstName: string; lastName: string; email: string }
+  job: { id: string; title: string }
+  company: { id: string; name: string } | null
+  stage: ScreeningStage
+  daysStuck: number
+  emailsSent: number
+  lastEmailAt: string | null
+  followUp: ApplicationFollowUpStatus
+}
+
+export interface ApplicationFollowUpEmailRecord {
+  id: string
+  applicationId: string
+  sentById: string | null
+  step: number
+  stage: ScreeningStage
+  subject: string
+  body: string
+  status: 'sent' | 'failed'
+  error: string | null
+  createdAt: string
+}
+
+export interface ApplicationFollowUpStep {
+  key: ScreeningStage
+  label: string
+  done: boolean
+  current: boolean
+}
+
+export interface ApplicationFollowUp {
+  applicationId: string
+  talentName: string
+  jobTitle: string
+  companyName: string | null
+  stage: ScreeningStage
+  stuck: boolean
+  daysStuck: number
+  steps: ApplicationFollowUpStep[]
+  nextSteps: { steps: string[]; ctaLabel: string } | null
+  followUp: ApplicationFollowUpStatus
+  emails: ApplicationFollowUpEmailRecord[]
+}
+
+export interface ApplicationFollowUpFilters {
+  stuckStage?: ScreeningStage | ''
+  followUp?: ApplicationFollowUpStatus | ''
+}
+
+export interface StuckApplicationsQuery extends ApplicationFollowUpFilters {
+  search?: string
+  limit?: number
+  offset?: number
+  sort?: 'asc' | 'desc'
+}
+
 export interface AdminFeedback {
   id: string
   subject: string | null

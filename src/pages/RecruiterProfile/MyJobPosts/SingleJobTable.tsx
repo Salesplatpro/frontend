@@ -15,6 +15,7 @@ import {
   StatusBadge,
   TableActions,
 } from '../../../components'
+import { isRowStuck } from '../../../features/admin/applicationFollowUp'
 import { JobAiConfigThresholds } from '../../../features/applications/services/applicationService'
 import { formatTimeAgo, SingleJobDetails } from '../../../utils'
 import { getStatusBadge } from '../getJobStatus'
@@ -295,12 +296,28 @@ export const buildColumns = ({
     hideBelow: 768,
     toggleable: true,
     render: (item) => (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 4,
+        }}>
         <StatusBadge
           status={item.status}
           showDot
           {...getStatusBadge(item.status)}
         />
+        {isRowStuck(item) && (
+          <span
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--color-warning-600)',
+            }}
+            title="No progress for 1+ day">
+            Stuck
+          </span>
+        )}
       </div>
     ),
     sortAccessor: (item) => item.status,
