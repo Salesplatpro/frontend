@@ -105,4 +105,88 @@ export const TOUR_STEPS: Record<TourRole, TourStep[]> = {
   talent: TALENT_TOUR,
 }
 
-export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {}
+const TALENT_PROFILE_PAGE = '/talentDashboard/talentProfile'
+const TALENT_JOBS_PAGE = '/talentDashboard/job'
+
+export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {
+  complete_profile: [
+    {
+      target: 'profile-bio',
+      route: TALENT_PROFILE_PAGE,
+      title: 'Complete your profile',
+      body: 'Start with a short bio about your work and what you are good at.',
+      why: 'It is the first thing a recruiter reads, and AI uses it to match you.',
+    },
+    {
+      target: 'profile-role',
+      route: TALENT_PROFILE_PAGE,
+      title: 'Pick your roles',
+      body: 'Choose the roles you want to work in.',
+      why: 'Jobs are matched to your roles, so this decides what you see.',
+    },
+    {
+      target: 'profile-fit',
+      route: TALENT_PROFILE_PAGE,
+      title: 'Experience, work type and location',
+      body: 'Set your experience level, how you want to work and where you are.',
+      why: 'These decide which jobs fit you and where employers can place you.',
+    },
+    {
+      target: 'profile-salary',
+      route: TALENT_PROFILE_PAGE,
+      title: 'Your salary range',
+      body: 'Pick a currency, a minimum and maximum, and a pay period.',
+      why: 'It keeps offers close to what you expect.',
+    },
+    {
+      target: 'profile-cv',
+      route: TALENT_PROFILE_PAGE,
+      title: 'Upload your CV',
+      body: 'Upload a PDF or DOCX. It saves as soon as the upload finishes.',
+      why: 'AI reads it to score your fit for each job, and employers can view it.',
+    },
+    {
+      target: 'profile-form',
+      route: TALENT_PROFILE_PAGE,
+      advanceOn: 'stage',
+      title: 'Save your profile',
+      body: 'Fill in anything still empty, then press Save.',
+      why: 'Your pre-assessment unlocks only when every field is complete.',
+    },
+  ],
+  take_assessment: [
+    {
+      target: 'nav-pre-assessment',
+      advanceOn: 'click',
+      to: '/talentDashboard/talentQuiz',
+      title: 'Take your pre-assessment',
+      body: 'Open it when you have about 20 quiet minutes. It starts right away and locks the app until you finish.',
+      why: 'You take it once, and your score is reused for every job you apply to.',
+    },
+  ],
+  apply_to_job: [
+    {
+      target: 'nav-jobs',
+      advanceOn: 'click',
+      to: TALENT_JOBS_PAGE,
+      title: 'Find a job',
+      body: 'Open Jobs to see openings that match your roles.',
+      why: 'Applying is how employers get to see you.',
+    },
+    {
+      target: 'job-card',
+      route: TALENT_JOBS_PAGE,
+      advanceOn: 'click',
+      title: 'Open a job',
+      body: 'Pick a job that fits you and open it to read the details.',
+      why: 'Each job shows the steps you will go through.',
+    },
+    {
+      target: 'apply-job',
+      advanceOn: 'stage',
+      title: 'Apply',
+      body: 'Read the role, then press Apply for this position.',
+      why: 'It starts your application, and your pre-assessment score is reused.',
+    },
+  ],
+}

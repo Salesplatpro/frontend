@@ -298,7 +298,11 @@ const IndividualJob = () => {
       Applied ✓
     </Button>
   ) : hasApplication ? null : (
-    <Button fullWidth onClick={handleApply} loading={applying}>
+    <Button
+      fullWidth
+      onClick={handleApply}
+      loading={applying}
+      data-tour="apply-job">
       Apply for this position
     </Button>
   )

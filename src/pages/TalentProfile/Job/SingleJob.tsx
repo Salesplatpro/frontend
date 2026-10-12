@@ -39,6 +39,7 @@ export type SingleJobProps = {
   applicationStage?: string | null
   applicationStages?: Record<string, string> | null
   organization?: JobOrganization | null
+  tourId?: string
 }
 
 export const SingleJob = ({
@@ -54,6 +55,7 @@ export const SingleJob = ({
   applicationStage,
   applicationStages,
   organization,
+  tourId,
 }: SingleJobProps) => {
   const facingStage = talentFacingStage(applicationStage, applicationStages)
   const isComplete = facingStage === 'completed'
@@ -62,7 +64,10 @@ export const SingleJob = ({
     <Card className={styles.card}>
       <PiBuildingOfficeBold size={36} className={styles.icon} />
       <div className={styles.body}>
-        <Link to={`/talentDashboard/job/${jobId}`} className={styles.titleRow}>
+        <Link
+          to={`/talentDashboard/job/${jobId}`}
+          className={styles.titleRow}
+          data-tour={tourId}>
           <span className={styles.title}>{capitalizeFirstWord(jobTitle)}</span>
           <span className={styles.category}>
             <GoDotFill className={styles.categoryDot} />

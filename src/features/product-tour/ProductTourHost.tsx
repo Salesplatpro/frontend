@@ -62,8 +62,8 @@ export const ProductTourHost = ({
   }, [showStageTour, mutate])
 
   useEffect(() => {
-    if (showStageTour) void mutate()
-  }, [showStageTour, location.pathname, mutate])
+    if (stageSteps && !replaying) void mutate()
+  }, [stageSteps, replaying, location.pathname, mutate])
 
   useEffect(() => () => stop(), [stop])
 
