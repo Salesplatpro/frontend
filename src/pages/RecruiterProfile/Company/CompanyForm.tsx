@@ -298,7 +298,7 @@ export const CompanyForm: React.FC<CompanyFormProps> = ({
       validationSchema={isEdit ? editValidationSchema : createValidationSchema}
       onSubmit={onSubmit}>
       <div className={styles.layout}>
-        <Form className={styles.form} noValidate>
+        <Form className={styles.form} noValidate data-tour="company-form">
           <FormikFocusOnError />
           <PagePanel>
             <div className={styles.sectionHead}>

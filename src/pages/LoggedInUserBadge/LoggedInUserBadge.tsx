@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   HiOutlineCreditCard,
   HiOutlineLockClosed,
+  HiOutlineQuestionMarkCircle,
   HiOutlineUser,
 } from 'react-icons/hi'
 import { HiArrowRightOnRectangle } from 'react-icons/hi2'
@@ -13,7 +14,7 @@ import {
 } from 'react-icons/io'
 import { IoCheckmarkCircle } from 'react-icons/io5'
 import { MdOutlineWorkspacePremium } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { NotificationPanel } from '@/components/features/notifications/NotificationPanel'
 import { Avatar } from '@/components/ui/Avatar'
@@ -24,6 +25,7 @@ import { useNotifications } from '@/features/notifications/hooks/useNotification
 import { isPayPerUsePlan } from '@/features/pricing/types'
 import { getActiveOrganizationBilling } from '@/features/pricing/utils/getActiveOrganizationBilling'
 import { getBillingPlanBadge } from '@/features/pricing/utils/getBillingPlanBadge'
+import { pageTourFor, useTourStore } from '@/features/product-tour'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { ThemeMode, useTheme } from '@/features/theme/ThemeProvider'
 
@@ -55,6 +57,8 @@ export const LoggedInUserBadge: React.FC = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const startTour = useTourStore((state) => state.start)
 
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
@@ -109,6 +113,15 @@ export const LoggedInUserBadge: React.FC = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isDropdownVisible, isNotificationsOpen])
+
+  const tourRole = role === 'talent' || role === 'recruiter' ? role : null
+  const hasPageTour = !!tourRole && !!pageTourFor(tourRole, pathname)
+
+  const takeTour = () => {
+    if (!tourRole) return
+    closeDropdown()
+    startTour(tourRole, hasPageTour ? 'page' : undefined)
+  }
 
   const goTo = (path: string) => {
     closeDropdown()
@@ -288,6 +301,29 @@ export const LoggedInUserBadge: React.FC = () => {
                 <span className={styles.menuTitle}>Change password</span>
                 <span className={styles.menuHint}>
                   Update the password for your account
+                </span>
+              </span>
+              <IoIosArrowForward className={styles.menuChevron} />
+            </button>
+          )}
+
+          {tourRole && (
+            <button
+              type="button"
+              className={styles.menuRow}
+              onClick={takeTour}
+              role="menuitem">
+              <span className={styles.menuIcon}>
+                <HiOutlineQuestionMarkCircle size={20} />
+              </span>
+              <span className={styles.menuCopy}>
+                <span className={styles.menuTitle}>
+                  {hasPageTour ? 'Tour this page' : 'Take the tour'}
+                </span>
+                <span className={styles.menuHint}>
+                  {hasPageTour
+                    ? 'See what this page is for'
+                    : 'A quick look around the app'}
                 </span>
               </span>
               <IoIosArrowForward className={styles.menuChevron} />

@@ -159,7 +159,7 @@ const AiConfig = () => {
           }
 
           return (
-            <Form noValidate>
+            <Form noValidate data-tour="ai-config">
               <FormikFocusOnError />
               {!existingConfig && <FormObserver saveDraft={draftSaver} />}
 

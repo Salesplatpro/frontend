@@ -65,10 +65,7 @@ describe('Guide', () => {
     fireEvent.click(
       screen.getByRole('button', { name: /take the tour again/i }),
     )
-    expect(useTourStore.getState().active).toEqual({
-      role: 'recruiter',
-      source: 'replay',
-    })
+    expect(useTourStore.getState().active).toEqual({ role: 'recruiter' })
     useTourStore.getState().stop()
   })
 })

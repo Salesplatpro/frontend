@@ -96,7 +96,7 @@ const Job = () => {
             <Spinner fullPage />
           ) : jobs.length > 0 ? (
             <div className={styles.jobList}>
-              {jobs.map((job) => (
+              {jobs.map((job, index) => (
                 <SingleJob
                   key={job.id}
                   jobId={job.id}
@@ -111,6 +111,7 @@ const Job = () => {
                   applicationStage={job.applicationStage}
                   applicationStages={job.applicationStages}
                   organization={job.organization}
+                  tourId={index === 0 ? 'job-card' : undefined}
                 />
               ))}
             </div>

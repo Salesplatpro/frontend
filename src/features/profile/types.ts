@@ -42,13 +42,26 @@ export interface ProfileUser {
   assessmentRetryDate?: string | null
   roleChangeCount?: number
   activePreScreeningId?: string | null
-  /** When the first-time product tour was finished or skipped; null means not yet. */
-  tourCompletedAt?: string | null
   createdAt?: string
   updatedAt?: string
   userRoles?: ProfileRole[]
   activeOrganization?: Organization | null
   profileCompletion?: ProfileCompletion
+}
+
+export type OnboardingStage =
+  | 'verify_email'
+  | 'complete_profile'
+  | 'take_assessment'
+  | 'apply_to_job'
+  | 'create_company'
+  | 'post_job'
+  | 'set_up_screening'
+  | 'publish_job'
+  | 'active'
+
+export interface OnboardingApiResponse {
+  data: { onboarding: { role: string; stage: OnboardingStage } }
 }
 
 export interface ProfileApiResponse {

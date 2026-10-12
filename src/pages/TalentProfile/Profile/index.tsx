@@ -105,10 +105,10 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
             }
 
             return (
-              <Form noValidate>
+              <Form noValidate data-tour="profile-form">
                 <FormikFocusOnError />
                 <FocusFirstIncompleteField hasCv={hasCv} />
-                <div className={styles.fieldGroup}>
+                <div className={styles.fieldGroup} data-tour="profile-bio">
                   <label className={styles.label} htmlFor="bio">
                     Bio
                   </label>
@@ -138,7 +138,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                       className={styles.readonlyInput}
                     />
                   </div>
-                  <div className={styles.field}>
+                  <div className={styles.field} data-tour="profile-role">
                     <div className={styles.labelRow}>
                       <span className={styles.label}>Role</span>
                       {profile?.roleChangeCount !== undefined && (
@@ -156,58 +156,63 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                   </div>
                 </div>
 
-                <div className={styles.row}>
-                  <div className={styles.field}>
-                    <Select
-                      name="experience"
-                      label="Experience Level"
-                      options={EXPERIENCE_LEVEL_OPTIONS}
-                      value={values.experience}
-                      onChange={(value) => setFieldValue('experience', value)}
-                      placeholder="Select experience level"
-                      error={fieldError('experience')}
-                    />
+                <div data-tour="profile-fit">
+                  <div className={styles.row}>
+                    <div className={styles.field}>
+                      <Select
+                        name="experience"
+                        label="Experience Level"
+                        options={EXPERIENCE_LEVEL_OPTIONS}
+                        value={values.experience}
+                        onChange={(value) => setFieldValue('experience', value)}
+                        placeholder="Select experience level"
+                        error={fieldError('experience')}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.row}>
+                    <div className={styles.fullField}>
+                      <div className={styles.label}>Work Type</div>
+                      <WorkTypeCheckboxes
+                        name="workType"
+                        value={values.workType}
+                        onChange={(value) => setFieldValue('workType', value)}
+                        error={
+                          touched.workType &&
+                          typeof errors.workType === 'string'
+                            ? errors.workType
+                            : undefined
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className={styles.row}>
+                    <div className={styles.fullField}>
+                      <LocationSelect
+                        value={values.location}
+                        onChange={(location) =>
+                          setFieldValue('location', location)
+                        }
+                        stateLabel="State/Province (Optional)"
+                        cityLabel="Region/City (Optional)"
+                        countryRequired
+                        errors={{
+                          country:
+                            touched.location?.country &&
+                            typeof errors.location?.country?.name === 'string'
+                              ? errors.location.country.name
+                              : undefined,
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className={styles.row}>
-                  <div className={styles.fullField}>
-                    <div className={styles.label}>Work Type</div>
-                    <WorkTypeCheckboxes
-                      name="workType"
-                      value={values.workType}
-                      onChange={(value) => setFieldValue('workType', value)}
-                      error={
-                        touched.workType && typeof errors.workType === 'string'
-                          ? errors.workType
-                          : undefined
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className={styles.row}>
-                  <div className={styles.fullField}>
-                    <LocationSelect
-                      value={values.location}
-                      onChange={(location) =>
-                        setFieldValue('location', location)
-                      }
-                      stateLabel="State/Province (Optional)"
-                      cityLabel="Region/City (Optional)"
-                      countryRequired
-                      errors={{
-                        country:
-                          touched.location?.country &&
-                          typeof errors.location?.country?.name === 'string'
-                            ? errors.location.country.name
-                            : undefined,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className={`${styles.row} ${styles.salaryRow}`}>
+                <div
+                  className={`${styles.row} ${styles.salaryRow}`}
+                  data-tour="profile-salary">
                   <div className={styles.salaryField}>
                     <Select
                       name="currency"
@@ -294,6 +299,7 @@ const TalentProfile = ({ formikRef }: TalentProfileProps) => {
                   <div
                     className={styles.fullField}
                     data-field="cv"
+                    data-tour="profile-cv"
                     id="cv-field"
                     tabIndex={-1}>
                     <label className={styles.label} htmlFor="cv">

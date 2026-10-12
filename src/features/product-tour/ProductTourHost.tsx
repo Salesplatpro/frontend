@@ -1,97 +1,140 @@
-import React, { useEffect, useRef } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import useSWR from 'swr'
 
 import { useProfile } from '@/features/profile/hooks/useProfile'
-import { completeTour } from '@/features/profile/services/profileService'
-import { useProfileStore } from '@/features/profile/store/useProfileStore'
+import {
+  fetchOnboarding,
+  ONBOARDING_ENDPOINT,
+} from '@/features/profile/services/profileService'
 
-import { ProductTour } from './ProductTour'
-import { TOUR_STEPS, TourRole } from './tourSteps'
+import { ProductTour, TourCloseReason } from './ProductTour'
+import { pageTourFor, STAGE_TOURS, TOUR_STEPS, TourRole } from './tourSteps'
 import { useTourStore } from './useTourStore'
 
-const sessionKey = (role: TourRole) => `auxhr-tour-dismissed-${role}`
+const STAGE_POLL_MS = 5000
+const SEEN_KEY = 'auxhr-page-tours-seen'
 
-// sessionStorage can be unavailable (private mode, blocked storage).
-const dismissedThisSession = (role: TourRole) => {
+// localStorage can be unavailable (private mode, blocked storage).
+const readSeen = (): string[] => {
   try {
-    return window.sessionStorage.getItem(sessionKey(role)) === '1'
+    const parsed: unknown = JSON.parse(
+      window.localStorage.getItem(SEEN_KEY) ?? '[]',
+    )
+    return Array.isArray(parsed) ? parsed.map(String) : []
   } catch {
-    return false
+    return []
   }
 }
 
-const rememberDismissed = (role: TourRole) => {
+const writeSeen = (seen: string[]) => {
   try {
-    window.sessionStorage.setItem(sessionKey(role), '1')
+    window.localStorage.setItem(SEEN_KEY, JSON.stringify(seen))
   } catch {
-    // Nothing to do — the server flag is the real record.
+    // Seeing a page tour again is harmless.
   }
 }
 
 type ProductTourHostProps = {
   audience: TourRole
-  /** The dashboard home page the first-run tour starts on. */
-  homePath: string
   /** Holds the tour back, e.g. while the talent pre-assessment locks navigation. */
   blocked?: boolean
 }
 
 export const ProductTourHost = ({
   audience: role,
-  homePath,
   blocked = false,
 }: ProductTourHostProps) => {
   const location = useLocation()
+  const navigate = useNavigate()
   const { profile } = useProfile()
-  const patchProfile = useProfileStore((state) => state.patchProfile)
   const active = useTourStore((state) => state.active)
-  const start = useTourStore((state) => state.start)
+  const paused = useTourStore((state) => state.paused)
   const stop = useTourStore((state) => state.stop)
-  const autoStarted = useRef(false)
+  const pause = useTourStore((state) => state.pause)
 
+  const replaying = active?.role === role
   const welcomeOpen = !!(
     location.state as { showWelcomeModal?: boolean } | null
   )?.showWelcomeModal
-  const onHome = location.pathname.replace(/\/+$/, '') === homePath
-  // Only an explicit null means "not done yet"; undefined means the API
-  // didn't say, and older sessions must never be surprised by a tour.
-  const needsTour =
-    profile?.userRole === role && profile?.tourCompletedAt === null
+
+  const [seen, setSeen] = useState(readSeen)
+
+  const { data, error, mutate } = useSWR(
+    profile?.id && profile.userRole === role
+      ? [ONBOARDING_ENDPOINT, profile.id]
+      : null,
+    fetchOnboarding,
+    { revalidateOnFocus: false },
+  )
+
+  const stage = data?.data.onboarding.stage
+  const stageSteps = stage ? STAGE_TOURS[stage] : undefined
+  const stageKey = `${role}:${stage}`
+  const showStageTour =
+    !replaying &&
+    !!stageSteps &&
+    !blocked &&
+    !welcomeOpen &&
+    !paused.includes(stageKey)
+
+  const pageTour = pageTourFor(role, location.pathname)
+  const showPageTour =
+    !replaying &&
+    !stageSteps &&
+    (!!data || !!error) &&
+    !blocked &&
+    !welcomeOpen &&
+    !!pageTour &&
+    !seen.includes(pageTour.id)
 
   useEffect(() => {
-    if (
-      autoStarted.current ||
-      active ||
-      blocked ||
-      welcomeOpen ||
-      !onHome ||
-      !needsTour ||
-      dismissedThisSession(role)
-    ) {
-      return
-    }
-    autoStarted.current = true
-    start(role, 'firstRun')
-  }, [active, blocked, welcomeOpen, onHome, needsTour, role, start])
+    if (!showStageTour) return
+    const interval = window.setInterval(() => void mutate(), STAGE_POLL_MS)
+    return () => window.clearInterval(interval)
+  }, [showStageTour, mutate])
+
+  useEffect(() => {
+    if (stageSteps && !replaying) void mutate()
+  }, [stageSteps, replaying, location.pathname, mutate])
 
   useEffect(() => () => stop(), [stop])
 
-  if (!active || active.role !== role) return null
+  if (replaying) {
+    const replaySteps =
+      active?.scope === 'page' && pageTour ? pageTour.steps : TOUR_STEPS[role]
+    return <ProductTour steps={replaySteps} onClose={stop} />
+  }
 
-  const handleClose = async () => {
-    const isFirstRun = active.source === 'firstRun'
-    stop()
-    if (!isFirstRun) return
-    rememberDismissed(role)
-    try {
-      const response = await completeTour()
-      patchProfile({ tourCompletedAt: response.data.tourCompletedAt })
-    } catch {
-      // Kept dismissed for this session; the tour may show again next visit.
+  if (showPageTour && pageTour) {
+    const handlePageClose = () => {
+      const next = [...seen, pageTour.id]
+      setSeen(next)
+      writeSeen(next)
     }
+    return (
+      <ProductTour
+        key={pageTour.id}
+        steps={pageTour.steps}
+        onClose={handlePageClose}
+      />
+    )
+  }
+
+  if (!showStageTour || !stageSteps) return null
+
+  const handleClose = (reason: TourCloseReason) => {
+    if (reason !== 'skipped') pause(stageKey)
   }
 
   return (
-    <ProductTour steps={TOUR_STEPS[role]} onClose={() => void handleClose()} />
+    <ProductTour
+      key={stageKey}
+      steps={stageSteps}
+      forced
+      pathname={location.pathname}
+      onNavigate={(path) => navigate(path)}
+      onClose={handleClose}
+    />
   )
 }

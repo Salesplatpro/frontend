@@ -50,10 +50,7 @@ const RecruiterProfileSidebar = () => {
         <div className="outlet">
           <Outlet />
         </div>
-        <ProductTourHost
-          audience="recruiter"
-          homePath="/recruiterDashboard/dashboard"
-        />
+        <ProductTourHost audience="recruiter" />
       </div>
     </ThemeProvider>
   )
