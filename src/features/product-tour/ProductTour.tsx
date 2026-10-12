@@ -74,6 +74,7 @@ export const ProductTour = ({
   const cardRef = useRef<HTMLDivElement>(null)
   const pathnameRef = useRef(pathname)
   const onNavigateRef = useRef(onNavigate)
+  const advanceRef = useRef<() => void>(() => undefined)
   const titleId = useId()
   const bodyId = useId()
   const step = steps[index]
@@ -94,6 +95,8 @@ export const ProductTour = ({
     setIndex((current) => current + 1)
   }, [isLast, onClose])
 
+  advanceRef.current = advance
+
   const measure = useCallback(() => {
     const viewport = { width: window.innerWidth, height: window.innerHeight }
     const element = findTarget(step?.target)
@@ -111,11 +114,15 @@ export const ProductTour = ({
 
   useEffect(() => {
     setTimedOut(false)
+    if (step?.skipWhen?.(pathnameRef.current)) {
+      advanceRef.current()
+      return
+    }
     const route = step?.route
     if (route && !onPage(pathnameRef.current, route)) {
       onNavigateRef.current?.(route)
     }
-  }, [index, step?.route])
+  }, [index, step?.route, step?.skipWhen])
 
   useLayoutEffect(() => {
     findTarget(step?.target)?.scrollIntoView?.({ block: 'nearest' })

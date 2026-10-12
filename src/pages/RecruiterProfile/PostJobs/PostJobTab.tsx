@@ -103,7 +103,7 @@ const PostJobTab = ({ step = 'new' }: PostJobTabProps) => {
         }}
       />
 
-      <div>{renderContent()}</div>
+      <div data-tour="post-job-content">{renderContent()}</div>
     </PageShell>
   )
 }

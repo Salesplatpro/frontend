@@ -12,6 +12,8 @@ export interface TourStep {
   route?: string
   /** Where clicking the target leads; offered as "Take me there" when the target can't be found. */
   to?: string
+  /** Skips the step when the user is already past it, e.g. already on the page it opens. */
+  skipWhen?: (pathname: string) => boolean
   /** `click` waits for a click on the target; `stage` waits for the user to finish the step on the page. */
   advanceOn?: 'click' | 'stage'
 }
@@ -105,6 +107,15 @@ export const TOUR_STEPS: Record<TourRole, TourStep[]> = {
   talent: TALENT_TOUR,
 }
 
+const withinPage = (page: string) => (pathname: string) => {
+  const current = pathname.replace(/\/+$/, '')
+  return current === page || current.startsWith(`${page}/`)
+}
+
+const COMPANY_NEW_PAGE = '/recruiterDashboard/company/new'
+const POST_JOB_PAGE = '/recruiterDashboard/postjob'
+const MY_JOBS_PAGE = '/recruiterDashboard/myJobPosts'
+
 const TALENT_PROFILE_PAGE = '/talentDashboard/talentProfile'
 const TALENT_JOBS_PAGE = '/talentDashboard/job'
 
@@ -169,6 +180,7 @@ export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {
       target: 'nav-jobs',
       advanceOn: 'click',
       to: TALENT_JOBS_PAGE,
+      skipWhen: withinPage(TALENT_JOBS_PAGE),
       title: 'Find a job',
       body: 'Open Jobs to see openings that match your roles.',
       why: 'Applying is how employers get to see you.',
@@ -176,6 +188,7 @@ export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {
     {
       target: 'job-card',
       route: TALENT_JOBS_PAGE,
+      skipWhen: (pathname) => pathname.startsWith(`${TALENT_JOBS_PAGE}/`),
       advanceOn: 'click',
       title: 'Open a job',
       body: 'Pick a job that fits you and open it to read the details.',
@@ -187,6 +200,61 @@ export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {
       title: 'Apply',
       body: 'Read the role, then press Apply for this position.',
       why: 'It starts your application, and your pre-assessment score is reused.',
+    },
+  ],
+  create_company: [
+    {
+      target: 'company-form',
+      route: COMPANY_NEW_PAGE,
+      advanceOn: 'stage',
+      title: 'Set up your company',
+      body: 'Add your company name, industry and a website or LinkedIn, then press Create company.',
+      why: 'Jobs are posted under your company, and candidates see it.',
+    },
+  ],
+  post_job: [
+    {
+      target: 'nav-post-job',
+      advanceOn: 'click',
+      to: POST_JOB_PAGE,
+      skipWhen: withinPage(POST_JOB_PAGE),
+      title: 'Post your first job',
+      body: 'Open Post a Job to describe the role you are hiring for.',
+      why: 'Applicants and screening both start from a job.',
+    },
+    {
+      target: 'post-job-content',
+      advanceOn: 'stage',
+      title: 'Describe the role',
+      body: 'Let AI draft it from a sentence, or start from scratch. Check the details, then continue to screening.',
+      why: 'Applicants and AI screening both work from this brief.',
+    },
+  ],
+  set_up_screening: [
+    {
+      target: 'nav-my-job-posts',
+      advanceOn: 'click',
+      to: MY_JOBS_PAGE,
+      skipWhen: withinPage(POST_JOB_PAGE),
+      title: 'Finish your draft',
+      body: 'Open My Job Posts to find the job you started.',
+      why: 'A job needs a screening setup before it can be published.',
+    },
+    {
+      target: 'add-ai-config',
+      route: MY_JOBS_PAGE,
+      advanceOn: 'click',
+      skipWhen: withinPage(POST_JOB_PAGE),
+      title: 'Add the screening setup',
+      body: 'Press Add AI Config on your draft job.',
+      why: 'It decides which tests applicants take before you see them.',
+    },
+    {
+      target: 'ai-config',
+      advanceOn: 'stage',
+      title: 'Choose how applicants are screened',
+      body: 'Pick a preset (Balanced suits most roles), adjust anything, then press Save and review.',
+      why: 'Each part adds a step candidates complete before they reach you.',
     },
   ],
 }

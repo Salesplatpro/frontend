@@ -216,7 +216,9 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 </Button>
               )}
             {job.status === 'draft' && !resolveAiConfigId(job) && (
-              <Link to={`/recruiterDashboard/postjob/${job.id}`}>
+              <Link
+                to={`/recruiterDashboard/postjob/${job.id}`}
+                data-tour="add-ai-config">
                 <button type="button" className={styles.addAiConfigButton}>
                   Add AI Config
                 </button>

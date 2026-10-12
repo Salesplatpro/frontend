@@ -261,4 +261,42 @@ describe('ProductTour', () => {
       expect(onNavigate).not.toHaveBeenCalled()
     })
   })
+
+  describe('skipping steps', () => {
+    const skippable = [
+      {
+        title: 'Open the page',
+        body: 'Go there',
+        skipWhen: (pathname: string) => pathname.startsWith('/jobs'),
+      },
+      { title: 'Next one', body: 'Carry on' },
+    ]
+
+    it('skips a step the user is already past', () => {
+      render(
+        <ProductTour steps={skippable} pathname="/jobs/1" onClose={vi.fn()} />,
+      )
+      expect(screen.getByRole('dialog', { name: 'Next one' })).toBeTruthy()
+    })
+
+    it('shows the step when the user is not past it', () => {
+      render(
+        <ProductTour steps={skippable} pathname="/home" onClose={vi.fn()} />,
+      )
+      expect(screen.getByRole('dialog', { name: 'Open the page' })).toBeTruthy()
+    })
+
+    it('does not navigate to a step page it is skipping', () => {
+      const onNavigate = vi.fn()
+      render(
+        <ProductTour
+          steps={[{ ...skippable[0], route: '/elsewhere' }, skippable[1]]}
+          pathname="/jobs/1"
+          onNavigate={onNavigate}
+          onClose={vi.fn()}
+        />,
+      )
+      expect(onNavigate).not.toHaveBeenCalled()
+    })
+  })
 })
