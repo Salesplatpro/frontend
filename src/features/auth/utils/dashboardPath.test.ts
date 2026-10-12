@@ -53,6 +53,20 @@ describe('destinationAfterAuth', () => {
     )
   })
 
+  it('sends an admin to the overview dashboard by default', () => {
+    expect(dashboardPathForRole('admin')).toBe('/adminDashboard')
+    expect(destinationAfterAuth('admin', null)).toBe('/adminDashboard')
+  })
+
+  it('resumes an admin sub-page but not another role dashboard', () => {
+    expect(destinationAfterAuth('admin', '/adminDashboard/jobs')).toBe(
+      '/adminDashboard/jobs',
+    )
+    expect(destinationAfterAuth('admin', '/recruiterDashboard/dashboard')).toBe(
+      '/adminDashboard',
+    )
+  })
+
   it('falls back to the role dashboard when next is missing', () => {
     expect(destinationAfterAuth('talent', null)).toBe(
       dashboardPathForRole('talent'),

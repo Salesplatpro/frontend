@@ -108,6 +108,9 @@
   --heatmap-3: var(--color-brand-500);
   --heatmap-4: var(--color-brand-800);
 
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+
   /* ── Typography ────────────────────────────────────────────────────── */
   --font-heading: 'Raleway', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -248,4 +251,7 @@
   --heatmap-2: #2b5ea8;
   --heatmap-3: #4985df;
   --heatmap-4: #8ab4f8;
+
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
 }
