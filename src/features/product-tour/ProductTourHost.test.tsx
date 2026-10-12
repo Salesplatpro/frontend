@@ -60,6 +60,7 @@ describe('ProductTourHost', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     useTourStore.setState({ active: null, paused: [] })
+    window.localStorage.clear()
     profileRef.current = { ...recruiter }
     respondWith('create_company')
   })
@@ -160,5 +161,67 @@ describe('ProductTourHost', () => {
     renderHost({ path: '/recruiterDashboard/guide' })
     act(() => useTourStore.getState().start('talent'))
     expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  describe('page tours', () => {
+    const JOBS_PAGE = '/recruiterDashboard/myJobPosts'
+
+    it('shows a page tour the first time an active user opens the page', async () => {
+      respondWith('active')
+      renderHost({ path: JOBS_PAGE })
+      expect(
+        await screen.findByRole('dialog', { name: 'Your jobs' }),
+      ).toBeTruthy()
+    })
+
+    it('does not show it again once it was closed', async () => {
+      respondWith('active')
+      renderHost({ path: JOBS_PAGE })
+      await screen.findByRole('dialog', { name: 'Your jobs' })
+      fireEvent.click(screen.getByRole('button', { name: /skip tour/i }))
+
+      expect(screen.queryByRole('dialog')).toBeNull()
+      expect(window.localStorage.getItem('auxhr-page-tours-seen')).toContain(
+        'recruiter-my-job-posts',
+      )
+    })
+
+    it('stays away from a page the user has seen', async () => {
+      window.localStorage.setItem(
+        'auxhr-page-tours-seen',
+        JSON.stringify(['recruiter-my-job-posts']),
+      )
+      respondWith('active')
+      renderHost({ path: JOBS_PAGE })
+      await waitFor(() => expect(fetchOnboardingMock).toHaveBeenCalled())
+      expect(screen.queryByRole('dialog')).toBeNull()
+    })
+
+    it('waits while setup steps are still pending', async () => {
+      respondWith('post_job')
+      useTourStore.setState({ paused: ['recruiter:post_job'] })
+      renderHost({ path: JOBS_PAGE })
+      await waitFor(() => expect(fetchOnboardingMock).toHaveBeenCalled())
+      expect(screen.queryByRole('dialog')).toBeNull()
+    })
+
+    it('does not show before the stage is known', () => {
+      profileRef.current = null
+      renderHost({ path: JOBS_PAGE })
+      expect(screen.queryByRole('dialog')).toBeNull()
+    })
+
+    it('replays just this page on request', async () => {
+      respondWith('active')
+      window.localStorage.setItem(
+        'auxhr-page-tours-seen',
+        JSON.stringify(['recruiter-my-job-posts']),
+      )
+      renderHost({ path: JOBS_PAGE })
+      await waitFor(() => expect(fetchOnboardingMock).toHaveBeenCalled())
+
+      act(() => useTourStore.getState().start('recruiter', 'page'))
+      expect(screen.getByRole('dialog', { name: 'Your jobs' })).toBeTruthy()
+    })
   })
 })

@@ -6,7 +6,13 @@ import {
 } from '@/components/features/recruiter/SideBar/sidebarData'
 import { sidebarData as talentSidebar } from '@/components/features/talent/SideBar/SideBarData'
 
-import { RECRUITER_TOUR, STAGE_TOURS, TALENT_TOUR } from './tourSteps'
+import {
+  PAGE_TOURS,
+  pageTourFor,
+  RECRUITER_TOUR,
+  STAGE_TOURS,
+  TALENT_TOUR,
+} from './tourSteps'
 
 const sources = import.meta.glob('/src/**/*.tsx', {
   query: '?raw',
@@ -89,6 +95,44 @@ describe('tour steps', () => {
           expect(step.to).toBeTruthy()
         }
       }
+    })
+  })
+
+  describe('page tours', () => {
+    const routes = Object.entries(sources).find(([path]) =>
+      path.endsWith('navigation/route-config.tsx'),
+    )?.[1]
+
+    it('has unique ids and short copy', () => {
+      const ids = PAGE_TOURS.map((tour) => tour.id)
+      expect(new Set(ids).size).toBe(ids.length)
+      for (const step of PAGE_TOURS.flatMap((tour) => tour.steps)) {
+        expect(step.body.length).toBeLessThanOrEqual(160)
+        expect(step.why?.length ?? 0).toBeGreaterThan(0)
+        expect(step.why!.length).toBeLessThanOrEqual(120)
+        expect(step.advanceOn).toBeUndefined()
+      }
+    })
+
+    it('belong to routes that exist', () => {
+      expect(routes).toBeTruthy()
+      for (const tour of PAGE_TOURS) {
+        const last = tour.path.split('/').pop()
+        expect(routes).toMatch(new RegExp(`path: '${last}('|/)`))
+      }
+    })
+
+    it('finds the tour for a page, its sub-pages and only for its role', () => {
+      expect(
+        pageTourFor('recruiter', '/recruiterDashboard/shortlist')?.id,
+      ).toBe('recruiter-shortlist')
+      expect(
+        pageTourFor('recruiter', '/recruiterDashboard/singleJobPost/abc')?.id,
+      ).toBe('recruiter-applicants')
+      expect(
+        pageTourFor('talent', '/recruiterDashboard/shortlist'),
+      ).toBeUndefined()
+      expect(pageTourFor('talent', '/talentDashboard')).toBeUndefined()
     })
   })
 })

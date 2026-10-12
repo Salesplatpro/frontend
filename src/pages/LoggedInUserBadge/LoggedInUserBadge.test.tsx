@@ -3,6 +3,8 @@ import React from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { useTourStore } from '@/features/product-tour'
+
 import { LoggedInUserBadge } from './LoggedInUserBadge'
 
 const { navigateMock, authState, orgState } = vi.hoisted(() => ({
@@ -73,9 +75,9 @@ vi.mock('@/features/notifications/hooks/useMarkAllNotificationsRead', () => ({
   }),
 }))
 
-const renderBadge = () =>
+const renderBadge = (path = '/') =>
   render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[path]}>
       <LoggedInUserBadge />
     </MemoryRouter>,
   )
@@ -86,6 +88,7 @@ describe('LoggedInUserBadge', () => {
     authState.logout.mockReset()
     authState.user.userRole = 'talent'
     orgState.billingPlan = 'pay_per_use'
+    useTourStore.getState().stop()
   })
 
   it('navigates to the change-password route from the account menu', () => {
@@ -140,5 +143,38 @@ describe('LoggedInUserBadge', () => {
     expect(screen.queryByText(/Free/)).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: /Ada Lovelace/ }))
     expect(screen.getByText('Pay per Use')).toBeTruthy()
+  })
+
+  describe('tour entry', () => {
+    const openMenu = () =>
+      fireEvent.click(screen.getByRole('button', { name: /Ada Lovelace/ }))
+
+    it('starts the page tour when the current page has one', () => {
+      renderBadge('/talentDashboard/chat')
+      openMenu()
+      fireEvent.click(screen.getByRole('menuitem', { name: /Tour this page/ }))
+
+      expect(useTourStore.getState().active).toEqual({
+        role: 'talent',
+        scope: 'page',
+      })
+    })
+
+    it('starts the overview tour on a page without its own', () => {
+      authState.user.userRole = 'recruiter'
+      renderBadge('/recruiterDashboard/profile')
+      openMenu()
+      fireEvent.click(screen.getByRole('menuitem', { name: /Take the tour/ }))
+
+      expect(useTourStore.getState().active).toEqual({ role: 'recruiter' })
+    })
+
+    it('is not offered to admins', () => {
+      authState.user.userRole = 'admin'
+      renderBadge()
+      openMenu()
+
+      expect(screen.queryByRole('menuitem', { name: /tour/i })).toBeNull()
+    })
   })
 })

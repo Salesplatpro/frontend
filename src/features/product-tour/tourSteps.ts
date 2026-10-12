@@ -258,3 +258,166 @@ export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {
     },
   ],
 }
+
+export interface PageTour {
+  id: string
+  role: TourRole
+  /** The tour belongs to this page and everything under it. */
+  path: string
+  steps: TourStep[]
+}
+
+export const PAGE_TOURS: PageTour[] = [
+  {
+    id: 'talent-pipeline',
+    role: 'talent',
+    path: '/talentDashboard/applicationPipeline',
+    steps: [
+      {
+        title: 'Your applications',
+        body: 'Every job you applied to is listed here with the stage it is at.',
+        why: 'You see at a glance where each one stands.',
+      },
+      {
+        title: 'Finish waiting steps',
+        body: 'If a job shows a test or task, open it and complete it.',
+        why: 'Finishing every stage raises your ranking for that job.',
+      },
+    ],
+  },
+  {
+    id: 'talent-jobs',
+    role: 'talent',
+    path: '/talentDashboard/job',
+    steps: [
+      {
+        title: 'Find jobs',
+        body: 'Search and filter open jobs. Open one to see its steps before you apply.',
+        why: 'Each job can screen applicants differently.',
+      },
+    ],
+  },
+  {
+    id: 'talent-inbox',
+    role: 'talent',
+    path: '/talentDashboard/chat',
+    steps: [
+      {
+        title: 'Your inbox',
+        body: 'Employers who want to talk to you message you here. Reply from this page.',
+        why: 'A quick reply keeps you in the running.',
+      },
+    ],
+  },
+  {
+    id: 'talent-notifications',
+    role: 'talent',
+    path: '/talentDashboard/notification',
+    steps: [
+      {
+        title: 'Notifications',
+        body: 'Updates on your applications show up here.',
+        why: 'So you never miss a next step.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-my-job-posts',
+    role: 'recruiter',
+    path: MY_JOBS_PAGE,
+    steps: [
+      {
+        title: 'Your jobs',
+        body: 'Each job shows its status and how many people applied. Open one to see its applicants.',
+        why: 'Applicants are already scored, so you start with the strongest.',
+      },
+      {
+        title: 'Share and publish',
+        body: 'Share active jobs with their link, and publish drafts when they are ready.',
+        why: 'Only published jobs can receive applications.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-applicants',
+    role: 'recruiter',
+    path: '/recruiterDashboard/singleJobPost',
+    steps: [
+      {
+        title: 'Ranked applicants',
+        body: 'Applicants are scored against your job and listed best first. Open one for the full report.',
+        why: 'You can skip the CV pile and start with the best fits.',
+      },
+      {
+        title: 'Shortlist',
+        body: 'Shortlist the people you like. Everyone you shortlist is kept on the Shortlist page.',
+        why: 'Your best candidates stay in one place.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-scout',
+    role: 'recruiter',
+    path: '/recruiterDashboard/scout',
+    steps: [
+      {
+        title: 'Scout',
+        body: 'Upload CVs you already have in bulk, and AI scores each one against your job.',
+        why: 'You get a ranked list without screening by hand.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-talent-search',
+    role: 'recruiter',
+    path: '/recruiterDashboard/talent-search',
+    steps: [
+      {
+        title: 'Talent Search',
+        body: 'Find talents already on Auxhr by role, experience and location.',
+        why: 'You can reach good candidates who have not applied yet.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-shortlist',
+    role: 'recruiter',
+    path: '/recruiterDashboard/shortlist',
+    steps: [
+      {
+        title: 'Your shortlist',
+        body: 'Everyone you shortlisted is kept here, across all your jobs.',
+        why: 'Your best candidates are always one click away.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-chat',
+    role: 'recruiter',
+    path: '/recruiterDashboard/chat',
+    steps: [
+      {
+        title: 'Chat',
+        body: 'Message talents directly and pick conversations up where you left off.',
+        why: 'Fast replies keep good candidates interested.',
+      },
+    ],
+  },
+  {
+    id: 'recruiter-plan',
+    role: 'recruiter',
+    path: '/recruiterDashboard/plan',
+    steps: [
+      {
+        title: 'Plan and billing',
+        body: 'See your plan, what it allows, and your billing history here.',
+        why: 'Know your limits before you hit one.',
+      },
+    ],
+  },
+]
+
+export const pageTourFor = (role: TourRole, pathname: string) =>
+  PAGE_TOURS.find(
+    (tour) => tour.role === role && withinPage(tour.path)(pathname),
+  )

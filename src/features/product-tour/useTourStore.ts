@@ -3,11 +3,11 @@ import { create } from 'zustand'
 import { TourRole } from './tourSteps'
 
 interface TourState {
-  /** A replay the user asked for from the Guide. */
-  active: { role: TourRole } | null
+  /** A replay the user asked for: the whole-app overview, or just the current page. */
+  active: { role: TourRole; scope?: 'page' } | null
   /** Stages the user paused this session; cleared by the reload on logout. */
   paused: string[]
-  start: (role: TourRole) => void
+  start: (role: TourRole, scope?: 'page') => void
   stop: () => void
   pause: (key: string) => void
 }
@@ -15,7 +15,7 @@ interface TourState {
 export const useTourStore = create<TourState>()((set) => ({
   active: null,
   paused: [],
-  start: (role) => set({ active: { role } }),
+  start: (role, scope) => set({ active: { role, scope } }),
   stop: () => set({ active: null }),
   pause: (key) =>
     set((state) =>

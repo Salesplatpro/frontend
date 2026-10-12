@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 
@@ -9,10 +9,31 @@ import {
 } from '@/features/profile/services/profileService'
 
 import { ProductTour, TourCloseReason } from './ProductTour'
-import { STAGE_TOURS, TOUR_STEPS, TourRole } from './tourSteps'
+import { pageTourFor, STAGE_TOURS, TOUR_STEPS, TourRole } from './tourSteps'
 import { useTourStore } from './useTourStore'
 
 const STAGE_POLL_MS = 5000
+const SEEN_KEY = 'auxhr-page-tours-seen'
+
+// localStorage can be unavailable (private mode, blocked storage).
+const readSeen = (): string[] => {
+  try {
+    const parsed: unknown = JSON.parse(
+      window.localStorage.getItem(SEEN_KEY) ?? '[]',
+    )
+    return Array.isArray(parsed) ? parsed.map(String) : []
+  } catch {
+    return []
+  }
+}
+
+const writeSeen = (seen: string[]) => {
+  try {
+    window.localStorage.setItem(SEEN_KEY, JSON.stringify(seen))
+  } catch {
+    // Seeing a page tour again is harmless.
+  }
+}
 
 type ProductTourHostProps = {
   audience: TourRole
@@ -37,7 +58,9 @@ export const ProductTourHost = ({
     location.state as { showWelcomeModal?: boolean } | null
   )?.showWelcomeModal
 
-  const { data, mutate } = useSWR(
+  const [seen, setSeen] = useState(readSeen)
+
+  const { data, error, mutate } = useSWR(
     profile?.id && profile.userRole === role
       ? [ONBOARDING_ENDPOINT, profile.id]
       : null,
@@ -55,6 +78,16 @@ export const ProductTourHost = ({
     !welcomeOpen &&
     !paused.includes(stageKey)
 
+  const pageTour = pageTourFor(role, location.pathname)
+  const showPageTour =
+    !replaying &&
+    !stageSteps &&
+    (!!data || !!error) &&
+    !blocked &&
+    !welcomeOpen &&
+    !!pageTour &&
+    !seen.includes(pageTour.id)
+
   useEffect(() => {
     if (!showStageTour) return
     const interval = window.setInterval(() => void mutate(), STAGE_POLL_MS)
@@ -68,7 +101,24 @@ export const ProductTourHost = ({
   useEffect(() => () => stop(), [stop])
 
   if (replaying) {
-    return <ProductTour steps={TOUR_STEPS[role]} onClose={stop} />
+    const replaySteps =
+      active?.scope === 'page' && pageTour ? pageTour.steps : TOUR_STEPS[role]
+    return <ProductTour steps={replaySteps} onClose={stop} />
+  }
+
+  if (showPageTour && pageTour) {
+    const handlePageClose = () => {
+      const next = [...seen, pageTour.id]
+      setSeen(next)
+      writeSeen(next)
+    }
+    return (
+      <ProductTour
+        key={pageTour.id}
+        steps={pageTour.steps}
+        onClose={handlePageClose}
+      />
+    )
   }
 
   if (!showStageTour || !stageSteps) return null
