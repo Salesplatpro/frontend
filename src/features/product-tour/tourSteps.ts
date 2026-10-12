@@ -5,6 +5,13 @@ export interface TourStep {
   target?: string
   title: string
   body: string
+  why?: string
+  /** The page the target lives on; the tour goes there when the step opens. */
+  route?: string
+  /** Where clicking the target leads; offered as "Take me there" when the target can't be found. */
+  to?: string
+  /** `click` waits for a click on the target; `stage` waits for the user to finish the step on the page. */
+  advanceOn?: 'click' | 'stage'
 }
 
 export const RECRUITER_TOUR: TourStep[] = [

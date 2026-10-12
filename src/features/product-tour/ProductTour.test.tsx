@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import React from 'react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ProductTour } from './ProductTour'
 
@@ -103,5 +103,162 @@ describe('ProductTour', () => {
     unmount()
     expect(document.activeElement).toBe(before)
     before.remove()
+  })
+
+  describe('when forced', () => {
+    it('can only be paused, not skipped', () => {
+      const onClose = vi.fn()
+      render(<ProductTour steps={steps} forced onClose={onClose} />)
+      expect(screen.queryByRole('button', { name: /skip tour/i })).toBeNull()
+      fireEvent.click(screen.getByRole('button', { name: /pause/i }))
+      expect(onClose).toHaveBeenLastCalledWith('paused')
+      fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' })
+      expect(onClose).toHaveBeenLastCalledWith('paused')
+    })
+  })
+
+  describe('gated steps', () => {
+    const gatedSteps = [
+      {
+        target: 'nav-jobs',
+        title: 'Open jobs',
+        body: 'Click Jobs',
+        why: 'That is where jobs live',
+        advanceOn: 'click' as const,
+        to: '/jobs',
+      },
+      { title: 'Done', body: 'All set' },
+    ]
+    const blocker = () =>
+      document.querySelector<HTMLElement>('[class*="blocker"]')
+
+    it('shows what to do and why, with no Next button', () => {
+      addTarget()
+      render(<ProductTour steps={gatedSteps} onClose={vi.fn()} />)
+      expect(screen.getByText('Your turn')).toBeTruthy()
+      expect(screen.getByText(/that is where jobs live/i)).toBeTruthy()
+      expect(screen.queryByRole('button', { name: 'Next' })).toBeNull()
+    })
+
+    it('opens a hole over the target only while gated', () => {
+      const target = addTarget()
+      render(<ProductTour steps={gatedSteps} onClose={vi.fn()} />)
+      expect(blocker()?.style.clipPath).toContain('evenodd')
+      fireEvent.click(target)
+      expect(screen.getByRole('dialog', { name: 'Done' })).toBeTruthy()
+      expect(blocker()?.style.clipPath).toBeFalsy()
+    })
+
+    it('moves on only when the target itself is clicked', () => {
+      const target = addTarget()
+      render(<ProductTour steps={gatedSteps} onClose={vi.fn()} />)
+      fireEvent.click(document.body)
+      expect(screen.getByRole('dialog', { name: 'Open jobs' })).toBeTruthy()
+      fireEvent.click(target)
+      expect(screen.getByRole('dialog', { name: 'Done' })).toBeTruthy()
+    })
+
+    it('closes as finished when the last step is clicked', () => {
+      const onClose = vi.fn()
+      const target = addTarget()
+      render(<ProductTour steps={gatedSteps.slice(0, 1)} onClose={onClose} />)
+      fireEvent.click(target)
+      expect(onClose).toHaveBeenCalledWith('finished')
+    })
+
+    it('waits on a stage step until the page moves on', () => {
+      addTarget()
+      const stageStep = [{ ...gatedSteps[0], advanceOn: 'stage' as const }]
+      render(<ProductTour steps={stageStep} onClose={vi.fn()} />)
+      expect(screen.queryByRole('button', { name: /next|finish/i })).toBeNull()
+      expect(blocker()?.style.clipPath).toContain('evenodd')
+    })
+
+    it('does not trap Tab, so the page stays usable', () => {
+      addTarget()
+      render(<ProductTour steps={gatedSteps} onClose={vi.fn()} />)
+      const dialog = screen.getByRole('dialog')
+      expect(dialog.getAttribute('aria-modal')).toBe('false')
+      expect(document.activeElement).not.toBe(dialog)
+    })
+  })
+
+  describe('finding the target', () => {
+    beforeEach(() => vi.useFakeTimers())
+    afterEach(() => vi.useRealTimers())
+
+    const gatedSteps = [
+      {
+        target: 'nav-jobs',
+        title: 'Open jobs',
+        body: 'Click Jobs',
+        advanceOn: 'click' as const,
+        to: '/jobs',
+      },
+      { title: 'Done', body: 'All set' },
+    ]
+
+    it('picks up a target that mounts late', () => {
+      render(<ProductTour steps={gatedSteps} onClose={vi.fn()} />)
+      const blocker = document.querySelector<HTMLElement>('[class*="blocker"]')
+      expect(blocker?.style.clipPath).toBeFalsy()
+      addTarget()
+      act(() => {
+        vi.advanceTimersByTime(300)
+      })
+      expect(blocker?.style.clipPath).toContain('evenodd')
+    })
+
+    it('lets the user continue or jump ahead when the target never shows', () => {
+      const onNavigate = vi.fn()
+      render(
+        <ProductTour
+          steps={gatedSteps}
+          pathname="/home"
+          onNavigate={onNavigate}
+          onClose={vi.fn()}
+        />,
+      )
+      expect(
+        screen.queryByRole('button', { name: /continue anyway/i }),
+      ).toBeNull()
+      act(() => {
+        vi.advanceTimersByTime(6100)
+      })
+      fireEvent.click(screen.getByRole('button', { name: /take me there/i }))
+      expect(onNavigate).toHaveBeenCalledWith('/jobs')
+      fireEvent.click(screen.getByRole('button', { name: /continue anyway/i }))
+      expect(screen.getByRole('dialog', { name: 'Done' })).toBeTruthy()
+    })
+  })
+
+  describe('step pages', () => {
+    const routed = [{ title: 'Profile', body: 'Fill it in', route: '/profile' }]
+
+    it('goes to the step page when it is elsewhere', () => {
+      const onNavigate = vi.fn()
+      render(
+        <ProductTour
+          steps={routed}
+          pathname="/home"
+          onNavigate={onNavigate}
+          onClose={vi.fn()}
+        />,
+      )
+      expect(onNavigate).toHaveBeenCalledWith('/profile')
+    })
+
+    it('stays put when already on the step page', () => {
+      const onNavigate = vi.fn()
+      render(
+        <ProductTour
+          steps={routed}
+          pathname="/profile/"
+          onNavigate={onNavigate}
+          onClose={vi.fn()}
+        />,
+      )
+      expect(onNavigate).not.toHaveBeenCalled()
+    })
   })
 })
