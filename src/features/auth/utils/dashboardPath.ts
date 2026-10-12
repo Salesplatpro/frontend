@@ -1,7 +1,7 @@
 export const dashboardPathForRole = (userRole?: string | null): string => {
   if (userRole === 'recruiter') return '/recruiterDashboard/dashboard'
   if (userRole === 'talent') return '/talentDashboard'
-  if (userRole === 'admin') return '/adminDashboard/viewcandidates'
+  if (userRole === 'admin') return '/adminDashboard'
   return '/'
 }
 

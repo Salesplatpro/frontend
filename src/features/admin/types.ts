@@ -274,3 +274,50 @@ export interface AdminFeedbackFilters {
   limit?: number
   skip?: number
 }
+
+export type OverviewRange = 7 | 30 | 90
+
+export interface OverviewPeriodTotals {
+  total: number
+  new: number
+  previous: number
+}
+
+export interface OverviewBucket {
+  key: string
+  count: number
+}
+
+export interface AdminOverview {
+  range: { days: OverviewRange; from: string; to: string }
+  kpis: {
+    talents: OverviewPeriodTotals
+    recruiters: OverviewPeriodTotals
+    organizations: {
+      total: number
+      pending: number
+      verified: number
+      rejected: number
+    }
+    jobs: { total: number; active: number }
+    applications: OverviewPeriodTotals
+    stuckApplications: number
+    unreadFeedback: number
+    unresolvedErrors: number
+    revenue: { total: number; inRange: number; previous: number }
+  }
+  series: {
+    signups: Array<{ date: string; talents: number; recruiters: number }>
+    applications: Array<{ date: string; count: number }>
+    revenue: Array<{ date: string; amount: number }>
+  }
+  breakdowns: {
+    applicationsByStatus: OverviewBucket[]
+    jobsByStatus: OverviewBucket[]
+    organizationsByPlan: OverviewBucket[]
+    talentOnboarding: OverviewBucket[]
+    recruiterOnboarding: OverviewBucket[]
+    stuckByStage: OverviewBucket[]
+    scoutRunsByStatus: OverviewBucket[]
+  }
+}

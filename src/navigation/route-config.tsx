@@ -43,6 +43,7 @@ import AdminJobDetail from '@/pages/AdminProfile/JobDetail/AdminJobDetail'
 import Jobs from '@/pages/AdminProfile/Jobs/Jobs'
 import OrganizationDetail from '@/pages/AdminProfile/Organizations/OrganizationDetail'
 import Organizations from '@/pages/AdminProfile/Organizations/Organizations'
+import Overview from '@/pages/AdminProfile/Overview/Overview'
 import Recruiters from '@/pages/AdminProfile/Recruiters/Recruiters'
 import AdminRoles from '@/pages/AdminProfile/Roles/Roles'
 import AdminTalentDetail from '@/pages/AdminProfile/Talents/TalentDetail'
@@ -462,7 +463,7 @@ export const routeConfig: RouteObject[] = [
             children: [
               {
                 index: true,
-                element: <Talents />,
+                element: <Overview />,
               },
               {
                 path: 'talents',

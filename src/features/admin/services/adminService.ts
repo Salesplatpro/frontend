@@ -7,6 +7,7 @@ import {
   AdminJobFilters,
   AdminOrganization,
   AdminOrganizationFilters,
+  AdminOverview,
   AdminRecruiter,
   AdminRecruiterFilters,
   AdminRole,
@@ -17,6 +18,7 @@ import {
   ApplicationFollowUp,
   ApplicationFollowUpEmailRecord,
   OnboardingEmailRecord,
+  OverviewRange,
   StuckApplicationsQuery,
   StuckApplicationSummary,
   UserOnboarding,
@@ -27,6 +29,11 @@ interface ApiEnvelope<T> {
   message: string
   data: T
 }
+
+export const fetchAdminOverview = (days: OverviewRange) =>
+  httpClient
+    .get<ApiEnvelope<AdminOverview>>('/admin/overview', { params: { days } })
+    .then((response) => response.data.data)
 
 export const fetchRoles = () =>
   httpClient

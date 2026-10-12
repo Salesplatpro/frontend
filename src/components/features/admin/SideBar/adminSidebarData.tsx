@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   HiOutlineBriefcase,
+  HiOutlineChartBar,
   HiOutlineChatAlt2,
   HiOutlineClipboardList,
   HiOutlineOfficeBuilding,
@@ -11,6 +12,12 @@ import { MdOutlineAdminPanelSettings } from 'react-icons/md'
 const ICON_SIZE = 20
 
 export const adminSidebarData = [
+  {
+    name: 'Overview',
+    icon: <HiOutlineChartBar size={ICON_SIZE} />,
+    link: '/adminDashboard',
+    end: true,
+  },
   {
     name: 'Talents',
     icon: <HiOutlineUsers size={ICON_SIZE} />,
