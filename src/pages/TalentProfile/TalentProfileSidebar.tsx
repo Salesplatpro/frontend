@@ -70,11 +70,7 @@ const TalentProfileSidebar: React.FC = () => {
         <div className="outlet">
           <Outlet context={{ setUnreadCount } as TalentSidebarContext} />
         </div>
-        <ProductTourHost
-          audience="talent"
-          homePath="/talentDashboard"
-          blocked={isLocked}
-        />
+        <ProductTourHost audience="talent" blocked={isLocked} />
       </div>
     </ThemeProvider>
   )

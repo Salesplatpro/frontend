@@ -2,7 +2,11 @@ import { AxiosProgressEvent } from 'axios'
 
 import { httpClient } from '@/features/auth/services/httpClient'
 
-import { ProfileApiResponse, ProfilePatchPayload } from '../types'
+import {
+  OnboardingApiResponse,
+  ProfileApiResponse,
+  ProfilePatchPayload,
+} from '../types'
 
 export const PROFILE_ENDPOINT = '/user/me'
 // Distinct from PROFILE_ENDPOINT: accepts a multipart `cv` file, which runs
@@ -11,7 +15,7 @@ export const PROFILE_ENDPOINT = '/user/me'
 const CV_UPLOAD_ENDPOINT = '/user/profile'
 // Available to every role, unlike CV_UPLOAD_ENDPOINT.
 const AVATAR_UPLOAD_ENDPOINT = '/user/avatar'
-const TOUR_ENDPOINT = '/user/me/tour'
+export const ONBOARDING_ENDPOINT = '/user/me/onboarding'
 
 export const fetchProfile = () =>
   httpClient
@@ -56,7 +60,7 @@ export const removeAvatar = () =>
     .delete<ProfileApiResponse>(AVATAR_UPLOAD_ENDPOINT)
     .then((response) => response.data)
 
-export const completeTour = () =>
+export const fetchOnboarding = () =>
   httpClient
-    .post<{ data: { tourCompletedAt: string } }>(TOUR_ENDPOINT)
+    .get<OnboardingApiResponse>(ONBOARDING_ENDPOINT)
     .then((response) => response.data)

@@ -1,3 +1,5 @@
+import { OnboardingStage } from '@/features/profile/types'
+
 export type TourRole = 'recruiter' | 'talent'
 
 export interface TourStep {
@@ -102,3 +104,5 @@ export const TOUR_STEPS: Record<TourRole, TourStep[]> = {
   recruiter: RECRUITER_TOUR,
   talent: TALENT_TOUR,
 }
+
+export const STAGE_TOURS: Partial<Record<OnboardingStage, TourStep[]>> = {}
