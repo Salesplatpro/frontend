@@ -59,7 +59,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       {plan.badge && (
         <span
           className={
-            /test/i.test(plan.badge) ? styles.badgeTesting : styles.badge
+            plan.badgeTone === 'success' ? styles.badgeSuccess : styles.badge
           }>
           {plan.badge}
         </span>
@@ -69,7 +69,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         {usd && ngn ? (
           <>
             <span className={styles.priceUsd}>{usd}</span>
-            <span className={styles.priceSep}> / </span>
             <span className={styles.priceNgn}>{ngn}</span>
           </>
         ) : (
