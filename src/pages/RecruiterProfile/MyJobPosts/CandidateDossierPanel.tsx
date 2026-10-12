@@ -9,12 +9,14 @@ import { BackButton } from '@/components/ui/BackButton'
 import { StatusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { isRowStuck } from '@/features/admin/applicationFollowUp'
 import { useApplication } from '@/features/applications/hooks/useApplication'
 import { useUpdateApplicationStatus } from '@/features/applications/hooks/useUpdateApplicationStatus'
 import {
   type JobAiConfigThresholds,
   downloadCandidateFitReport,
 } from '@/features/applications/services/applicationService'
+import { ApplicationFollowUpDrawer } from '@/pages/AdminProfile/Applications/ApplicationFollowUpDrawer'
 import { humanStage } from '@/pages/TalentProfile/Job/jobPipeline'
 import { getErrorMessage } from '@/utils/getErrorMessage'
 import type { SingleJobDetails } from '@/utils/recruiterJobPostsTypes'
@@ -125,6 +127,15 @@ export const CandidateDossierPanel = ({
   )
   const [isLoadingCv, setIsLoadingCv] = useState(false)
   const [isDownloadingReport, setIsDownloadingReport] = useState(false)
+  const [isFollowUpOpen, setIsFollowUpOpen] = useState(false)
+  const stuck = readOnly && isRowStuck(application)
+  const daysStuck = Math.max(
+    1,
+    Math.floor(
+      (Date.now() - new Date(application.updatedAt).getTime()) /
+        (24 * 60 * 60 * 1000),
+    ),
+  )
 
   const handleStatus = async (status: 'shortlisted' | 'rejected') => {
     await updateStatus(status)
@@ -234,6 +245,14 @@ export const CandidateDossierPanel = ({
               onClick={() => void handleDownloadReport()}>
               Download report
             </Button>
+            {stuck && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsFollowUpOpen(true)}>
+                Follow up
+              </Button>
+            )}
             {!readOnly && (
               <>
                 <Button
@@ -398,6 +417,17 @@ export const CandidateDossierPanel = ({
             ) : null}
           </div>
 
+          {stuck && (
+            <PagePanel title="Stuck in screening">
+              <p className={styles.prose}>
+                {fullName || 'This talent'} hasn&apos;t moved past{' '}
+                <strong>{humanStage(application.currentStage)}</strong> in{' '}
+                {daysStuck}+ day{daysStuck === 1 ? '' : 's'}. Send a follow-up
+                to nudge them back to finish this application.
+              </p>
+            </PagePanel>
+          )}
+
           {!readOnly && (
             <PagePanel title="Messages">
               <Messaging
@@ -409,6 +439,12 @@ export const CandidateDossierPanel = ({
           )}
         </>
       )}
+
+      <ApplicationFollowUpDrawer
+        applicationId={isFollowUpOpen ? application.id : null}
+        talentName={fullName || 'this talent'}
+        onClose={() => setIsFollowUpOpen(false)}
+      />
     </div>
   )
 }
