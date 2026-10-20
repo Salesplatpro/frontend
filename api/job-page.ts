@@ -17,7 +17,7 @@ export const config = { runtime: 'edge' }
 // (src/utils/baseConfig.ts) — Vercel exposes project env vars to functions via
 // `process.env` regardless of the VITE_ prefix.
 const API_BASE_URL =
-  process.env['VITE_API_BASE_URL'] ?? 'https://api.auxhr.com/v1'
+  process.env['VITE_API_BASE_URL'] || 'https://api.auxhr.com/v1'
 
 // Canonical public origin, shared with appOrigin in src/utils/shareLinks.ts.
 // og:url and rel=canonical are identity claims, so they must name production

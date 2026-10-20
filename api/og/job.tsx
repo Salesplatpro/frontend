@@ -11,7 +11,7 @@ import React from 'react'
 export const config = { runtime: 'edge' }
 
 const API_BASE_URL =
-  process.env['VITE_API_BASE_URL'] ?? 'https://api.auxhr.com/v1'
+  process.env['VITE_API_BASE_URL'] || 'https://api.auxhr.com/v1'
 
 const FALLBACK_IMAGE_PATH = '/og-image.png'
 const API_TIMEOUT_MS = 2500
@@ -108,10 +108,16 @@ type FontSet = { name: string; data: ArrayBuffer; weight: 400 | 700 }[]
 
 let fontCache: Promise<FontSet> | null = null
 
+const loadFont = async (url: string): Promise<ArrayBuffer> => {
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`Font fetch failed: ${response.status}`)
+  return response.arrayBuffer()
+}
+
 const loadFonts = (origin: string): Promise<FontSet> => {
   fontCache ??= Promise.all([
-    fetch(`${origin}/fonts/Inter-Regular.ttf`).then((r) => r.arrayBuffer()),
-    fetch(`${origin}/fonts/Inter-Bold.ttf`).then((r) => r.arrayBuffer()),
+    loadFont(`${origin}/fonts/Inter-Regular.ttf`),
+    loadFont(`${origin}/fonts/Inter-Bold.ttf`),
   ]).then(([regular, bold]) => [
     { name: 'Inter', data: regular, weight: 400 as const },
     { name: 'Inter', data: bold, weight: 700 as const },
@@ -275,10 +281,17 @@ export default async function handler(request: Request) {
       fontCache = null
     }
 
-    return new ImageResponse(<Card job={job} logo={logo} />, {
+    // ImageResponse renders lazily inside its stream, after a 200 has been
+    // sent, so a render failure would reach the crawler as a truncated PNG.
+    // Rendering to a buffer here lets the catch below serve the fallback.
+    const image = await new ImageResponse(<Card job={job} logo={logo} />, {
       width: 1200,
       height: 630,
       fonts,
+    }).arrayBuffer()
+
+    return new Response(image, {
+      status: 200,
       headers: {
         'content-type': 'image/png',
         'cache-control':
