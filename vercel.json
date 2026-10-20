@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/job/postedjob/:jobId",
+      "destination": "/api/job-page?id=:jobId"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

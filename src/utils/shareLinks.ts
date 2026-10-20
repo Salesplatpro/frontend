@@ -12,7 +12,7 @@
  * redirect whose og:url then points back at it — Facebook and LinkedIn treat
  * that as a circular redirect and render no card.
  *
- * Must stay in agreement with SITE_ORIGIN in middleware.ts and the og:url in
+ * Must stay in agreement with SITE_ORIGIN in api/job-page.ts and the og:url in
  * index.html.
  */
 export const appOrigin = 'https://www.auxhr.com'

@@ -22,7 +22,6 @@
   "include": [
     "api",
     "cypress",
-    "middleware.ts",
     "./src",
     "./stories",
     "../postcss.config.js",

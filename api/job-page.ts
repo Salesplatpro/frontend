@@ -1,19 +1,21 @@
-// Vercel Edge Middleware — root-level convention, runs before the SPA is
-// served. Injects OG/Twitter-card meta tags, JobPosting JSON-LD and a
-// crawlable text body for known crawler requests to a public job page; every
-// other request passes through to the SPA untouched. Kept dependency-free and
-// simple (fetch JSON, template HTML) since the Edge Runtime does not support
-// the full Node API surface.
+// Serves every request for a public job page (vercel.json rewrites
+// /job/postedjob/:jobId here): the SPA shell with its generic page meta
+// swapped for the job's title, description, OG/Twitter card tags and
+// JobPosting JSON-LD. It answers every user agent instead of a crawler
+// allowlist because link-preview fetchers are too varied to enumerate —
+// Google Chat, Viber, Zoom, Notion and any app fetching with a browser UA all
+// fell outside the list and rendered the generic card.
+//
+// Real visitors load the app through this response too, so it is CDN-cached
+// and every failure short of the shell itself degrades to the unmodified shell
+// rather than an error. Kept dependency-free since the Edge Runtime does not
+// support the full Node API surface.
 
-const CRAWLER_UA_PATTERN =
-  /facebookexternalhit|facebookcatalog|Facebot|Twitterbot|LinkedInBot|Slackbot|Slack-ImgProxy|WhatsApp|Discordbot|TelegramBot|Bluesky|Mastodon|redditbot|Pinterest(?:bot)?|Applebot|SkypeUriPreview|MicrosoftPreview|Snap URL Preview|embedly|iframely|vkShare|XING-contenttabreceiver|Nuzzel|Qwantify|outbrain|W3C_Validator|Googlebot|Google-InspectionTool|bingbot|BingPreview|DuckDuckBot|YandexBot|Baiduspider/i
-
-const JOB_PATH_PATTERN = /^\/job\/postedjob\/([^/?#]+)/
+export const config = { runtime: 'edge' }
 
 // Same env var the SPA build injects into `import.meta.env.VITE_API_BASE_URL`
-// (src/utils/baseConfig.ts) — Vercel exposes project env vars to Edge
-// Middleware via `process.env` regardless of the VITE_ prefix, since that
-// prefix only governs what Vite inlines into the client bundle.
+// (src/utils/baseConfig.ts) — Vercel exposes project env vars to functions via
+// `process.env` regardless of the VITE_ prefix.
 const API_BASE_URL =
   process.env['VITE_API_BASE_URL'] ?? 'https://api.auxhr.com/v1'
 
@@ -25,6 +27,19 @@ const API_BASE_URL =
 const SITE_ORIGIN = 'https://www.auxhr.com'
 
 const API_TIMEOUT_MS = 2500
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+// Delimits the generic title, description and card tags in index.html.
+export const PAGE_META_PATTERN = /<!-- page-meta\b[\s\S]*?<!-- \/page-meta -->/
+
+const ROOT_ELEMENT = '<div id="root"></div>'
+
+const JOB_CACHE_CONTROL =
+  'public, max-age=0, s-maxage=300, stale-while-revalidate=86400'
+// Short, so a transient API blip does not pin the generic card.
+const FALLBACK_CACHE_CONTROL = 'public, max-age=0, s-maxage=60'
 
 interface JobResponse {
   data?: {
@@ -128,7 +143,12 @@ const buildSalary = (job: Job): string => {
   return `${currency}${range} / ${period}`
 }
 
-const buildHtml = (job: Job, jobId: string, origin: string): string => {
+export const renderJobPage = (
+  shell: string,
+  job: Job,
+  jobId: string,
+  origin: string,
+): string => {
   const company = job.organization?.name?.trim() || null
   const recruiter = job.postedBy
     ? `${job.postedBy.firstName ?? ''} ${job.postedBy.lastName ?? ''}`.trim()
@@ -212,6 +232,9 @@ const buildHtml = (job: Job, jobId: string, origin: string): string => {
           }
         : undefined,
   }
+  // stripHtml decodes &lt; after removing tags, so job text can carry a
+  // literal </script> that would otherwise close this block early.
+  const safeJsonLd = JSON.stringify(jsonLd).replace(/</g, '\\u003c')
 
   const safeTitle = escapeHtml(title)
   const safeDescription = escapeHtml(description)
@@ -229,11 +252,7 @@ const buildHtml = (job: Job, jobId: string, origin: string): string => {
         .join('')}</ul>`
     : ''
 
-  return `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>${safeTitle}</title>
+  const meta = `<title>${safeTitle}</title>
     <meta name="description" content="${safeDescription}" />
     <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -256,75 +275,102 @@ const buildHtml = (job: Job, jobId: string, origin: string): string => {
     <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />
     <meta name="twitter:image:alt" content="${safeTitle}" />
 
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-  </head>
-  <body>
-    <h1>${safeTitle}</h1>
-    ${employer ? `<p>${escapeHtml(employer)}</p>` : ''}
-    ${location ? `<p>${escapeHtml(location)}</p>` : ''}
-    ${facts ? `<p>${escapeHtml(facts)}</p>` : ''}
-    ${section('Job Brief', rawDescription)}
-    ${section('Requirements', requirements)}
-    ${skills}
-    <p><a href="${escapeHtml(canonicalUrl)}">Apply for this position</a></p>
-  </body>
-</html>`
+    <script type="application/ld+json">${safeJsonLd}</script>`
+
+  // Crawlable text for readers that never run the app; browsers with
+  // JavaScript ignore it.
+  const body = `<noscript>
+      <h1>${safeTitle}</h1>
+      ${employer ? `<p>${escapeHtml(employer)}</p>` : ''}
+      ${location ? `<p>${escapeHtml(location)}</p>` : ''}
+      ${facts ? `<p>${escapeHtml(facts)}</p>` : ''}
+      ${section('Job Brief', rawDescription)}
+      ${section('Requirements', requirements)}
+      ${skills}
+    </noscript>`
+
+  return shell
+    .replace(PAGE_META_PATTERN, () => meta)
+    .replace(ROOT_ELEMENT, () => `${ROOT_ELEMENT}\n    ${body}`)
 }
 
-export default async function middleware(request: Request) {
-  const userAgent = request.headers.get('user-agent') ?? ''
-  if (!CRAWLER_UA_PATTERN.test(userAgent)) {
-    return
-  }
+let shellCache: Promise<string> | null = null
 
-  const url = new URL(request.url)
-  const match = JOB_PATH_PATTERN.exec(url.pathname)
-  const jobId = match?.[1]
-  if (!jobId) {
-    return
-  }
+// The cookie is forwarded so a viewer's Vercel auth carries the fetch through
+// deployment protection on preview deployments; production needs none.
+const loadShell = (origin: string, cookie: string | null): Promise<string> => {
+  shellCache ??= fetch(`${origin}/index.html`, {
+    headers: cookie ? { cookie } : {},
+  })
+    .then((response) => {
+      if (!response.ok)
+        throw new Error(`Shell fetch failed: ${response.status}`)
+      return response.text()
+    })
+    .catch((error: unknown) => {
+      shellCache = null
+      throw error
+    })
+  return shellCache
+}
+
+const fetchJob = async (jobId: string): Promise<Job | null> => {
+  // Validated before it reaches the API so a malformed id cannot mint an
+  // unbounded set of distinct cached upstream requests.
+  if (!UUID_PATTERN.test(jobId)) return null
 
   const controller = new AbortController()
   // Kept well under Slack's ~3s budget, above which it renders no card at all.
   const timer = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
 
   try {
-    const apiResponse = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
+    const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`, {
       signal: controller.signal,
       headers: { accept: 'application/json' },
     })
-    if (!apiResponse.ok) {
-      return
-    }
-    const body = (await apiResponse.json()) as JobResponse
-    const job = body.data?.job
-    if (!job) {
-      return
-    }
-
-    const html = buildHtml(job, jobId, url.origin)
-    return new Response(html, {
-      status: 200,
-      headers: {
-        'content-type': 'text/html; charset=utf-8',
-        'cache-control':
-          'public, max-age=0, s-maxage=600, stale-while-revalidate=86400',
-        // Without this, any intermediary cache could hand this crawler-only
-        // stub to a real visitor.
-        vary: 'user-agent',
-      },
-    })
+    if (!response.ok) return null
+    const body = (await response.json()) as JobResponse
+    return body.data?.job ?? null
   } catch {
-    // On any failure, fall through to the normal SPA rather than error out.
-    return
+    return null
   } finally {
     clearTimeout(timer)
   }
 }
 
-// Scoped to job pages only, which is also why /api/og/job is not intercepted —
-// widening this to a catch-all would make middleware swallow its own image
-// route, and would need `['/((?!api|_next|.*\\..*).*)']` instead.
-export const config = {
-  matcher: '/job/postedjob/:jobId*',
+const htmlResponse = (html: string, cacheControl: string): Response =>
+  new Response(html, {
+    status: 200,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': cacheControl,
+    },
+  })
+
+export default async function handler(request: Request) {
+  const url = new URL(request.url)
+  const jobId = url.searchParams.get('id') ?? ''
+
+  const jobRequest = fetchJob(jobId)
+
+  let shell: string
+  try {
+    shell = await loadShell(url.origin, request.headers.get('cookie'))
+  } catch {
+    return new Response('This page failed to load. Please refresh.', {
+      status: 502,
+      headers: {
+        'content-type': 'text/plain; charset=utf-8',
+        'cache-control': 'no-store',
+      },
+    })
+  }
+
+  const job = await jobRequest
+  if (!job) return htmlResponse(shell, FALLBACK_CACHE_CONTROL)
+
+  return htmlResponse(
+    renderJobPage(shell, job, jobId, url.origin),
+    JOB_CACHE_CONTROL,
+  )
 }
