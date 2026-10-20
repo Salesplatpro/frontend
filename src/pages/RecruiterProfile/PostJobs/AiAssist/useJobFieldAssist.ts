@@ -26,6 +26,7 @@ type FieldRequest = {
   action?: JobFieldAction
   currentText?: string
   job: JobAiContext
+  richText?: boolean
 }
 
 export const hasAiContext = (job: JobAiContext) =>

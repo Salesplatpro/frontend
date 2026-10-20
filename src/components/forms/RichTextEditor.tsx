@@ -1,9 +1,13 @@
 import 'react-quill/dist/quill.snow.css'
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ReactQuill from 'react-quill'
 
+import { resolvePaste } from '@/utils/jobText'
+
 import styles from './RichTextEditor.module.scss'
+
+const Delta = ReactQuill.Quill.import('delta')
 
 interface RichTextEditorProps {
   id?: string
@@ -41,6 +45,37 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   invalid,
 }) => {
   const quillRef = useRef<ReactQuill | null>(null)
+
+  // Quill's own paste listener sits on the editor root and skips events that
+  // are already defaultPrevented, so this capture listener on its container
+  // runs first and only takes over when the paste needs formatting.
+  useEffect(() => {
+    const quill = quillRef.current?.getEditor()
+    if (!quill) return
+    const container = quill.root.parentElement
+    if (!container) return
+
+    const handlePaste = (event: ClipboardEvent) => {
+      if (!event.clipboardData) return
+      const html = resolvePaste({
+        html: event.clipboardData.getData('text/html'),
+        text: event.clipboardData.getData('text/plain'),
+      })
+      if (html === null) return
+
+      event.preventDefault()
+      const range = quill.getSelection(true)
+      const pasted = quill.clipboard.convert(html)
+      quill.updateContents(
+        new Delta().retain(range.index).delete(range.length).concat(pasted),
+        'user',
+      )
+      quill.setSelection(range.index + pasted.length(), 0, 'silent')
+    }
+
+    container.addEventListener('paste', handlePaste, true)
+    return () => container.removeEventListener('paste', handlePaste, true)
+  }, [])
 
   const wordCount = value ? countWords(value) : 0
   const isAtLimit = !!maxLength && wordCount >= maxLength

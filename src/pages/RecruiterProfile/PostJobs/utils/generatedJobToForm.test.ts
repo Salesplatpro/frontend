@@ -52,8 +52,12 @@ describe('generatedJobToForm', () => {
     expect(values.minSalary).toBe('800000')
     expect(values.maxSalary).toBe('1200000')
     expect(values.compensationPeriod).toBe('monthly')
-    expect(values.jobBrief).toBe('<p>About the Role:</p><p>Build APIs</p>')
-    expect(values.requirements).toBe('<p>Qualifications:</p><p>Go</p>')
+    expect(values.jobBrief).toBe(
+      '<p><strong>About the Role:</strong></p><p>Build APIs</p>',
+    )
+    expect(values.requirements).toBe(
+      '<p><strong>Qualifications:</strong></p><p>Go</p>',
+    )
     expect(values.skills).toEqual(['Go'])
     expect(values.goals).toEqual(['Ship payments v2'])
     expect(filledCount).toBe(12)
