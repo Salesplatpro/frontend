@@ -67,7 +67,7 @@ const AdminJobDetail = () => {
 
   return (
     <PageShell wide>
-      <JobDetailsView jobId={jobId!} job={job} action={null} />
+      <JobDetailsView jobId={jobId!} job={job} audience="admin" action={null} />
 
       <PagePanel title={`Applicants (${applications.length})`}>
         <SingleJobTable

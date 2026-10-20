@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { dashboardPathForRole } from '@/features/auth/utils/dashboardPath'
 import { usePreAssessment } from '@/features/pre-assessment/hooks'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { firstRemainingStep } from '@/pages/TalentProfile/Job/jobPipeline'
@@ -116,8 +117,14 @@ const ApplyWizardEntry: React.FC = () => {
         </p>
         {jobLoadFailed ? (
           <Button onClick={() => void refetchJob()}>Try again</Button>
+        ) : user?.userRole === 'recruiter' || user?.userRole === 'admin' ? (
+          <Button onClick={() => navigate(dashboardPathForRole(user.userRole))}>
+            Go to dashboard
+          </Button>
         ) : (
-          <Button onClick={() => navigate('/job')}>Browse open jobs</Button>
+          <Button onClick={() => navigate('/talentDashboard/jobs')}>
+            Browse open jobs
+          </Button>
         )}
       </div>
     )

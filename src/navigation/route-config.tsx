@@ -1,7 +1,6 @@
 import React from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
 
-import SingleJob from '@/components/features/jobs/SingleJob'
 import CustomerStories from '@/components/features/landing/customerStories'
 import Explore from '@/components/features/landing/Explore'
 import {
@@ -163,10 +162,6 @@ export const routeConfig: RouteObject[] = [
           {
             path: 'testimonials',
             element: <Testimonials />,
-          },
-          {
-            path: 'job',
-            element: <SingleJob />,
           },
           {
             path: 'job/postedjob/:jobId',

@@ -260,7 +260,7 @@ a {
 }
 
 .rich-text-content a {
-  color: #3b82f6;
+  color: var(--color-primary);
   text-decoration: underline;
 }
 

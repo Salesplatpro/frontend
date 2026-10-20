@@ -1,17 +1,14 @@
-.applyButton {
-  width: 100%;
-  padding: var(--space-2) var(--space-4);
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--font-heading);
-  font-weight: var(--weight-medium);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-standard);
+@use '../../../styles/breakpoints' as bp;
 
-  &:hover {
-    background-color: var(--color-primary-strong);
+.page {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-6) 20px var(--space-12);
+  box-sizing: border-box;
+
+  @include bp.from(bp.$bp-lg) {
+    padding: var(--space-10) 32px var(--space-16);
   }
 }
 
