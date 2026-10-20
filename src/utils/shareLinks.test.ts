@@ -1,29 +1,12 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { appOrigin, buildJobShareUrl, buildShareTargets } from './shareLinks'
 
 const JOB_ID = '0f4c1a2e-9b3d-4c7a-8e15-2d6f7b8c9a01'
 
 describe('appOrigin', () => {
-  afterEach(() => {
-    vi.unstubAllEnvs()
-    vi.resetModules()
-  })
-
-  it('falls back to the production origin when unset', () => {
+  it('is the primary www production origin', () => {
     expect(appOrigin).toBe('https://www.auxhr.com')
-  })
-
-  it('strips trailing slashes from a configured origin', async () => {
-    vi.stubEnv('VITE_PUBLIC_APP_URL', 'https://staging.auxhr.com//')
-    vi.resetModules()
-
-    const reloaded = await import('./shareLinks')
-
-    expect(reloaded.appOrigin).toBe('https://staging.auxhr.com')
-    expect(reloaded.buildJobShareUrl(JOB_ID)).toBe(
-      `https://staging.auxhr.com/job/postedjob/${JOB_ID}`,
-    )
   })
 })
 

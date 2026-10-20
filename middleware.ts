@@ -17,11 +17,12 @@ const JOB_PATH_PATTERN = /^\/job\/postedjob\/([^/?#]+)/
 const API_BASE_URL =
   process.env['VITE_API_BASE_URL'] ?? 'https://api.auxhr.com/v1'
 
-// Canonical public origin, shared with buildJobShareUrl in
-// src/utils/shareLinks.ts. og:url and rel=canonical are identity claims, so
-// they must name production even when a preview deployment renders them.
-const SITE_ORIGIN =
-  process.env['VITE_PUBLIC_APP_URL'] ?? 'https://www.auxhr.com'
+// Canonical public origin, shared with appOrigin in src/utils/shareLinks.ts.
+// og:url and rel=canonical are identity claims, so they must name production
+// even when a preview deployment renders them — and must name the primary
+// domain, since auxhr.com redirects here and an og:url pointing at a redirect
+// back to this page is a circular path Facebook and LinkedIn will not render.
+const SITE_ORIGIN = 'https://www.auxhr.com'
 
 const API_TIMEOUT_MS = 2500
 

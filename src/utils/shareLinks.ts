@@ -7,13 +7,15 @@
  * pasted, and a Vercel preview origin sits behind deployment protection, so a
  * crawler fetching it gets a 401 and renders no preview card at all.
  *
- * Must stay in agreement with SITE_ORIGIN in middleware.ts, which reads the
- * same variable via process.env — otherwise the canonical URL advertised to
- * crawlers disagrees with the URL that was actually shared.
+ * Deliberately not configurable either: it must be the primary Vercel domain.
+ * auxhr.com redirects here, so an apex origin sends crawlers through a
+ * redirect whose og:url then points back at it — Facebook and LinkedIn treat
+ * that as a circular redirect and render no card.
+ *
+ * Must stay in agreement with SITE_ORIGIN in middleware.ts and the og:url in
+ * index.html.
  */
-export const appOrigin = (
-  import.meta.env.VITE_PUBLIC_APP_URL ?? 'https://www.auxhr.com'
-).replace(/\/+$/, '')
+export const appOrigin = 'https://www.auxhr.com'
 
 export const buildJobShareUrl = (jobId: string): string =>
   `${appOrigin}/job/postedjob/${encodeURIComponent(jobId)}`
