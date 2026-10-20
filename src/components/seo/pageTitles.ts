@@ -12,7 +12,6 @@ const EXACT_TITLES: Record<string, string> = {
   '/register': 'Register',
   '/faq': 'FAQ',
   '/testimonials': 'Testimonials',
-  '/job': 'Job',
   '/privacy-policy': 'Privacy Policy',
   '/terms-and-conditions': 'Terms and Conditions',
   '/talentDashboard': 'Dashboard',

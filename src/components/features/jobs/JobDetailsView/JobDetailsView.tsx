@@ -1,175 +1,157 @@
+import cn from 'classnames'
 import React from 'react'
+import { FiCheckCircle } from 'react-icons/fi'
 
-import {
-  CompanyTag,
-  JobOrganization,
-} from '@/components/features/jobs/CompanyTag'
-import { ShareJob } from '@/components/features/jobs/ShareJob'
+import { CompanyTag } from '@/components/features/jobs/CompanyTag'
 import RichTextDisplay from '@/components/features/shared/global/RichTextDisplay'
-import { PageHero } from '@/components/layout/PageHero'
 import { PageShell } from '@/components/layout/PageShell'
 import { BackButton } from '@/components/ui/BackButton'
-import { StatusBadge } from '@/components/ui/Badge'
-import { getStatusBadge } from '@/pages/RecruiterProfile/getJobStatus'
-import { capitalizeFirstWord } from '@/utils'
-import { capitalizeEachWord } from '@/utils/CapitalizeWord'
-import { formatCompensation } from '@/utils/formatCompensation'
 
+import { formatPoster, hasRichText, toWebsiteLink } from './jobDetailsFormat'
 import styles from './JobDetailsView.module.scss'
-
-export interface JobDetailsJob {
-  role?: { name: string }
-  createdAt?: string
-  jobBrief?: string
-  requirements?: string
-  skills?: string[] | null
-  goals?: string[] | null
-  workMode?: string[] | null
-  locationCountry?: string | null
-  locationState?: string | null
-  locationCity?: string | null
-  experienceLevel?: string
-  currency?: string | null
-  minSalary?: number | null
-  maxSalary?: number | null
-  compensationPeriod?: string | null
-  noOfApplicants?: number
-  postedBy?: { firstName?: string; lastName?: string } | null
-  organization?: JobOrganization | null
-  status?: string
-  hasApplied?: boolean
-  applicationStage?: string | null
-  applicationId?: string | null
-  applicationStages?: Record<string, string> | null
-  aiConfigId?: string | null
-  aiConfig?: { id?: string } | null
-}
+import { JobHeader } from './JobHeader'
+import { JobOverview } from './JobOverview'
+import type { JobDetailsAudience, JobDetailsJob } from './types'
 
 interface JobDetailsViewProps {
   jobId: string
   job: JobDetailsJob
+  /** Who is looking: drives the status badge and the back button. */
+  audience: JobDetailsAudience
   action: React.ReactNode
   onBack?: () => void
-  /** Optional content rendered between the hero and the company/share row — e.g. the recruiter-only applicant stats strip. Other consumers of this shared view simply omit it. */
-  beforeBody?: React.ReactNode
-}
-
-const formatLocation = (job: JobDetailsJob) => {
-  const parts = [job.locationCity, job.locationState, job.locationCountry]
-    .filter(Boolean)
-    .map((part) => capitalizeFirstWord(part ?? undefined))
-  return parts.length > 0 ? parts.join(', ') : 'Not specified'
+  /** Hiring-team card shown above the job overview, e.g. applicant stats. */
+  insights?: React.ReactNode
 }
 
 const JobDetailsView: React.FC<JobDetailsViewProps> = ({
   jobId,
   job,
+  audience,
   action,
   onBack,
-  beforeBody,
+  insights,
 }) => {
-  const workModeLabel = job.workMode?.length
-    ? job.workMode.map((mode) => capitalizeFirstWord(mode)).join(', ')
-    : 'Not specified'
-
-  const postedByName = job.postedBy?.firstName
-    ? `${job.postedBy.firstName} ${job.postedBy.lastName ?? ''}`.trim()
-    : null
+  const isHiringTeam = audience === 'recruiter' || audience === 'admin'
+  const poster = formatPoster(job)
+  const website = toWebsiteLink(job.organization?.website)
 
   return (
     <PageShell wide>
-      <BackButton onClick={onBack} />
-      <PageHero
-        compact
-        title={
-          job.role?.name ? capitalizeEachWord(job.role.name) : 'Job details'
-        }
-        lead={postedByName ? `Posted by ${postedByName}` : undefined}
-        pills={
-          job.status ? (
-            <StatusBadge status={job.status} {...getStatusBadge(job.status)} />
-          ) : undefined
-        }
-      />
-      {beforeBody}
-      <div className={styles.header}>
-        <CompanyTag
-          organization={job.organization}
-          size="md"
-          className={styles.company}
+      {audience !== 'public' && <BackButton onClick={onBack} />}
+
+      <div className={styles.view}>
+        <JobHeader
+          jobId={jobId}
+          job={job}
+          showStatus={isHiringTeam}
+          canShare={job.status === 'active'}
         />
-        <ShareJob jobId={jobId} jobTitle={job.role?.name} />
-      </div>
 
-      <div className={styles.body}>
-        <div className={styles.main}>
-          <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Job Brief</h3>
-            <RichTextDisplay
-              content={job.jobBrief || ''}
-              className={styles.richText}
-            />
-          </section>
+        <div className={styles.body}>
+          <div className={styles.main}>
+            {hasRichText(job.jobBrief) && (
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>About the role</h2>
+                <RichTextDisplay
+                  content={job.jobBrief ?? ''}
+                  className={styles.richText}
+                />
+              </section>
+            )}
 
-          <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>Requirements</h3>
-            <RichTextDisplay
-              content={job.requirements || ''}
-              className={styles.richText}
-            />
-          </section>
+            {hasRichText(job.requirements) && (
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>Requirements</h2>
+                <RichTextDisplay
+                  content={job.requirements ?? ''}
+                  className={styles.richText}
+                />
+              </section>
+            )}
 
-          {!!job.skills?.length && (
-            <section className={styles.section}>
-              <h3 className={styles.sectionTitle}>Skills</h3>
-              <ul className={styles.list}>
-                {job.skills.map((skill, i) => (
-                  <li key={i}>{skill}</li>
-                ))}
-              </ul>
-            </section>
-          )}
+            {!!job.skills?.length && (
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>Skills</h2>
+                <ul className={styles.chips}>
+                  {job.skills.map((skill, index) => (
+                    <li key={`${skill}-${index}`} className={styles.chip}>
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-          {!!job.goals?.length && (
-            <section className={styles.section}>
-              <h3 className={styles.sectionTitle}>Goals</h3>
-              <ul className={styles.list}>
-                {job.goals.map((goal, i) => (
-                  <li key={i}>{goal}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-        </div>
-
-        <aside className={styles.sidebar}>
-          <div className={styles.actionSlot}>{action}</div>
-
-          <div className={styles.summaryItem}>
-            <p className={styles.summaryLabel}>Work Mode</p>
-            <p className={styles.summaryValue}>{workModeLabel}</p>
+            {!!job.goals?.length && (
+              <section className={styles.section}>
+                <h2 className={styles.sectionTitle}>Goals for this role</h2>
+                <ul className={styles.goals}>
+                  {job.goals.map((goal, index) => (
+                    <li key={`${goal}-${index}`} className={styles.goal}>
+                      <FiCheckCircle className={styles.goalIcon} aria-hidden />
+                      {goal}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
           </div>
-          <div className={styles.summaryItem}>
-            <p className={styles.summaryLabel}>Location</p>
-            <p className={styles.summaryValue}>{formatLocation(job)}</p>
-          </div>
-          <div className={styles.summaryItem}>
-            <p className={styles.summaryLabel}>Experience Level</p>
-            <p className={styles.summaryValue}>
-              {capitalizeFirstWord(job.experienceLevel) || 'Not specified'}
-            </p>
-          </div>
-          <div className={styles.summaryItem}>
-            <p className={styles.summaryLabel}>Salary</p>
-            <p className={styles.summaryValue}>{formatCompensation(job)}</p>
-          </div>
-          {job.noOfApplicants != null && (
-            <div className={styles.summaryItem}>
-              <p className={styles.summaryLabel}>Applicants</p>
-              <p className={styles.summaryValue}>{job.noOfApplicants}</p>
+
+          <div className={styles.sidebar}>
+            {action && (
+              <div
+                className={cn(
+                  styles.actionCard,
+                  !isHiringTeam && styles.actionCardSticky,
+                )}>
+                {action}
+              </div>
+            )}
+
+            {insights && (
+              <section
+                className={cn(styles.card, styles.sidebarItem)}
+                aria-labelledby="job-insights-title">
+                <h2 id="job-insights-title" className={styles.cardTitle}>
+                  Hiring insights
+                </h2>
+                {insights}
+              </section>
+            )}
+
+            <div className={styles.sidebarItem}>
+              <JobOverview job={job} />
             </div>
-          )}
-        </aside>
+
+            <section
+              className={cn(styles.card, styles.sidebarItem)}
+              aria-labelledby="job-company-title">
+              <h2 id="job-company-title" className={styles.cardTitle}>
+                About the company
+              </h2>
+              <CompanyTag
+                organization={job.organization}
+                size="md"
+                fallback="Company not listed"
+              />
+              {website && (
+                <a
+                  href={website.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.website}>
+                  {website.label}
+                </a>
+              )}
+              {poster && (
+                <p className={styles.poster}>
+                  Posted by <span>{poster}</span>
+                </p>
+              )}
+            </section>
+          </div>
+        </div>
       </div>
     </PageShell>
   )

@@ -91,7 +91,10 @@ describe('StartStep', () => {
     fireEvent.click(screen.getByRole('button', { name: /write my job post/i }))
 
     await waitFor(() => expect(onGenerated).toHaveBeenCalled())
-    expect(generateMock).toHaveBeenCalledWith({ prompt: DESCRIPTION })
+    expect(generateMock).toHaveBeenCalledWith({
+      prompt: DESCRIPTION,
+      richText: true,
+    })
     const [values, filledCount] = onGenerated.mock.calls[0]
     expect(values.role).toBe('role-1')
     expect(values.skills).toEqual(['Go'])
@@ -151,6 +154,7 @@ describe('StartStep', () => {
     await waitFor(() => expect(onGenerated).toHaveBeenCalled())
     expect(generateMock).toHaveBeenCalledWith({
       sourceText: 'We are hiring a designer to own our design system.',
+      richText: true,
     })
     expect(generateFileMock).not.toHaveBeenCalled()
   })
@@ -172,6 +176,7 @@ describe('StartStep', () => {
     await waitFor(() => expect(onGenerated).toHaveBeenCalled())
     const sent = generateFileMock.mock.calls[0][0] as FormData
     expect(sent.get('file')).toBe(file)
+    expect(sent.get('richText')).toBe('true')
     expect(generateMock).not.toHaveBeenCalled()
   })
 

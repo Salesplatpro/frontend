@@ -4,8 +4,7 @@ import {
   resolveLocationFromNames,
 } from '@/components/forms/LocationSelect'
 import { PostJobFormValues } from '@/utils/jobPostTypes'
-
-import { plainTextToHtml } from './aiText'
+import { textToRichHtml } from '@/utils/jobText'
 
 export interface GeneratedJobContent {
   role?: string
@@ -75,9 +74,9 @@ export const generatedJobToForm = (
     minSalary: content.minSalary ? String(content.minSalary) : '',
     maxSalary: content.maxSalary ? String(content.maxSalary) : '',
     compensationPeriod: content.compensationPeriod ?? '',
-    jobBrief: content.jobBrief ? plainTextToHtml(content.jobBrief) : '',
+    jobBrief: content.jobBrief ? textToRichHtml(content.jobBrief) : '',
     requirements: content.requirements
-      ? plainTextToHtml(content.requirements)
+      ? textToRichHtml(content.requirements)
       : '',
     skills: content.skills ?? [],
     goals: content.goals ?? [],

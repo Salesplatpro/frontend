@@ -345,7 +345,12 @@ const IndividualJob = () => {
       )}
 
       {resolvedStep === 'details' && (
-        <JobDetailsView jobId={jobId} job={job} action={applyAction} />
+        <JobDetailsView
+          jobId={jobId}
+          job={job}
+          audience="talent"
+          action={applyAction}
+        />
       )}
 
       {resolvedStep === 'personality' &&

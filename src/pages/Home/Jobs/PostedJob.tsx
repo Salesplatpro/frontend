@@ -8,6 +8,8 @@ import {
 import { useDocumentTitle } from '@/components/seo'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { useAuthStore } from '@/features/auth/store/useAuthStore'
+import { dashboardPathForRole } from '@/features/auth/utils/dashboardPath'
 import { useIndividualJobQuery } from '@/redux/api/talent'
 import { notify } from '@/utils/toastNotifications'
 
@@ -16,12 +18,14 @@ import styles from './PostedJob.module.scss'
 const PostedJob = () => {
   const { jobId } = useParams<{ jobId: string }>()
   const navigate = useNavigate()
+  const userRole = useAuthStore((state) => state.user?.userRole)
   const { data, error, isLoading, refetch } = useIndividualJobQuery(jobId)
   const job: JobDetailsJob | undefined = data?.data?.job
   const errorStatus = (error as { status?: number } | undefined)?.status
   const jobNotFound = errorStatus === 404
   const jobLoadFailed = !!error && !jobNotFound
   const jobClosed = !!job && job.status !== 'active'
+  const isHiringTeam = userRole === 'recruiter' || userRole === 'admin'
 
   useDocumentTitle(
     job?.role?.name
@@ -50,8 +54,14 @@ const PostedJob = () => {
         </p>
         {jobLoadFailed ? (
           <Button onClick={() => void refetch()}>Try again</Button>
+        ) : isHiringTeam ? (
+          <Button onClick={() => navigate(dashboardPathForRole(userRole))}>
+            Go to dashboard
+          </Button>
         ) : (
-          <Button onClick={() => navigate('/job')}>Browse open jobs</Button>
+          <Button onClick={() => navigate('/talentDashboard/jobs')}>
+            Browse open jobs
+          </Button>
         )}
       </div>
     )
@@ -66,19 +76,29 @@ const PostedJob = () => {
     navigate(`/apply/${jobId}`)
   }
 
+  const action = isHiringTeam ? null : userRole === 'talent' &&
+    job.hasApplied ? (
+    <Button
+      fullWidth
+      variant="secondary"
+      onClick={() => navigate(`/talentDashboard/job/${jobId}`)}>
+      View your application
+    </Button>
+  ) : (
+    <Button fullWidth size="lg" onClick={handleApply}>
+      Apply now
+    </Button>
+  )
+
   return (
-    <JobDetailsView
-      jobId={jobId!}
-      job={job}
-      action={
-        <button
-          type="button"
-          onClick={handleApply}
-          className={styles.applyButton}>
-          Apply for this position
-        </button>
-      }
-    />
+    <div className={styles.page}>
+      <JobDetailsView
+        jobId={jobId!}
+        job={job}
+        audience="public"
+        action={action}
+      />
+    </div>
   )
 }
 

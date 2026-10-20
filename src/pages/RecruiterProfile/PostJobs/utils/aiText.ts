@@ -1,11 +1,3 @@
-const HTML_ESCAPES: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-}
-
 const HTML_ENTITIES: Record<string, string> = {
   '&nbsp;': ' ',
   '&amp;': '&',
@@ -14,17 +6,6 @@ const HTML_ENTITIES: Record<string, string> = {
   '&quot;': '"',
   '&#39;': "'",
 }
-
-const escapeHtml = (text: string) =>
-  text.replace(/[&<>"']/g, (char) => HTML_ESCAPES[char])
-
-export const plainTextToHtml = (text: string): string =>
-  text
-    .split(/\n+/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => `<p>${escapeHtml(line)}</p>`)
-    .join('')
 
 export const htmlToPlainText = (html: string): string =>
   html

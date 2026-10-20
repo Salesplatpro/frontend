@@ -79,6 +79,7 @@ export const StartStep = ({
     try {
       const response = await generateJobContent({
         prompt: description.trim(),
+        richText: true,
       }).unwrap()
       finish(response?.data?.content)
     } catch (err) {
@@ -95,10 +96,12 @@ export const StartStep = ({
       if (file) {
         const formData = new FormData()
         formData.append('file', file)
+        formData.append('richText', 'true')
         response = await generateFromFile(formData).unwrap()
       } else {
         response = await generateJobContent({
           sourceText: sourceText.trim(),
+          richText: true,
         }).unwrap()
       }
       finish(response?.data?.content)

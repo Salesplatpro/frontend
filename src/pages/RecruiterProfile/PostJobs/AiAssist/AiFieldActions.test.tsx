@@ -49,7 +49,7 @@ describe('AiFieldActions', () => {
     }
   })
 
-  it('sends plain text to the AI and applies the answer as editor HTML', async () => {
+  it('sends the field as Markdown and applies the answer as editor HTML', async () => {
     generateFieldMock.mockReturnValue({
       unwrap: () => Promise.resolve({ data: { text: 'Short line\nSecond' } }),
     })
@@ -73,7 +73,37 @@ describe('AiFieldActions', () => {
       action: 'shorter',
       currentText: 'Long & detailed',
       job,
+      richText: true,
     })
+  })
+
+  it('keeps headers, bullets and emphasis in both directions', async () => {
+    generateFieldMock.mockReturnValue({
+      unwrap: () =>
+        Promise.resolve({
+          data: { text: '**Qualifications**\n- 3+ years of *B2B* sales' },
+        }),
+    })
+    const onApply = vi.fn()
+    render(
+      <AiFieldActions
+        field="requirements"
+        value="<p><strong>Must have</strong></p><ul><li>Sales</li></ul>"
+        job={job}
+        onApply={onApply}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Rewrite' }))
+
+    await waitFor(() =>
+      expect(onApply).toHaveBeenCalledWith(
+        '<p><strong>Qualifications</strong></p><ul><li>3+ years of <em>B2B</em> sales</li></ul>',
+      ),
+    )
+    expect(generateFieldMock.mock.calls[0][0].currentText).toBe(
+      '**Must have**\n- Sales',
+    )
   })
 
   it('does not send currentText when writing an empty field', async () => {
@@ -172,5 +202,6 @@ describe('AiFieldActions', () => {
     expect(generateFieldMock.mock.calls[0][0].currentText).toBe(
       'draft <b>notes</b>',
     )
+    expect(generateFieldMock.mock.calls[0][0]).not.toHaveProperty('richText')
   })
 })

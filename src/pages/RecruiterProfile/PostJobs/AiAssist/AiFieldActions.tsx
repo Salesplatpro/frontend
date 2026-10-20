@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { HiOutlineSparkles } from 'react-icons/hi2'
 
-import { htmlToPlainText, plainTextToHtml } from '../utils/aiText'
+import { richHtmlToMarkdown, textToRichHtml } from '@/utils/jobText'
+
 import styles from './AiAssist.module.scss'
 import {
   hasAiContext,
@@ -39,8 +40,10 @@ export const AiFieldActions = ({
 }: AiFieldActionsProps) => {
   const { run, pendingKey } = useJobFieldAssist()
   const [previous, setPrevious] = useState<string | null>(null)
-  const currentText =
-    format === 'html' ? htmlToPlainText(value ?? '') : (value ?? '').trim()
+  const isRichText = format === 'html'
+  const currentText = isRichText
+    ? richHtmlToMarkdown(value ?? '')
+    : (value ?? '').trim()
   const isEmpty = !currentText
   const canRun = hasAiContext(job)
   const isBusy = pendingKey !== null
@@ -51,10 +54,11 @@ export const AiFieldActions = ({
       action,
       currentText: isEmpty ? undefined : currentText,
       job,
+      ...(isRichText ? { richText: true } : {}),
     })
     if (result?.text) {
       setPrevious(value ?? '')
-      onApply(format === 'html' ? plainTextToHtml(result.text) : result.text)
+      onApply(isRichText ? textToRichHtml(result.text) : result.text)
     }
   }
 

@@ -8,6 +8,7 @@ export type JobOrganization = {
   id?: string
   name?: string | null
   logoUrl?: string | null
+  website?: string | null
 }
 
 type CompanyTagProps = {

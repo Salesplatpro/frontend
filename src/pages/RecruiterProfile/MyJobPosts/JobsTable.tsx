@@ -224,7 +224,9 @@ export const JobsTable = ({ data }: JobsTableType) => {
                 </button>
               </Link>
             )}
-            <ShareJob jobId={job.id} jobTitle={job.role?.name} />
+            {job.status === 'active' && (
+              <ShareJob jobId={job.id} jobTitle={job.role?.name} />
+            )}
           </TableActions>
         ),
       },

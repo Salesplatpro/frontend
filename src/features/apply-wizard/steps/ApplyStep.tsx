@@ -54,6 +54,7 @@ const ApplyStep: React.FC = () => {
     <JobDetailsView
       jobId={jobId!}
       job={job}
+      audience="talent"
       onBack={() => navigate(`/apply/${jobId}/prescreen`)}
       action={
         <Button fullWidth onClick={() => void handleApply()} loading={applying}>
