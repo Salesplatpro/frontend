@@ -1,4 +1,4 @@
-// Renders the 1200x630 preview card that middleware.ts advertises as og:image
+// Renders the 1200x630 preview card that api/job-page.ts advertises as og:image
 // for a shared job link. Deliberately dependency-free beyond @vercel/og: the
 // "@/*" path alias is not resolved for files outside src/, so the small amount
 // of formatting this needs is inlined rather than imported from src/utils.
