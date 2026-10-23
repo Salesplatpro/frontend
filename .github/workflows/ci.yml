@@ -8,7 +8,8 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel a run on main: it may be deploying to production.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
@@ -44,5 +45,46 @@ jobs:
       - name: 🧪 Run unit tests
         run: yarn test run --coverage
 
+      - name: 🚦 Test the Vercel deploy gate
+        run: node --test scripts/vercel-gate.check.mjs
+
       - name: 🏗️ Build
         run: yarn build
+
+  # Production deploys happen here, and only after the build job above passed
+  # (lint, types, tests, build) for this exact commit. Vercel's own automatic
+  # deploy from main is turned off in vercel.json. Setup: VERCEL-SETUP.md.
+  deploy-production:
+    name: Deploy to Vercel (production)
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: vercel-production
+      cancel-in-progress: false
+
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔑 Check Vercel secrets
+        run: bash scripts/check-vercel-secrets.sh
+
+      - name: 🚀 Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: ⬇️ Pull Vercel production settings
+        run: npx --yes vercel@65.2.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: 🏗️ Build for production
+        run: npx --yes vercel@65.2.0 build --prod --token="$VERCEL_TOKEN"
+
+      - name: 🌍 Deploy to production
+        run: npx --yes vercel@65.2.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
