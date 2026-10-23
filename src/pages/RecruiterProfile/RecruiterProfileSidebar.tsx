@@ -1,14 +1,17 @@
 import '../TalentProfile/TalentProfileSidebar.scss'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { IoMdMenu } from 'react-icons/io'
 import { Outlet } from 'react-router-dom'
 
 import {
+  peopleOwnerSidebarData,
+  peopleSidebarData,
   sidebarData,
   sidebarFooterData,
 } from '@/components/features/recruiter/SideBar/sidebarData'
+import { usePeopleAccess } from '@/features/people/hooks/usePeopleAccess'
 import { ProductTourHost } from '@/features/product-tour'
 import { ThemeProvider } from '@/features/theme/ThemeProvider'
 
@@ -18,6 +21,16 @@ import { CompanyBanner } from './CompanyBanner/CompanyBanner'
 
 const RecruiterProfileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { isOwner, canManagePeople } = usePeopleAccess()
+
+  const navItems = useMemo(
+    () => [
+      ...sidebarData,
+      ...(canManagePeople ? peopleSidebarData : []),
+      ...(isOwner ? peopleOwnerSidebarData : []),
+    ],
+    [canManagePeople, isOwner],
+  )
 
   return (
     <ThemeProvider>
@@ -38,7 +51,7 @@ const RecruiterProfileSidebar = () => {
         )}
         <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
           <SideBar
-            sideBarData={sidebarData}
+            sideBarData={navItems}
             handleClick={() => setIsOpen(false)}
             topSlot={<CompanyBanner />}
             footerItems={sidebarFooterData}

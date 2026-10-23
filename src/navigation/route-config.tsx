@@ -16,6 +16,7 @@ import Solutions from '@/components/features/landing/Solutions'
 import ProtectedRoute from '@/components/routing/ProtectedRoute'
 import RequireActiveCompany from '@/components/routing/RequireActiveCompany'
 import RequireEmailVerified from '@/components/routing/RequireEmailVerified'
+import RequirePeopleAccess from '@/components/routing/RequirePeopleAccess'
 import ApplyWizardEntry from '@/features/apply-wizard/ApplyWizardEntry'
 import ApplyWizardLayout from '@/features/apply-wizard/ApplyWizardLayout'
 import ApplyStep from '@/features/apply-wizard/steps/ApplyStep'
@@ -65,6 +66,9 @@ import { EditJobTab } from '@/pages/RecruiterProfile/EditJob'
 import RecruiterGuide from '@/pages/RecruiterProfile/Guide/Guide'
 import JobDetail from '@/pages/RecruiterProfile/JobDetail'
 import { SingleJobPost } from '@/pages/RecruiterProfile/MyJobPosts/SingleJobPost'
+import { AccessLog } from '@/pages/RecruiterProfile/People/AccessLog'
+import { EmployeeDetail } from '@/pages/RecruiterProfile/People/EmployeeDetail'
+import { Employees } from '@/pages/RecruiterProfile/People/Employees'
 import RecruiterPlanPage from '@/pages/RecruiterProfile/Plan/RecruiterPlanPage'
 import PostJobTab from '@/pages/RecruiterProfile/PostJobs/PostJobTab'
 import RecruiterProfileSidebar from '@/pages/RecruiterProfile/RecruiterProfileSidebar'
@@ -427,6 +431,27 @@ export const routeConfig: RouteObject[] = [
                       {
                         path: 'chat',
                         element: <Chat />,
+                      },
+                      {
+                        path: 'people',
+                        element: <RequirePeopleAccess />,
+                        children: [
+                          {
+                            index: true,
+                            element: <Navigate to="employees" replace />,
+                          },
+                          { path: 'employees', element: <Employees /> },
+                          {
+                            path: 'employees/:staffId',
+                            element: <EmployeeDetail />,
+                          },
+                          {
+                            element: <RequirePeopleAccess ownerOnly />,
+                            children: [
+                              { path: 'access-log', element: <AccessLog /> },
+                            ],
+                          },
+                        ],
                       },
                     ],
                   },
