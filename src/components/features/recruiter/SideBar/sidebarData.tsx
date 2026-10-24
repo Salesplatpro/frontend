@@ -1,16 +1,10 @@
 import React from 'react'
 import { BsChatDots } from 'react-icons/bs'
 import { CiBoxList, CiSearch } from 'react-icons/ci'
-import {
-  HiOutlineShieldCheck,
-  HiOutlineUsers,
-  HiOutlineViewfinderCircle,
-} from 'react-icons/hi2'
+import { HiOutlineViewfinderCircle } from 'react-icons/hi2'
 import { IoBookOutline } from 'react-icons/io5'
 import { MdWorkOutline } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
-
-import { peoplePaths } from '@/features/people/paths'
 
 const ICON_SIZE = 20
 
@@ -59,27 +53,6 @@ export const sidebarData = [
     name: 'Shortlist',
     icon: <CiBoxList size={ICON_SIZE} />,
     link: '/recruiterDashboard/shortlist',
-  },
-]
-
-const PEOPLE_GROUP = 'People'
-
-export const peopleSidebarData = [
-  {
-    name: 'Employees',
-    group: PEOPLE_GROUP,
-    icon: <HiOutlineUsers size={ICON_SIZE} />,
-    link: peoplePaths.employees,
-    end: false,
-  },
-]
-
-export const peopleOwnerSidebarData = [
-  {
-    name: 'Access log',
-    group: PEOPLE_GROUP,
-    icon: <HiOutlineShieldCheck size={ICON_SIZE} />,
-    link: peoplePaths.accessLog,
   },
 ]
 

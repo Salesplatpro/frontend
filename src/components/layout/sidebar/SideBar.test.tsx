@@ -36,19 +36,4 @@ describe('SideBar', () => {
     expect(screen.queryByText('Guide')).toBeNull()
     expect(screen.getByText('Leave us feedback')).toBeTruthy()
   })
-
-  it('labels a group once, above its first item', () => {
-    render(
-      <MemoryRouter>
-        <SideBar
-          sideBarData={[
-            { name: 'Dashboard', icon: null, link: '/a' },
-            { name: 'Employees', icon: null, link: '/b', group: 'People' },
-            { name: 'Access log', icon: null, link: '/c', group: 'People' },
-          ]}
-        />
-      </MemoryRouter>,
-    )
-    expect(screen.getAllByText('People')).toHaveLength(1)
-  })
 })

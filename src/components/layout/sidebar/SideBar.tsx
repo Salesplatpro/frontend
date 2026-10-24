@@ -19,8 +19,6 @@ interface SideBarItem {
   link?: string
   end?: boolean
   tourId?: string
-  /** Items that share a group are listed together under a small heading. */
-  group?: string
 }
 
 interface sideBarProps {
@@ -54,26 +52,18 @@ export const SideBar: React.FC<sideBarProps> = ({
         {topSlot}
 
         <div className={styles.sidebarList}>
-          {sideBarData.map((data, index) => {
-            const startsGroup =
-              !!data.group && data.group !== sideBarData[index - 1]?.group
-            return (
-              <React.Fragment key={index}>
-                {startsGroup && (
-                  <div className={styles.groupLabel}>{data.group}</div>
-                )}
-                <SidebarList
-                  icon={data.icon}
-                  name={data.name}
-                  count={data.count}
-                  link={data.link}
-                  end={data.end}
-                  tourId={data.tourId}
-                  onClick={handleClick}
-                />
-              </React.Fragment>
-            )
-          })}
+          {sideBarData.map((data, index) => (
+            <SidebarList
+              key={index}
+              icon={data.icon}
+              name={data.name}
+              count={data.count}
+              link={data.link}
+              end={data.end}
+              tourId={data.tourId}
+              onClick={handleClick}
+            />
+          ))}
         </div>
       </div>
       <div>
